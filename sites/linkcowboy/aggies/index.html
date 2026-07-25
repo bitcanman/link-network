@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aggie Links | Texas A&M University Links, All in One Place</title>
+<meta name="description" content="Every link a Texas A&M University (TAMU) student needs: Howdy, Canvas, registration, tickets, dining, financial aid and more, rounded up on one page for Aggies in College Station. Unofficial, student-built.">
+<meta property="og:title" content="Aggie Links">
+<meta property="og:description" content="Every link a Texas A&M student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://linkcowboy.com/aggies">
+<meta property="og:image" content="https://linkcowboy.com/aggies-og.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Aggie Links">
+<meta name="twitter:description" content="Every link a Texas A&M student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta name="twitter:image" content="https://linkcowboy.com/aggies-og.png">
+<meta name="theme-color" content="#500000">
+<link rel="canonical" href="https://linkcowboy.com/aggies">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23500000'/%3E%3Cpath d='M16 4 L18.8 12.1 27.4 12.3 20.6 17.5 23.1 25.7 16 20.8 8.9 25.7 11.4 17.5 4.6 12.3 13.2 12.1 Z' fill='%23fff'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*
+ * Aggie Links, the Link Cowboy family style, gone Aggieland.
+ * Pixel sprites drawn on canvas, Press Start 2P headings, hard shadows,
+ * and Aggie Maroon (#500000) over black, cream, and prairie green.
+ */
+:root{
+  --ink:#2b2016;
+  --cream:#f6eed9;
+  --card:#fffaf0;
+  --orange:#500000;
+  --orange-d:#6d1010;
+  --black:#1e1a17;
+  --muted:rgba(43,32,22,.72);
+  --sky1:#a9d4e5; --sky2:#c3e2ee; --sky3:#dff0f6;
+  --water1:#8cb757; --water2:#7aa64b;
+  --px:'Press Start 2P',monospace;
+  --body:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:118px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+a{color:inherit}
+canvas{image-rendering:pixelated;display:block}
+
+/* ---------- masthead scene ---------- */
+.masthead{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(to bottom, var(--sky1) 0 35%, var(--sky2) 35% 70%, var(--sky3) 70% 100%);
+  border-bottom:4px solid var(--ink);
+}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;top:26px;right:6vw;width:calc(9px * 7)}
+.cloud{position:absolute;width:calc(16px * 5);opacity:.95;animation:drift linear infinite}
+.cloud.c2{width:calc(16px * 4)}
+.cloud.c3{width:calc(16px * 3);opacity:.85}
+@keyframes drift{from{transform:translateX(-25vw)}to{transform:translateX(115vw)}}
+.treeline{position:absolute;left:0;right:0;bottom:52px;height:0}
+.treeline .tree{position:absolute;bottom:-6px;z-index:1}
+.river{
+  position:absolute;left:0;right:0;bottom:0;height:56px;
+  background:linear-gradient(to bottom, var(--water1) 0 55%, var(--water2) 55% 100%);
+}
+.river::before{ /* pixel-stepped waterline */
+  content:"";position:absolute;left:0;right:0;top:-6px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--water1) 0 14px, transparent 14px 24px,
+    var(--water1) 24px 34px, transparent 34px 48px);
+}
+.dam{position:absolute;right:5vw;bottom:6px}
+.dam canvas{width:calc(9px * 5)}
+.swimmer{
+  position:absolute;bottom:8px;left:0;
+  --swim-max:72vw;
+  animation:swim 38s linear infinite alternate;animation-delay:-10s;
+}
+.swimmer canvas{width:calc(23px * 4);animation:faceflip 76s linear infinite;animation-delay:-10s}
+@keyframes swim{from{transform:translateX(2vw)}to{transform:translateX(var(--swim-max))}}
+@keyframes faceflip{0%,49.99%{transform:scaleX(1)}50%,100%{transform:scaleX(-1)}}
+.floatlog{position:absolute;bottom:16px;left:0;animation:logdrift 46s linear infinite;animation-delay:-22s}
+.floatlog canvas{width:calc(8px * 5)}
+@keyframes logdrift{from{transform:translateX(108vw)}to{transform:translateX(-18vw)}}
+.floatlog canvas{animation:tumble 1.1s steps(4) infinite}
+@keyframes tumble{from{rotate:0deg}to{rotate:-360deg}}
+
+.topbar{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dealschip{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:#deaa4e;
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  white-space:nowrap;
+}
+.dealschip:hover,.dealschip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.backlink{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:var(--cream);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.backlink:hover,.backlink:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.backlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+
+.hero{position:relative;z-index:2;text-align:center;padding:30px 20px 190px}
+.mascot{width:calc(15px * 5);margin:0 auto 18px;filter:drop-shadow(3px 3px 0 rgba(43,32,22,.2))}
+h1{
+  font-family:var(--px);
+  font-size:clamp(20px,4.6vw,42px);
+  line-height:1.3;letter-spacing:.02em;
+  text-shadow:4px 4px 0 rgba(255,255,255,.65);
+}
+h1 .bv{color:var(--orange)}
+.tag{
+  font-family:var(--px);
+  font-size:clamp(8px,1.5vw,11px);
+  margin-top:16px;line-height:2;color:#31566b;
+}
+.blurb{
+  margin:14px auto 0;max-width:48ch;
+  font-size:clamp(14px,1.9vw,16px);font-weight:500;
+  color:var(--muted);
+}
+.blurb b{font-weight:700;border-bottom:3px solid var(--orange);color:var(--ink)}
+.edition{
+  font-family:var(--px);font-size:8px;line-height:1;
+  margin-top:20px;color:#4a6b7d;
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+.edition .dot{width:6px;height:6px;background:var(--orange)}
+
+/* ---------- sticky search + nav ---------- */
+.sticky{
+  position:sticky;top:0;z-index:50;
+  background:var(--black);
+  border-bottom:4px solid var(--orange);
+}
+.searchwrap{
+  max-width:1140px;margin:0 auto;
+  padding:12px 20px 8px;
+  display:flex;align-items:center;gap:14px;
+}
+.searchlabel{font-family:var(--px);font-size:10px;color:var(--cream);white-space:nowrap}
+.searchbox{position:relative;flex:1}
+#search{
+  width:100%;
+  font-family:var(--body);font-weight:500;font-size:16px;
+  padding:11px 42px 11px 12px;
+  border:3px solid var(--ink);
+  background:var(--card);color:var(--ink);
+  outline:none;border-radius:0;
+}
+#search::placeholder{color:#8b7f6d;font-weight:400}
+#search:focus{box-shadow:0 0 0 3px var(--orange)}
+.searchbox .ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--orange-d);pointer-events:none}
+.searchbox .clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  border:2px solid var(--ink);background:var(--orange);color:#fff;
+  width:26px;height:26px;font-size:15px;line-height:1;cursor:pointer;display:none;
+}
+.nav{
+  max-width:1140px;margin:0 auto;
+  display:flex;gap:10px;overflow-x:auto;
+  padding:6px 20px 14px;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  font-family:var(--px);font-size:8px;line-height:1;
+  white-space:nowrap;text-decoration:none;
+  color:var(--cream);
+  border:3px solid rgba(246,238,217,.45);
+  padding:8px 10px;
+  transition:background .12s steps(2),color .12s steps(2),border-color .12s steps(2);
+}
+.nav a:hover,.nav a:focus-visible{background:var(--orange);border-color:var(--orange);color:#fff;outline:none}
+
+/* ---------- sections + cards ---------- */
+main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
+.section{margin-top:40px;scroll-margin-top:118px}
+.sechead{display:flex;align-items:center;gap:14px}
+.sechead h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(13px,2.4vw,17px);line-height:1.5;
+  color:var(--ink);
+}
+.sechead .count{font-family:var(--px);font-size:8px;color:var(--orange-d);white-space:nowrap}
+.secrule{
+  height:6px;margin-top:10px;
+  background:repeating-linear-gradient(to right, var(--orange) 0 14px, transparent 14px 22px);
+}
+.grid{
+  display:grid;gap:22px;margin-top:20px;
+  grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+}
+.card{
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:16px 15px 14px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  min-height:122px;
+}
+.card:hover,.card:focus-visible{
+  transform:translate(-3px,-3px);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  outline:none;
+}
+.card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.card:focus-visible{outline:3px dashed var(--orange);outline-offset:3px}
+.cardtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card h3{
+  font-family:var(--px);font-weight:400;
+  font-size:10px;line-height:1.7;letter-spacing:.02em;
+}
+.card:hover h3,.card:focus-visible h3{color:var(--orange-d)}
+.badge{
+  font-family:var(--px);font-size:7px;line-height:1;
+  white-space:nowrap;
+  border:2px solid var(--orange);color:var(--orange-d);
+  padding:4px 5px;margin-top:2px;
+}
+.card p{font-size:13.5px;color:var(--muted);margin-top:9px;flex:1}
+.card .host{
+  font-family:var(--body);font-weight:700;font-size:12px;
+  color:var(--orange-d);margin-top:12px;
+  display:flex;align-items:center;gap:6px;
+}
+.card .host .arw{font-family:var(--px);font-size:8px}
+.card:hover .host .arw,.card:focus-visible .host .arw{animation:nudge .6s steps(2) infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.noresults{
+  display:none;text-align:center;padding:56px 16px;
+  font-family:var(--px);font-size:10px;line-height:2;color:var(--muted);
+}
+.noresults b{color:var(--orange-d)}
+
+/* ---------- "start here" admit callout ---------- */
+.section.admit{
+  background:var(--card);
+  border:4px solid var(--orange);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  overflow:hidden;
+}
+.section.admit .admit-head{
+  background:var(--orange);
+  border-bottom:4px solid var(--ink);
+  padding:15px 18px;
+}
+.section.admit .admit-eyebrow{
+  display:block;font-family:var(--px);font-size:8px;line-height:1;
+  color:rgba(255,255,255,.82);margin-bottom:9px;letter-spacing:.04em;
+}
+.section.admit .admit-head h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(12px,2.2vw,15px);line-height:1.45;color:#fff;
+}
+.section.admit .admit-note{
+  padding:15px 18px 2px;margin:0;
+  font-size:14px;font-weight:500;color:var(--muted);
+}
+.section.admit .grid{padding:0 18px}
+
+/* ---------- suggest a link ---------- */
+.suggest{
+  margin-top:52px;
+  background:var(--card);
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+}
+.suggest .sh{
+  background:var(--orange);
+  border-bottom:4px solid var(--ink);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+}
+.suggest .sh canvas{width:calc(15px * 2)}
+.suggest .sh .t{font-family:var(--px);font-size:clamp(11px,2vw,14px);color:#fff;line-height:1.5}
+.suggest .body{padding:18px 18px 20px}
+.suggest .lede{font-size:14.5px;color:var(--muted);max-width:60ch;margin-bottom:18px}
+.frow{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.field{display:flex;flex-direction:column}
+.field.full{grid-column:1/-1}
+.field label{
+  font-family:var(--px);font-size:8px;line-height:1;
+  color:var(--ink);margin-bottom:7px;
+}
+.field input,.field textarea{
+  font-family:var(--body);font-size:15px;color:var(--ink);
+  width:100%;padding:10px 11px;
+  border:3px solid var(--ink);background:#fff;
+  outline:none;resize:vertical;border-radius:0;
+}
+.field input:focus,.field textarea:focus{box-shadow:0 0 0 3px var(--orange)}
+.submitrow{display:flex;align-items:center;gap:16px;margin-top:18px;flex-wrap:wrap}
+button.send{
+  font-family:var(--px);font-size:10px;
+  color:#fff;background:var(--orange);
+  border:3px solid var(--ink);
+  padding:13px 22px;cursor:pointer;
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+button.send:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(43,32,22,.8)}
+button.send:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.formnote{font-size:13.5px;font-weight:500;color:var(--muted)}
+.formnote.ok{color:var(--orange-d);font-weight:700}
+
+/* ---------- footer ---------- */
+footer{
+  margin-top:52px;
+  background:var(--black);color:#cbbfae;
+  border-top:4px solid var(--orange);
+  position:relative;
+}
+footer::before{ /* pixel notches on the footer edge */
+  content:"";position:absolute;left:0;right:0;top:-10px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--orange) 0 14px, transparent 14px 24px,
+    var(--orange) 24px 34px, transparent 34px 48px);
+}
+.footwrap{max-width:1140px;margin:0 auto;padding:30px 20px 34px;text-align:center}
+.footwrap .beavrow{display:flex;justify-content:center;gap:26px;margin-bottom:18px}
+.footwrap .beavrow{align-items:center}
+.footwrap .beavrow canvas{opacity:.95}
+.footwrap .beavrow canvas:nth-of-type(1),.footwrap .beavrow canvas:nth-of-type(3){width:calc(3px * 8)}
+.footwrap .beavrow canvas:nth-of-type(2){width:calc(15px * 4)}
+.disclaimer{font-size:13px;max-width:66ch;margin:0 auto 16px;line-height:1.7}
+.disclaimer b{color:#fff}
+.family{font-family:var(--px);font-size:8px;line-height:2;color:var(--cream)}
+.family a{color:#deaa4e;text-decoration:none;border-bottom:2px solid var(--orange);padding-bottom:2px}
+.family a:hover,.family a:focus-visible{color:#fff;outline:none}
+.copyright{margin-top:12px;font-family:var(--px);font-size:7px;line-height:2;color:#8c8175}
+.copyright .px-star{color:var(--orange)}
+
+@media (max-width:640px){
+  html{scroll-padding-top:112px}
+  .section{scroll-margin-top:112px}
+  .searchlabel{display:none}
+  .frow{grid-template-columns:1fr}
+  .hero{padding:22px 16px 160px}
+  .card{min-height:0}
+  .swimmer canvas{width:calc(23px * 3)}
+  .dam canvas{width:calc(9px * 4)}
+  .cloud.c3{display:none}
+  .topbar{padding:14px 14px 0}
+  .backlink,.dealschip{font-size:8px;padding:9px 10px;border-width:3px;box-shadow:3px 3px 0 rgba(43,32,22,.8)}
+  .sun{top:84px;right:5vw;width:calc(9px * 5)}
+  .skystar{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+  .cloud,.swimmer,.swimmer canvas,.floatlog,.card,.backlink,button.send,.card .host .arw{animation:none;transition:none}
+  .swimmer{left:8vw}
+  .floatlog{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="scene" aria-hidden="true">
+    <canvas class="sun" data-sprite="sun"></canvas>
+    <canvas class="cloud c1" data-sprite="cloud" style="top:34px;animation-duration:90s;animation-delay:-18s"></canvas>
+    <canvas class="cloud c2" data-sprite="cloud" style="top:96px;animation-duration:125s;animation-delay:-64s"></canvas>
+    <canvas class="cloud c3" data-sprite="cloud" style="top:20px;animation-duration:105s;animation-delay:-95s"></canvas>
+    <div class="treeline" id="treeline"></div>
+    <div class="river">
+      <div class="dam"><canvas data-sprite="cactus"></canvas></div>
+      <div class="floatlog"><canvas data-sprite="tumbleweed"></canvas></div>
+      <div class="swimmer"><canvas id="beav" data-sprite="dog0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <a class="backlink" href="https://linkcowboy.com">&lt;&lt; LINK COWBOY</a>
+    <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+  </div>
+
+  <div class="hero">
+    <canvas class="mascot" data-sprite="star" role="img" aria-label="Pixel Texas star"></canvas>
+    <h1><span class="bv">AGGIE</span> LINKS</h1>
+    <p class="tag">EVERY A&amp;M LINK.<br>ONE PAGE. GIG 'EM.</p>
+    <p class="blurb">Every link a <b>Texas A&amp;M University</b> student actually needs: Howdy, Canvas, registration, tickets, dining, and everything else scattered across a dozen department sites, rounded up so you stop hunting for it. Unofficial and student-built for Aggies in College Station.</p>
+    <div class="edition">
+      <span>VOL. 1</span><i class="dot"></i><span>FALL 2026 EDITION</span><i class="dot"></i><span id="linkcount">LINKS</span>
+    </div>
+  </div>
+</header>
+
+<div class="sticky">
+  <div class="searchwrap">
+    <span class="searchlabel">SEARCH</span>
+    <div class="searchbox">
+      <input id="search" type="text" autocomplete="off" spellcheck="false"
+        placeholder="Try &ldquo;bus&rdquo;, &ldquo;tickets&rdquo;, &ldquo;financial aid&rdquo;, &ldquo;math exam&rdquo;&hellip;"
+        aria-label="Search all links by name, category, or keyword">
+      <span class="ico" aria-hidden="true">&#9906;</span>
+      <button class="clear" id="clearBtn" type="button" aria-label="Clear search">&times;</button>
+    </div>
+  </div>
+  <nav class="nav" id="nav" aria-label="Jump to category"></nav>
+</div>
+
+<main id="main">
+  <div class="noresults" id="noresults">NOTHING MATCHES <b id="nrterm"></b>.<br>TRY ANOTHER WORD, OR SUGGEST THE LINK YOU&rsquo;RE MISSING BELOW.</div>
+</main>
+
+<footer>
+  <div class="footwrap">
+    <div class="beavrow" aria-hidden="true">
+      <canvas data-sprite="bluebonnet"></canvas>
+      <canvas data-sprite="star"></canvas>
+      <canvas data-sprite="bluebonnet"></canvas>
+    </div>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with or endorsed by Texas A&amp;M University. Links point to official A&amp;M and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above.</p>
+    <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
+    <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
+  </div>
+</footer>
+
+<script>
+/*
+ * Aggie Links
+ * Paste your deployed Google Apps Script Web App URL into SCRIPT_URL to
+ * turn on click tracking and the suggest-a-link form. Leave it empty to
+ * disable tracking; the form then falls back to the mailto below.
+ */
+const SCRIPT_URL = "";                          // e.g. "https://script.google.com/macros/s/AKfyc.../exec"
+const SUGGEST_MAILTO = "jn32456@my.utexas.edu";  // fallback inbox when SCRIPT_URL is empty
+
+/* ---------- pixel sprites (Link Cowboy style) ---------- */
+const PIX = {
+  palette:{"B": "#8a5a2b", "D": "#6b4423", "P": "#ffffff", "V": "#1e1812", "m": "#500000", "c": "#4a7c3e", "e": "#3a6430", "w": "#a08252", "t": "#5a8c42", "u": "#3a58ac", "g": "#5a8c42", "L": "#d2c19a", "K": "#a89268", "G": "#ffd35c", "W": "#ffffff", "F": "#dff0f6"},
+  sprites:{
+    star:[
+      ".......m.......",
+      "......mmm......",
+      "......mmm......",
+      ".....mmmmm.....",
+      "mmmmmmmmmmmmmmm",
+      ".mmmmmmmmmmmmm.",
+      "...mmmmmmmmm...",
+      "....mmmmmmm....",
+      "...mmmmmmmmm...",
+      "...mmmm.mmmm...",
+      "..mmmm...mmmm..",
+      "..mm.......mm.."
+    ],
+    building:[
+      "...mmm...",
+      "..mmmmm..",
+      "..LLLLL..",
+      "..LVVVL..",
+      "..LVVVL..",
+      "..LLLLL..",
+      "..LWWWL..",
+      "..LWVWL..",
+      "..LWWWL..",
+      "..LLLLL..",
+      "..LLLLL..",
+      "..LVLVL..",
+      "..LLLLL..",
+      "..LLLLL..",
+      "..LVLVL..",
+      "..LLLLL..",
+      "..KKKKK.."
+    ],
+    dog0:[
+      ".......................",
+      "..............DD.DD....",
+      "..D...........BBBBB....",
+      "..DB..........BBPVB....",
+      "...BB.........BBPBBBB..",
+      "....B.........BBPBBBBV.",
+      ".....DDDDDDDDDmmmBBPPB.",
+      ".....BBBBBBBBPPP.......",
+      ".....BBBBBBBBPPP.......",
+      ".....BBBBBBBBPPP.......",
+      "......BB.BB..BB........",
+      "......BB.PP..BB........",
+      "......PP.....PP........",
+      "......................."
+    ],
+    dog1:[
+      ".......................",
+      "..............DD.DD....",
+      "..............BBBBB....",
+      "..............BBPVB....",
+      ".DDBB.........BBPBBBB..",
+      ".D..B.........BBPBBBBV.",
+      ".....DDDDDDDDDmmmBBPPB.",
+      ".....BBBBBBBBPPP.......",
+      ".....BBBBBBBBPPP.......",
+      ".....BBBBBBBBPPP.......",
+      ".....BBBB...BBBB.......",
+      ".....PPBB...PPBB.......",
+      ".......PP.....PP.......",
+      "......................."
+    ],
+    cactus:[
+      ".........",
+      "....ec...",
+      "....cc..c",
+      ".c..ce..c",
+      ".c..ccccc",
+      ".c..ccccc",
+      ".cccec...",
+      ".ccccc...",
+      "....cc...",
+      "....ce...",
+      "....cc...",
+      "....cc..."
+    ],
+    tumbleweed:[
+      "...w....",
+      "..wwww..",
+      ".www.ww.",
+      "www.www.",
+      ".w.w.www",
+      ".wwww.w.",
+      "..wwww..",
+      "....w..."
+    ],
+    tuft:[
+      "..g..",
+      "g.g.g",
+      "g.g.g"
+    ],
+    bluebonnet:[
+      "Pu.",
+      "uuu",
+      ".u.",
+      ".g.",
+      ".g."
+    ],
+    sun:[
+      "....G....",
+      "..GGGGG..",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "GGGGGGGGG",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "..GGGGG..",
+      "....G...."
+    ],
+    cloud:[
+      ".....WWWWW......",
+      "....WWWWWWWW....",
+      "...WWWWWWWWWW...",
+      ".WWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWWWW.",
+      "................"
+    ]
+  }
+};
+
+function drawSprite(canvas, name){
+  const map = PIX.sprites[name];
+  if(!map) return;
+  const h = map.length, w = map[0].length;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,w,h);
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const c = PIX.palette[map[y][x]];
+      if(c){ ctx.fillStyle = c; ctx.fillRect(x,y,1,1); }
+    }
+  }
+}
+document.querySelectorAll("canvas[data-sprite]").forEach(c => drawSprite(c, c.dataset.sprite));
+
+/* prairie scene: cactus horizon, bluebonnets, grass tufts, a few sky stars (seeded) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rand = mulberry32(1876); /* A&M founded 1876 */
+const treeline = document.getElementById("treeline");
+const scene = document.querySelector(".scene");
+/* a little College Station campus building on the horizon */
+(function(){
+  const holder = document.createElement("div");
+  holder.className = "tree";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, "building");
+  cv.style.width = (cv.width * 4) + "px";
+  holder.style.left = "58vw";
+  holder.style.bottom = "-4px";
+  holder.appendChild(cv);
+  treeline.appendChild(holder);
+})();
+/* distant cactus horizon, the prairie's answer to the evergreen line (kept sparse) */
+for(let i=0; i<5; i++){
+  const holder = document.createElement("div");
+  holder.className = "tree";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, "cactus");
+  const s = 4 + Math.floor(rand()*2); /* 4x - 5x */
+  cv.style.width = (cv.width * s) + "px";
+  holder.style.left = (4 + rand()*90) + "vw";
+  holder.style.bottom = (-4 + rand()*6) + "px";
+  holder.appendChild(cv);
+  treeline.appendChild(holder);
+}
+/* bluebonnets + grass tufts up front (thinned out) */
+for(let i=0; i<16; i++){
+  const holder = document.createElement("div");
+  holder.className = "tree";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, rand() < 0.55 ? "bluebonnet" : "tuft");
+  const s = 3 + Math.floor(rand()*2); /* 3x - 4x */
+  cv.style.width = (cv.width * s) + "px";
+  holder.style.left = (rand()*97) + "vw";
+  holder.style.bottom = (-46 + rand()*34) + "px";
+  holder.appendChild(cv);
+  treeline.appendChild(holder);
+}
+/* little maroon stars in the sky, symmetric pairs mirrored around center, kept clear of the wordmark and sun */
+[[20,90,3],[80,90,3],[13,176,2],[87,176,2]].forEach(function(p){
+  const st = document.createElement("canvas");
+  drawSprite(st, "star");
+  st.className = "skystar";
+  st.style.position = "absolute";
+  st.style.imageRendering = "pixelated";
+  st.style.width = (st.width * p[2]) + "px";
+  st.style.left = p[0] + "vw";
+  st.style.top = p[1] + "px";
+  st.style.opacity = ".8";
+  scene.appendChild(st);
+});
+
+/* trotting collie animation */
+const beav = document.getElementById("beav");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduced){
+  let trot = 0;
+  setInterval(() => { trot ^= 1; drawSprite(beav, "dog" + trot); }, 300);
+}
+
+/* ---------- link data ---------- */
+const CATEGORIES = [
+  "Essentials",
+  "Classes & Registration",
+  "Money",
+  "Getting Around",
+  "Campus Life",
+  "Career",
+  "Sports & Traditions",
+  "Housing",
+  "Health & Safety",
+  "Fall Admits"
+];
+
+const LINKS = [
+  // Essentials
+  {name:"Howdy Portal", url:"https://howdy.tamu.edu/", category:"Essentials", desc:"The main A&M student portal for registration, records, billing, and campus web services.", keywords:["howdy","portal","compass","myrecord","aggie portal","home"], login:true},
+  {name:"Canvas", url:"https://canvas.tamu.edu/", category:"Essentials", desc:"Course materials, assignments, grades, and quizzes for all your classes.", keywords:["canvas","lms","coursework","assignments","grades","instructure"], login:true},
+  {name:"TAMU Gmail & Google", url:"https://www.it.tamu.edu/google/get-started.html", category:"Essentials", desc:"Set up your official A&M Gmail and Google Workspace apps like Drive and Docs.", keywords:["gmail","email","google","workspace","drive","student email"], login:false},
+  {name:"NetID & Duo Gateway", url:"https://gateway.tamu.edu/", category:"Essentials", desc:"Claim your NetID, reset your password, and manage Duo two-factor settings.", keywords:["netid","duo","two-factor","2fa","mfa","password","account","gateway","login"], login:false},
+  {name:"Aggie Map", url:"https://aggiemap.tamu.edu/", category:"Essentials", desc:"Interactive campus map for buildings, classrooms, parking lots, and facilities.", keywords:["map","campus map","buildings","directions","wayfinding","where"], login:false},
+  {name:"Help Desk Central", url:"https://www.it.tamu.edu/help/index.html", category:"Essentials", desc:"A&M's 24/7 IT help desk for password, email, Wi-Fi, and NetID problems.", keywords:["it","help","helpdesk","support","wifi","tech","hdc"], login:false},
+  {name:"University Libraries", url:"https://library.tamu.edu/", category:"Essentials", desc:"Catalog, study rooms, research databases, and reservations across the library system.", keywords:["library","evans","annex","study rooms","research","databases","books"], login:false},
+  {name:"Aggie One Stop", url:"https://aggie.tamu.edu/index.html", category:"Essentials", desc:"One front door for financial aid, billing, registration, and academic records.", keywords:["one stop","registrar","financial aid","billing","records","help"], login:false},
+
+  // Classes & Registration
+  {name:"Register for Classes", url:"https://aggie.tamu.edu/registration-and-records/classes/registration-information", category:"Classes & Registration", desc:"Registration times, holds, and step-by-step how-to for registering in Howdy.", keywords:["register","registration","enroll","add drop","holds","times"], login:false},
+  {name:"Course Catalog", url:"https://catalog.tamu.edu/", category:"Classes & Registration", desc:"Course descriptions, degree requirements, and university academic policies.", keywords:["catalog","courses","descriptions","degree requirements","policies"], login:false},
+  {name:"Class Search", url:"https://howdyportal.tamu.edu/uPortal/p/public-class-search-ui.ctf1/max/render.uP", category:"Classes & Registration", desc:"Search the live schedule of classes for sections, times, seats, and instructors.", keywords:["class search","schedule of classes","sections","open seats","course search","compass"], login:false},
+  {name:"Degree Audit", url:"https://registrar.tamu.edu/academic-services/degree-audit/index.html", category:"Classes & Registration", desc:"Degree evaluation and planner tools that track your progress to graduation.", keywords:["degree audit","degree evaluation","dars","degree planner","graduation","progress"], login:false},
+  {name:"Order Transcripts", url:"https://aggieonestop.tamu.edu/registration-and-records/transcripts-and-diplomas/order-transcripts", category:"Classes & Registration", desc:"Request official and unofficial Texas A&M transcripts through Aggie One Stop.", keywords:["transcript","transcripts","official transcript","records","order transcript","registrar"], login:false},
+  {name:"Academic Calendar", url:"https://registrar.tamu.edu/academic-calendar/index.html", category:"Classes & Registration", desc:"Key dates: semester start and end, holidays, registration windows, and deadlines.", keywords:["academic calendar","dates","deadlines","semester","holidays"], login:false},
+  {name:"Final Exam Schedule", url:"https://aggie.tamu.edu/registration-and-records/classes/final-examination-schedules", category:"Classes & Registration", desc:"Maps your class meeting times to exam dates and times each semester.", keywords:["finals","final exams","exam schedule","final examination","exam times"], login:false},
+  {name:"Academic Success Center", url:"https://asc.tamu.edu/", category:"Classes & Registration", desc:"Free tutoring, supplemental instruction, and success coaching for Aggies.", keywords:["tutoring","tutor","si","supplemental instruction","coaching","asc","help"], login:false},
+  {name:"University Writing Center", url:"https://writingcenter.tamu.edu/", category:"Classes & Registration", desc:"Free writing and public-speaking consultations, in person or online.", keywords:["writing center","uwc","essays","writing help","public speaking","consultation"], login:false},
+
+  // Money
+  {name:"Scholarships & Financial Aid", url:"https://financialaid.tamu.edu/", category:"Money", desc:"FAFSA, grants, loans, work-study, and every aid resource in one office.", keywords:["financial aid","fafsa","grants","loans","work study","aid","money"], login:false},
+  {name:"Scholarships", url:"https://aggie.tamu.edu/financial-aid/types-of-aid/scholarships", category:"Money", desc:"Find and apply for A&M scholarships for undergrad and grad students.", keywords:["scholarships","merit","apply","awards","funding","free money"], login:false},
+  {name:"Tuition & Billing (SBS)", url:"https://sbs.tamu.edu/", category:"Money", desc:"Student Business Services handles tuition, fee bills, due dates, and payments.", keywords:["sbs","tuition","billing","student business services","fee statement","pay bill"], login:false},
+  {name:"Payment Plans", url:"https://sbs.tamu.edu/billing-payments/payment-plan/index.html", category:"Money", desc:"Split tuition and fees into scheduled installments through SBS.", keywords:["payment plan","installment","installments","monthly payments","split"], login:false},
+
+  // Getting Around
+  {name:"Aggie Spirit Bus", url:"https://aggiespirit.ts.tamu.edu/", category:"Getting Around", desc:"Live bus arrival times, route maps, and trip planning around campus and B/CS.", keywords:["bus","aggie spirit","transit","shuttle","routes","bus times","transport"], login:false},
+  {name:"Parking & Transportation", url:"https://transport.tamu.edu/parking.aspx", category:"Getting Around", desc:"Parking permits, live garage availability, citations, and visitor parking.", keywords:["parking","permit","garage","citation","car","transportation","ticket"], login:false},
+  {name:"Visit Aggieland", url:"https://admissions.tamu.edu/visit", category:"Getting Around", desc:"Campus visits, Howdy Crew walking tours, and virtual tours of Aggieland.", keywords:["visit","destination aggieland","tour","campus tour","howdy crew","new student"], login:false},
+
+  // Campus Life
+  {name:"Dining Meal Plans", url:"https://mealplans.tamu.edu/", category:"Campus Life", desc:"Buy and manage on-campus dining meal plans for the best prices on campus food.", keywords:["dining","meal plan","food","dine on campus","aggie bucks","eat"], login:true},
+  {name:"Rec Sports", url:"https://recsports.tamu.edu/", category:"Campus Life", desc:"The Student Rec Center: gym, intramurals, sport clubs, fitness, and outdoor trips.", keywords:["rec center","gym","fitness","intramural","sport clubs","workout","rec sports"], login:false},
+  {name:"Get Involved (Orgs)", url:"https://getinvolved.tamu.edu/organizations", category:"Campus Life", desc:"Searchable directory of 1,300+ student organizations to find and join clubs.", keywords:["organizations","orgs","clubs","get involved","stuact","maroonlink","join"], login:false},
+  {name:"Fraternity & Sorority Life", url:"https://getinvolved.tamu.edu/org/ofsl", category:"Campus Life", desc:"The Office of Fraternity & Sorority Life: recruitment, chapters, and how to go Greek at A&M.", keywords:["greek life","fraternity","sorority","ofsl","rush","recruitment","panhellenic","ifc","mgc","nphc"], login:false},
+  {name:"MSC Programs", url:"https://mscprograms.tamu.edu/", category:"Campus Life", desc:"Student-led programs, events, and leadership through the Memorial Student Center.", keywords:["msc","memorial student center","events","programs","leadership","council"], login:false},
+  {name:"Education Abroad", url:"https://global.tamu.edu/ea/index.html", category:"Campus Life", desc:"Study, intern, research, and volunteer abroad in over 110 countries.", keywords:["study abroad","education abroad","international","exchange","global","travel"], login:false},
+  {name:"A&M Bookstore", url:"https://tamu.bncollege.com/", category:"Campus Life", desc:"Official campus store for textbooks, course materials, and Aggie gear.", keywords:["bookstore","textbooks","books","barnes noble","gear","apparel","spirit"], login:false},
+
+  // Career
+  {name:"Career Center", url:"https://careercenter.tamu.edu/", category:"Career", desc:"Career advising, job and internship help, interview prep, and employer recruiting.", keywords:["career","career center","jobs","internship","advising","interview"], login:false},
+  {name:"HireAggies (Handshake)", url:"https://tamu.joinhandshake.com/login", category:"Career", desc:"The HireAggies job platform for jobs, internships, and recruiting events.", keywords:["hireaggies","handshake","jobs","internship","recruiting","apply","work"], login:true},
+  {name:"Jobs for Aggies", url:"https://jobsforaggies.tamu.edu/index.html", category:"Career", desc:"On-campus part-time jobs and work-study postings for Texas A&M students.", keywords:["jobs for aggies","student employment","part-time","on-campus job","work study","hourly","student jobs"], login:false},
+  {name:"Resume Resources", url:"https://careercenter.tamu.edu/current-students/resume-documents/", category:"Career", desc:"Resume, CV, and cover letter help, plus the VMock AI review tool.", keywords:["resume","cv","cover letter","vmock","documents","career"], login:false},
+
+  // Sports & Traditions
+  {name:"Student Football Tickets", url:"https://www.12thmanfoundation.com/tickets/student-tickets/index.html", category:"Sports & Traditions", desc:"How students get a sports pass and pull football tickets through the 12th Man Foundation.", keywords:["tickets","student tickets","football tickets","sports pass","ticket pull","12th man","kyle field"], login:false},
+  {name:"Aggie Athletics", url:"https://12thman.com/", category:"Sports & Traditions", desc:"Official athletics site with schedules, scores, and news across every sport.", keywords:["athletics","schedule","football schedule","scores","12thman","games","sports"], login:false},
+  {name:"Midnight Yell", url:"https://midnightyell.tamu.edu/", category:"Sports & Traditions", desc:"The Midnight Yell tradition at Kyle Field, with dates, gate times, and livestreams.", keywords:["midnight yell","yell practice","yell leaders","kyle field","traditions"], login:false},
+  {name:"Aggie Traditions", url:"https://traditions.tamu.edu/", category:"Sports & Traditions", desc:"The traditions that make A&M: Silver Taps, Muster, Bonfire Remembrance, and more.", keywords:["traditions","silver taps","muster","bonfire","aggie spirit","council"], login:false},
+
+  // Housing
+  {name:"On-Campus Housing", url:"https://reslife.tamu.edu/", category:"Housing", desc:"Residence Life lets you apply for and explore on-campus housing and residence halls.", keywords:["housing","dorms","residence life","on-campus","reslife","move-in","application"], login:false},
+  {name:"Off-Campus Housing", url:"https://aggiesearch.tamu.edu/", category:"Housing", desc:"AggieSearch is the official off-campus housing and roommate search resource.", keywords:["off-campus","apartments","roommates","aggiesearch","rentals","lease","housing"], login:false},
+
+  // Health & Safety
+  {name:"Student Health Services", url:"https://shs.tamu.edu/", category:"Health & Safety", desc:"On-campus clinic and pharmacy providing medical care to Aggies.", keywords:["student health","clinic","doctor","pharmacy","shs","medical","appointment","sick"], login:false},
+  {name:"Counseling (CAPS)", url:"https://caps.tamu.edu/", category:"Health & Safety", desc:"Counseling and Psychological Services provides mental health support for students.", keywords:["caps","counseling","mental health","therapy","crisis","psychological","help"], login:false},
+  {name:"Code Maroon Alerts", url:"https://codemaroon.tamu.edu/", category:"Health & Safety", desc:"A&M's official emergency alert system for text, email, and app notifications.", keywords:["code maroon","emergency","alerts","safety","notifications","text alerts"], login:false},
+  {name:"University Police (UPD)", url:"https://upd.tamu.edu/", category:"Health & Safety", desc:"Campus police for safety resources, crime logs, and emergency procedures.", keywords:["police","upd","campus safety","emergency","crime log","escort"], login:false},
+  {name:"Disability Resources", url:"https://disability.tamu.edu/", category:"Health & Safety", desc:"Accommodations and access services for students via the AIM portal.", keywords:["disability","accommodations","aim","accessibility","access","dr"], login:false},
+
+  // Fall Admits (seasonal, for incoming first-year students)
+  {name:"New Student Conference", url:"https://newaggie.tamu.edu/", category:"Fall Admits", desc:"Register for the required New Student Conference, your orientation before you can enroll and pick classes.", keywords:["orientation","nsc","new student conference","advising","incoming","freshman"], login:false},
+  {name:"Fish Camp", url:"https://fishcamp.tamu.edu/", category:"Fall Admits", desc:"Sign up for Fish Camp, the classic extended orientation into Aggie traditions and friendships.", keywords:["fish camp","freshman","orientation camp","traditions","fish","incoming"], login:false},
+  {name:"Admitted: Next Steps", url:"https://admissions.tamu.edu/apply/admitted-students/index.html", category:"Fall Admits", desc:"Confirm your admission and work through your checklist of enrollment steps.", keywords:["admitted","next steps","confirm enrollment","checklist","commit","incoming"], login:false},
+  {name:"Immunization Requirements", url:"https://uhs.tamu.edu/medical/immunizations.html", category:"Fall Admits", desc:"Submit your required bacterial meningitis vaccine record before you can register.", keywords:["immunization","bacterial meningitis","vaccine","medproctor","health requirement","incoming"], login:false},
+  {name:"New Student Programs", url:"https://studentlife.tamu.edu/programs/", category:"Fall Admits", desc:"Howdy Week and other first-year programs that welcome brand-new Aggies to campus.", keywords:["howdy week","gig em week","first year","new student","welcome week","incoming"], login:false},
+  {name:"Math Placement Exam", url:"https://mlc.tamu.edu/mpe.html", category:"Fall Admits", desc:"Take the Math Placement Exam before your conference if your degree plan needs calculus.", keywords:["mpe","math placement","calculus","placement test","math learning center","incoming"], login:false}
+];
+
+/* ---------- helpers ---------- */
+function hostOf(url){
+  try{ return new URL(url).hostname.replace(/^www\./,""); }
+  catch(err){ return url; }
+}
+function slug(text){
+  return text.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function esc(text){
+  return text.replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+
+/* Click and suggestion tracking. Fails silently if SCRIPT_URL is empty or unreachable. */
+function track(payload){
+  if(!SCRIPT_URL) return;
+  try{
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(SCRIPT_URL, new Blob([body], {type:"text/plain;charset=UTF-8"}));
+    }else{
+      fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"}, body:body});
+    }
+  }catch(err){ /* intentionally ignored */ }
+}
+
+/* ---------- render sections ---------- */
+const main = document.getElementById("main");
+const nav = document.getElementById("nav");
+const noresults = document.getElementById("noresults");
+
+document.getElementById("linkcount").textContent = LINKS.length + " LINKS";
+
+const INCOMING = "Fall Admits";
+
+function makeCard(link){
+  const card = document.createElement("a");
+  card.className = "card";
+  card.href = link.url;
+  card.target = "_blank";
+  card.rel = "noopener";
+  card.dataset.search = [link.name, link.category, link.desc, (link.keywords || []).join(" ")]
+    .join(" ").toLowerCase();
+  card.innerHTML =
+    '<div class="cardtop"><h3>' + esc(link.name.toUpperCase()) + '</h3>' +
+    (link.login ? '<span class="badge" title="Requires your NetID login">NETID</span>' : "") +
+    '</div>' +
+    '<p>' + esc(link.desc) + '</p>' +
+    '<span class="host">' + esc(hostOf(link.url)) + ' <span class="arw">&gt;&gt;</span></span>';
+  card.addEventListener("click", () => {
+    track({type:"click", name:link.name, url:link.url, category:link.category,
+      ts:new Date().toISOString(), ref:location.href});
+  });
+  return card;
+}
+
+/* prominent "start here" callout for incoming students, pulled to the very top */
+const incomingItems = LINKS.filter(link => link.category === INCOMING);
+if(incomingItems.length){
+  const chip = document.createElement("a");
+  chip.href = "#" + slug(INCOMING);
+  chip.textContent = "START HERE";
+  nav.appendChild(chip);
+
+  const admit = document.createElement("section");
+  admit.className = "section admit";
+  admit.id = slug(INCOMING);
+  admit.innerHTML =
+    '<div class="admit-head">' +
+      '<span class="admit-eyebrow">FALL 2026 ADMITS</span>' +
+      '<h2>HOWDY, FISH? START HERE.</h2>' +
+    '</div>' +
+    '<p class="admit-note">First things first. A couple of these have deadlines that block registration.</p>' +
+    '<div class="grid"></div>';
+  const agrid = admit.querySelector(".grid");
+  incomingItems.forEach(link => agrid.appendChild(makeCard(link)));
+  main.insertBefore(admit, noresults);
+}
+
+CATEGORIES.forEach(category => {
+  if(category === INCOMING) return;
+  const items = LINKS.filter(link => link.category === category);
+  if(!items.length) return;
+
+  const id = slug(category);
+
+  const chip = document.createElement("a");
+  chip.href = "#" + id;
+  chip.textContent = category.toUpperCase();
+  nav.appendChild(chip);
+
+  const section = document.createElement("section");
+  section.className = "section";
+  section.id = id;
+
+  const head = document.createElement("div");
+  head.className = "sechead";
+  head.innerHTML =
+    '<h2>' + esc(category.toUpperCase()) + '</h2>' +
+    '<span class="count">' + items.length + ' LINKS</span>';
+  section.appendChild(head);
+
+  const rule = document.createElement("div");
+  rule.className = "secrule";
+  section.appendChild(rule);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  items.forEach(link => grid.appendChild(makeCard(link)));
+  section.appendChild(grid);
+  main.insertBefore(section, noresults);
+});
+
+/* ---------- suggest-a-link form ---------- */
+const suggest = document.createElement("section");
+suggest.className = "suggest";
+suggest.id = "suggest";
+suggest.innerHTML =
+  '<div class="sh"><canvas id="shBeav" aria-hidden="true"></canvas><span class="t">SUGGEST A LINK</span></div>' +
+  '<div class="body">' +
+    '<p class="lede">Know a link every Aggie needs that isn&rsquo;t here? Send it over. If it&rsquo;s useful, it goes on the page.</p>' +
+    '<form id="suggestForm" novalidate>' +
+      '<div class="frow">' +
+        '<div class="field"><label for="sName">LINK NAME</label><input id="sName" name="name" required maxlength="120" placeholder="e.g. Aggie Ring Office"></div>' +
+        '<div class="field"><label for="sUrl">URL</label><input id="sUrl" name="url" type="url" required maxlength="400" placeholder="https://&hellip;"></div>' +
+        '<div class="field full"><label for="sWhy">WHY IT BELONGS</label><textarea id="sWhy" name="why" rows="3" maxlength="600" placeholder="What is it and who needs it?"></textarea></div>' +
+      '</div>' +
+      '<div class="submitrow"><button class="send" type="submit">SEND IT &gt;&gt;</button><span class="formnote" id="formnote" role="status"></span></div>' +
+    '</form>' +
+  '</div>';
+main.insertBefore(suggest, noresults);
+drawSprite(document.getElementById("shBeav"), "star");
+
+document.getElementById("suggestForm").addEventListener("submit", function(event){
+  event.preventDefault();
+  const name = document.getElementById("sName").value.trim();
+  const url = document.getElementById("sUrl").value.trim();
+  const why = document.getElementById("sWhy").value.trim();
+  const note = document.getElementById("formnote");
+  if(!name || !url) return;
+
+  if(SCRIPT_URL){
+    track({type:"suggestion", name:name, url:url, why:why, ts:new Date().toISOString(), ref:location.href});
+    note.textContent = "Thanks, got it. We'll take a look.";
+    note.classList.add("ok");
+    this.reset();
+  }else{
+    const subject = encodeURIComponent("Aggie Links suggestion: " + name);
+    const bodyText = encodeURIComponent("Link name: " + name + "\nURL: " + url + "\nWhy it belongs: " + why);
+    window.location.href = "mailto:" + SUGGEST_MAILTO + "?subject=" + subject + "&body=" + bodyText;
+    note.textContent = "Opening your email app.";
+    note.classList.add("ok");
+  }
+  setTimeout(() => { note.textContent = ""; note.classList.remove("ok"); }, 6000);
+});
+
+/* ---------- live search ---------- */
+const search = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
+const sections = Array.from(main.querySelectorAll(".section"));
+
+function matches(haystack, terms){
+  return terms.every(term => haystack.includes(term));
+}
+
+function applyFilter(){
+  const query = search.value.trim().toLowerCase();
+  const terms = query.split(/\s+/).filter(Boolean);
+  clearBtn.style.display = query ? "block" : "none";
+
+  let anyVisible = false;
+  sections.forEach(section => {
+    let sectionVisible = false;
+    section.querySelectorAll(".card").forEach(card => {
+      const show = !terms.length || matches(card.dataset.search, terms);
+      card.style.display = show ? "" : "none";
+      if(show) sectionVisible = true;
+    });
+    section.style.display = sectionVisible ? "" : "none";
+    if(sectionVisible) anyVisible = true;
+  });
+
+  noresults.style.display = anyVisible ? "none" : "block";
+  if(!anyVisible) document.getElementById("nrterm").textContent = "“" + search.value.trim().toUpperCase() + "”";
+}
+
+search.addEventListener("input", applyFilter);
+clearBtn.addEventListener("click", () => { search.value = ""; applyFilter(); search.focus(); });
+search.addEventListener("keydown", event => { if(event.key === "Escape"){ search.value = ""; applyFilter(); } });
+</script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<!--
+  Longhorn Links  ·  longhornlinks.com
+  A student-led link directory for the University of Texas at Austin.
+
+  Static single-file site: no backend, no database, no dependencies.
+  Link data lives in the LINKS array near the top of the <script> block;
+  add or edit an entry there and redeploy. Categories are defined in CATS.
+  Anonymous, cookie-free usage counts post to a Google Apps Script endpoint.
+
+  Unofficial · not affiliated with or endorsed by UT Austin.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Longhorn Links is a University of Texas at Austin student-led link directory - registration, Canvas, course schedules, housing, financial aid, clubs, and campus resources in one place." />
+<meta name="keywords" content="UT Austin, University of Texas, Longhorn, links, student resources, registration, Canvas, McCombs, campus" />
+<meta name="author" content="Longhorn Links" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://longhornlinks.com/" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png" />
+<meta name="theme-color" content="#BF5700" />
+<title>Longhorn Links</title>
+<meta property="og:title" content="Longhorn Links" />
+<meta property="og:description" content="Every UT Austin undergrad link in one place: registration, Canvas, housing, orientation, immunization requirements, clubs, financial aid. Unofficial, student-built." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://longhornlinks.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://longhornlinks.com/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://longhornlinks.com/og-image.png" />
+<meta name="twitter:title" content="Longhorn Links" />
+<meta name="twitter:description" content="Every UT Austin undergrad link in one place. Unofficial, student-built." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --brand:#BF5700;        /* deep teal/petrol - distinct from UT orange */
+    --brand-deep:#8F4200;
+    --brand-tint:#F7E4D2;
+    --ink:#221B14;
+    --bg:#F6F1E8;           /* warm off-white field */
+    --band:#EFE6D8;         /* alternating band */
+    --panel:#FFFFFF;
+    --line:#E4D9C9;
+    --muted:#6B6157;
+    --dark:#211913;         /* utility bar + footer */
+    --dark-line:#3D3025;
+    --focus:#1457D6;
+    --open:#3F7A3F;--wait:#9A6B12;--closed:#9A3636;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px;}
+  .display{font-family:"Archivo","Public Sans",sans-serif;}
+  .mono{font-family:"Spline Sans Mono",monospace;}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
+  a{color:inherit;}
+
+  /* ---------- Utility bar (tier 1) ---------- */
+  .utility{background:var(--dark);color:#E9DACA;}
+  .utility-inner{display:flex;align-items:center;justify-content:flex-end;gap:18px;height:38px;font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:0;text-transform:uppercase;}
+  .utility a,.utility button{color:#E9DACA;text-decoration:none;background:none;border:none;font:inherit;cursor:pointer;padding:0;}
+  .utility a:hover,.utility button:hover{color:#fff;}
+  .utility .pill{margin-right:auto;display:inline-flex;align-items:center;gap:7px;color:#A9917A;}
+  .utility .pill .dot{width:7px;height:7px;border-radius:50%;background:#E08A3C;}
+
+  .utility .backlink{margin-right:auto;display:inline-flex;align-items:center;gap:8px;color:#E9DACA;text-decoration:none;line-height:1.4;}
+  .utility .backlink:hover{color:#fff;}
+  .utility .backlink .arw{color:#BF5700;font-weight:700;}
+  .utility .disc{color:#8E7E6A;}
+
+  /* ---------- Main header (tier 2) ---------- */
+  header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bottom:3px solid var(--brand);}
+  .main-inner{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px;}
+  .wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .wordmark .mark{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;background:var(--brand);color:#fff;border-radius:8px;font-size:19px;}
+  .wordmark .wm-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1;color:var(--ink);white-space:nowrap;}
+  .wordmark .wm-sub{font-family:"Spline Sans Mono",monospace;font-size:9px;white-space:nowrap;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  nav.sections{display:flex;gap:2px;flex-wrap:nowrap;}
+  nav.sections a{font-size:12.5px;font-weight:600;color:var(--ink);text-decoration:none;padding:8px 9px;border-radius:7px;white-space:nowrap;}
+  nav.sections a:hover{background:var(--brand-tint);color:var(--brand-deep);}
+
+  /* ---------- Audience tabs ---------- */
+  .aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
+  .aud-tabs{display:flex;gap:8px;padding:10px 0;}
+  .aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
+  .aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
+  .aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
+
+  .btn-head{font-size:12.5px;padding:9px 13px;white-space:nowrap;flex:0 0 auto;}
+  /* ---------- Hero ---------- */
+  .hero{padding:62px 0 44px;border-bottom:1px solid var(--line);}
+  .hero .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-deep);}
+  .hero h1{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(34px,6vw,60px);line-height:1.04;letter-spacing:-.03em;margin:14px 0 16px;}
+  .hero h1 .u{color:var(--brand);}
+  .hero .bookmark-me{color:var(--ink);font-weight:700;}
+  .hero p.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:58ch;margin:0;}
+  .hero .btn-hero-ghost{background:transparent;color:var(--brand-deep);border:2px solid var(--brand);}
+  .hero .btn-hero-ghost:hover{background:var(--brand-tint);}
+  .hero .btn-hero{margin-top:26px;font-size:16.5px;font-weight:700;padding:16px 28px;border-radius:12px;}
+
+  /* ---------- Controls ---------- */
+  .controls{position:sticky;top:62px;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 0;}
+  .search-row{display:flex;gap:12px;align-items:center;}
+  .search{flex:1;position:relative;}
+  .search input{width:100%;font-family:inherit;font-size:16px;padding:11px 16px 11px 44px;border:1.5px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);}
+  .search input::placeholder{color:#A69C90;}
+  .search input:focus{border-color:var(--brand);}
+  .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);}
+  .search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:"Spline Sans Mono",monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:2px 7px;background:var(--bg);}
+  .count{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--muted);white-space:nowrap;letter-spacing:.04em;}
+  .chips{display:none;flex-wrap:wrap;gap:7px;margin-top:11px;}
+  .controls:focus-within .chips{display:flex;}
+  .controls.filter-active .chips{display:flex;}
+  .chip{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;padding:6px 11px;border-radius:7px;border:1.5px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;text-transform:uppercase;transition:all .12s ease;}
+  .chip:hover{border-color:var(--brand);color:var(--brand-deep);}
+  .chip.active{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+  .newtab-note{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.02em;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px;}
+  .newtab-note svg{width:13px;height:13px;color:var(--brand);flex:0 0 auto;}
+  @media (max-width:640px){ .newtab-note{font-size:10px;} }
+  /* ---------- Sections + cards ---------- */
+  main{padding:48px 0 0;}
+  .section{margin-bottom:42px;scroll-margin-top:170px;}
+  .section-head{margin-bottom:16px;}
+  .section-head .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);}
+  .section-head h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:5px 0 0;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;}
+  .card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 17px 14px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}
+  .card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
+  .card .ttl{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .card .name{font-weight:700;font-size:15.5px;line-height:1.22;}
+  .card .desc{font-size:13px;color:var(--muted);line-height:1.45;}
+  .card .host{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:#AC9F8F;margin-top:3px;}
+  .arrow{flex:0 0 auto;color:#C9BCAC;transition:color .12s,transform .12s;}
+  .card:hover .arrow{color:var(--brand);transform:translate(2px,-2px);}
+  .badge{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font-family:"Spline Sans Mono",monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:5px;font-weight:500;}
+  .badge.login{background:var(--brand);color:#fff;}
+  .badge.ext{background:var(--ink);color:#fff;}
+  .badge svg{width:10px;height:10px;}
+  .empty{display:none;text-align:center;color:var(--muted);padding:50px 0;font-size:15px;}
+
+  .section.admit{background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:16px;padding:24px 22px 22px;margin-top:14px;}
+  .section.admit .section-head h2{color:var(--brand-deep);}
+  .section.admit .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
+
+  /* ---------- Band (alternating section) ---------- */
+  .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
+
+  /* ---------- Registration mockup ---------- */
+  .mock-wrap{position:relative;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel);}
+  .mock-top{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:var(--dark);color:#F4EBE1;}
+  .mock-top h3{margin:0;font-family:"Archivo",sans-serif;font-weight:600;font-size:17px;}
+  .mock-top .term{font-family:"Spline Sans Mono",monospace;font-size:12px;color:#CBB49C;letter-spacing:.04em;}
+  table.mock{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.mock th{text-align:left;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:11px 20px;border-bottom:1px solid var(--line);background:var(--bg);}
+  table.mock td{padding:13px 20px;border-bottom:1px solid var(--line);}
+  table.mock tr:last-child td{border-bottom:none;}
+  .uniq{font-family:"Spline Sans Mono",monospace;color:var(--brand-deep);font-weight:500;}
+  .stat-pill{font-family:"Spline Sans Mono",monospace;font-size:10.5px;padding:3px 9px;border-radius:5px;text-transform:uppercase;letter-spacing:.03em;}
+  .stat-pill.open{background:#E2EFE2;color:var(--open);}
+  .stat-pill.wait{background:#F7EBD2;color:var(--wait);}
+  .stat-pill.closed{background:#F2DFDF;color:var(--closed);}
+  .mock-veil{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,rgba(235,231,221,.55),rgba(235,231,221,.95));backdrop-filter:blur(2px);text-align:center;padding:26px;}
+  .mock-veil .lock{width:34px;height:34px;color:var(--brand);}
+  .mock-veil p{margin:0;max-width:44ch;font-size:14px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;border:none;cursor:pointer;transition:background .12s;}
+  .btn:hover{background:var(--brand-deep);}
+  .mock-note{font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:var(--muted);margin-top:6px;}
+
+  /* ---------- Stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin:14px 0;}
+  .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .stat-card .big{font-family:"Archivo",sans-serif;font-weight:800;font-size:24px;line-height:.95;color:var(--brand);}
+  .stat-card .lbl{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.3;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--dark);color:#E9DACA;margin-top:36px;padding:50px 0 40px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:32px;}
+  .foot-brand .fb-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:22px;color:#fff;}
+  .foot-brand p{color:#B49B84;font-size:13px;max-width:34ch;margin:10px 0 16px;line-height:1.5;}
+  .foot-brand .btn{font-size:13px;}
+  footer h5{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8E7E6A;margin:0 0 12px;}
+  footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  footer ul a{color:#E9DACA;text-decoration:none;font-size:13.5px;}
+  footer ul a:hover{color:#fff;}
+  .legal{margin-top:34px;border-top:1px solid var(--dark-line);padding-top:20px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:#8E7E6A;line-height:1.7;}
+
+  /* ---------- Modal form ---------- */
+  .modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(19,32,30,.55);}
+  .modal.open{display:flex;}
+  .modal-box{background:var(--panel);border-radius:16px;max-width:480px;width:100%;padding:26px;max-height:90vh;overflow:auto;}
+  .modal-box h3{font-family:"Archivo",sans-serif;font-weight:800;font-size:22px;margin:0 0 4px;}
+  .modal-box .sub{color:var(--muted);font-size:13.5px;margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px;}
+  .field input,.field select{width:100%;font-family:inherit;font-size:15px;padding:11px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);}
+  .field input:focus,.field select:focus{border-color:var(--brand);background:var(--panel);}
+  .radio-row{display:flex;gap:18px;}
+  .radio-row label{display:flex;align-items:center;gap:7px;text-transform:none;font-weight:500;font-size:14px;color:var(--ink);letter-spacing:0;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;}
+  .btn-ghost{background:none;border:1.5px solid var(--line);color:var(--ink);font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;cursor:pointer;}
+  .btn-ghost:hover{border-color:var(--muted);}
+  .form-msg{font-size:13.5px;margin-top:6px;display:none;}
+  .form-msg.ok{display:block;color:var(--open);}
+  .form-msg.err{display:block;color:var(--closed);}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
+  @media (max-width:860px){ nav.sections{display:none;} .btn-head{display:none;} }
+  @media (max-width:640px){
+    .hero{padding:32px 0 22px;}
+    .hero h1{font-size:clamp(28px,8vw,40px);}
+    .hero .bookmark-me{color:var(--ink);font-weight:700;}
+  .hero p.lede{font-size:15px;}
+    .hero .btn-hero{width:100%;justify-content:center;font-size:15px;padding:14px 18px;}
+    .aud-tab{padding:8px 14px;font-size:11.5px;}
+    .section-head h2{font-size:19px;}
+    .section.admit{padding:16px 13px 14px;}
+    .card{padding:13px 14px 12px;}
+    .card .name{font-size:14.5px;}
+    .card .desc{font-size:12.5px;}
+    .stats{grid-template-columns:1fr 1fr;gap:8px;}
+    .stat-card .big{font-size:20px;}
+    .stat-card .lbl{font-size:10.5px;}
+    .mock-veil p{font-size:13px;}
+    table.mock{font-size:12px;}
+    table.mock th, table.mock td{padding:9px 12px;}
+    .count,.search kbd{display:none;}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:26px;}
+    .foot-brand{grid-column:1 / -1;}
+    .utility-inner{gap:14px;}
+    .controls{position:static;padding:12px 0;}
+    .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .chips::-webkit-scrollbar{display:none;}
+    .section{scroll-margin-top:84px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+</style>
+</head>
+<body>
+
+<!-- Tier 1: utility bar -->
+<div class="utility">
+  <div class="wrap utility-inner">
+    <a class="backlink" href="https://linkcowboy.com"><span class="arw">&larr;</span> Back to LinkCowboy</a>
+    <span class="disc">Unofficial · Student-built</span>
+    <button type="button" data-open-form>Suggest a link</button>
+  </div>
+</div>
+
+<!-- Tier 2: main header -->
+<header class="main">
+  <div class="wrap main-inner">
+    <a class="wordmark" href="#top">
+      <span class="mark" aria-hidden="true">&#9733;</span>
+      <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">UT Austin Undergrad</span></span>
+    </a>
+    <nav class="sections" aria-label="Jump to section">
+      <a href="#cat-academics">Academics</a>
+      <a href="#cat-registration">Registration</a>
+      <a href="#cat-money">Money</a>
+      <a href="#cat-campuslife">Campus</a>
+      <a href="#cat-sports">Sports</a>
+      <a href="#cat-housing">Housing</a>
+      <a href="#cat-health">Health</a>
+      <a href="#cat-incoming">Admits</a>
+    </nav>
+    <a class="btn btn-head" href="https://linkcowboy.com/deals" target="_blank" rel="noopener">Student Deals</a>
+  </div>
+</header>
+
+<div class="aud-wrap"><div class="wrap"><div class="aud-tabs">
+  <a class="aud-tab active" href="/" aria-current="page">Undergrad</a>
+  <a class="aud-tab" href="/mba.html">MBA</a>
+</div></div></div>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <h1>The UT Austin undergrad<br><span class="u">link directory.</span></h1>
+    <p class="lede">Registration, Canvas, housing, orientation, immunization requirements, clubs, financial aid. All the stuff scattered across a dozen sites, gathered into one place. <strong class="bookmark-me">Bookmark Me!</strong></p>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="search-row">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="Smart Search - try &ldquo;my classes&rdquo;, &ldquo;shots&rdquo;, &ldquo;longhorn sports&rdquo;&hellip;" aria-label="Smart Search" autocomplete="off" />
+        <kbd>/</kbd>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips" role="tablist" aria-label="Filter by category"></div>
+      <p class="newtab-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg> Links open in a new tab - this page stays open behind them, so you won't lose your place.</p>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="section admit" id="cat-incoming">
+    <div class="section-head">
+      <span class="eyebrow">Fall 2026 Admits</span>
+      <h2>Fall admit? Start here.</h2>
+    </div>
+    <p class="admit-note">New Longhorn? These are the things to do first - a couple have deadlines that block registration.</p>
+    <div class="grid" id="grid-incoming"></div>
+  </div>
+
+  <div id="sections"></div>
+  <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
+</main>
+
+<!-- Band: registration + incoming -->
+<section class="band">
+  <div class="wrap">
+    <div class="section" id="cat-mock">
+      <div class="section-head">
+        <span class="eyebrow">Preview</span>
+        <h2>What registration looks like</h2>
+      </div>
+      <div class="mock-wrap" aria-label="Mockup of the class registration screen; the real system requires login">
+        <div class="mock-top"><h3>Class Registration</h3><span class="term">FALL 2026 · UNDERGRAD</span></div>
+        <table class="mock" aria-hidden="true">
+          <thead><tr><th>Unique</th><th>Course</th><th>Instructor</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td class="uniq">04125</td><td>Intro to Microeconomics - ECO 304K</td><td>Staff</td><td><span class="stat-pill open">Open</span></td></tr>
+            <tr><td class="uniq">04210</td><td>Rhetoric &amp; Writing - RHE 306</td><td>Staff</td><td><span class="stat-pill wait">Waitlist</span></td></tr>
+            <tr><td class="uniq">04388</td><td>Calculus I - M 408C</td><td>Staff</td><td><span class="stat-pill closed">Closed</span></td></tr>
+            <tr><td class="uniq">04501</td><td>Intro to Psychology - PSY 301</td><td>Staff</td><td><span class="stat-pill open">Open</span></td></tr>
+          </tbody>
+        </table>
+        <div class="mock-veil">
+          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <p><strong>This is a preview, not the real thing.</strong> Live registration is personalized and lives behind UT EID + DUO login. This page sends you straight to the sign-in.</p>
+          <a class="btn" href="https://utdirect.utexas.edu/registration/" target="_blank" rel="noopener">Go to Registration (sign-in required) &rarr;</a>
+          <span class="mock-note">Numbers and courses above are illustrative only.</span>
+        </div>
+      </div>
+    </div>
+
+    
+  </div>
+</section>
+
+<footer id="suggest">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="fb-name">Longhorn Links</div>
+        <p>Longhorn Links is a University of Texas student-led link directory. Stop hunting across a dozen sites for the link you need.</p>
+        <button class="btn" type="button" data-open-form>&#10022; Request or Suggest a Link</button>
+      </div>
+      <div><h5>Academics</h5><ul>
+        <li><a href="#cat-academics">Course schedule</a></li>
+        <li><a href="#cat-academics">Canvas</a></li>
+        <li><a href="#cat-academics">Calendar</a></li>
+        <li><a href="#cat-academics">Tutoring</a></li>
+      </ul></div>
+      <div><h5>Campus life</h5><ul>
+        <li><a href="#cat-campuslife">Clubs &amp; Greek life</a></li>
+        <li><a href="#cat-sports">Longhorn sports</a></li>
+        <li><a href="#cat-housing">Housing &amp; dining</a></li>
+        <li><a href="#cat-health">Health &amp; safety</a></li>
+        <li><a href="#cat-incoming">Fall admits</a></li>
+      </ul></div>
+      <div><h5>Admin</h5><ul>
+        <li><a href="#cat-registration">Registration</a></li>
+        <li><a href="#cat-money">Tuition &amp; aid</a></li>
+        <li><a href="#cat-essentials">UT EID / DUO</a></li>
+        <li><a href="/mba.html">MBA version</a></li>
+      </ul></div>
+    </div>
+    <p class="legal">
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.3.
+    </p>
+  </div>
+</footer>
+
+<!-- Suggest-a-link modal -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-box">
+    <h3 id="modal-title">Request or suggest a link</h3>
+    <p class="sub">Found something missing? Send it over and it goes straight to the review list.</p>
+    <div class="field"><label for="f-title">Link title</label><input id="f-title" type="text" placeholder="e.g. MBA Wellness Collective" /></div>
+    <div class="field"><label for="f-url">Destination URL</label><input id="f-url" type="url" placeholder="https://&hellip;" /></div>
+    <div class="field"><label for="f-section">Which section</label>
+      <select id="f-section">
+        <option value="Academics & Classes">Academics &amp; Classes</option>
+        <option value="Registration & Records">Registration &amp; Records</option>
+        <option value="Tuition & Aid">Tuition &amp; Aid</option>
+        <option value="Clubs & Community">Clubs &amp; Community</option>
+        <option value="Global & Study Abroad">Global &amp; Study Abroad</option>
+        <option value="Careers">Careers</option>
+        <option value="UT Essentials">UT Essentials</option>
+        <option value="Not sure">Not sure</option>
+      </select>
+    </div>
+    <div class="field"><label>Behind a login?</label>
+      <div class="radio-row">
+        <label><input type="radio" name="f-login" value="No" checked /> No</label>
+        <label><input type="radio" name="f-login" value="Yes" /> Yes (UT EID)</label>
+      </div>
+    </div>
+    <div class="field"><label for="f-email">Your email (optional)</label><input id="f-email" type="email" placeholder="so we can say thanks" /></div>
+    <div class="hp" aria-hidden="true"><label>Company (leave blank)<input id="f-company" type="text" tabindex="-1" autocomplete="off" /></label></div>
+    <p class="form-msg" id="form-msg"></p>
+    <div class="modal-actions">
+      <button class="btn-ghost" type="button" id="cancel-form">Cancel</button>
+      <button class="btn" type="button" id="submit-form">Send it &rarr;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  /* ============================================================
+     CONFIG - paste your Google Apps Script Web App URL here once
+     deployed (see setup steps). Leave blank and the form falls
+     back to email; tracking simply stays off.
+     ============================================================ */
+  const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbyYGxdju1XchwNGAORmB3Fz4NSPXQYQrpo-eur2R3pbIGcRTuwdgvkqltSsMfd89WT2/exec";
+  const ANALYTICS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyYGxdju1XchwNGAORmB3Fz4NSPXQYQrpo-eur2R3pbIGcRTuwdgvkqltSsMfd89WT2/exec";
+  const FALLBACK_EMAIL = "cobynorton@gmail.com";
+
+  // ---- Link data. Edit/extend freely. login:true = behind UT EID. ext:true = external. ----
+  const LINKS = [
+    {cat:"academics", name:"Course Schedule (Registrar)", desc:"Every class, its time, location, and unique number by semester.", url:"https://registrar.utexas.edu/schedules"},
+    {cat:"academics", name:"Course Catalog & Degree Plans", desc:"Official course descriptions, prerequisites, and degree requirements.", url:"https://catalog.utexas.edu/"},
+    {cat:"academics", name:"Academic Calendar", desc:"Add/drop, tuition due dates, breaks, and deadlines.", url:"https://registrar.utexas.edu/calendars"},
+    {cat:"academics", name:"My Grades", desc:"Your official grade report - separate from Canvas.", url:"https://utdirect.utexas.edu/apps/student/gradereport/student/", login:true},
+    {cat:"academics", name:"Canvas (LMS)", desc:"Your courses, assignments, and grades.", url:"https://utexas.instructure.com/", login:true},
+    {cat:"academics", name:"UT Libraries", desc:"Study rooms, research help, and the PCL.", url:"https://www.lib.utexas.edu/"},
+    {cat:"academics", name:"Sanger Learning Center", desc:"Free tutoring, study skills, and academic coaching.", url:"https://ugs.utexas.edu/slc/"},
+
+    {cat:"registration", name:"Register for Classes", desc:"The live add/drop registration system.", url:"https://utdirect.utexas.edu/registration/", login:true},
+    {cat:"registration", name:"How to Register (One Stop)", desc:"Step-by-step on registering, waitlists, and bars.", url:"https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/"},
+    {cat:"registration", name:"MyUT Student Portal", desc:"Your dashboard - links out to records, billing, and more.", url:"https://my.utexas.edu/", login:true},
+    {cat:"registration", name:"Texas One Stop", desc:"Registrar, records, financial aid, and billing in one office.", url:"https://onestop.utexas.edu/"},
+
+    {cat:"money", name:"Tuition & \u201CWhat I Owe\u201D", desc:"View your bill, pay tuition, and confirm attendance.", url:"https://onestop.utexas.edu/managing-costs/", login:true},
+    {cat:"money", name:"Direct Deposit (Refunds)", desc:"Set up direct deposit so refunds and student-job pay land in your bank.", url:"https://utdirect.utexas.edu/acct/rec/weft/webEFT_info.WBX", login:true},
+    {cat:"money", name:"Student Tax Forms (1098-T)", desc:"Your 1098-T tuition statement and 1098-E loan-interest form for taxes.", url:"https://afm.utexas.edu/student-accounts-receivable/resources/student-tax-form-information"},
+    {cat:"money", name:"Paying Your Tuition", desc:"How and where to pay, payment plans, and due dates.", url:"https://onestop.utexas.edu/managing-costs/paying-your-tuition/"},
+    {cat:"money", name:"Financial Aid", desc:"FAFSA, grants, loans, and disbursement info.", url:"https://onestop.utexas.edu/managing-costs/financial-aid/"},
+    {cat:"money", name:"Scholarships", desc:"University-wide and college scholarships.", url:"https://onestop.utexas.edu/managing-costs/scholarships/"},
+    {cat:"money", name:"Student Jobs (Workday)", desc:"On-campus student jobs - UT's official hiring portal.", url:"https://utaustin.wd1.myworkdayjobs.com/UTstudent", ext:true},
+
+    {cat:"campuslife", name:"HornsLink - All 1,000+ Orgs", desc:"UT's official directory of every student organization.", url:"https://utexas.campuslabs.com/engage/", login:true},
+    {cat:"campuslife", name:"Find a Student Org (Dean of Students)", desc:"How to explore orgs, org fairs, and getting involved.", url:"https://deanofstudents.utexas.edu/so/find-a-student-organization.php"},
+    {cat:"campuslife", name:"Sorority & Fraternity Life", desc:"All four Greek councils, recruitment, and how to join.", url:"https://deanofstudents.utexas.edu/sfl/"},
+    {cat:"campuslife", name:"RecSports", desc:"Gregory Gym, fitness classes, club sports, and outdoor trips.", url:"https://www.utrecsports.org/"},
+    {cat:"campuslife", name:"Campus Events + Entertainment", desc:"Student-run events, concerts, and free movies.", url:"https://universityunions.utexas.edu/"},
+    {cat:"campuslife", name:"The Daily Texan", desc:"UT's student newspaper since 1900 - campus news, sports, and life.", url:"https://thedailytexan.com/", ext:true},
+    {cat:"campuslife", name:"Texas Student Media", desc:"All student outlets: KVRX radio, TSTV, the Travesty, Cactus yearbook.", url:"https://texasstudentmedia.com/", ext:true},
+    {cat:"sports", name:"The Big Ticket", desc:"The student season ticket - football and every home sport, one price.", url:"https://texaslonghorns.com/sports/2026/4/6/the-big-ticket-the-ticket-option-for-ut-students", ext:true},
+    {cat:"sports", name:"Football Schedule", desc:"Every game, kickoff time, and TV channel this season.", url:"https://texaslonghorns.com/sports/football/schedule", ext:true},
+    {cat:"sports", name:"All Longhorn Sports", desc:"Schedules and scores for every UT team, fall through spring.", url:"https://texaslonghorns.com/", ext:true},
+    {cat:"sports", name:"Intramural Sports (IM)", desc:"25+ leagues and tournaments a semester - sign up on IMLeagues.", url:"https://www.utrecsports.org/intramurals"},
+    {cat:"sports", name:"Student Tickets", desc:"How claiming and entry works for students.", url:"https://texaslonghorns.com/sports/2018/7/23/tickets-students-html", ext:true},
+
+    {cat:"housing", name:"University Housing & Dining", desc:"All 15 residence halls, the housing application, and meal plans.", url:"https://housing.utexas.edu/"},
+    {cat:"housing", name:"Dining Halls & Menus", desc:"Where to eat on campus and what's being served.", url:"https://housing.utexas.edu/dining"},
+    {cat:"housing", name:"Dining Balance", desc:"Check your Dine In Dollars and meal plan balance.", url:"https://utdirect.utexas.edu/utapps/uhd/services/dining/", login:true},
+    {cat:"housing", name:"Off-Campus Living", desc:"Apartment search, roommates, and leases near campus.", url:"https://deanofstudents.utexas.edu/offcampus/"},
+    {cat:"housing", name:"Campus Map", desc:"Find buildings, classrooms, and everything on the 40 Acres.", url:"https://maps.utexas.edu/"},
+    {cat:"housing", name:"UT Shuttle & Bus Routes", desc:"Campus shuttles and CapMetro routes, especially West Campus.", url:"https://parking.utexas.edu/transportation/shuttles"},
+    {cat:"housing", name:"Parking & Transportation", desc:"Permits, garages, and campus shuttles.", url:"https://parking.utexas.edu/"},
+    {cat:"housing", name:"UT Night Rides", desc:"Free late-night safe rides home for students.", url:"https://parking.utexas.edu/transportation/ut-night-rides"},
+
+    {cat:"health", name:"Immunization Requirements", desc:"Required vaccines and medical clearance - needed BEFORE you can register.", url:"https://www.healthyhorns.utexas.edu/uhs/immunization-medical-clearance-requirements.html"},
+    {cat:"health", name:"University Health Services", desc:"Doctor visits, pharmacy, and urgent care on campus.", url:"https://www.healthyhorns.utexas.edu/"},
+    {cat:"health", name:"Counseling & Mental Health (CMHC)", desc:"Free counseling, crisis line, and wellness programs.", url:"https://cmhc.utexas.edu/"},
+    {cat:"health", name:"Free Legal Help (LSS)", desc:"Free attorney consultations - lease review, landlord disputes, tickets, and more.", url:"https://deanofstudents.utexas.edu/lss/"},
+    {cat:"health", name:"Legal Resources & Expunction", desc:"Record expunction help and referrals via Texas Law's pro bono program.", url:"https://deanofstudents.utexas.edu/lss/resources.php"},
+    {cat:"health", name:"Disability & Access (D&A)", desc:"Academic accommodations, testing support, and accessibility services.", url:"https://disability.utexas.edu/"},
+    {cat:"health", name:"Title IX", desc:"Report or get support for sexual misconduct, discrimination, or harassment.", url:"https://titleix.utexas.edu/"},
+    {cat:"health", name:"Student Emergency Services (SOS)", desc:"Emergency financial help, absence notices, and crisis support.", url:"https://deanofstudents.utexas.edu/sos/"},
+    {cat:"health", name:"UT Police & Campus Safety", desc:"UTPD, emergency info, and safety escorts.", url:"https://police.utexas.edu/"},
+
+    {cat:"essentials", name:"UT EID Self-Service", desc:"Look up or reset your EID and password.", url:"https://www.utexas.edu/eid"},
+    {cat:"essentials", name:"DUO / Multi-Factor Setup", desc:"Required to log into Canvas, MyUT, and more.", url:"https://mfa.login.utexas.edu/", login:true},
+    {cat:"essentials", name:"UT AI Tools", desc:"University-approved AI tools and guidance for students.", url:"https://tech.utexas.edu/services-tools/ai"},
+    {cat:"essentials", name:"UT Email (Office 365)", desc:"Your official university email - set it up day one.", url:"https://office365.austin.utexas.edu/", login:true},
+    {cat:"essentials", name:"UT Zoom", desc:"Sign in for class sessions and virtual events.", url:"https://utexas.zoom.us/", login:true},
+    {cat:"essentials", name:"University Co-op (Bookstore)", desc:"Textbooks, supplies, and burnt-orange everything.", url:"https://www.universitycoop.com/", ext:true},
+    {cat:"essentials", name:"UT Austin - Main Site", desc:"The university's front door.", url:"https://www.utexas.edu/"},
+
+    {cat:"incoming", name:"New Student Orientation", desc:"Register for your session - required before you can enroll.", url:"https://orientation.utexas.edu/"},
+    {cat:"incoming", name:"Registration Plus (Chrome Extension)", desc:"Student-built extension - grade distributions, prof ratings, and syllabi right in the course schedule.", url:"https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa", ext:true},
+    {cat:"incoming", name:"HornsLink - Browse 1,000+ Clubs", desc:"UT's official org directory - find your people before you even arrive.", url:"https://utexas.campuslabs.com/engage/", login:true},
+    {cat:"incoming", name:"Housing Application", desc:"Apply early - assignments are first-come, first-served.", url:"https://housing.utexas.edu/"},
+    {cat:"incoming", name:"UT Night Rides", desc:"Free late-night safe rides home for students - good to know before you arrive.", url:"https://parking.utexas.edu/transportation/ut-night-rides", ext:false},
+    {cat:"incoming", name:"Immunization / Medical Clearance", desc:"Submit records 4-6 weeks ahead or you can't register.", url:"https://www.healthyhorns.utexas.edu/uhs/immunization-medical-clearance-requirements.html"},
+    {cat:"incoming", name:"myIO (International Portal)", desc:"The international student portal - check-in, immigration docs, advising.", url:"https://global.utexas.edu/isss/advising-services/myio", login:true},
+    {cat:"incoming", name:"International Students (Texas Global)", desc:"Check-in, visas, and extra requirements for international Longhorns.", url:"https://global.utexas.edu/isss"},
+  ];
+
+  const CATS = [
+    {id:"academics",    label:"Academics & Classes"},
+    {id:"registration", label:"Registration & Records"},
+    {id:"money",        label:"Tuition & Financial Aid"},
+    {id:"campuslife",   label:"Clubs, Greek & Campus Life"},
+    {id:"sports",       label:"Longhorn Sports"},
+    {id:"housing",      label:"Housing & Dining"},
+    {id:"health",       label:"Health & Safety"},
+    {id:"essentials",   label:"UT Essentials"},
+  ];
+
+  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.incoming = "Fall Admits";
+
+  const lockSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  const arrowSVG = '<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
+  const host = u => { try { return new URL(u).hostname.replace(/^www\./,""); } catch(e){ return ""; } };
+
+  function cardHTML(l){
+    let badge = "";
+    if(l.login) badge = '<span class="badge login">'+lockSVG+' UT EID</span>';
+    else if(l.ext) badge = '<span class="badge ext">External</span>';
+    return '<a class="card" href="'+l.url+'" target="_blank" rel="noopener" title="Opens in a new tab \u2014 this page stays open behind it" data-cat="'+l.cat+'" data-name="'+esc(l.name)+'" data-text="'+esc((l.name+' '+l.desc+' '+(CAT_LABEL[l.cat]||l.cat)+' '+host(l.url)).toLowerCase())+'">'
+      + '<div class="ttl"><span class="name">'+l.name+'</span>'+(badge||arrowSVG)+'</div>'
+      + '<div class="desc">'+l.desc+'</div>'
+      + '<div class="host">'+host(l.url)+'</div></a>';
+  }
+
+  // Build category sections
+  const sectionsEl = document.getElementById("sections");
+  CATS.forEach((c,i)=>{
+    const items = LINKS.filter(l=>l.cat===c.id);
+    if(!items.length) return;
+    const sec = document.createElement("div");
+    sec.className="section"; sec.dataset.cat=c.id; sec.id="cat-"+c.id;
+    sec.innerHTML = '<div class="section-head"><span class="eyebrow">'+String(i+1).padStart(2,"0")+' / '+CATS.length+'</span>'
+      + '<h2>'+c.label+'</h2></div>'
+      + '<div class="grid">'+items.map(cardHTML).join("")+'</div>';
+    sectionsEl.appendChild(sec);
+  });
+  document.getElementById("grid-incoming").innerHTML =
+    LINKS.filter(l=>l.cat==="incoming").map(cardHTML).join("");
+
+  // Chips
+  const chipsEl = document.getElementById("chips");
+  const allCats = [{id:"all",label:"All"}, ...CATS,
+    {id:"incoming",label:"Fall Admits"}, {id:"mock",label:"Registration Preview"}];
+  let activeCat = "all";
+  allCats.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip"+(c.id==="all"?" active":"");
+    b.textContent=c.label; b.dataset.cat=c.id; b.setAttribute("role","tab");
+    b.onclick=()=>{
+      activeCat=c.id;
+      document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      if(c.id!=="all"){ const t=document.getElementById("cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+      applyFilter();
+    };
+    chipsEl.appendChild(b);
+  });
+
+  /* ---------- Smart search: synonyms, stemming, typo tolerance, graceful fallback ---------- */
+  const STOPW = {"my":1,"the":1,"a":1,"an":1,"for":1,"to":1,"me":1,"i":1,"of":1,"in":1,"on":1,"do":1,"how":1,"where":1,"is":1,"ut":1,"find":1,"get":1,"school":1,"college":1,"university":1,"campus":1,"texas":1,"austin":1,"utexas":1,"longhorn":1,"longhorns":1,"student":1,"students":1,"mccombs":1,"link":1,"links":1,"page":1,"website":1,"site":1,"info":1,"information":1};
+  const SYN = {
+    "dorm":["housing","residence"],"dorms":["housing","residence"],"housing":["residence","dorm"],
+    "class":["course","schedule","academics"],"classes":["course","schedule","academics"],"course":["class","schedule"],"courses":["class","schedule"],
+    "signup":["register"],"enroll":["register"],"enrollment":["registration"],
+    "money":["tuition","aid","owe"],"pay":["tuition","owe"],"bill":["tuition","owe"],"billing":["tuition"],
+    "tax":["1098","taxes"],"taxes":["1098","tax"],"1098t":["1098"],"refund":["direct deposit"],"deposit":["direct deposit"],"loan":["financial aid"],"loans":["financial aid"],"fafsa":["financial aid"],
+    "job":["handshake","career"],"jobs":["handshake","career"],"work":["handshake","jobs"],"internship":["career","handshake"],
+    "gym":["recsports","fitness","gregory"],"workout":["recsports","fitness"],"rec":["recsports"],
+    "im":["intramural"],"intramurals":["intramural"],
+    "shots":["immunization"],"shot":["immunization"],"vaccine":["immunization"],"vaccines":["immunization"],"vaccination":["immunization"],"meningitis":["immunization"],
+    "doctor":["health"],"sick":["health"],"clinic":["health"],"medical":["health","immunization"],
+    "therapy":["counseling","mental"],"therapist":["counseling"],"mental":["counseling"],
+    "food":["dining"],"eat":["dining"],"meal":["dining"],"meals":["dining"],
+    "bus":["parking","transportation"],"shuttle":["parking","transportation"],"car":["parking"],
+    "club":["organization"],"clubs":["organization"],"orgs":["organization"],"org":["organization"],"greek":["sorority","fraternity","organization"],"rush":["sorority","fraternity","recruitment"],"sorority":["greek"],"frat":["fraternity"],"fraternity":["greek"],
+    "football":["sports"],"game":["sports","ticket"],"games":["sports","schedule"],"tickets":["ticket"],"basketball":["sports","longhorn"],
+    "news":["texan","media"],"newspaper":["texan"],"paper":["texan"],
+    "ai":["ai tools"],"chatgpt":["ai tools"],"claude":["ai tools"],
+    "abroad":["global","exchange"],"travel":["global","abroad","exchange"],"international":["global"],
+    "startup":["entrepreneurship","venture","accelerator"],"founder":["entrepreneurship","venture"],"vc":["venture"],
+    "books":["co-op","bookstore","libraries"],"textbooks":["co-op","bookstore"],"bookstore":["co-op"],
+    "pass":["permit","ticket"],"permit":["parking"],"login":["eid","duo"],"password":["eid"],"grades":["canvas"],"homework":["canvas"],"assignments":["canvas"],
+    "email":["eid","essentials"],"tutor":["sanger","tutoring"],"tutoring":["sanger"],
+    "apply":["admissions","application"],"admissions":["apply","application"],
+    "grad":["graduate"],"gradschool":["graduate"],"semester":["calendar","schedule"],"fall":["calendar","admit"],"spring":["calendar"],"disability":["access","accommodation","accommodations"],"accommodation":["disability","access"],"adhd":["disability","access"],"dsa":["disability"],"lawyer":["legal"],"lease":["legal","off-campus","housing"],"landlord":["legal","off-campus"],"expunge":["expunction"],"expungement":["expunction"],"night":["night rides"],"ride":["night rides","shuttle"],"safe":["night rides","police"],"map":["campus map"],"lost":["campus map"],"bus":["shuttle","parking","transportation"],"shuttle":["parking","transportation"],"extension":["registration plus","chrome"],"chrome":["extension"],"grades":["canvas","grade report"],"grade":["grade report"],"email":["office 365","essentials"],"titleix":["title ix"],"harassment":["title ix"],"assault":["title ix"],"emergency":["sos","police"],"deadline":["calendar"],"deadlines":["calendar"],"dates":["calendar"],"holiday":["calendar"],"breaks":["calendar"]
+  };
+  const stemw = w => w.length>3 ? w.replace(/(ies)$/,"y").replace(/(es|s)$/,"") : w;
+  function edist(a,b,max){
+    if(Math.abs(a.length-b.length)>max) return max+1;
+    var prev=[],cur,i,j,best;
+    for(j=0;j<=b.length;j++)prev[j]=j;
+    for(i=1;i<=a.length;i++){
+      cur=[i];best=cur[0];
+      for(j=1;j<=b.length;j++){
+        cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
+        if(cur[j]<best)best=cur[j];
+      }
+      if(best>max)return max+1;
+      prev=cur;
+    }
+    return prev[b.length];
+  }
+  function termHits(t, text, words){
+    var alts=[t].concat(SYN[t]||[]);
+    for(var k=0;k<alts.length;k++){
+      var alt=alts[k];
+      if(alt.length<3){ if(words.indexOf(alt)>-1) return true; continue; }   // short terms: whole-word only ("ai", "im")
+      if(text.indexOf(alt)>-1) return true;               // substring anywhere (covers multiword synonyms)
+      var sa=stemw(alt);
+      for(var m=0;m<words.length;m++){
+        var w=words[m], sw=stemw(w);
+        if(sw.indexOf(sa)===0 || (sa.length>=4 && sa.indexOf(sw)===0 && sw.length>=4)) return true;  // prefix either way
+        if(alt.length>=5 && w.length>=5 && w[0]===alt[0] && edist(sa,sw, alt.length>=8?2:1)<=(alt.length>=8?2:1)) return true;  // typos: same first letter, real words only
+      }
+    }
+    return false;
+  }
+  function cardWords(card){
+    if(!card._w) card._w = card.dataset.text.split(/[^a-z0-9]+/).filter(Boolean);
+    return card._w;
+  }
+
+  // Search + filter
+  const q = document.getElementById("q");
+  const countEl = document.getElementById("count");
+  const emptyEl = document.getElementById("empty");
+  const total = LINKS.length;
+
+  function applyFilter(){
+    const term = q.value.trim().toLowerCase();
+    const terms = term.split(/\s+/).map(function(t){return t.replace(/[^a-z0-9]/g,"");}).filter(function(t){ return t && !STOPW[t]; });
+    const need = terms.length<=2 ? terms.length : terms.length-1;   // allow one miss on long queries
+    let shown = 0;
+    document.querySelectorAll(".section").forEach(sec=>{
+      const cat = sec.dataset.cat || sec.id.replace("cat-","");
+      const catMatch = (activeCat==="all") || (activeCat===cat) ||
+                       (activeCat==="mock" && sec.id==="cat-mock") ||
+                       (activeCat==="incoming" && sec.id==="cat-incoming");
+      let secVisible = 0;
+      sec.querySelectorAll(".card").forEach(card=>{
+        var hits = 0;
+        if(term && terms.length){
+          var words = cardWords(card);
+          for(var ti=0; ti<terms.length; ti++){ if(termHits(terms[ti], card.dataset.text, words)) hits++; }
+        }
+        const ok = catMatch && (!term || terms.length===0 || hits>=need);
+        card.style.display = ok ? "" : "none";
+        if(ok){secVisible++; shown++;}
+      });
+      const hasCards = sec.querySelectorAll(".card").length>0;
+      if(!hasCards){ sec.style.display = (catMatch && !term) ? "" : "none"; }
+      else { sec.style.display = (catMatch && secVisible>0) ? "" : "none"; }
+    });
+    countEl.textContent = (term||activeCat!=="all") ? (shown+" shown") : (total+" links");
+    emptyEl.style.display = (shown===0) ? "block" : "none";
+    document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");
+  }
+  q.addEventListener("input", ()=>{ activeCat="all";
+    document.querySelectorAll(".chip").forEach((x,i)=>x.classList.toggle("active",i===0));
+    applyFilter();
+  });
+  document.addEventListener("keydown", e=>{
+    if(e.key==="/" && document.activeElement!==q && !document.getElementById("modal").classList.contains("open")){ e.preventDefault(); q.focus(); }
+    if(e.key==="Escape"){ if(document.getElementById("modal").classList.contains("open")) closeForm(); else { q.value=""; applyFilter(); q.blur(); } }
+  });
+  applyFilter();
+
+  /* ---------- Click tracking (privacy-respecting: no cookies, no PII) ---------- */
+  document.addEventListener("click", e=>{
+    const card = e.target.closest(".card");
+    if(card && ANALYTICS_ENDPOINT){
+      try{
+        const body = new Blob(
+          ["type=click&link="+encodeURIComponent(card.dataset.name||"")+"&section="+encodeURIComponent(card.dataset.cat||"")],
+          {type:"application/x-www-form-urlencoded"});
+        navigator.sendBeacon(ANALYTICS_ENDPOINT, body);
+      }catch(err){/* fail silently */}
+    }
+  });
+
+  /* ---------- Suggest-a-link modal + form submission ---------- */
+  const modal = document.getElementById("modal");
+  const formMsg = document.getElementById("form-msg");
+  function openForm(){ modal.classList.add("open"); formMsg.className="form-msg"; document.getElementById("f-title").focus(); }
+  function closeForm(){ modal.classList.remove("open"); }
+  document.querySelectorAll("[data-open-form]").forEach(el=>el.addEventListener("click", e=>{e.preventDefault();openForm();}));
+  document.getElementById("cancel-form").addEventListener("click", closeForm);
+  modal.addEventListener("click", e=>{ if(e.target===modal) closeForm(); });
+
+  document.getElementById("submit-form").addEventListener("click", async ()=>{
+    const title = document.getElementById("f-title").value.trim();
+    const url = document.getElementById("f-url").value.trim();
+    const section = document.getElementById("f-section").value;
+    const login = (document.querySelector('input[name="f-login"]:checked')||{}).value || "No";
+    const email = document.getElementById("f-email").value.trim();
+    if(document.getElementById("f-company").value){ formMsg.className="form-msg ok"; formMsg.textContent="Thanks!"; setTimeout(closeForm,1000); return; } // honeypot: bot caught
+    if(!title || !url){ formMsg.className="form-msg err"; formMsg.textContent="Please add at least a title and a URL."; return; }
+
+    if(!FORM_ENDPOINT){
+      // Fallback: open a pre-filled email if no backend is wired yet
+      const body = encodeURIComponent("Title: "+title+"\nURL: "+url+"\nSection: "+section+"\nBehind login: "+login+"\nFrom: "+email);
+      window.location.href = "mailto:"+FALLBACK_EMAIL+"?subject="+encodeURIComponent("Longhorn Links - add a link")+"&body="+body;
+      return;
+    }
+    try{
+      const params = new URLSearchParams({type:"submit", title, url, section, login, email});
+      await fetch(FORM_ENDPOINT, {method:"POST", mode:"no-cors", headers:{"Content-Type":"application/x-www-form-urlencoded"}, body:params.toString()});
+      formMsg.className="form-msg ok"; formMsg.textContent="Got it - thanks! Added to the review list.";
+      document.getElementById("f-title").value=""; document.getElementById("f-url").value=""; document.getElementById("f-email").value="";
+      setTimeout(closeForm, 1400);
+    }catch(err){
+      formMsg.className="form-msg err"; formMsg.textContent="Couldn't send just now - try again, or email "+FALLBACK_EMAIL+".";
+    }
+  });
+</script>
+</body>
+</html>

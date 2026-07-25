@@ -1,0 +1,23 @@
+# Netlify config for longhornlinks.com
+#
+# In the Netlify UI this project must have:
+#   Base directory    = sites/longhornlinks
+#   Build command     = (leave empty)
+#   Publish directory = sites/longhornlinks
+#
+# Netlify finds this file inside the base directory, and every path below
+# is relative to that base directory.
+
+[build]
+  # Static single-file site: nothing to compile, publish the folder as-is.
+  publish = "."
+
+  # Skip the deploy entirely when this commit didn't touch this site's folder.
+  # Exit code 0 = "ignore / cancel the build". So pushing a change to
+  # sites/linkcowboy will NOT redeploy longhornlinks, and vice versa.
+  ignore = "git diff --quiet HEAD^ HEAD -- ."
+
+# Redirect and header rules live in the _redirects and _headers files that
+# ship inside this folder (downloaded from the current Netlify deploy).
+# You can move them here under [[redirects]] / [[headers]] later if you like,
+# but do not define the same rule in both places.

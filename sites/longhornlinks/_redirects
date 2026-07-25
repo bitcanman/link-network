@@ -1,0 +1,5 @@
+/mba /mba.html 200
+/mba/ /mba.html 200
+/undergrad / 301
+/undergrad/ / 301
+/undergrad.html / 301

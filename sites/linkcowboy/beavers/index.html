@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beaver Links | Oregon State University Links, All in One Place</title>
+<meta name="description" content="Every link an Oregon State University (OSU) student needs: Beaver Hub, Canvas, registration, tickets, dining, financial aid and more, rounded up on one page for Corvallis Beavers. Unofficial, student-built.">
+<meta property="og:title" content="Beaver Links">
+<meta property="og:description" content="Every link an Oregon State student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://linkcowboy.com/beavers">
+<meta property="og:image" content="https://linkcowboy.com/beavers-og.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Beaver Links">
+<meta name="twitter:description" content="Every link an Oregon State student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta name="twitter:image" content="https://linkcowboy.com/beavers-og.png">
+<meta name="theme-color" content="#dc4405">
+<link rel="canonical" href="https://linkcowboy.com/beavers">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23dc4405'/%3E%3Crect x='3' y='2' width='2' height='2' fill='%23fff'/%3E%3Crect x='11' y='2' width='2' height='2' fill='%23fff'/%3E%3Crect x='3' y='4' width='10' height='6' fill='%23fff'/%3E%3Crect x='5' y='6' width='1' height='1' fill='%23dc4405'/%3E%3Crect x='10' y='6' width='1' height='1' fill='%23dc4405'/%3E%3Crect x='6' y='10' width='4' height='3' fill='%23fff'/%3E%3Crect x='8' y='10' width='1' height='3' fill='%23dc4405'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*
+ * Beaver Links, the Link Cowboy family style, gone Pacific Northwest.
+ * Pixel sprites drawn on canvas, Press Start 2P headings, hard shadows,
+ * and Beaver Orange (#dc4405) over black, cream, and evergreen.
+ */
+:root{
+  --ink:#2b2016;
+  --cream:#f6eed9;
+  --card:#fffaf0;
+  --orange:#dc4405;
+  --orange-d:#a83403;
+  --black:#1e1a17;
+  --muted:rgba(43,32,22,.72);
+  --sky1:#a9d4e5; --sky2:#c3e2ee; --sky3:#dff0f6;
+  --water1:#4f93b8; --water2:#3d7ba0;
+  --px:'Press Start 2P',monospace;
+  --body:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:118px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+a{color:inherit}
+canvas{image-rendering:pixelated;display:block}
+
+/* ---------- masthead scene ---------- */
+.masthead{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(to bottom, var(--sky1) 0 35%, var(--sky2) 35% 70%, var(--sky3) 70% 100%);
+  border-bottom:4px solid var(--ink);
+}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;top:26px;right:6vw;width:calc(9px * 7)}
+.cloud{position:absolute;width:calc(16px * 5);opacity:.95;animation:drift linear infinite}
+.cloud.c2{width:calc(16px * 4)}
+.cloud.c3{width:calc(16px * 3);opacity:.85}
+@keyframes drift{from{transform:translateX(-25vw)}to{transform:translateX(115vw)}}
+.treeline{position:absolute;left:0;right:0;bottom:52px;height:0}
+.treeline .tree{position:absolute;bottom:-6px}
+.river{
+  position:absolute;left:0;right:0;bottom:0;height:56px;
+  background:linear-gradient(to bottom, var(--water1) 0 55%, var(--water2) 55% 100%);
+}
+.river::before{ /* pixel-stepped waterline */
+  content:"";position:absolute;left:0;right:0;top:-6px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--water1) 0 14px, transparent 14px 24px,
+    var(--water1) 24px 34px, transparent 34px 48px);
+}
+.dam{position:absolute;right:5vw;bottom:6px}
+.dam canvas{width:calc(20px * 4)}
+.swimmer{
+  position:absolute;bottom:8px;left:0;
+  --swim-max:72vw;
+  animation:swim 38s linear infinite alternate;animation-delay:-10s;
+}
+.swimmer canvas{width:calc(24px * 4);animation:faceflip 76s linear infinite;animation-delay:-10s}
+@keyframes swim{from{transform:translateX(2vw)}to{transform:translateX(var(--swim-max))}}
+@keyframes faceflip{0%,49.99%{transform:scaleX(1)}50%,100%{transform:scaleX(-1)}}
+.floatlog{position:absolute;bottom:16px;left:0;animation:logdrift 46s linear infinite;animation-delay:-22s}
+.floatlog canvas{width:calc(12px * 4)}
+@keyframes logdrift{from{transform:translateX(108vw)}to{transform:translateX(-18vw)}}
+
+.topbar{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dealschip{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:#deaa4e;
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  white-space:nowrap;
+}
+.dealschip:hover,.dealschip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.backlink{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:var(--cream);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.backlink:hover,.backlink:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.backlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.giveback{display:inline-block;margin-top:18px;font-family:var(--px);font-size:8px;line-height:1.5;color:#fff;text-decoration:none;background:var(--orange);border:3px solid var(--ink);box-shadow:3px 3px 0 rgba(43,32,22,.7);padding:8px 11px;opacity:.92;transition:transform .12s steps(2),box-shadow .12s steps(2),opacity .12s}
+.giveback:hover,.giveback:focus-visible{transform:translate(-2px,-2px);box-shadow:5px 5px 0 rgba(43,32,22,.8);opacity:1;outline:none}
+.giveback:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+
+.hero{position:relative;z-index:2;text-align:center;padding:30px 20px 190px}
+.mascot{width:calc(16px * 5);margin:0 auto 18px;filter:drop-shadow(3px 3px 0 rgba(43,32,22,.2))}
+h1{
+  font-family:var(--px);
+  font-size:clamp(20px,4.6vw,42px);
+  line-height:1.3;letter-spacing:.02em;
+  text-shadow:4px 4px 0 rgba(255,255,255,.65);
+}
+h1 .bv{color:var(--orange)}
+.tag{
+  font-family:var(--px);
+  font-size:clamp(8px,1.5vw,11px);
+  margin-top:16px;line-height:2;color:#31566b;
+}
+.blurb{
+  margin:14px auto 0;max-width:48ch;
+  font-size:clamp(14px,1.9vw,16px);font-weight:500;
+  color:var(--muted);
+}
+.blurb b{font-weight:700;border-bottom:3px solid var(--orange);color:var(--ink)}
+.edition{
+  font-family:var(--px);font-size:8px;line-height:1;
+  margin-top:20px;color:#4a6b7d;
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+.edition .dot{width:6px;height:6px;background:var(--orange)}
+
+/* ---------- sticky search + nav ---------- */
+.sticky{
+  position:sticky;top:0;z-index:50;
+  background:var(--black);
+  border-bottom:4px solid var(--orange);
+}
+.searchwrap{
+  max-width:1140px;margin:0 auto;
+  padding:12px 20px 8px;
+  display:flex;align-items:center;gap:14px;
+}
+.searchlabel{font-family:var(--px);font-size:10px;color:var(--cream);white-space:nowrap}
+.searchbox{position:relative;flex:1}
+#search{
+  width:100%;
+  font-family:var(--body);font-weight:500;font-size:16px;
+  padding:11px 42px 11px 12px;
+  border:3px solid var(--ink);
+  background:var(--card);color:var(--ink);
+  outline:none;border-radius:0;
+}
+#search::placeholder{color:#8b7f6d;font-weight:400}
+#search:focus{box-shadow:0 0 0 3px var(--orange)}
+.searchbox .ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--orange-d);pointer-events:none}
+.searchbox .clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  border:2px solid var(--ink);background:var(--orange);color:#fff;
+  width:26px;height:26px;font-size:15px;line-height:1;cursor:pointer;display:none;
+}
+.nav{
+  max-width:1140px;margin:0 auto;
+  display:flex;gap:10px;overflow-x:auto;
+  padding:6px 20px 14px;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  font-family:var(--px);font-size:8px;line-height:1;
+  white-space:nowrap;text-decoration:none;
+  color:var(--cream);
+  border:3px solid rgba(246,238,217,.45);
+  padding:8px 10px;
+  transition:background .12s steps(2),color .12s steps(2),border-color .12s steps(2);
+}
+.nav a:hover,.nav a:focus-visible{background:var(--orange);border-color:var(--orange);color:#fff;outline:none}
+
+/* ---------- sections + cards ---------- */
+main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
+.section{margin-top:40px;scroll-margin-top:118px}
+.sechead{display:flex;align-items:center;gap:14px}
+.sechead h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(13px,2.4vw,17px);line-height:1.5;
+  color:var(--ink);
+}
+.sechead .count{font-family:var(--px);font-size:8px;color:var(--orange-d);white-space:nowrap}
+.secrule{
+  height:6px;margin-top:10px;
+  background:repeating-linear-gradient(to right, var(--orange) 0 14px, transparent 14px 22px);
+}
+.grid{
+  display:grid;gap:22px;margin-top:20px;
+  grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+}
+.card{
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:16px 15px 14px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  min-height:122px;
+}
+.card:hover,.card:focus-visible{
+  transform:translate(-3px,-3px);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  outline:none;
+}
+.card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.card:focus-visible{outline:3px dashed var(--orange);outline-offset:3px}
+.cardtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card h3{
+  font-family:var(--px);font-weight:400;
+  font-size:10px;line-height:1.7;letter-spacing:.02em;
+}
+.card:hover h3,.card:focus-visible h3{color:var(--orange-d)}
+.badge{
+  font-family:var(--px);font-size:7px;line-height:1;
+  white-space:nowrap;
+  border:2px solid var(--orange);color:var(--orange-d);
+  padding:4px 5px;margin-top:2px;
+}
+.card p{font-size:13.5px;color:var(--muted);margin-top:9px;flex:1}
+.card .host{
+  font-family:var(--body);font-weight:700;font-size:12px;
+  color:var(--orange-d);margin-top:12px;
+  display:flex;align-items:center;gap:6px;min-width:0;
+}
+.card .host .hosturl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.card .host .arw{font-family:var(--px);font-size:8px;flex:none}
+.card:hover .host .arw,.card:focus-visible .host .arw{animation:nudge .6s steps(2) infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.noresults{
+  display:none;text-align:center;padding:56px 16px;
+  font-family:var(--px);font-size:10px;line-height:2;color:var(--muted);
+}
+.noresults b{color:var(--orange-d)}
+
+/* ---------- "start here" admit callout ---------- */
+.section.admit{
+  background:var(--card);
+  border:4px solid var(--orange);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  overflow:hidden;
+}
+.section.admit .admit-head{
+  background:var(--orange);
+  border-bottom:4px solid var(--ink);
+  padding:15px 18px;
+}
+.section.admit .admit-eyebrow{
+  display:block;font-family:var(--px);font-size:8px;line-height:1;
+  color:rgba(255,255,255,.82);margin-bottom:9px;letter-spacing:.04em;
+}
+.section.admit .admit-head h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(12px,2.2vw,15px);line-height:1.45;color:#fff;
+}
+.section.admit .admit-note{
+  padding:15px 18px 2px;margin:0;
+  font-size:14px;font-weight:500;color:var(--muted);
+}
+.section.admit .grid{padding:0 18px}
+
+/* ---------- suggest a link ---------- */
+.suggest{
+  margin-top:52px;
+  background:var(--card);
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+}
+.suggest .sh{
+  background:var(--orange);
+  border-bottom:4px solid var(--ink);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+}
+.suggest .sh canvas{width:calc(16px * 2)}
+.suggest .sh .t{font-family:var(--px);font-size:clamp(11px,2vw,14px);color:#fff;line-height:1.5}
+.suggest .body{padding:18px 18px 20px}
+.suggest .lede{font-size:14.5px;color:var(--muted);max-width:60ch;margin-bottom:18px}
+.frow{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.field{display:flex;flex-direction:column}
+.field.full{grid-column:1/-1}
+.field label{
+  font-family:var(--px);font-size:8px;line-height:1;
+  color:var(--ink);margin-bottom:7px;
+}
+.field input,.field textarea{
+  font-family:var(--body);font-size:15px;color:var(--ink);
+  width:100%;padding:10px 11px;
+  border:3px solid var(--ink);background:#fff;
+  outline:none;resize:vertical;border-radius:0;
+}
+.field input:focus,.field textarea:focus{box-shadow:0 0 0 3px var(--orange)}
+.submitrow{display:flex;align-items:center;gap:16px;margin-top:18px;flex-wrap:wrap}
+button.send{
+  font-family:var(--px);font-size:10px;
+  color:#fff;background:var(--orange);
+  border:3px solid var(--ink);
+  padding:13px 22px;cursor:pointer;
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+button.send:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(43,32,22,.8)}
+button.send:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.formnote{font-size:13.5px;font-weight:500;color:var(--muted)}
+.formnote.ok{color:var(--orange-d);font-weight:700}
+
+/* ---------- footer ---------- */
+footer{
+  margin-top:52px;
+  background:var(--black);color:#cbbfae;
+  border-top:4px solid var(--orange);
+  position:relative;
+}
+footer::before{ /* pixel notches on the footer edge */
+  content:"";position:absolute;left:0;right:0;top:-10px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--orange) 0 14px, transparent 14px 24px,
+    var(--orange) 24px 34px, transparent 34px 48px);
+}
+.footwrap{max-width:1140px;margin:0 auto;padding:30px 20px 34px;text-align:center}
+.footwrap .beavrow{display:flex;justify-content:center;gap:26px;margin-bottom:18px}
+.footwrap .beavrow canvas{width:calc(16px * 3);opacity:.95}
+.disclaimer{font-size:13px;max-width:66ch;margin:0 auto 16px;line-height:1.7}
+.disclaimer b{color:#fff}
+.family{font-family:var(--px);font-size:8px;line-height:2;color:var(--cream)}
+.family a{color:#ff8a54;text-decoration:none;border-bottom:2px solid var(--orange);padding-bottom:2px}
+.family a:hover,.family a:focus-visible{color:#fff;outline:none}
+.copyright{margin-top:12px;font-family:var(--px);font-size:7px;line-height:2;color:#8c8175}
+.copyright .px-star{color:var(--orange)}
+
+@media (max-width:640px){
+  html{scroll-padding-top:112px}
+  .section{scroll-margin-top:112px}
+  .searchlabel{display:none}
+  .frow{grid-template-columns:1fr}
+  .hero{padding:22px 16px 160px}
+  .card{min-height:0}
+  .swimmer canvas{width:calc(24px * 3)}
+  .dam canvas{width:calc(20px * 3)}
+  .cloud.c3{display:none}
+  .topbar{padding:14px 14px 0}
+  .backlink,.dealschip{font-size:8px;padding:9px 10px;border-width:3px;box-shadow:3px 3px 0 rgba(43,32,22,.8)}
+  .sun{top:84px;right:5vw;width:calc(9px * 5)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+  .cloud,.swimmer,.swimmer canvas,.floatlog,.card,.backlink,button.send,.card .host .arw{animation:none;transition:none}
+  .swimmer{left:8vw}
+  .floatlog{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="scene" aria-hidden="true">
+    <canvas class="sun" data-sprite="sun"></canvas>
+    <canvas class="cloud c1" data-sprite="cloud" style="top:34px;animation-duration:90s;animation-delay:-18s"></canvas>
+    <canvas class="cloud c2" data-sprite="cloud" style="top:96px;animation-duration:125s;animation-delay:-64s"></canvas>
+    <canvas class="cloud c3" data-sprite="cloud" style="top:20px;animation-duration:105s;animation-delay:-95s"></canvas>
+    <div class="treeline" id="treeline"></div>
+    <div class="river">
+      <div class="dam"><canvas data-sprite="dam"></canvas></div>
+      <div class="floatlog"><canvas data-sprite="log"></canvas></div>
+      <div class="swimmer"><canvas id="beav" data-sprite="swim0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <a class="backlink" href="https://linkcowboy.com">&lt;&lt; LINK COWBOY</a>
+    <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+  </div>
+
+  <div class="hero">
+    <canvas class="mascot" data-sprite="face" role="img" aria-label="Pixel beaver"></canvas>
+    <h1><span class="bv">BEAVER</span> LINKS</h1>
+    <p class="tag">EVERY OSU LINK.<br>ONE DAM PAGE.</p>
+    <p class="blurb">Every link an <b>Oregon State University</b> student actually needs: Beaver Hub, Canvas, registration, tickets, dining, and everything else scattered across a dozen department sites, rounded up so you stop hunting for it. Unofficial and student-built for Beavers in Corvallis.</p>
+    <div class="edition">
+      <span>VOL. 1</span><i class="dot"></i><span>FALL TERM 2026</span><i class="dot"></i><span id="linkcount">LINKS</span>
+    </div>
+    <a class="giveback" href="https://projectbeaver.org/giving/" target="_blank" rel="noopener">GIVE BACK TO BEAVERS HERE &gt;&gt;</a>
+  </div>
+</header>
+
+<div class="sticky">
+  <div class="searchwrap">
+    <span class="searchlabel">SEARCH</span>
+    <div class="searchbox">
+      <input id="search" type="text" autocomplete="off" spellcheck="false"
+        placeholder="Try &ldquo;bus&rdquo;, &ldquo;tickets&rdquo;, &ldquo;financial aid&rdquo;, &ldquo;aleks&rdquo;&hellip;"
+        aria-label="Search all links by name, category, or keyword">
+      <span class="ico" aria-hidden="true">&#9906;</span>
+      <button class="clear" id="clearBtn" type="button" aria-label="Clear search">&times;</button>
+    </div>
+  </div>
+  <nav class="nav" id="nav" aria-label="Jump to category"></nav>
+</div>
+
+<main id="main">
+  <div class="noresults" id="noresults">NOTHING MATCHES <b id="nrterm"></b>.<br>TRY ANOTHER WORD, OR SUGGEST THE LINK YOU&rsquo;RE MISSING BELOW.</div>
+</main>
+
+<footer>
+  <div class="footwrap">
+    <div class="beavrow" aria-hidden="true">
+      <canvas data-sprite="tree_sm"></canvas>
+      <canvas data-sprite="face"></canvas>
+      <canvas data-sprite="tree_sm"></canvas>
+    </div>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with or endorsed by Oregon State University. Links point to official OSU and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above.</p>
+    <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
+    <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> BUILT RAIN OR SHINE IN BEAVER NATION</p>
+  </div>
+</footer>
+
+<script>
+/*
+ * Beaver Links
+ * Paste your deployed Google Apps Script Web App URL into SCRIPT_URL to
+ * turn on click tracking and the suggest-a-link form. Leave it empty to
+ * disable tracking; the form then falls back to the mailto below.
+ */
+const SCRIPT_URL = "";                          // e.g. "https://script.google.com/macros/s/AKfyc.../exec"
+const SUGGEST_MAILTO = "jn32456@my.utexas.edu";  // fallback inbox when SCRIPT_URL is empty
+
+/* ---------- pixel sprites (Link Cowboy style) ---------- */
+const PIX = {
+  palette:{
+    "B":"#8a5a2b","D":"#6b4423","b":"#4a2e18","k":"#c99a63",
+    "V":"#1e1812","P":"#ffffff","o":"#dc4405",
+    "t":"#2f6d3c","e":"#1f4d2a","n":"#5c3a21",
+    "F":"#dff0f6","G":"#ffd35c","W":"#ffffff"
+  },
+  sprites:{
+    face:[
+      "..BB........BB..",
+      ".BDDB......BDDB.",
+      ".BBBBBBBBBBBBBB.",
+      "BBBBBBBBBBBBBBBB",
+      "BBVVBBBBBBBBVVBB",
+      "BBVPBBBBBBBBVPBB",
+      "BBBBBBBBBBBBBBBB",
+      "BBBBBkkkkkkBBBBB",
+      "BBBBkkVVVVkkBBBB",
+      ".BBBkkkkkkkkBBB.",
+      ".BBBBPPVPPBBBBB.",
+      "..BBBPPVPPBBBB..",
+      "...BBBBBBBBBB..."
+    ],
+    swim0:[
+      "........................",
+      ".........BBBBBBBB.......",
+      ".bbb...BBBBBBBBBBBB.....",
+      "bbbbb.BBBBBBBBBBBBBVk...",
+      "bbbbb.BBBBBBBBBBBBBkk...",
+      ".bbb..BBBBBBBBBBBBBkP...",
+      "F.F.FBBBBBBBBBBBBBBFF.F.",
+      "........................"
+    ],
+    swim1:[
+      "..bb....................",
+      ".bbbb....BBBBBBBB.......",
+      ".bbbb..BBBBBBBBBBBB.....",
+      "..bb..BBBBBBBBBBBBBVk...",
+      "......BBBBBBBBBBBBBkk...",
+      "......BBBBBBBBBBBBBkP...",
+      ".F.F.FBBBBBBBBBBBBBFF.F.",
+      "........................"
+    ],
+    tree:[
+      ".....t.....",
+      "....ttt....",
+      "...ttttt...",
+      "....ttte...",
+      "...ttttte..",
+      "..ttttttte.",
+      "...ttttte..",
+      "..ttttttte.",
+      ".ttttttttte",
+      "ttttttttttt",
+      "....nn.....",
+      "....nn....."
+    ],
+    tree_sm:[
+      "....t....",
+      "...ttt...",
+      "..ttttt..",
+      "...ttt...",
+      "..ttttt..",
+      ".ttttttt.",
+      "ttttttttt",
+      "...nn....",
+      "...nn...."
+    ],
+    dam:[
+      "....n....n....n.....",
+      "..kDDDDDDDDDDDDDDk..",
+      ".kDDDDDDDDDDDDDDDDk.",
+      "..kBBBBBBBBBBBBBBk..",
+      ".kBBBBBBBBBBBBBBBBk.",
+      "..kDDDDDDDDDDDDDDk..",
+      ".kBBBBBBBBBBBBBBBBk."
+    ],
+    log:[
+      ".BBBBBBBBBB.",
+      "kBBDBBBBDBBk",
+      "kBBBBBBBBBBk",
+      ".BBBBBBBBBB."
+    ],
+    sun:[
+      "....G....",
+      "..GGGGG..",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "GGGGGGGGG",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "..GGGGG..",
+      "....G...."
+    ],
+    cloud:[
+      ".....WWWWW......",
+      "....WWWWWWWW....",
+      "...WWWWWWWWWW...",
+      ".WWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWWWW.",
+      "................"
+    ]
+  }
+};
+
+function drawSprite(canvas, name){
+  const map = PIX.sprites[name];
+  if(!map) return;
+  const h = map.length, w = map[0].length;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,w,h);
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const c = PIX.palette[map[y][x]];
+      if(c){ ctx.fillStyle = c; ctx.fillRect(x,y,1,1); }
+    }
+  }
+}
+document.querySelectorAll("canvas[data-sprite]").forEach(c => drawSprite(c, c.dataset.sprite));
+
+/* evergreen treeline (seeded, deterministic) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rand = mulberry32(1868); /* OSU founded 1868 */
+const treeline = document.getElementById("treeline");
+for(let i=0; i<26; i++){
+  const holder = document.createElement("div");
+  holder.className = "tree";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, "tree");
+  const s = 3 + Math.floor(rand()*3); /* 3x - 5x */
+  cv.style.width = (cv.width * s) + "px";
+  holder.style.left = (rand()*97) + "vw";
+  holder.style.bottom = (-8 + rand()*10) + "px";
+  holder.style.zIndex = s; /* bigger trees in front */
+  holder.appendChild(cv);
+  treeline.appendChild(holder);
+}
+
+/* swimming beaver paddle animation */
+const beav = document.getElementById("beav");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduced){
+  let paddle = 0;
+  setInterval(() => { paddle ^= 1; drawSprite(beav, "swim" + paddle); }, 340);
+}
+
+/* ---------- link data ---------- */
+const CATEGORIES = [
+  "Essentials",
+  "Classes & Registration",
+  "Money",
+  "Getting Around",
+  "Campus Life",
+  "Career",
+  "Sports & Traditions",
+  "Housing",
+  "Health & Safety",
+  "New Beavs"
+];
+
+const LINKS = [
+  // Essentials
+  {name:"Beaver Hub", url:"https://beaverhub.oregonstate.edu/", category:"Essentials", desc:"OSU's student portal for registration, records, billing, and your success team.", keywords:["beaver hub","portal","student portal","myoregonstate","dashboard","records","home"], login:true},
+  {name:"Canvas", url:"https://canvas.oregonstate.edu/", category:"Essentials", desc:"Course materials, assignments, grades, and quizzes for all your classes.", keywords:["canvas","lms","coursework","assignments","grades","instructure"], login:true},
+  {name:"OSU Email", url:"https://technology.oregonstate.edu/services/email", category:"Essentials", desc:"Your official OSU student email through Outlook and Microsoft 365, tied to your ONID account.", keywords:["outlook","email","microsoft","office 365","onid mail","inbox","student email"], login:false},
+  {name:"ONID Account", url:"https://onid.oregonstate.edu/", category:"Essentials", desc:"Activate your ONID, reset your password, and manage your OSU login.", keywords:["onid","password","account","activate","reset","username","login"], login:false},
+  {name:"Duo Two-Step Login", url:"https://technology.oregonstate.edu/services/duo", category:"Essentials", desc:"Set up and manage Duo two-step verification for your ONID account.", keywords:["duo","two-factor","2fa","mfa","two-step","security","authentication"], login:false},
+  {name:"OSU MediaSpace", url:"https://media.oregonstate.edu/", category:"Essentials", desc:"OSU's Kaltura media portal for lecture recordings, course videos, and media you can share in Canvas.", keywords:["mediaspace","kaltura","media","video","lecture recordings","recordings","streaming"], login:false},
+  {name:"IT Service Desk", url:"https://technology.oregonstate.edu/help", category:"Essentials", desc:"OSU tech help for password, email, Wi-Fi, and ONID problems.", keywords:["it","help","helpdesk","support","wifi","tech","service desk"], login:false},
+  {name:"OSU Libraries", url:"https://library.oregonstate.edu/", category:"Essentials", desc:"The Valley Library: catalog, study rooms, research databases, and course reserves.", keywords:["library","valley library","study rooms","research","databases","books"], login:false},
+
+  // Classes & Registration
+  {name:"How to Register", url:"https://registrar.oregonstate.edu/how-register", category:"Classes & Registration", desc:"Registration windows, holds, and step-by-step how-to for registering in Beaver Hub.", keywords:["register","registration","enroll","add drop","holds","priority registration"], login:false},
+  {name:"Schedule of Classes", url:"https://classes.oregonstate.edu/", category:"Classes & Registration", desc:"Search the live class schedule for sections, times, seats, and instructors.", keywords:["class search","schedule of classes","sections","open seats","course search"], login:false},
+  {name:"Academic Catalog", url:"https://catalog.oregonstate.edu/", category:"Classes & Registration", desc:"Course descriptions, majors, minors, and university degree requirements.", keywords:["catalog","courses","descriptions","degree requirements","majors","minors"], login:false},
+  {name:"MyDegrees", url:"https://registrar.oregonstate.edu/degree-processes-monitoring-your-progress", category:"Classes & Registration", desc:"The degree audit and planner that tracks your progress to graduation.", keywords:["mydegrees","degree audit","degree planner","graduation","progress","requirements"], login:false},
+  {name:"Academic Calendar", url:"https://registrar.oregonstate.edu/osu-academic-calendar", category:"Classes & Registration", desc:"Quarter-system dates: term start and end, breaks, registration windows, and deadlines.", keywords:["academic calendar","dates","deadlines","terms","quarters","breaks","holidays"], login:false},
+  {name:"Final Exam Schedule", url:"https://registrar.oregonstate.edu/exams/final-examination-schedule", category:"Classes & Registration", desc:"Maps your class meeting times to exam dates and times each finals week.", keywords:["finals","final exams","exam schedule","finals week","exam times"], login:false},
+  {name:"Academic Success Center", url:"https://success.oregonstate.edu/", category:"Classes & Registration", desc:"Free academic coaching, supplemental instruction, and study-strategy help.", keywords:["tutoring","tutor","coaching","supplemental instruction","study help","success"], login:false},
+  {name:"Writing Center", url:"https://writingcenter.oregonstate.edu/", category:"Classes & Registration", desc:"Free writing consultations and feedback on papers at any stage.", keywords:["writing center","essays","writing help","papers","feedback","consultation"], login:false},
+  {name:"Academic Coaching", url:"https://coolkidsgetcoached.acuityscheduling.com/schedule/3f536236/appointment/2165431", category:"Classes & Registration", desc:"One-on-one coaching on time management, study habits, and staying on track, free through the Academic Success Center.", keywords:["academic coaching","coach","study skills","time management","success center","tutoring"], login:false},
+  {name:"Supplemental Instruction (SI)", url:"https://success.oregonstate.edu/supplemental-instruction", category:"Classes & Registration", desc:"Free peer-led study sessions for historically tough courses, run through the Academic Success Center.", keywords:["supplemental instruction","si","study sessions","peer tutoring","group study","success center"], login:false},
+
+  // Money
+  {name:"Office of Financial Aid", url:"https://financialaid.oregonstate.edu/", category:"Money", desc:"FAFSA, ORSAA, grants, loans, work-study, and every aid resource in one office.", keywords:["financial aid","fafsa","orsaa","grants","loans","work study","money"], login:false},
+  {name:"ScholarDollars", url:"https://scholarships.oregonstate.edu/", category:"Money", desc:"Find and apply for OSU scholarships through one application portal.", keywords:["scholarships","scholardollars","merit","apply","awards","funding","free money"], login:false},
+  {name:"Student Billing", url:"https://finance.oregonstate.edu/student-accounts/student-billing", category:"Money", desc:"View and pay your tuition and fee bill through myBill and the Cashier's Office.", keywords:["billing","tuition","mybill","student account","cashier","pay bill","fees"], login:false},
+  {name:"Payment Plans", url:"https://finance.oregonstate.edu/student-accounts/payment-plans", category:"Money", desc:"Split tuition and fees into scheduled monthly installments.", keywords:["payment plan","installment","installments","monthly payments","split"], login:false},
+
+  // Getting Around
+  {name:"Beaver Bus", url:"https://transportation.oregonstate.edu/beaver-bus", category:"Getting Around", desc:"Free campus shuttle with routes, schedules, and live bus tracking.", keywords:["bus","beaver bus","shuttle","routes","bus times","tracker","transit"], login:false},
+  {name:"Parking & Permits", url:"https://transportation.oregonstate.edu/parking", category:"Getting Around", desc:"Parking permits, zones, rates, citations, and visitor parking.", keywords:["parking","permit","zones","citation","car","transportation","ticket"], login:false},
+  {name:"Corvallis Transit", url:"https://www.corvallisoregon.gov/cts", category:"Getting Around", desc:"Fareless city buses connecting campus to the rest of Corvallis.", keywords:["corvallis transit","cts","city bus","fareless","free bus","routes"], login:false},
+  {name:"Visit OSU", url:"https://visitosu.oregonstate.edu/", category:"Getting Around", desc:"Campus tours, individual visits, and Welcome Center programs.", keywords:["visit","tour","campus tour","welcome center","prospective","new student"], login:false},
+
+  // Campus Life
+  {name:"UHDS Dining", url:"https://uhds.oregonstate.edu/dining", category:"Campus Life", desc:"Dining plans, campus restaurants, hours, menus, and nutrition info.", keywords:["dining","meal plan","food","uhds","orange rewards","eat","menus"], login:false},
+  {name:"Dixon Rec Center", url:"https://recsports.oregonstate.edu/", category:"Campus Life", desc:"The rec center: gym, intramurals, sport clubs, climbing, and fitness classes.", keywords:["dixon","rec center","gym","fitness","intramural","sport clubs","workout"], login:false},
+  {name:"Clubs & Organizations", url:"https://see.oregonstate.edu/ela/find-clubs", category:"Campus Life", desc:"Searchable directory of recognized OSU student clubs and organizations.", keywords:["organizations","orgs","clubs","get involved","join","directory"], login:false},
+  {name:"Fraternity & Sorority Life", url:"https://gogreek.oregonstate.edu/", category:"Campus Life", desc:"The Center for Fraternity & Sorority Life: chapters, recruitment, and how to go Greek at OSU.", keywords:["greek life","fraternity","sorority","cfsl","go greek","recruitment","rush","panhellenic","ifc"], login:false},
+  {name:"Memorial Union", url:"https://mu.oregonstate.edu/", category:"Campus Life", desc:"The campus hub for events, food, bowling, study spots, and student services.", keywords:["memorial union","mu","events","bowling","student union","programs"], login:false},
+  {name:"OSU GO (Study Abroad)", url:"https://osuglobal.oregonstate.edu/", category:"Campus Life", desc:"Study, intern, and research abroad through OSU GO programs worldwide.", keywords:["study abroad","osu go","education abroad","international","exchange","global","travel"], login:false},
+  {name:"OSU Beaver Store", url:"https://www.osubeaverstore.com/", category:"Campus Life", desc:"Textbooks, course materials, tech, and official Beaver gear.", keywords:["bookstore","textbooks","books","beaver store","gear","apparel","spirit"], login:false},
+  {name:"Campus Map", url:"https://map.oregonstate.edu/", category:"Campus Life", desc:"Interactive Corvallis campus map for buildings, classrooms, and parking lots.", keywords:["map","campus map","buildings","directions","wayfinding","where"], login:false},
+
+  // Career
+  {name:"Career Development Center", url:"https://career.oregonstate.edu/", category:"Career", desc:"Career advising, job and internship help, interview prep, and career fairs.", keywords:["career","career center","jobs","internship","advising","interview","fair"], login:false},
+  {name:"Handshake", url:"https://oregonstate.joinhandshake.com/login", category:"Career", desc:"OSU's job platform for jobs, internships, and employer recruiting events.", keywords:["handshake","jobs","internship","recruiting","apply","work","employers"], login:true},
+  {name:"Resume Resources", url:"https://career.oregonstate.edu/resumes-cvs-cover-letters", category:"Career", desc:"Resume, CV, and cover letter guides, templates, and samples.", keywords:["resume","cv","cover letter","templates","samples","career"], login:false},
+
+  // Sports & Traditions
+  {name:"Student Tickets", url:"https://osubeavers.com/sports/2016/7/27/student-ticket-information", category:"Sports & Traditions", desc:"How students claim tickets to football and other home games at Reser.", keywords:["tickets","student tickets","football tickets","beaver dam","reser","claim","games"], login:false},
+  {name:"Beaver Athletics", url:"https://osubeavers.com/", category:"Sports & Traditions", desc:"Official athletics site with schedules, scores, and news across every sport.", keywords:["athletics","schedule","football schedule","scores","osubeavers","games","sports"], login:false},
+  {name:"OSU Traditions", url:"https://admissions.oregonstate.edu/traditions", category:"Sports & Traditions", desc:"Benny Beaver, the fight song, Homecoming, and the traditions that make OSU.", keywords:["traditions","benny beaver","fight song","homecoming","rivalry","spirit"], login:false},
+  {name:"OSU Marching Band", url:"https://www.oregonstateband.org/", category:"Sports & Traditions", desc:"The Spirit and Sound of OSU: join the band or catch a gameday performance.", keywords:["marching band","band","osumb","music","gameday","spirit"], login:false},
+
+  // Housing
+  {name:"On-Campus Housing", url:"https://uhds.oregonstate.edu/", category:"Housing", desc:"UHDS lets you apply for housing and explore residence halls and dining.", keywords:["housing","dorms","residence halls","uhds","on-campus","move-in","application"], login:false},
+  {name:"Off-Campus Living", url:"https://uhds.oregonstate.edu/off-campus", category:"Housing", desc:"Finding off-campus housing in Corvallis: leases, budgeting, and renter tips.", keywords:["off-campus","apartments","roommates","rentals","lease","corvallis","housing"], login:false},
+
+  // Health & Safety
+  {name:"Student Health Services", url:"https://studenthealth.oregonstate.edu/", category:"Health & Safety", desc:"On-campus clinic and pharmacy providing medical care to students.", keywords:["student health","clinic","doctor","pharmacy","medical","appointment","sick"], login:false},
+  {name:"Counseling (CAPS)", url:"https://counseling.oregonstate.edu/", category:"Health & Safety", desc:"Counseling and Psychological Services provides mental health support for students.", keywords:["caps","counseling","mental health","therapy","crisis","psychological","help"], login:false},
+  {name:"OSU Alert", url:"https://oregonstate.edu/alerts/osu-alert-portal", category:"Health & Safety", desc:"OSU's emergency notification system for text, email, and closure alerts.", keywords:["osu alert","emergency","alerts","safety","notifications","closures","text alerts"], login:false},
+  {name:"Public Safety & OSU Police", url:"https://publicsafety.oregonstate.edu/", category:"Health & Safety", desc:"Campus police and public safety: reporting, safety escorts, and resources.", keywords:["police","public safety","campus safety","emergency","escort","report"], login:false},
+  {name:"SafeRide", url:"https://asosu.oregonstate.edu/saferide", category:"Health & Safety", desc:"ASOSU's free late-night rides home for students around Corvallis.", keywords:["saferide","safe ride","asosu","late night","ride","escort","transportation","safety"], login:false},
+  {name:"Disability Access Services", url:"https://ds.oregonstate.edu/", category:"Health & Safety", desc:"Academic accommodations and access services for students with disabilities.", keywords:["disability","das","accommodations","accessibility","access","testing"], login:false},
+  {name:"Basic Needs Center", url:"https://basicneeds.oregonstate.edu/", category:"Health & Safety", desc:"Food pantry, housing help, SNAP assistance, and support for students in need.", keywords:["basic needs","food pantry","snap","housing help","financial help","support"], login:false},
+
+  // New Beavs (seasonal, for incoming first-year students)
+  {name:"New Student Onboarding", url:"https://newstudents.oregonstate.edu/", category:"New Beavs", desc:"Required orientation: online modules, advising, and registering for your first classes.", keywords:["orientation","onboarding","start","new student","advising","incoming","freshman"], login:false},
+  {name:"Admitted: Next Steps", url:"https://admissions.oregonstate.edu/next-steps-admitted-students", category:"New Beavs", desc:"Confirm your admission and work through your enrollment checklist.", keywords:["admitted","next steps","checklist","confirm enrollment","deposit","incoming"], login:false},
+  {name:"Launch Orientation", url:"https://newstudents.oregonstate.edu/launch-session-dates", category:"New Beavs", desc:"Sign up for a Launch orientation session before your first fall term.", keywords:["launch","orientation dates","sessions","welcome","sign up","incoming"], login:false},
+  {name:"Immunization Requirements", url:"https://studenthealth.oregonstate.edu/immunizations", category:"New Beavs", desc:"Submit required vaccine records before enrolling to avoid a health hold.", keywords:["immunization","vaccine","mmr","records","health requirement","incoming"], login:false},
+  {name:"Math Placement (ALEKS)", url:"https://math.oregonstate.edu/undergraduate/math-placement-assessment", category:"New Beavs", desc:"Take the ALEKS assessment to place into the right math course.", keywords:["aleks","math placement","placement test","assessment","calculus","incoming"], login:false},
+  {name:"Parent & Family Programs", url:"https://families.oregonstate.edu/", category:"New Beavs", desc:"Resources, newsletters, and Family Weekend info for families of new Beavs.", keywords:["family","parents","family weekend","supporters","newsletter","incoming"], login:false}
+];
+
+/* ---------- helpers ---------- */
+function hostOf(url){
+  try{ return new URL(url).hostname.replace(/^www\./,""); }
+  catch(err){ return url; }
+}
+function slug(text){
+  return text.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function esc(text){
+  return text.replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+
+/* Click and suggestion tracking. Fails silently if SCRIPT_URL is empty or unreachable. */
+function track(payload){
+  if(!SCRIPT_URL) return;
+  try{
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(SCRIPT_URL, new Blob([body], {type:"text/plain;charset=UTF-8"}));
+    }else{
+      fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"}, body:body});
+    }
+  }catch(err){ /* intentionally ignored */ }
+}
+
+/* ---------- render sections ---------- */
+const main = document.getElementById("main");
+const nav = document.getElementById("nav");
+const noresults = document.getElementById("noresults");
+
+document.getElementById("linkcount").textContent = LINKS.length + " LINKS";
+
+const INCOMING = "New Beavs";
+
+function makeCard(link){
+  const card = document.createElement("a");
+  card.className = "card";
+  card.href = link.url;
+  card.target = "_blank";
+  card.rel = "noopener";
+  card.dataset.search = [link.name, link.category, link.desc, (link.keywords || []).join(" ")]
+    .join(" ").toLowerCase();
+  card.innerHTML =
+    '<div class="cardtop"><h3>' + esc(link.name.toUpperCase()) + '</h3>' +
+    (link.login ? '<span class="badge" title="Requires your ONID login">ONID</span>' : "") +
+    '</div>' +
+    '<p>' + esc(link.desc) + '</p>' +
+    '<span class="host"><span class="hosturl">' + esc(hostOf(link.url)) + '</span> <span class="arw">&gt;&gt;</span></span>';
+  card.addEventListener("click", () => {
+    track({type:"click", name:link.name, url:link.url, category:link.category,
+      ts:new Date().toISOString(), ref:location.href});
+  });
+  return card;
+}
+
+/* prominent "start here" callout for incoming students, pulled to the very top */
+const incomingItems = LINKS.filter(link => link.category === INCOMING);
+if(incomingItems.length){
+  const chip = document.createElement("a");
+  chip.href = "#" + slug(INCOMING);
+  chip.textContent = "START HERE";
+  nav.appendChild(chip);
+
+  const admit = document.createElement("section");
+  admit.className = "section admit";
+  admit.id = slug(INCOMING);
+  admit.innerHTML =
+    '<div class="admit-head">' +
+      '<span class="admit-eyebrow">FALL 2026 ADMITS</span>' +
+      '<h2>NEW BEAV? START HERE.</h2>' +
+    '</div>' +
+    '<p class="admit-note">First things first. A couple of these have deadlines that block registration.</p>' +
+    '<div class="grid"></div>';
+  const agrid = admit.querySelector(".grid");
+  incomingItems.forEach(link => agrid.appendChild(makeCard(link)));
+  main.insertBefore(admit, noresults);
+}
+
+CATEGORIES.forEach(category => {
+  if(category === INCOMING) return;
+  const items = LINKS.filter(link => link.category === category);
+  if(!items.length) return;
+
+  const id = slug(category);
+
+  const chip = document.createElement("a");
+  chip.href = "#" + id;
+  chip.textContent = category.toUpperCase();
+  nav.appendChild(chip);
+
+  const section = document.createElement("section");
+  section.className = "section";
+  section.id = id;
+
+  const head = document.createElement("div");
+  head.className = "sechead";
+  head.innerHTML =
+    '<h2>' + esc(category.toUpperCase()) + '</h2>' +
+    '<span class="count">' + items.length + ' LINKS</span>';
+  section.appendChild(head);
+
+  const rule = document.createElement("div");
+  rule.className = "secrule";
+  section.appendChild(rule);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  items.forEach(link => grid.appendChild(makeCard(link)));
+  section.appendChild(grid);
+  main.insertBefore(section, noresults);
+});
+
+/* ---------- suggest-a-link form ---------- */
+const suggest = document.createElement("section");
+suggest.className = "suggest";
+suggest.id = "suggest";
+suggest.innerHTML =
+  '<div class="sh"><canvas id="shBeav" aria-hidden="true"></canvas><span class="t">SUGGEST A LINK</span></div>' +
+  '<div class="body">' +
+    '<p class="lede">Know a link every Beav needs that isn&rsquo;t here? Send it over. If it&rsquo;s useful, it goes on the page.</p>' +
+    '<form id="suggestForm" novalidate>' +
+      '<div class="frow">' +
+        '<div class="field"><label for="sName">LINK NAME</label><input id="sName" name="name" required maxlength="120" placeholder="e.g. OSU Craft Center"></div>' +
+        '<div class="field"><label for="sUrl">URL</label><input id="sUrl" name="url" type="url" required maxlength="400" placeholder="https://&hellip;"></div>' +
+        '<div class="field full"><label for="sWhy">WHY IT BELONGS</label><textarea id="sWhy" name="why" rows="3" maxlength="600" placeholder="What is it and who needs it?"></textarea></div>' +
+      '</div>' +
+      '<div class="submitrow"><button class="send" type="submit">SEND IT &gt;&gt;</button><span class="formnote" id="formnote" role="status"></span></div>' +
+    '</form>' +
+  '</div>';
+main.insertBefore(suggest, noresults);
+drawSprite(document.getElementById("shBeav"), "face");
+
+document.getElementById("suggestForm").addEventListener("submit", function(event){
+  event.preventDefault();
+  const name = document.getElementById("sName").value.trim();
+  const url = document.getElementById("sUrl").value.trim();
+  const why = document.getElementById("sWhy").value.trim();
+  const note = document.getElementById("formnote");
+  if(!name || !url) return;
+
+  if(SCRIPT_URL){
+    track({type:"suggestion", name:name, url:url, why:why, ts:new Date().toISOString(), ref:location.href});
+    note.textContent = "Thanks, got it. We'll take a look.";
+    note.classList.add("ok");
+    this.reset();
+  }else{
+    const subject = encodeURIComponent("Beaver Links suggestion: " + name);
+    const bodyText = encodeURIComponent("Link name: " + name + "\nURL: " + url + "\nWhy it belongs: " + why);
+    window.location.href = "mailto:" + SUGGEST_MAILTO + "?subject=" + subject + "&body=" + bodyText;
+    note.textContent = "Opening your email app.";
+    note.classList.add("ok");
+  }
+  setTimeout(() => { note.textContent = ""; note.classList.remove("ok"); }, 6000);
+});
+
+/* ---------- live search ---------- */
+const search = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
+const sections = Array.from(main.querySelectorAll(".section"));
+
+function matches(haystack, terms){
+  return terms.every(term => haystack.includes(term));
+}
+
+function applyFilter(){
+  const query = search.value.trim().toLowerCase();
+  const terms = query.split(/\s+/).filter(Boolean);
+  clearBtn.style.display = query ? "block" : "none";
+
+  let anyVisible = false;
+  sections.forEach(section => {
+    let sectionVisible = false;
+    section.querySelectorAll(".card").forEach(card => {
+      const show = !terms.length || matches(card.dataset.search, terms);
+      card.style.display = show ? "" : "none";
+      if(show) sectionVisible = true;
+    });
+    section.style.display = sectionVisible ? "" : "none";
+    if(sectionVisible) anyVisible = true;
+  });
+
+  noresults.style.display = anyVisible ? "none" : "block";
+  if(!anyVisible) document.getElementById("nrterm").textContent = "“" + search.value.trim().toUpperCase() + "”";
+}
+
+search.addEventListener("input", applyFilter);
+clearBtn.addEventListener("click", () => { search.value = ""; applyFilter(); search.focus(); });
+search.addEventListener("keydown", event => { if(event.key === "Escape"){ search.value = ""; applyFilter(); } });
+</script>
+</body>
+</html>

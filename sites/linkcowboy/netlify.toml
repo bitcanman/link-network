@@ -1,0 +1,20 @@
+# Netlify config for linkcowboy.com  (Netlify project: serene-peony-a10dcf)
+#
+# In the Netlify UI this project must have:
+#   Base directory    = sites/linkcowboy
+#   Build command     = (leave empty)
+#   Publish directory = sites/linkcowboy
+#
+# Netlify finds this file inside the base directory, and every path below
+# is relative to that base directory.
+
+[build]
+  # Static single-file site: nothing to compile, publish the folder as-is.
+  publish = "."
+
+  # Skip the deploy entirely when this commit didn't touch this site's folder.
+  # Exit code 0 = "ignore / cancel the build".
+  ignore = "git diff --quiet HEAD^ HEAD -- ."
+
+# Redirect and header rules live in the _redirects and _headers files that
+# ship inside this folder (downloaded from the current Netlify deploy).
