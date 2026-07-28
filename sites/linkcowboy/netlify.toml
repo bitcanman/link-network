@@ -18,3 +18,5 @@
 
 # Redirect and header rules live in the _redirects and _headers files that
 # ship inside this folder (downloaded from the current Netlify deploy).
+
+# Deploy check: 2026-07-28 — verifying GitHub App webhook fires builds.
