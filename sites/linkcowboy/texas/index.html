@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Longhorn Links | UT Austin Links, All in One Place</title>
+<meta name="description" content="Every link a University of Texas at Austin student needs: Canvas, registration, What I Owe, tickets, dining, financial aid and more, rounded up on one page for Longhorns. Unofficial, student-built.">
+<meta property="og:title" content="Longhorn Links">
+<meta property="og:description" content="Every link a UT Austin student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://linkcowboy.com/texas">
+<meta property="og:image" content="https://linkcowboy.com/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Longhorn Links">
+<meta name="twitter:description" content="Every link a UT Austin student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta name="twitter:image" content="https://linkcowboy.com/og.png">
+<meta name="theme-color" content="#A24D12">
+<link rel="canonical" href="https://linkcowboy.com/texas">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23A24D12'/%3E%3Crect x='2' y='3' width='2' height='2' fill='%23f0ead6'/%3E%3Crect x='12' y='3' width='2' height='2' fill='%23f0ead6'/%3E%3Crect x='2' y='5' width='12' height='2' fill='%23f0ead6'/%3E%3Crect x='6' y='7' width='4' height='5' fill='%23f0ead6'/%3E%3Crect x='7' y='9' width='1' height='1' fill='%23A24D12'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*
+ * Longhorn Links, the Link Cowboy family style, gone Austin.
+ * Pixel sprites drawn on canvas, Press Start 2P headings, hard shadows,
+ * hill-country green under a big Texas sky, bats over the skyline.
+ *
+ * Chrome uses --orange #A24D12 per house style (deliberately not UT's
+ * burnt orange, for trademark distance). The longhorn sprite itself is
+ * reproduced exactly from the supplied design.
+ */
+:root{
+  --ink:#2b2016;
+  --cream:#f6eed9;
+  --card:#fffaf0;
+  --orange:#A24D12;
+  --orange-d:#7d3a0d;
+  --black:#1e1a17;
+  --muted:rgba(43,32,22,.72);
+  --sky1:#a5d8eb; --sky2:#c2e4f1; --sky3:#dcf0f8;
+  --field1:#a4c96b; --field2:#8bb455;
+  --px:'Press Start 2P',monospace;
+  --body:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:118px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+a{color:inherit}
+canvas{image-rendering:pixelated;display:block}
+
+/* ---------- masthead scene ---------- */
+.masthead{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(to bottom, var(--sky1) 0 35%, var(--sky2) 35% 70%, var(--sky3) 70% 100%);
+  border-bottom:4px solid var(--ink);
+}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;top:26px;right:6vw;width:calc(9px * 7)}
+.cloud{position:absolute;width:calc(16px * 5);opacity:.95;animation:drift linear infinite}
+.cloud.c2{width:calc(16px * 4)}
+.cloud.c3{width:calc(16px * 3);opacity:.85}
+@keyframes drift{from{transform:translateX(-25vw)}to{transform:translateX(115vw)}}
+.ridge{position:absolute;left:0;right:0;bottom:52px;height:0}
+.ridge .bonnet{position:absolute;bottom:-4px}
+.field{
+  position:absolute;left:0;right:0;bottom:0;height:56px;
+  background:linear-gradient(to bottom, var(--field1) 0 55%, var(--field2) 55% 100%);
+}
+.field::before{ /* pixel-stepped grass line */
+  content:"";position:absolute;left:0;right:0;top:-6px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--field1) 0 14px, transparent 14px 24px,
+    var(--field1) 24px 34px, transparent 34px 48px);
+}
+.tower{position:absolute;right:6vw;bottom:8px;z-index:8}
+.tower canvas{width:calc(11px * 5)}
+.walker{
+  position:absolute;bottom:8px;left:0;
+  --walk-max:70vw;
+  animation:mosey 44s linear infinite alternate;animation-delay:-12s;
+}
+.walker canvas{width:calc(23px * 4);animation:faceflip 88s linear infinite;animation-delay:-12s}
+@keyframes mosey{from{transform:translateX(2vw)}to{transform:translateX(var(--walk-max))}}
+@keyframes faceflip{0%,49.99%{transform:scaleX(1)}50%,100%{transform:scaleX(-1)}}
+.batflock{position:absolute;bottom:124px;left:0;animation:batdrift 52s linear infinite;animation-delay:-26s}
+.batflock canvas{width:calc(12px * 3);opacity:.62}
+.batflock canvas.b2{margin:4px 0 0 54px}
+.batflock canvas.b3{margin:4px 0 0 22px}
+@keyframes batdrift{from{transform:translateX(112vw)}to{transform:translateX(-20vw)}}
+
+.topbar{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dealschip{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:#deaa4e;
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  white-space:nowrap;
+}
+.dealschip:hover,.dealschip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.backlink{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:var(--cream);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.backlink:hover,.backlink:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.backlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+
+.hero{position:relative;z-index:2;text-align:center;padding:30px 20px 190px}
+.mascot{width:calc(23px * 5);margin:0 auto 18px;filter:drop-shadow(3px 3px 0 rgba(43,32,22,.2))}
+h1{
+  font-family:var(--px);
+  font-size:clamp(20px,4.6vw,42px);
+  line-height:1.3;letter-spacing:.02em;
+  text-shadow:4px 4px 0 rgba(255,255,255,.65);
+}
+h1 .lh{color:var(--orange)}
+.tag{
+  font-family:var(--px);
+  font-size:clamp(8px,1.5vw,11px);
+  margin-top:16px;line-height:2;color:#31566b;
+}
+.blurb{
+  margin:14px auto 0;max-width:48ch;
+  font-size:clamp(14px,1.9vw,16px);font-weight:500;
+  color:var(--muted);
+}
+.blurb b{font-weight:700;border-bottom:3px solid var(--orange);color:var(--ink)}
+.edition{
+  font-family:var(--px);font-size:8px;line-height:1;
+  margin-top:20px;color:#4a6b7d;
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+.edition .dot{width:6px;height:6px;background:var(--orange)}
+
+/* ---------- audience tab switch (undergrad / MBA) ---------- */
+.aud-tabs{
+  display:flex;justify-content:center;gap:0;
+  margin:26px auto 0;width:max-content;max-width:100%;
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  background:var(--cream);
+}
+.aud-tab{
+  font-family:var(--px);font-size:10px;line-height:1;
+  padding:14px 20px;text-decoration:none;color:var(--ink);
+  background:var(--cream);
+  transition:background .12s steps(2),color .12s steps(2);
+  white-space:nowrap;
+}
+.aud-tab + .aud-tab{border-left:4px solid var(--ink)}
+.aud-tab:hover,.aud-tab:focus-visible{background:#efe2c6;outline:none}
+.aud-tab[aria-current="page"]{background:var(--orange);color:#fff}
+.aud-tab[aria-current="page"]:hover{background:var(--orange)}
+
+/* ---------- sticky search + nav ---------- */
+.sticky{
+  position:sticky;top:0;z-index:50;
+  background:var(--black);
+  border-bottom:4px solid var(--orange);
+}
+.searchwrap{
+  max-width:1140px;margin:0 auto;
+  padding:12px 20px 8px;
+  display:flex;align-items:center;gap:14px;
+}
+.searchlabel{font-family:var(--px);font-size:10px;color:var(--cream);white-space:nowrap}
+.searchbox{position:relative;flex:1}
+#search{
+  width:100%;
+  font-family:var(--body);font-weight:500;font-size:16px;
+  padding:11px 42px 11px 12px;
+  border:3px solid var(--ink);
+  background:var(--card);color:var(--ink);
+  outline:none;border-radius:0;
+}
+#search::placeholder{color:#8b7f6d;font-weight:400}
+#search:focus{box-shadow:0 0 0 3px var(--orange)}
+.searchbox .ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--orange-d);pointer-events:none}
+.searchbox .clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  border:2px solid var(--ink);background:var(--orange);color:#fff;
+  width:26px;height:26px;font-size:15px;line-height:1;cursor:pointer;display:none;
+}
+.nav{
+  max-width:1140px;margin:0 auto;
+  display:flex;gap:10px;overflow-x:auto;
+  padding:6px 20px 14px;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  font-family:var(--px);font-size:8px;line-height:1;
+  white-space:nowrap;text-decoration:none;
+  color:var(--cream);
+  border:3px solid rgba(246,238,217,.45);
+  padding:8px 10px;
+  transition:background .12s steps(2),color .12s steps(2),border-color .12s steps(2);
+}
+.nav a:hover,.nav a:focus-visible{background:var(--orange);border-color:var(--orange);color:#fff;outline:none}
+
+/* ---------- sections + cards ---------- */
+main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
+.section{margin-top:40px;scroll-margin-top:118px}
+.sechead{display:flex;align-items:center;gap:14px}
+.sechead h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(13px,2.4vw,17px);line-height:1.5;
+  color:var(--ink);
+}
+.sechead .count{font-family:var(--px);font-size:8px;color:var(--orange-d);white-space:nowrap}
+.secrule{
+  height:6px;margin-top:10px;
+  background:repeating-linear-gradient(to right, var(--orange) 0 14px, transparent 14px 22px);
+}
+.grid{
+  display:grid;gap:22px;margin-top:20px;
+  grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+}
+.card{
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:16px 15px 14px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  min-height:122px;
+}
+.card:hover,.card:focus-visible{
+  transform:translate(-3px,-3px);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  outline:none;
+}
+.card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.card:focus-visible{outline:3px dashed var(--orange);outline-offset:3px}
+.cardtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card h3{
+  font-family:var(--px);font-weight:400;
+  font-size:10px;line-height:1.7;letter-spacing:.02em;
+}
+.card:hover h3,.card:focus-visible h3{color:var(--orange-d)}
+.badges{display:flex;flex-direction:column;gap:4px;align-items:flex-end;flex:none}
+.badge{
+  font-family:var(--px);font-size:7px;line-height:1;
+  white-space:nowrap;
+  border:2px solid var(--orange);color:var(--orange-d);
+  padding:4px 5px;margin-top:2px;
+}
+.badge.ext{border-color:#4a6b7d;color:#3c5768}
+.card p{font-size:13.5px;color:var(--muted);margin-top:9px;flex:1}
+.card .host{
+  font-family:var(--body);font-weight:700;font-size:12px;
+  color:var(--orange-d);margin-top:12px;
+  display:flex;align-items:center;gap:6px;min-width:0;
+}
+.card .host .hosturl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.card .host .arw{font-family:var(--px);font-size:8px;flex:none}
+.card:hover .host .arw,.card:focus-visible .host .arw{animation:nudge .6s steps(2) infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.noresults{
+  display:none;text-align:center;padding:56px 16px;
+  font-family:var(--px);font-size:10px;line-height:2;color:var(--muted);
+}
+.noresults b{color:var(--orange-d)}
+
+/* ---------- "start here" admit callout ---------- */
+.section.admit{
+  background:var(--card);
+  border:4px solid var(--orange);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  overflow:hidden;
+}
+.section.admit .admit-head{
+  background:var(--orange);
+  border-bottom:4px solid var(--ink);
+  padding:15px 18px;
+}
+.section.admit .admit-eyebrow{
+  display:block;font-family:var(--px);font-size:8px;line-height:1;
+  color:rgba(255,255,255,.82);margin-bottom:9px;letter-spacing:.04em;
+}
+.section.admit .admit-head h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(12px,2.2vw,15px);line-height:1.45;color:#fff;
+}
+.section.admit .admit-note{
+  padding:15px 18px 2px;margin:0;
+  font-size:14px;font-weight:500;color:var(--muted);
+}
+.section.admit .grid{padding:0 18px}
+
+/* ---------- suggest a link ---------- */
+.suggest{
+  margin-top:52px;
+  background:var(--card);
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+}
+.suggest .sh{
+  background:var(--orange);
+  border-bottom:4px solid var(--ink);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+}
+.suggest .sh canvas{width:calc(13px * 2)}
+.suggest .sh .t{font-family:var(--px);font-size:clamp(11px,2vw,14px);color:#fff;line-height:1.5}
+.suggest .body{padding:18px 18px 20px}
+.suggest .lede{font-size:14.5px;color:var(--muted);max-width:60ch;margin-bottom:18px}
+.frow{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.field-row{display:flex;flex-direction:column}
+.field-row.full{grid-column:1/-1}
+.field-row label{
+  font-family:var(--px);font-size:8px;line-height:1;
+  color:var(--ink);margin-bottom:7px;
+}
+.field-row input,.field-row textarea{
+  font-family:var(--body);font-size:15px;color:var(--ink);
+  width:100%;padding:10px 11px;
+  border:3px solid var(--ink);background:#fff;
+  outline:none;resize:vertical;border-radius:0;
+}
+.field-row input:focus,.field-row textarea:focus{box-shadow:0 0 0 3px var(--orange)}
+.submitrow{display:flex;align-items:center;gap:16px;margin-top:18px;flex-wrap:wrap}
+button.send{
+  font-family:var(--px);font-size:10px;
+  color:#fff;background:var(--orange);
+  border:3px solid var(--ink);
+  padding:13px 22px;cursor:pointer;
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+button.send:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(43,32,22,.8)}
+button.send:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.formnote{font-size:13.5px;font-weight:500;color:var(--muted)}
+.formnote.ok{color:var(--orange-d);font-weight:700}
+
+/* ---------- footer ---------- */
+footer{
+  margin-top:52px;
+  background:var(--black);color:#cbbfae;
+  border-top:4px solid var(--orange);
+  position:relative;
+}
+footer::before{ /* pixel notches on the footer edge */
+  content:"";position:absolute;left:0;right:0;top:-10px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--orange) 0 14px, transparent 14px 24px,
+    var(--orange) 24px 34px, transparent 34px 48px);
+}
+.footwrap{max-width:1140px;margin:0 auto;padding:30px 20px 34px;text-align:center}
+.footwrap .hornrow{display:flex;justify-content:center;align-items:flex-end;gap:26px;margin-bottom:18px}
+.footwrap .hornrow canvas{width:calc(13px * 3);opacity:.95}
+.footwrap .hornrow canvas.bb{width:calc(3px * 5)}
+.disclaimer{font-size:13px;max-width:66ch;margin:0 auto 16px;line-height:1.7}
+.disclaimer b{color:#fff}
+.family{font-family:var(--px);font-size:8px;line-height:2;color:var(--cream)}
+.family a{color:#e08b4f;text-decoration:none;border-bottom:2px solid var(--orange);padding-bottom:2px}
+.family a:hover,.family a:focus-visible{color:#fff;outline:none}
+.copyright{margin-top:12px;font-family:var(--px);font-size:7px;line-height:2;color:#8c8175}
+.copyright .px-star{color:var(--orange)}
+
+@media (max-width:640px){
+  html{scroll-padding-top:112px}
+  .section{scroll-margin-top:112px}
+  .searchlabel{display:none}
+  .frow{grid-template-columns:1fr}
+  .hero{padding:22px 16px 160px}
+  .card{min-height:0}
+  .walker canvas{width:calc(23px * 3)}
+  .tower canvas{width:calc(11px * 4)}
+  .cloud.c3{display:none}
+  .batflock{bottom:104px}
+  .batflock canvas{width:calc(12px * 2)}
+  .topbar{padding:14px 14px 0}
+  .backlink,.dealschip{font-size:8px;padding:9px 10px;border-width:3px;box-shadow:3px 3px 0 rgba(43,32,22,.8)}
+  .aud-tab{font-size:8px;padding:12px 14px}
+  .sun{top:84px;right:5vw;width:calc(9px * 5)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+  .cloud,.walker,.walker canvas,.batflock,.card,.backlink,button.send,.card .host .arw{animation:none;transition:none}
+  .walker{left:8vw}
+  .batflock{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="scene" aria-hidden="true">
+    <canvas class="sun" data-sprite="sun"></canvas>
+    <canvas class="cloud c1" data-sprite="cloud" style="top:34px;animation-duration:90s;animation-delay:-18s"></canvas>
+    <canvas class="cloud c2" data-sprite="cloud" style="top:96px;animation-duration:125s;animation-delay:-64s"></canvas>
+    <canvas class="cloud c3" data-sprite="cloud" style="top:20px;animation-duration:105s;animation-delay:-95s"></canvas>
+    <div class="batflock">
+      <canvas data-sprite="bat"></canvas>
+      <canvas class="b2" data-sprite="bat"></canvas>
+      <canvas class="b3" data-sprite="bat"></canvas>
+    </div>
+    <div class="ridge" id="ridge"></div>
+    <div class="field">
+      <div class="tower"><canvas data-sprite="tower"></canvas></div>
+      <div class="walker"><canvas id="horn" data-sprite="walk0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <a class="backlink" href="https://linkcowboy.com">&lt;&lt; LINK COWBOY</a>
+    <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+  </div>
+
+  <div class="hero">
+    <canvas class="mascot" data-sprite="walk0" role="img" aria-label="Pixel longhorn"></canvas>
+    <h1><span class="lh">LONGHORN</span> LINKS</h1>
+    <p class="tag">EVERY UT LINK.<br>ONE PAGE.</p>
+    <p class="blurb">Every link a <b>UT Austin</b> student actually needs: Canvas, registration, What I Owe, tickets, dining, and everything else scattered across a dozen department sites, rounded up so you stop hunting for it. Unofficial and student-built for Longhorns on the Forty Acres.</p>
+    <div class="edition">
+      <span>VOL. 1</span><i class="dot"></i><span>FALL 2026</span><i class="dot"></i><span id="linkcount">LINKS</span>
+    </div>
+    <nav class="aud-tabs" aria-label="Choose undergrad or MBA">
+      <a class="aud-tab" href="/texas" aria-current="page">UNDERGRAD</a>
+      <a class="aud-tab" href="https://longhornlinks.com/mba">MBA</a>
+    </nav>
+  </div>
+</header>
+
+<div class="sticky">
+  <div class="searchwrap">
+    <span class="searchlabel">SEARCH</span>
+    <div class="searchbox">
+      <input id="search" type="text" autocomplete="off" spellcheck="false"
+        placeholder="Try &ldquo;canvas&rdquo;, &ldquo;tickets&rdquo;, &ldquo;financial aid&rdquo;, &ldquo;eid&rdquo;&hellip;"
+        aria-label="Search all links by name, category, or keyword">
+      <span class="ico" aria-hidden="true">&#9906;</span>
+      <button class="clear" id="clearBtn" type="button" aria-label="Clear search">&times;</button>
+    </div>
+  </div>
+  <nav class="nav" id="nav" aria-label="Jump to category"></nav>
+</div>
+
+<main id="main">
+  <div class="noresults" id="noresults">NOTHING MATCHES <b id="nrterm"></b>.<br>TRY ANOTHER WORD, OR SUGGEST THE LINK YOU&rsquo;RE MISSING BELOW.</div>
+</main>
+
+<footer>
+  <div class="footwrap">
+    <div class="hornrow" aria-hidden="true">
+      <canvas class="bb" data-sprite="bluebonnet"></canvas>
+      <canvas data-sprite="head"></canvas>
+      <canvas class="bb" data-sprite="bluebonnet"></canvas>
+    </div>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin. Links point to official UT and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.1.</p>
+    <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
+    <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
+  </div>
+</footer>
+
+<script>
+/*
+ * Longhorn Links (linkcowboy.com/texas)
+ * Same links and setup as longhornlinks.com, served from the Link Cowboy
+ * domain so it stays reachable on the UT network.
+ */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYGxdju1XchwNGAORmB3Fz4NSPXQYQrpo-eur2R3pbIGcRTuwdgvkqltSsMfd89WT2/exec";
+const SUGGEST_MAILTO = "cobynorton@gmail.com";  // fallback inbox when SCRIPT_URL is empty
+
+/* ---------- pixel sprites (Link Cowboy style) ----------
+ * walk0 is the supplied longhorn design, reproduced pixel for pixel.
+ * walk1 only moves the legs, so the walk cycle keeps the same body.
+ */
+const PIX = {
+  palette:{
+    "o":"#bf5700","O":"#964400","W":"#f0ead6","k":"#e8b088","V":"#1e1812",
+    "G":"#ffd35c","u":"#3a58ac","g":"#3f7a33","C":"#ffffff"
+  },
+  sprites:{
+    walk0:[
+      "........WW...........WW",
+      "........WW...........WW",
+      "........WWWWWWWWWWWWWWW",
+      ".............oooooo....",
+      ".............oVooVo....",
+      "O............okkkko....",
+      "Ooooooooooooooooooo....",
+      "Ooooooooooooooooooo....",
+      ".ooooooooooooooooo.....",
+      "..oooooooooooooooo.....",
+      "...oo.oo.....oo.oo.....",
+      "...oo.oo.....oo.oo.....",
+      "...OO.OO.....OO.OO....."
+    ],
+    walk1:[
+      "........WW...........WW",
+      "........WW...........WW",
+      "........WWWWWWWWWWWWWWW",
+      ".............oooooo....",
+      ".............oVooVo....",
+      "O............okkkko....",
+      "Ooooooooooooooooooo....",
+      "Ooooooooooooooooooo....",
+      ".ooooooooooooooooo.....",
+      "..oooooooooooooooo.....",
+      "..oo..oo....oo..oo.....",
+      "..oo..oo....oo..oo.....",
+      "..OO..OO....OO..OO....."
+    ],
+    head:[
+      "WW.........WW",
+      "WW.........WW",
+      "WWWWWWWWWWWWW",
+      "....oooooo...",
+      "....oVooVo...",
+      "....oooooo...",
+      "....okkkko...",
+      "....oooooo..."
+    ],
+    tower:[
+      ".....V.....",
+      "....VWV....",
+      "....VWV....",
+      "...VWWWV...",
+      "..VWWWWWV..",
+      "..VoooooV..",
+      "..VoooooV..",
+      "..VWWWWWV..",
+      ".VWWWWWWWV.",
+      ".VWVWWWVWV.",
+      ".VWWWWWWWV.",
+      ".VWVGGGVWV.",
+      ".VWWWWWWWV.",
+      ".VWWWWWWWV.",
+      ".VWVWWWVWV.",
+      ".VWWWWWWWV.",
+      "VWWWWWWWWWV",
+      "VWWWWWWWWWV",
+      "VWVVWWWVVWV",
+      "VWWWWWWWWWV",
+      "VWWWWWWWWWV",
+      "VVVVVVVVVVV"
+    ],
+    bat:[
+      "V..........V",
+      "VV........VV",
+      ".VVV.VV.VVV.",
+      "..VVVVVVVV..",
+      "....VVVV...."
+    ],
+    bluebonnet:[
+      "..C..",
+      ".CCC.",
+      ".uuu.",
+      ".uuu.",
+      ".uuu.",
+      "..u..",
+      "..g..",
+      ".g.g.",
+      "..g.."
+    ],
+    sun:[
+      "....G....",
+      "..GGGGG..",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "GGGGGGGGG",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "..GGGGG..",
+      "....G...."
+    ],
+    cloud:[
+      ".....CCCCC......",
+      "....CCCCCCCC....",
+      "...CCCCCCCCCC...",
+      ".CCCCCCCCCCCCCC.",
+      ".CCCCCCCCCCCCCC.",
+      "................"
+    ]
+  }
+};
+
+function drawSprite(canvas, name){
+  const map = PIX.sprites[name];
+  if(!map) return;
+  const h = map.length, w = map[0].length;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,w,h);
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const c = PIX.palette[map[y][x]];
+      if(c){ ctx.fillStyle = c; ctx.fillRect(x,y,1,1); }
+    }
+  }
+}
+document.querySelectorAll("canvas[data-sprite]").forEach(c => drawSprite(c, c.dataset.sprite));
+
+/* bluebonnets along the ridge (seeded, deterministic) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rand = mulberry32(1883); /* UT founded 1883 */
+const ridge = document.getElementById("ridge");
+for(let i=0; i<30; i++){
+  const holder = document.createElement("div");
+  holder.className = "bonnet";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, "bluebonnet");
+  const s = 3 + Math.floor(rand()*3); /* 3x - 5x */
+  cv.style.width = (cv.width * s) + "px";
+  holder.style.left = (rand()*97) + "vw";
+  holder.style.bottom = (-6 + rand()*10) + "px";
+  holder.style.zIndex = s; /* bigger blooms in front */
+  holder.appendChild(cv);
+  ridge.appendChild(holder);
+}
+
+/* walking longhorn animation */
+const horn = document.getElementById("horn");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduced){
+  let step = 0;
+  setInterval(() => { step ^= 1; drawSprite(horn, "walk" + step); }, 380);
+}
+
+/* ---------- link data ---------- */
+const CATEGORIES = [
+  "Academics & Classes",
+  "Registration & Records",
+  "Tuition & Financial Aid",
+  "Clubs, Greek & Campus Life",
+  "Longhorn Sports",
+  "Housing & Dining",
+  "Health & Safety",
+  "UT Essentials",
+  "Fall Admits"
+];
+
+const LINKS = [
+  // Academics & Classes
+  {name:"Course Schedule (Registrar)", url:"https://registrar.utexas.edu/schedules", category:"Academics & Classes", desc:"Every class, its time, location, and unique number by semester.", keywords:["course schedule","registrar","unique number","sections","classes","times"], login:false},
+  {name:"Course Catalog & Degree Plans", url:"https://catalog.utexas.edu/", category:"Academics & Classes", desc:"Official course descriptions, prerequisites, and degree requirements.", keywords:["catalog","degree plan","prerequisites","requirements","majors","minors"], login:false},
+  {name:"Academic Calendar", url:"https://registrar.utexas.edu/calendars", category:"Academics & Classes", desc:"Add/drop, tuition due dates, breaks, and deadlines.", keywords:["academic calendar","dates","deadlines","add drop","breaks","semester"], login:false},
+  {name:"My Grades", url:"https://utdirect.utexas.edu/apps/student/gradereport/student/", category:"Academics & Classes", desc:"Your official grade report - separate from Canvas.", keywords:["grades","grade report","gpa","transcript","marks"], login:true},
+  {name:"Canvas (LMS)", url:"https://utexas.instructure.com/", category:"Academics & Classes", desc:"Your courses, assignments, and grades.", keywords:["canvas","lms","assignments","coursework","instructure","modules"], login:true},
+  {name:"UT Libraries", url:"https://www.lib.utexas.edu/", category:"Academics & Classes", desc:"Study rooms, research help, and the PCL.", keywords:["library","libraries","pcl","study rooms","research","databases","books"], login:false},
+  {name:"Sanger Learning Center", url:"https://ugs.utexas.edu/slc/", category:"Academics & Classes", desc:"Free tutoring, study skills, and academic coaching.", keywords:["sanger","tutoring","tutor","study skills","coaching","academic help"], login:false},
+
+  // Registration & Records
+  {name:"Register for Classes", url:"https://utdirect.utexas.edu/registration/", category:"Registration & Records", desc:"The live add/drop registration system.", keywords:["register","registration","add drop","enroll","waitlist","classes"], login:true},
+  {name:"How to Register (One Stop)", url:"https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/", category:"Registration & Records", desc:"Step-by-step on registering, waitlists, and bars.", keywords:["how to register","one stop","waitlist","bars","holds","registration help"], login:false},
+  {name:"MyUT Student Portal", url:"https://my.utexas.edu/", category:"Registration & Records", desc:"Your dashboard - links out to records, billing, and more.", keywords:["myut","portal","dashboard","records","student portal","home"], login:true},
+  {name:"Texas One Stop", url:"https://onestop.utexas.edu/", category:"Registration & Records", desc:"Registrar, records, financial aid, and billing in one office.", keywords:["one stop","registrar","records","billing","financial aid","help"], login:false},
+
+  // Tuition & Financial Aid
+  {name:"Tuition & “What I Owe”", url:"https://utdirect.utexas.edu/acct/rec/wio/wio_home.WBX", category:"Tuition & Financial Aid", desc:"View your bill, pay tuition, and confirm attendance.", keywords:["what i owe","wio","tuition","bill","pay","confirm attendance","balance"], login:true},
+  {name:"Direct Deposit (Refunds)", url:"https://utdirect.utexas.edu/acct/rec/weft/webEFT_info.WBX", category:"Tuition & Financial Aid", desc:"Set up direct deposit so refunds and student-job pay land in your bank.", keywords:["direct deposit","refund","eft","bank","paycheck","reimbursement"], login:true},
+  {name:"Student Tax Forms (1098-T)", url:"https://afm.utexas.edu/student-accounts-receivable/resources/student-tax-form-information", category:"Tuition & Financial Aid", desc:"Your 1098-T tuition statement and 1098-E loan-interest form for taxes.", keywords:["1098-t","1098-e","taxes","tax form","tuition statement","irs"], login:false},
+  {name:"Paying Your Tuition", url:"https://onestop.utexas.edu/managing-costs/paying-your-tuition/", category:"Tuition & Financial Aid", desc:"How and where to pay, payment plans, and due dates.", keywords:["pay tuition","payment plan","installment","due date","cashier"], login:false},
+  {name:"Financial Aid", url:"https://onestop.utexas.edu/managing-costs/financial-aid/", category:"Tuition & Financial Aid", desc:"FAFSA, grants, loans, and disbursement info.", keywords:["financial aid","fafsa","grants","loans","disbursement","aid"], login:false},
+  {name:"Scholarships", url:"https://onestop.utexas.edu/managing-costs/scholarships/", category:"Tuition & Financial Aid", desc:"University-wide and college scholarships.", keywords:["scholarships","awards","merit","funding","free money","apply"], login:false},
+  {name:"Student Jobs (Workday)", url:"https://utaustin.wd1.myworkdayjobs.com/UTstudent", category:"Tuition & Financial Aid", desc:"On-campus student jobs - UT's official hiring portal.", keywords:["student jobs","workday","on campus job","employment","hiring","work study"], login:false, ext:true},
+
+  // Clubs, Greek & Campus Life
+  {name:"HornsLink - All 1,000+ Orgs", url:"https://utexas.campuslabs.com/engage/", category:"Clubs, Greek & Campus Life", desc:"UT's official directory of every student organization.", keywords:["hornslink","orgs","organizations","clubs","get involved","directory"], login:true},
+  {name:"Find a Student Org (Dean of Students)", url:"https://deanofstudents.utexas.edu/so/find-a-student-organization.php", category:"Clubs, Greek & Campus Life", desc:"How to explore orgs, org fairs, and getting involved.", keywords:["student org","dean of students","org fair","join","involvement"], login:false},
+  {name:"Sorority & Fraternity Life", url:"https://deanofstudents.utexas.edu/sfl/", category:"Clubs, Greek & Campus Life", desc:"All four Greek councils, recruitment, and how to join.", keywords:["greek life","sorority","fraternity","rush","recruitment","sfl","panhellenic","ifc"], login:false},
+  {name:"RecSports", url:"https://www.utrecsports.org/", category:"Clubs, Greek & Campus Life", desc:"Gregory Gym, fitness classes, club sports, and outdoor trips.", keywords:["recsports","gym","gregory","fitness","club sports","workout","outdoor"], login:false},
+  {name:"Campus Events + Entertainment", url:"https://universityunions.utexas.edu/", category:"Clubs, Greek & Campus Life", desc:"Student-run events, concerts, and free movies.", keywords:["events","university unions","concerts","movies","entertainment","programs"], login:false},
+  {name:"The Daily Texan", url:"https://thedailytexan.com/", category:"Clubs, Greek & Campus Life", desc:"UT's student newspaper since 1900 - campus news, sports, and life.", keywords:["daily texan","newspaper","news","student media","journalism"], login:false, ext:true},
+  {name:"Texas Student Media", url:"https://texasstudentmedia.com/", category:"Clubs, Greek & Campus Life", desc:"All student outlets: KVRX radio, TSTV, the Travesty, Cactus yearbook.", keywords:["texas student media","kvrx","tstv","travesty","cactus","yearbook","radio"], login:false, ext:true},
+
+  // Longhorn Sports
+  {name:"The Big Ticket", url:"https://texaslonghorns.com/sports/2026/4/6/the-big-ticket-the-ticket-option-for-ut-students", category:"Longhorn Sports", desc:"The student season ticket - football and every home sport, one price.", keywords:["big ticket","season ticket","student tickets","football","games"], login:false, ext:true},
+  {name:"Football Schedule", url:"https://texaslonghorns.com/sports/football/schedule", category:"Longhorn Sports", desc:"Every game, kickoff time, and TV channel this season.", keywords:["football","schedule","kickoff","games","tv","season"], login:false, ext:true},
+  {name:"All Longhorn Sports", url:"https://texaslonghorns.com/", category:"Longhorn Sports", desc:"Schedules and scores for every UT team, fall through spring.", keywords:["athletics","sports","scores","schedules","texaslonghorns","teams"], login:false, ext:true},
+  {name:"Intramural Sports (IM)", url:"https://www.utrecsports.org/intramurals", category:"Longhorn Sports", desc:"25+ leagues and tournaments a semester - sign up on IMLeagues.", keywords:["intramural","im sports","imleagues","leagues","tournaments","rec"], login:false},
+  {name:"Student Tickets", url:"https://texaslonghorns.com/sports/2018/7/23/tickets-students-html", category:"Longhorn Sports", desc:"How claiming and entry works for students.", keywords:["student tickets","claim","entry","gameday","tickets"], login:false, ext:true},
+
+  // Housing & Dining
+  {name:"University Housing & Dining", url:"https://housing.utexas.edu/", category:"Housing & Dining", desc:"All 15 residence halls, the housing application, and meal plans.", keywords:["housing","dorms","residence halls","meal plan","uhd","application"], login:false},
+  {name:"Dining Halls & Menus", url:"https://housing.utexas.edu/dining", category:"Housing & Dining", desc:"Where to eat on campus and what's being served.", keywords:["dining","menus","food","dining hall","eat","jester","kins"], login:false},
+  {name:"Dining Balance", url:"https://utdirect.utexas.edu/utapps/uhd/services/dining/", category:"Housing & Dining", desc:"Check your Dine In Dollars and meal plan balance.", keywords:["dining balance","dine in dollars","meal plan","balance","bevo bucks"], login:true},
+  {name:"Off-Campus Living", url:"https://deanofstudents.utexas.edu/offcampus/", category:"Housing & Dining", desc:"Apartment search, roommates, and leases near campus.", keywords:["off campus","apartments","roommates","lease","west campus","rent"], login:false},
+  {name:"Campus Map", url:"https://maps.utexas.edu/", category:"Housing & Dining", desc:"Find buildings, classrooms, and everything on the 40 Acres.", keywords:["map","campus map","buildings","directions","forty acres","where"], login:false},
+  {name:"UT Shuttle & Bus Routes", url:"https://parking.utexas.edu/transportation/shuttles", category:"Housing & Dining", desc:"Campus shuttles and CapMetro routes, especially West Campus.", keywords:["shuttle","bus","capmetro","routes","transit","west campus"], login:false},
+  {name:"Parking & Transportation", url:"https://parking.utexas.edu/", category:"Housing & Dining", desc:"Permits, garages, and campus shuttles.", keywords:["parking","permit","garage","transportation","car","citation"], login:false},
+  {name:"UT Night Rides", url:"https://parking.utexas.edu/transportation/ut-night-rides", category:"Housing & Dining", desc:"Free late-night safe rides home for students.", keywords:["night rides","safe ride","late night","ride home","safety","transportation"], login:false},
+
+  // Health & Safety
+  {name:"Immunization Requirements", url:"https://www.healthyhorns.utexas.edu/uhs/immunization-medical-clearance-requirements.html", category:"Health & Safety", desc:"Required vaccines and medical clearance - needed BEFORE you can register.", keywords:["immunization","vaccine","medical clearance","meningitis","records","hold"], login:false},
+  {name:"University Health Services", url:"https://www.healthyhorns.utexas.edu/", category:"Health & Safety", desc:"Doctor visits, pharmacy, and urgent care on campus.", keywords:["uhs","health","doctor","pharmacy","urgent care","clinic","sick","healthyhorns"], login:false},
+  {name:"Counseling & Mental Health (CMHC)", url:"https://cmhc.utexas.edu/", category:"Health & Safety", desc:"Free counseling, crisis line, and wellness programs.", keywords:["cmhc","counseling","mental health","therapy","crisis","wellness"], login:false},
+  {name:"Free Legal Help (LSS)", url:"https://deanofstudents.utexas.edu/lss/", category:"Health & Safety", desc:"Free attorney consultations - lease review, landlord disputes, tickets, and more.", keywords:["legal","lawyer","attorney","lss","lease","landlord","tickets"], login:false},
+  {name:"Legal Resources & Expunction", url:"https://deanofstudents.utexas.edu/lss/resources.php", category:"Health & Safety", desc:"Record expunction help and referrals via Texas Law's pro bono program.", keywords:["expunction","legal resources","pro bono","record","referral","texas law"], login:false},
+  {name:"Disability & Access (D&A)", url:"https://disability.utexas.edu/", category:"Health & Safety", desc:"Academic accommodations, testing support, and accessibility services.", keywords:["disability","accommodations","accessibility","testing","ssd","d&a"], login:false},
+  {name:"Title IX", url:"https://titleix.utexas.edu/", category:"Health & Safety", desc:"Report or get support for sexual misconduct, discrimination, or harassment.", keywords:["title ix","report","misconduct","harassment","discrimination","support"], login:false},
+  {name:"Student Emergency Services (SOS)", url:"https://deanofstudents.utexas.edu/sos/", category:"Health & Safety", desc:"Emergency financial help, absence notices, and crisis support.", keywords:["sos","emergency","absence notice","crisis","financial help","support"], login:false},
+  {name:"UT Police & Campus Safety", url:"https://police.utexas.edu/", category:"Health & Safety", desc:"UTPD, emergency info, and safety escorts.", keywords:["utpd","police","safety","emergency","escort","report"], login:false},
+
+  // UT Essentials
+  {name:"UT EID Self-Service", url:"https://www.utexas.edu/eid", category:"UT Essentials", desc:"Look up or reset your EID and password.", keywords:["eid","password","reset","account","login","self service"], login:false},
+  {name:"DUO / Multi-Factor Setup", url:"https://mfa.login.utexas.edu/", category:"UT Essentials", desc:"Required to log into Canvas, MyUT, and more.", keywords:["duo","mfa","two factor","2fa","multi-factor","authentication","security"], login:true},
+  {name:"UT AI Tools", url:"https://tech.utexas.edu/services-tools/ai", category:"UT Essentials", desc:"University-approved AI tools and guidance for students.", keywords:["ai","chatgpt","copilot","tools","approved","guidance","tech"], login:false},
+  {name:"UT Email (Office 365)", url:"https://office365.austin.utexas.edu/", category:"UT Essentials", desc:"Your official university email - set it up day one.", keywords:["email","office 365","outlook","microsoft","inbox","mail"], login:true},
+  {name:"UT Zoom", url:"https://utexas.zoom.us/", category:"UT Essentials", desc:"Sign in for class sessions and virtual events.", keywords:["zoom","video","meeting","class","virtual","online"], login:true},
+  {name:"University Co-op (Bookstore)", url:"https://www.universitycoop.com/", category:"UT Essentials", desc:"Textbooks, supplies, and burnt-orange everything.", keywords:["co-op","coop","bookstore","textbooks","supplies","gear","apparel"], login:false, ext:true},
+  {name:"UT Austin - Main Site", url:"https://www.utexas.edu/", category:"UT Essentials", desc:"The university's front door.", keywords:["utexas","main site","university","home","front door"], login:false},
+
+  // Fall Admits (seasonal, for incoming students)
+  {name:"New Student Orientation", url:"https://orientation.utexas.edu/", category:"Fall Admits", desc:"Register for your session - required before you can enroll.", keywords:["orientation","nso","incoming","session","new student","required"], login:false},
+  {name:"Registration Plus (Chrome Extension)", url:"https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa", category:"Fall Admits", desc:"Student-built extension - grade distributions, prof ratings, and syllabi right in the course schedule.", keywords:["registration plus","extension","chrome","grade distribution","rate my professor","syllabi"], login:false, ext:true},
+  {name:"HornsLink - Browse 1,000+ Clubs", url:"https://utexas.campuslabs.com/engage/", category:"Fall Admits", desc:"UT's official org directory - find your people before you even arrive.", keywords:["hornslink","clubs","orgs","incoming","join","directory"], login:true},
+  {name:"Housing Application", url:"https://housing.utexas.edu/", category:"Fall Admits", desc:"Apply early - assignments are first-come, first-served.", keywords:["housing application","dorm","apply","incoming","residence hall","deadline"], login:false},
+  {name:"UT Night Rides", url:"https://parking.utexas.edu/transportation/ut-night-rides", category:"Fall Admits", desc:"Free late-night safe rides home for students - good to know before you arrive.", keywords:["night rides","safe ride","incoming","late night","safety"], login:false},
+  {name:"Immunization / Medical Clearance", url:"https://www.healthyhorns.utexas.edu/uhs/immunization-medical-clearance-requirements.html", category:"Fall Admits", desc:"Submit records 4-6 weeks ahead or you can't register.", keywords:["immunization","medical clearance","vaccine","incoming","deadline","hold"], login:false},
+  {name:"myIO (International Portal)", url:"https://global.utexas.edu/isss/advising-services/myio", category:"Fall Admits", desc:"The international student portal - check-in, immigration docs, advising.", keywords:["myio","international","isss","immigration","check in","visa","advising"], login:true},
+  {name:"International Students (Texas Global)", url:"https://global.utexas.edu/isss", category:"Fall Admits", desc:"Check-in, visas, and extra requirements for international Longhorns.", keywords:["international","texas global","isss","visa","check in","requirements"], login:false}
+];
+
+/* ---------- helpers ---------- */
+function hostOf(url){
+  try{ return new URL(url).hostname.replace(/^www\./,""); }
+  catch(err){ return url; }
+}
+function slug(text){
+  return text.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function esc(text){
+  return text.replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+
+/* Click and suggestion tracking. Fails silently if SCRIPT_URL is empty or unreachable. */
+function track(payload){
+  if(!SCRIPT_URL) return;
+  try{
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(SCRIPT_URL, new Blob([body], {type:"text/plain;charset=UTF-8"}));
+    }else{
+      fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"}, body:body});
+    }
+  }catch(err){ /* intentionally ignored */ }
+}
+
+/* ---------- render sections ---------- */
+const main = document.getElementById("main");
+const nav = document.getElementById("nav");
+const noresults = document.getElementById("noresults");
+
+document.getElementById("linkcount").textContent = LINKS.length + " LINKS";
+
+const INCOMING = "Fall Admits";
+
+function makeCard(link){
+  const card = document.createElement("a");
+  card.className = "card";
+  card.href = link.url;
+  card.target = "_blank";
+  card.rel = "noopener";
+  card.dataset.search = [link.name, link.category, link.desc, (link.keywords || []).join(" ")]
+    .join(" ").toLowerCase();
+  const badges =
+    (link.login ? '<span class="badge" title="Requires your UT EID login">EID</span>' : "") +
+    (link.ext ? '<span class="badge ext" title="Third-party site, not run by UT">EXT</span>' : "");
+  card.innerHTML =
+    '<div class="cardtop"><h3>' + esc(link.name.toUpperCase()) + '</h3>' +
+    (badges ? '<span class="badges">' + badges + '</span>' : "") +
+    '</div>' +
+    '<p>' + esc(link.desc) + '</p>' +
+    '<span class="host"><span class="hosturl">' + esc(hostOf(link.url)) + '</span> <span class="arw">&gt;&gt;</span></span>';
+  card.addEventListener("click", () => {
+    track({type:"click", name:link.name, url:link.url, category:link.category,
+      ts:new Date().toISOString(), ref:location.href});
+  });
+  return card;
+}
+
+/* prominent "start here" callout for incoming students, pulled to the very top */
+const incomingItems = LINKS.filter(link => link.category === INCOMING);
+if(incomingItems.length){
+  const chip = document.createElement("a");
+  chip.href = "#" + slug(INCOMING);
+  chip.textContent = "START HERE";
+  nav.appendChild(chip);
+
+  const admit = document.createElement("section");
+  admit.className = "section admit";
+  admit.id = slug(INCOMING);
+  admit.innerHTML =
+    '<div class="admit-head">' +
+      '<span class="admit-eyebrow">FALL 2026 ADMITS</span>' +
+      '<h2>NEW LONGHORN? START HERE.</h2>' +
+    '</div>' +
+    '<p class="admit-note">First things first. A couple of these have deadlines that block registration.</p>' +
+    '<div class="grid"></div>';
+  const agrid = admit.querySelector(".grid");
+  incomingItems.forEach(link => agrid.appendChild(makeCard(link)));
+  main.insertBefore(admit, noresults);
+}
+
+CATEGORIES.forEach(category => {
+  if(category === INCOMING) return;
+  const items = LINKS.filter(link => link.category === category);
+  if(!items.length) return;
+
+  const id = slug(category);
+
+  const chip = document.createElement("a");
+  chip.href = "#" + id;
+  chip.textContent = category.toUpperCase();
+  nav.appendChild(chip);
+
+  const section = document.createElement("section");
+  section.className = "section";
+  section.id = id;
+
+  const head = document.createElement("div");
+  head.className = "sechead";
+  head.innerHTML =
+    '<h2>' + esc(category.toUpperCase()) + '</h2>' +
+    '<span class="count">' + items.length + ' LINKS</span>';
+  section.appendChild(head);
+
+  const rule = document.createElement("div");
+  rule.className = "secrule";
+  section.appendChild(rule);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  items.forEach(link => grid.appendChild(makeCard(link)));
+  section.appendChild(grid);
+  main.insertBefore(section, noresults);
+});
+
+/* ---------- suggest-a-link form ---------- */
+const suggest = document.createElement("section");
+suggest.className = "suggest";
+suggest.id = "suggest";
+suggest.innerHTML =
+  '<div class="sh"><canvas id="shHead" aria-hidden="true"></canvas><span class="t">SUGGEST A LINK</span></div>' +
+  '<div class="body">' +
+    '<p class="lede">Know a link every Longhorn needs that isn&rsquo;t here? Send it over. If it&rsquo;s useful, it goes on the page.</p>' +
+    '<form id="suggestForm" novalidate>' +
+      '<div class="frow">' +
+        '<div class="field-row"><label for="sName">LINK NAME</label><input id="sName" name="name" required maxlength="120" placeholder="e.g. UT Farm Stand"></div>' +
+        '<div class="field-row"><label for="sUrl">URL</label><input id="sUrl" name="url" type="url" required maxlength="400" placeholder="https://&hellip;"></div>' +
+        '<div class="field-row full"><label for="sWhy">WHY IT BELONGS</label><textarea id="sWhy" name="why" rows="3" maxlength="600" placeholder="What is it and who needs it?"></textarea></div>' +
+      '</div>' +
+      '<div class="submitrow"><button class="send" type="submit">SEND IT &gt;&gt;</button><span class="formnote" id="formnote" role="status"></span></div>' +
+    '</form>' +
+  '</div>';
+main.insertBefore(suggest, noresults);
+drawSprite(document.getElementById("shHead"), "head");
+
+document.getElementById("suggestForm").addEventListener("submit", function(event){
+  event.preventDefault();
+  const name = document.getElementById("sName").value.trim();
+  const url = document.getElementById("sUrl").value.trim();
+  const why = document.getElementById("sWhy").value.trim();
+  const note = document.getElementById("formnote");
+  if(!name || !url) return;
+
+  if(SCRIPT_URL){
+    track({type:"suggestion", name:name, url:url, why:why, ts:new Date().toISOString(), ref:location.href});
+    note.textContent = "Thanks, got it. We'll take a look.";
+    note.classList.add("ok");
+    this.reset();
+  }else{
+    const subject = encodeURIComponent("Longhorn Links suggestion: " + name);
+    const bodyText = encodeURIComponent("Link name: " + name + "\nURL: " + url + "\nWhy it belongs: " + why);
+    window.location.href = "mailto:" + SUGGEST_MAILTO + "?subject=" + subject + "&body=" + bodyText;
+    note.textContent = "Opening your email app.";
+    note.classList.add("ok");
+  }
+  setTimeout(() => { note.textContent = ""; note.classList.remove("ok"); }, 6000);
+});
+
+/* ---------- live search ---------- */
+const search = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
+const sections = Array.from(main.querySelectorAll(".section"));
+
+function matches(haystack, terms){
+  return terms.every(term => haystack.includes(term));
+}
+
+function applyFilter(){
+  const query = search.value.trim().toLowerCase();
+  const terms = query.split(/\s+/).filter(Boolean);
+  clearBtn.style.display = query ? "block" : "none";
+
+  let anyVisible = false;
+  sections.forEach(section => {
+    let sectionVisible = false;
+    section.querySelectorAll(".card").forEach(card => {
+      const show = !terms.length || matches(card.dataset.search, terms);
+      card.style.display = show ? "" : "none";
+      if(show) sectionVisible = true;
+    });
+    section.style.display = sectionVisible ? "" : "none";
+    if(sectionVisible) anyVisible = true;
+  });
+
+  noresults.style.display = anyVisible ? "none" : "block";
+  if(!anyVisible) document.getElementById("nrterm").textContent = "“" + search.value.trim().toUpperCase() + "”";
+}
+
+search.addEventListener("input", applyFilter);
+clearBtn.addEventListener("click", () => { search.value = ""; applyFilter(); search.focus(); });
+search.addEventListener("keydown", event => { if(event.key === "Escape"){ search.value = ""; applyFilter(); } });
+</script>
+</body>
+</html>
