@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wolverine Links | University of Michigan Links, All in One Place</title>
+<meta name="description" content="Every link a University of Michigan student needs: Wolverine Access, Canvas, backpacking, tuition, financial aid, MBus, dining and more, rounded up on one page for Wolverines in Ann Arbor. Unofficial, student-built.">
+<meta property="og:title" content="Wolverine Links">
+<meta property="og:description" content="Every link a Michigan student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://linkcowboy.com/wolverines">
+<meta property="og:image" content="https://linkcowboy.com/wolverines-og.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Wolverine Links">
+<meta name="twitter:description" content="Every link a Michigan student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta name="twitter:image" content="https://linkcowboy.com/wolverines-og.png">
+<meta name="theme-color" content="#00274c">
+<link rel="canonical" href="https://linkcowboy.com/wolverines">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2300274c'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%23ffcb05'/%3E%3Crect x='12' y='2' width='2' height='2' fill='%23ffcb05'/%3E%3Crect x='2' y='4' width='12' height='5' fill='%23ffcb05'/%3E%3Crect x='4' y='5' width='1' height='1' fill='%2300274c'/%3E%3Crect x='11' y='5' width='1' height='1' fill='%2300274c'/%3E%3Crect x='4' y='9' width='8' height='3' fill='%23ffcb05'/%3E%3Crect x='6' y='10' width='1' height='2' fill='%2300274c'/%3E%3Crect x='9' y='10' width='1' height='2' fill='%2300274c'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*
+ * Wolverine Links, the Link Cowboy family style, gone Ann Arbor.
+ * Pixel sprites drawn on canvas, Press Start 2P headings, hard shadows,
+ * and Michigan blue (#00274c) with maize (#ffcb05) over cream and autumn.
+ */
+:root{
+  --ink:#2b2016;
+  --cream:#f6eed9;
+  --card:#fffaf0;
+  --brand:#00274c;
+  --brand-d:#001c37;
+  --maize:#ffcb05;
+  --maize-d:#a37f00;
+  --black:#001a33;
+  --muted:rgba(43,32,22,.72);
+  --sky1:#a9c8e0; --sky2:#c9dced; --sky3:#e9e2d0;
+  --pave1:#cfc7b6; --pave2:#b3aa98;
+  --px:'Press Start 2P',monospace;
+  --body:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:118px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+a{color:inherit}
+canvas{image-rendering:pixelated;display:block}
+
+/* ---------- masthead scene ---------- */
+.masthead{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(to bottom, var(--sky1) 0 35%, var(--sky2) 35% 70%, var(--sky3) 70% 100%);
+  border-bottom:4px solid var(--ink);
+}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;top:26px;right:6vw;width:calc(9px * 7)}
+.cloud{position:absolute;width:calc(16px * 5);opacity:.95;animation:drift linear infinite}
+.cloud.c2{width:calc(16px * 4)}
+.cloud.c3{width:calc(16px * 3);opacity:.85}
+@keyframes drift{from{transform:translateX(-25vw)}to{transform:translateX(115vw)}}
+.treeline{position:absolute;left:0;right:0;bottom:52px;height:0}
+.treeline .tree{position:absolute;bottom:-6px}
+/* the Diag: paved, not turf */
+.ground{
+  position:absolute;left:0;right:0;bottom:0;height:56px;z-index:6;
+  background:linear-gradient(to bottom, var(--pave1) 0 55%, var(--pave2) 55% 100%);
+}
+.ground::before{ /* pixel-stepped pavement edge */
+  content:"";position:absolute;left:0;right:0;top:-6px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--pave1) 0 14px, transparent 14px 24px,
+    var(--pave1) 24px 34px, transparent 34px 48px);
+}
+/* the brass block M set into the Diag pavement */
+.diagm{position:absolute;right:10vw;bottom:14px;z-index:6}
+.diagm canvas{width:calc(14px * 4)}
+/* Burton Tower, standing tall on the left rather than a bowl on the right.
+   It sits behind the treeline on purpose, so the trees give it some depth. */
+.tower{position:absolute;left:6vw;bottom:50px;z-index:2}
+.tower canvas{width:calc(12px * 6)}
+.walker{
+  position:absolute;bottom:6px;left:0;z-index:8;
+  --walk-max:66vw;
+  animation:stroll 46s linear infinite alternate;animation-delay:-10s;
+}
+.walker canvas{width:calc(27px * 4);animation:faceflip 92s linear infinite;animation-delay:-10s}
+@keyframes stroll{from{transform:translateX(24vw)}to{transform:translateX(var(--walk-max))}}
+@keyframes faceflip{0%,49.99%{transform:scaleX(1)}50%,100%{transform:scaleX(-1)}}
+/* autumn leaves falling, so the motion reads vertical instead of rolling past */
+.leaves{position:absolute;inset:0;overflow:hidden}
+.leaf{position:absolute;top:0;animation:fall linear infinite}
+.leaf canvas{width:calc(7px * 3);animation:sway 2.8s ease-in-out infinite alternate}
+@keyframes fall{from{transform:translateY(-40px)}to{transform:translateY(720px)}}
+@keyframes sway{from{transform:translateX(-18px) rotate(-25deg)}to{transform:translateX(18px) rotate(25deg)}}
+
+.topbar{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dealschip{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:#deaa4e;
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  white-space:nowrap;
+}
+.dealschip:hover,.dealschip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.backlink{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:var(--cream);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.backlink:hover,.backlink:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.backlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.giveback{display:inline-block;margin-top:18px;font-family:var(--px);font-size:8px;line-height:1.5;color:var(--maize);text-decoration:none;background:var(--brand);border:3px solid var(--ink);box-shadow:3px 3px 0 rgba(43,32,22,.7);padding:8px 11px;opacity:.92;transition:transform .12s steps(2),box-shadow .12s steps(2),opacity .12s}
+.giveback:hover,.giveback:focus-visible{transform:translate(-2px,-2px);box-shadow:5px 5px 0 rgba(43,32,22,.8);opacity:1;outline:none}
+.giveback:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+
+.hero{position:relative;z-index:2;text-align:center;padding:30px 20px 190px}
+.mascot{width:calc(16px * 5);margin:0 auto 18px;filter:drop-shadow(3px 3px 0 rgba(43,32,22,.2))}
+h1{
+  font-family:var(--px);
+  font-size:clamp(20px,4.6vw,42px);
+  line-height:1.3;letter-spacing:.02em;
+  text-shadow:4px 4px 0 rgba(255,255,255,.65);
+}
+h1 .wv{color:var(--brand)}
+.tag{
+  font-family:var(--px);
+  font-size:clamp(8px,1.5vw,11px);
+  margin-top:16px;line-height:2;color:#3a5266;
+}
+.blurb{
+  margin:14px auto 0;max-width:48ch;
+  font-size:clamp(14px,1.9vw,16px);font-weight:500;
+  color:var(--muted);
+}
+.blurb b{font-weight:700;border-bottom:3px solid var(--maize);color:var(--ink)}
+.edition{
+  font-family:var(--px);font-size:8px;line-height:1;
+  margin-top:20px;color:#4c6376;
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+.edition .dot{width:6px;height:6px;background:var(--brand)}
+
+/* ---------- sticky search + nav ---------- */
+.sticky{
+  position:sticky;top:0;z-index:50;
+  background:var(--black);
+  border-bottom:4px solid var(--maize);
+}
+.searchwrap{
+  max-width:1140px;margin:0 auto;
+  padding:12px 20px 8px;
+  display:flex;align-items:center;gap:14px;
+}
+.searchlabel{font-family:var(--px);font-size:10px;color:var(--maize);white-space:nowrap}
+.searchbox{position:relative;flex:1}
+#search{
+  width:100%;
+  font-family:var(--body);font-weight:500;font-size:16px;
+  padding:11px 42px 11px 12px;
+  border:3px solid var(--ink);
+  background:var(--card);color:var(--ink);
+  outline:none;border-radius:0;
+}
+#search::placeholder{color:#8b7f6d;font-weight:400}
+#search:focus{box-shadow:0 0 0 3px var(--maize)}
+.searchbox .ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--brand);pointer-events:none}
+.searchbox .clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  border:2px solid var(--ink);background:var(--brand);color:var(--maize);
+  width:26px;height:26px;font-size:15px;line-height:1;cursor:pointer;display:none;
+}
+.nav{
+  max-width:1140px;margin:0 auto;
+  display:flex;gap:10px;overflow-x:auto;
+  padding:6px 20px 14px;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  font-family:var(--px);font-size:8px;line-height:1;
+  white-space:nowrap;text-decoration:none;
+  color:var(--cream);
+  border:3px solid rgba(255,203,5,.45);
+  padding:8px 10px;
+  transition:background .12s steps(2),color .12s steps(2),border-color .12s steps(2);
+}
+.nav a:hover,.nav a:focus-visible{background:var(--maize);border-color:var(--maize);color:var(--brand);outline:none}
+
+/* ---------- sections + cards ---------- */
+main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
+.section{margin-top:40px;scroll-margin-top:118px}
+.sechead{display:flex;align-items:center;gap:14px}
+.sechead h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(13px,2.4vw,17px);line-height:1.5;
+  color:var(--ink);
+}
+.sechead .count{font-family:var(--px);font-size:8px;color:var(--brand);white-space:nowrap}
+.secrule{
+  height:6px;margin-top:10px;
+  background:repeating-linear-gradient(to right, var(--brand) 0 14px, var(--maize) 14px 22px);
+}
+.grid{
+  display:grid;gap:22px;margin-top:20px;
+  grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+}
+.card{
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:16px 15px 14px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  min-height:122px;
+}
+.card:hover,.card:focus-visible{
+  transform:translate(-3px,-3px);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  outline:none;
+}
+.card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.card:focus-visible{outline:3px dashed var(--brand);outline-offset:3px}
+.cardtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card h3{
+  font-family:var(--px);font-weight:400;
+  font-size:10px;line-height:1.7;letter-spacing:.02em;
+}
+.card:hover h3,.card:focus-visible h3{color:var(--brand)}
+.badge{
+  font-family:var(--px);font-size:7px;line-height:1;
+  white-space:nowrap;
+  border:2px solid var(--brand);color:var(--brand);
+  padding:4px 5px;margin-top:2px;
+}
+.card p{font-size:13.5px;color:var(--muted);margin-top:9px;flex:1}
+.card .host{
+  font-family:var(--body);font-weight:700;font-size:12px;
+  color:var(--brand);margin-top:12px;
+  display:flex;align-items:center;gap:6px;min-width:0;
+}
+.card .host .hosturl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.card .host .arw{font-family:var(--px);font-size:8px;flex:none}
+.card:hover .host .arw,.card:focus-visible .host .arw{animation:nudge .6s steps(2) infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.noresults{
+  display:none;text-align:center;padding:56px 16px;
+  font-family:var(--px);font-size:10px;line-height:2;color:var(--muted);
+}
+.noresults b{color:var(--brand)}
+
+/* ---------- "start here" admit callout ---------- */
+.section.admit{
+  background:var(--card);
+  border:4px solid var(--brand);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  overflow:hidden;
+}
+.section.admit .admit-head{
+  background:var(--brand);
+  border-bottom:4px solid var(--ink);
+  padding:15px 18px;
+}
+.section.admit .admit-eyebrow{
+  display:block;font-family:var(--px);font-size:8px;line-height:1;
+  color:var(--maize);margin-bottom:9px;letter-spacing:.04em;
+}
+.section.admit .admit-head h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(12px,2.2vw,15px);line-height:1.45;color:#fff;
+}
+.section.admit .admit-note{
+  padding:15px 18px 2px;margin:0;
+  font-size:14px;font-weight:500;color:var(--muted);
+}
+.section.admit .grid{padding:0 18px}
+
+/* ---------- suggest a link ---------- */
+.suggest{
+  margin-top:52px;
+  background:var(--card);
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+}
+.suggest .sh{
+  background:var(--brand);
+  border-bottom:4px solid var(--ink);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+}
+.suggest .sh canvas{width:calc(14px * 2)}
+.suggest .sh .t{font-family:var(--px);font-size:clamp(11px,2vw,14px);color:var(--maize);line-height:1.5}
+.suggest .body{padding:18px 18px 20px}
+.suggest .lede{font-size:14.5px;color:var(--muted);max-width:60ch;margin-bottom:18px}
+.frow{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.field{display:flex;flex-direction:column}
+.field.full{grid-column:1/-1}
+.field label{
+  font-family:var(--px);font-size:8px;line-height:1;
+  color:var(--ink);margin-bottom:7px;
+}
+.field input,.field textarea{
+  font-family:var(--body);font-size:15px;color:var(--ink);
+  width:100%;padding:10px 11px;
+  border:3px solid var(--ink);background:#fff;
+  outline:none;resize:vertical;border-radius:0;
+}
+.field input:focus,.field textarea:focus{box-shadow:0 0 0 3px var(--maize)}
+.submitrow{display:flex;align-items:center;gap:16px;margin-top:18px;flex-wrap:wrap}
+button.send{
+  font-family:var(--px);font-size:10px;
+  color:var(--maize);background:var(--brand);
+  border:3px solid var(--ink);
+  padding:13px 22px;cursor:pointer;
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+button.send:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(43,32,22,.8)}
+button.send:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.formnote{font-size:13.5px;font-weight:500;color:var(--muted)}
+.formnote.ok{color:var(--brand);font-weight:700}
+
+/* ---------- footer ---------- */
+footer{
+  margin-top:52px;
+  background:var(--black);color:#c3cdd6;
+  border-top:4px solid var(--maize);
+  position:relative;
+}
+footer::before{ /* pixel notches on the footer edge */
+  content:"";position:absolute;left:0;right:0;top:-10px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--maize) 0 14px, transparent 14px 24px,
+    var(--maize) 24px 34px, transparent 34px 48px);
+}
+.footwrap{max-width:1140px;margin:0 auto;padding:30px 20px 34px;text-align:center}
+.footwrap .beavrow{display:flex;justify-content:center;align-items:flex-end;gap:26px;margin-bottom:18px}
+.footwrap .beavrow canvas{width:calc(9px * 3);opacity:.95}
+.footwrap .beavrow canvas.mid{width:calc(14px * 3)}
+.disclaimer{font-size:13px;max-width:66ch;margin:0 auto 16px;line-height:1.7}
+.disclaimer b{color:#fff}
+.family{font-family:var(--px);font-size:8px;line-height:2;color:var(--cream)}
+.family a{color:var(--maize);text-decoration:none;border-bottom:2px solid var(--maize);padding-bottom:2px}
+.family a:hover,.family a:focus-visible{color:#fff;outline:none}
+.copyright{margin-top:12px;font-family:var(--px);font-size:7px;line-height:2;color:#7f8d99}
+.copyright .px-star{color:var(--maize)}
+
+@media (max-width:640px){
+  html{scroll-padding-top:112px}
+  .section{scroll-margin-top:112px}
+  .searchlabel{display:none}
+  .frow{grid-template-columns:1fr}
+  .hero{padding:22px 16px 160px}
+  .card{min-height:0}
+  .walker canvas{width:calc(27px * 3)}
+  .tower canvas{width:calc(12px * 5)}
+  .diagm canvas{width:calc(14px * 3)}
+  .cloud.c3{display:none}
+  .topbar{padding:14px 14px 0}
+  .backlink,.dealschip{font-size:8px;padding:9px 10px;border-width:3px;box-shadow:3px 3px 0 rgba(43,32,22,.8)}
+  .sun{top:84px;right:5vw;width:calc(9px * 5)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+  .cloud,.walker,.walker canvas,.leaf,.leaf canvas,.card,.backlink,button.send,.card .host .arw{animation:none;transition:none}
+  .walker{left:26vw}
+  .leaves{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="scene" aria-hidden="true">
+    <canvas class="sun" data-sprite="sun"></canvas>
+    <canvas class="cloud c1" data-sprite="cloud" style="top:34px;animation-duration:90s;animation-delay:-18s"></canvas>
+    <canvas class="cloud c2" data-sprite="cloud" style="top:96px;animation-duration:125s;animation-delay:-64s"></canvas>
+    <canvas class="cloud c3" data-sprite="cloud" style="top:20px;animation-duration:105s;animation-delay:-95s"></canvas>
+    <div class="tower"><canvas data-sprite="tower"></canvas></div>
+    <div class="treeline" id="treeline"></div>
+    <div class="leaves" id="leaves"></div>
+    <div class="ground">
+      <div class="diagm"><canvas data-sprite="blockm"></canvas></div>
+      <div class="walker"><canvas id="walker" data-sprite="walk0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <a class="backlink" href="https://linkcowboy.com">&lt;&lt; LINK COWBOY</a>
+    <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+  </div>
+
+  <div class="hero">
+    <canvas class="mascot" data-sprite="face" role="img" aria-label="Pixel wolverine"></canvas>
+    <h1><span class="wv">WOLVERINE</span> LINKS</h1>
+    <p class="tag">EVERY MICHIGAN LINK.<br>ONE PAGE. GO BLUE.</p>
+    <p class="blurb">Every link a <b>University of Michigan</b> student actually needs: Wolverine Access, Canvas, backpacking, tuition, MBus, dining, and everything else scattered across a few hundred umich.edu sites, rounded up so you stop hunting for it. Unofficial and student-built for Wolverines in Ann Arbor.</p>
+    <div class="edition">
+      <span>VOL. 1</span><i class="dot"></i><span>FALL 2026</span><i class="dot"></i><span id="linkcount">LINKS</span>
+    </div>
+    <a class="giveback" href="https://mbc.studentlife.umich.edu/" target="_blank" rel="noopener">SUPPORT THE MAIZE &amp; BLUE CUPBOARD &gt;&gt;</a>
+  </div>
+</header>
+
+<div class="sticky">
+  <div class="searchwrap">
+    <span class="searchlabel">SEARCH</span>
+    <div class="searchbox">
+      <input id="search" type="text" autocomplete="off" spellcheck="false"
+        placeholder="Try &ldquo;mbus&rdquo;, &ldquo;tickets&rdquo;, &ldquo;financial aid&rdquo;, &ldquo;backpack&rdquo;&hellip;"
+        aria-label="Search all links by name, category, or keyword">
+      <span class="ico" aria-hidden="true">&#9906;</span>
+      <button class="clear" id="clearBtn" type="button" aria-label="Clear search">&times;</button>
+    </div>
+  </div>
+  <nav class="nav" id="nav" aria-label="Jump to category"></nav>
+</div>
+
+<main id="main">
+  <div class="noresults" id="noresults">NOTHING MATCHES <b id="nrterm"></b>.<br>TRY ANOTHER WORD, OR SUGGEST THE LINK YOU&rsquo;RE MISSING BELOW.</div>
+</main>
+
+<footer>
+  <div class="footwrap">
+    <div class="beavrow" aria-hidden="true">
+      <canvas data-sprite="tree_sm"></canvas>
+      <canvas class="mid" data-sprite="face"></canvas>
+      <canvas data-sprite="tree_sm"></canvas>
+    </div>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with or endorsed by the University of Michigan. Links point to official U-M and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.1.</p>
+    <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
+    <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> BUILT IN THE COLD, LIKE ANN ARBOR IN JANUARY</p>
+  </div>
+</footer>
+
+<script>
+/*
+ * Wolverine Links
+ * Paste your deployed Google Apps Script Web App URL into SCRIPT_URL to
+ * turn on click tracking and the suggest-a-link form. Leave it empty to
+ * disable tracking; the form then falls back to the mailto below.
+ */
+const SCRIPT_URL = "";                          // e.g. "https://script.google.com/macros/s/AKfyc.../exec"
+const SUGGEST_MAILTO = "jn32456@my.utexas.edu";  // fallback inbox when SCRIPT_URL is empty
+
+/* ---------- pixel sprites (Link Cowboy style) ---------- */
+const PIX = {
+  palette:{
+    "d":"#2e1f12","b":"#7a5230","B":"#5c3d22","k":"#f2e0c4","D":"#43301c",
+    "Y":"#ffcb05","y":"#c99f00","n":"#00274c","N":"#2e1f12","P":"#ffffff",
+    "G":"#a8b3bd","s":"#5a666f",
+    "r":"#b53a24","o":"#d97b25","t":"#5c3a21",
+    "S":"#ffd35c","W":"#ffffff"
+  },
+  sprites:{
+    face:[
+      "...dd......dd...",
+      "..dbbd....dbbd..",
+      "..dbBd....dBbd..",
+      "ddbbbbbbbbbbbbdd",
+      "dbbbbbbbbbbbbbbd",
+      "dbnnnbbbbbbnnnbd",
+      "dbnnPbbbbbbnnPbd",
+      "dbnnnbbbbbbnnnbd",
+      "dbbbbbbbbbbbbbbd",
+      "dbbbkkkkkkkkbbbd",
+      "dbbbkkkNNkkkbbbd",
+      ".dbbkkkkkkkkbbd.",
+      "..dbbkkkkkkbbd..",
+      ".dYYYYYYYYYYYYd.",
+      ".dYyYYYYYYYYyYd.",
+      "..dddddddYYYYd..",
+      "..........dYd..."
+    ],
+    walk0:[
+      "...ddd.....................",
+      "..dDDDd....................",
+      "..dDDDDd...........dd......",
+      "...dDDDDd........ddDDd.....",
+      "...dDDDDDd......dDDDDDdd...",
+      "....dDDDDDdd....dDDDDDDDd..",
+      "....dDDDDDDDddddYYYYYYDDDd.",
+      ".....dYYYYYYYYYYYYDkknPDDd.",
+      ".....dYYYYYYYDDDDDDkknnkDd.",
+      "......dDDDDDDDDDDDDDDDkkNNd",
+      "......dDDDDDDDDDDDDDDDkkNd.",
+      ".......dDDDDDDDDDDDDDDDDd..",
+      ".......dDDd......dDDd......",
+      ".......dDDd......dDDd......",
+      "......dDDDDd....dDDDDd....."
+    ],
+    walk1:[
+      "...ddd.....................",
+      "..dDDDd....................",
+      "..dDDDDd...........dd......",
+      "...dDDDDd........ddDDd.....",
+      "...dDDDDDd......dDDDDDdd...",
+      "....dDDDDDdd....dDDDDDDDd..",
+      "....dDDDDDDDddddYYYYYYDDDd.",
+      ".....dYYYYYYYYYYYYDkknPDDd.",
+      ".....dYYYYYYYDDDDDDkknnkDd.",
+      "......dDDDDDDDDDDDDDDDkkNNd",
+      "......dDDDDDDDDDDDDDDDkkNd.",
+      ".......dDDDDDDDDDDDDDDDDd..",
+      ".....dDDd..........dDDd....",
+      ".....dDDd..........dDDd....",
+      "....dDDDDd........dDDDDd..."
+    ],
+    tower:[
+      ".dGdGGGGdGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      ".dGkkkkkkGd.",
+      ".dGkkdkkkGd.",
+      ".dGkddkkkGd.",
+      ".dGkkkkkkGd.",
+      ".dGGGGGGGGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGGGGGGGGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGGGGGGGGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGsGGGGsGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      ".dGGGGGGGGd.",
+      "dGGGGGGGGGGd",
+      "dGGGGGGGGGGd",
+      "dGGGGGGGGGGd",
+      "dddddddddddd"
+    ],
+    blockm:[
+      "dddddddddddddd",
+      "dYYddddddddYYd",
+      "dYYYddddddYYYd",
+      "dYYYYddddYYYYd",
+      "dYYYYYddYYYYYd",
+      "dYYdYYYYYYdYYd",
+      "dYYddYYYYddYYd",
+      "dYYdddYYdddYYd",
+      "dYYddddddddYYd",
+      "dddddddddddddd"
+    ],
+    leaf0:[
+      ".o.o.o.",
+      "oooooo.",
+      ".ooooo.",
+      "oorooo.",
+      ".oooo..",
+      "...t...",
+      "...t..."
+    ],
+    leaf1:[
+      ".r.r.r.",
+      "rrrrrr.",
+      ".rrrrr.",
+      "rrorrr.",
+      ".rrrr..",
+      "...t...",
+      "...t..."
+    ],
+    tree:[
+      "...ooooo...",
+      "..ooorroo..",
+      ".oorrrrroo.",
+      "oorrrrrrroo",
+      "oorrrrrrroo",
+      ".oorrrrroo.",
+      "..ooorroo..",
+      "...ooooo...",
+      "....ttt....",
+      "....ttt....",
+      "....ttt....",
+      "....ttt...."
+    ],
+    tree_sm:[
+      "...ooo...",
+      "..oorroo.",
+      ".oorrroo.",
+      "oorrrrroo",
+      ".oorrroo.",
+      "..ooooo..",
+      "...ttt...",
+      "...ttt...",
+      "...ttt..."
+    ],
+    sun:[
+      "....S....",
+      "..SSSSS..",
+      ".SSSSSSS.",
+      ".SSSSSSS.",
+      "SSSSSSSSS",
+      ".SSSSSSS.",
+      ".SSSSSSS.",
+      "..SSSSS..",
+      "....S...."
+    ],
+    cloud:[
+      ".....WWWWW......",
+      "....WWWWWWWW....",
+      "...WWWWWWWWWW...",
+      ".WWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWWWW.",
+      "................"
+    ]
+  }
+};
+
+function drawSprite(canvas, name){
+  const map = PIX.sprites[name];
+  if(!map) return;
+  const h = map.length, w = map[0].length;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,w,h);
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const c = PIX.palette[map[y][x]];
+      if(c){ ctx.fillStyle = c; ctx.fillRect(x,y,1,1); }
+    }
+  }
+}
+document.querySelectorAll("canvas[data-sprite]").forEach(c => drawSprite(c, c.dataset.sprite));
+
+/* autumn treeline along the horizon (seeded, deterministic) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rand = mulberry32(1817); /* U-M founded 1817 */
+const treeline = document.getElementById("treeline");
+for(let i=0; i<24; i++){
+  const holder = document.createElement("div");
+  holder.className = "tree";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, "tree");
+  const s = 3 + Math.floor(rand()*3); /* 3x - 5x */
+  cv.style.width = (cv.width * s) + "px";
+  holder.style.left = (rand()*97) + "vw";
+  holder.style.bottom = (-8 + rand()*10) + "px";
+  holder.style.zIndex = s; /* bigger trees in front */
+  holder.appendChild(cv);
+  treeline.appendChild(holder);
+}
+
+/* leaves coming down over the Diag (seeded, so every visit matches) */
+const leafbox = document.getElementById("leaves");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduced){
+  for(let i=0; i<9; i++){
+    const holder = document.createElement("div");
+    holder.className = "leaf";
+    holder.style.left = (rand()*96 + 2) + "vw";
+    holder.style.animationDuration = (9 + rand()*9).toFixed(1) + "s";
+    holder.style.animationDelay = "-" + (rand()*14).toFixed(1) + "s";
+    const cv = document.createElement("canvas");
+    drawSprite(cv, "leaf" + (rand() < 0.5 ? 0 : 1));
+    cv.style.animationDelay = "-" + (rand()*3).toFixed(1) + "s";
+    holder.appendChild(cv);
+    leafbox.appendChild(holder);
+  }
+}
+
+/* wolverine walk cycle */
+const walker = document.getElementById("walker");
+if(!reduced){
+  let step = 0;
+  setInterval(() => { step ^= 1; drawSprite(walker, "walk" + step); }, 260);
+}
+
+/* ---------- link data ---------- */
+const CATEGORIES = [
+  "Essentials",
+  "Classes & Registration",
+  "Money",
+  "Getting Around",
+  "Campus Life",
+  "Career",
+  "Sports & Traditions",
+  "Housing",
+  "Health & Safety",
+  "New Wolverines"
+];
+
+const LINKS = [
+  // Essentials
+  {name:"Wolverine Access", url:"https://wolverineaccess.umich.edu/", category:"Essentials", desc:"The portal for registration, your student account, financial aid, grades, and records.", keywords:["wolverine access","portal","student center","student business","records","grades","account"], login:true},
+  {name:"Canvas", url:"https://canvas.umich.edu/", category:"Essentials", desc:"Course sites, assignments, grades, and quizzes for every class you're enrolled in.", keywords:["canvas","lms","coursework","assignments","grades","instructure","course site"], login:true},
+  {name:"UMICH Account Management", url:"https://accounts.it.umich.edu/", category:"Essentials", desc:"Set or reset your UMICH password, manage your uniqname, and enroll a device in Duo.", keywords:["password","uniqname","account","reset","login","duo","enroll","credentials"], login:true},
+  {name:"Duo Two-Factor", url:"https://documentation.its.umich.edu/2fa/duo-two-factor-login", category:"Essentials", desc:"How Duo works at U-M, how to add a device, and what to do when you lose your phone.", keywords:["duo","two factor","2fa","mfa","authentication","push","lost phone","security"], login:false},
+  {name:"ITS Service Portal", url:"https://teamdynamix.umich.edu/TDClient/76/Portal/Home/", category:"Essentials", desc:"U-M tech help: knowledge base articles, service requests, and how to reach the help desk.", keywords:["it","help","helpdesk","support","service","ticket","wifi","tech","its"], login:false},
+  {name:"Information & Technology Services", url:"https://its.umich.edu/", category:"Essentials", desc:"Software downloads, U-M Google and email, storage, and every centrally supported IT service.", keywords:["its","software","email","google","storage","dropbox","zoom","services","technology"], login:false},
+  {name:"U-M Library", url:"https://lib.umich.edu/", category:"Essentials", desc:"Hatcher, Shapiro, and the rest: catalog, databases, study spaces, and research help.", keywords:["library","hatcher","shapiro","ugli","study","research","databases","books","reserves"], login:false},
+  {name:"MCard", url:"https://ssc.umich.edu/mcard/", category:"Essentials", desc:"Your U-M ID: how to get one, replace a lost card, and what it unlocks around campus.", keywords:["mcard","id card","student id","lost card","replace","access","entree plus"], login:false},
+  {name:"Campus Information", url:"https://campusinfo.umich.edu/", category:"Essentials", desc:"The Campus Information Center: the desk that actually answers “where is this and when is it open?”", keywords:["campus info","information","help","hours","where","questions","desk","union"], login:false},
+  {name:"Happening @ Michigan", url:"https://events.umich.edu/", category:"Essentials", desc:"The university-wide event calendar for lectures, performances, and everything free on campus.", keywords:["events","calendar","happening","lectures","things to do","tonight","free"], login:false},
+
+  // Classes & Registration
+  {name:"Office of the Registrar", url:"https://ro.umich.edu/", category:"Classes & Registration", desc:"Registration policies, records, enrollment verification, and the answers to schedule problems.", keywords:["registrar","records","enrollment","verification","policy","transcript","withdraw"], login:false},
+  {name:"Academic Calendar", url:"https://ro.umich.edu/calendars", category:"Classes & Registration", desc:"Term start and end dates, drop/add deadlines, study days, breaks, and final exam periods.", keywords:["academic calendar","dates","deadlines","drop add","breaks","finals","exam schedule","study days"], login:false},
+  {name:"Registration", url:"https://ro.umich.edu/registration", category:"Classes & Registration", desc:"Enrollment appointments, waitlists, credit limits, and how registration actually works.", keywords:["registration","register","enroll","appointment","waitlist","credits","add drop","holds"], login:false},
+  {name:"Backpack / Register", url:"https://wolverineaccess.umich.edu/task/all/backpacking", category:"Classes & Registration", desc:"Build your backpack ahead of your appointment, then convert it into an actual schedule.", keywords:["backpack","backpacking","register","schedule","classes","enroll","cart"], login:true},
+  {name:"Atlas", url:"https://atlas.ai.umich.edu/", category:"Classes & Registration", desc:"Grade distributions, workload, and student reviews for U-M courses and instructors.", keywords:["atlas","grade distribution","reviews","workload","professor","course ratings","gpa","pick classes"], login:false},
+  {name:"LSA Course Guide", url:"https://lsa.umich.edu/cg", category:"Classes & Registration", desc:"Full descriptions, prerequisites, and section details for LSA courses each term.", keywords:["course guide","lsa","cg","descriptions","prerequisites","sections","classes"], login:false},
+  {name:"Engineering Bulletin", url:"https://bulletin.engin.umich.edu/", category:"Classes & Registration", desc:"Program requirements and course listings for the College of Engineering.", keywords:["engineering","coe","bulletin","requirements","courses","curriculum","degree"], login:false},
+  {name:"Newnan Advising Center", url:"https://lsa.umich.edu/advising", category:"Classes & Registration", desc:"LSA academic advising: book an appointment, plan your major, and clear a registration hold.", keywords:["advising","advisor","newnan","appointment","major","hold","lsa","plan","declare"], login:false},
+  {name:"Sweetland Center for Writing", url:"https://lsa.umich.edu/sweetland", category:"Classes & Registration", desc:"U-M's writing center: the Writing Workshop, Peer Writing Centers, and the writing requirements.", keywords:["sweetland","writing center","writing","essays","papers","tutoring","requirement"], login:false},
+  {name:"Writing Support", url:"https://lsa.umich.edu/sweetland/undergraduates/writing-support.html", category:"Classes & Registration", desc:"Book a free one-on-one appointment on any piece of writing, at any stage.", keywords:["writing appointment","peer writing","tutor","feedback","essay help","book","consultation"], login:false},
+
+  // Money
+  {name:"Office of Financial Aid", url:"https://finaid.umich.edu/", category:"Money", desc:"FAFSA, grants, loans, work-study, Go Blue Guarantee, and how to keep your aid.", keywords:["financial aid","fafsa","grants","loans","work study","go blue guarantee","aid","money"], login:false},
+  {name:"Aid Payments & Your Bill", url:"https://finaid.umich.edu/managing-your-aid/aid-payments-your-bill", category:"Money", desc:"When aid disburses, how it applies to your bill, and what happens to the leftover refund.", keywords:["disbursement","refund","aid payment","bill","credit balance","when does aid come"], login:false},
+  {name:"Student Financial Services", url:"https://finance.umich.edu/finops/student", category:"Money", desc:"Your student account: statements, due dates, holds, and the U-M payment plan.", keywords:["billing","student account","statement","tuition bill","due date","payment plan","hold","sfs"], login:false},
+  {name:"Make a Payment", url:"https://finance.umich.edu/finops/student/payments", category:"Money", desc:"Every accepted payment method and where each one actually posts to your account.", keywords:["pay","payment","epayment","check","pay bill","tuition payment","methods"], login:false},
+
+  // Getting Around
+  {name:"Magic Bus", url:"https://mbus.ltp.umich.edu/", category:"Getting Around", desc:"Live MBus tracking: where your bus is right now and how long until it gets to your stop.", keywords:["mbus","magic bus","bus","live","tracking","when is the bus","transit","stop"], login:false},
+  {name:"Bus Routes & Schedules", url:"https://ltp.umich.edu/campus-transit/routes-and-schedules/", category:"Getting Around", desc:"Every campus bus route, timetable, and the late-night and paratransit services.", keywords:["routes","schedules","bus","north campus","commuter","late night","ride","transit"], login:false},
+  {name:"Permit Parking", url:"https://ltp.umich.edu/parking/permit-parking/", category:"Getting Around", desc:"Parking tiers, colors, rates, and how to actually get a permit as a student.", keywords:["parking","permit","lot","tier","car","rates","citation","commute"], login:false},
+  {name:"Maps & Wayfinding", url:"https://campusinfo.umich.edu/maps-wayfinding", category:"Getting Around", desc:"Interactive maps of Central, North, Medical, and Athletic campus, plus bus and parking layers.", keywords:["map","campus map","directions","north campus","central campus","wayfinding","where","buildings"], login:false},
+  {name:"Student Life Building Map", url:"https://maps.studentlife.umich.edu/", category:"Getting Around", desc:"Find dining halls, residence halls, rec facilities, and Student Life spaces with hours.", keywords:["map","dining hall","residence hall","rec","hours","student life","buildings","find"], login:false},
+
+  // Campus Life
+  {name:"Michigan Dining", url:"https://dining.umich.edu/", category:"Campus Life", desc:"Dining hall menus and hours, meal plans, Blue Apple, and every campus cafe and market.", keywords:["dining","food","menus","dining hall","meal plan","hours","eat","blue apple","markets"], login:false},
+  {name:"University Unions", url:"https://uunions.umich.edu/", category:"Campus Life", desc:"The Michigan Union, League, and Pierpont: study space, food, reservations, and services.", keywords:["michigan union","league","pierpont","union","study space","reserve","hours","student services"], login:false},
+  {name:"Recreational Sports", url:"https://recsports.umich.edu/", category:"Campus Life", desc:"The IM, CCRB, and NCRB: memberships, intramurals, club sports, and group fitness.", keywords:["rec sports","gym","im building","ccrb","ncrb","intramural","club sports","fitness","workout","pool"], login:false},
+  {name:"Maize Pages", url:"https://maizepages.umich.edu/", category:"Campus Life", desc:"The searchable directory of 1,600-plus student organizations, plus how to start your own.", keywords:["clubs","organizations","orgs","maize pages","get involved","join","student org","start a club"], login:false},
+  {name:"CGIS (Study Abroad)", url:"https://lsa.umich.edu/cgis", category:"Campus Life", desc:"U-M's study abroad office: 120-plus programs, scholarships, and the application portal.", keywords:["study abroad","cgis","education abroad","international","exchange","travel","m-compass","semester abroad"], login:false},
+  {name:"International Center", url:"https://internationalcenter.umich.edu/", category:"Campus Life", desc:"Visa and immigration advising, work authorization, and support for international students.", keywords:["international","visa","f-1","opt","cpt","immigration","i-20","advising","international students"], login:false},
+  {name:"Ulrich's Bookstore", url:"https://www.ubooks.com/", category:"Campus Life", desc:"The State Street standby for textbooks, course materials, supplies, and Michigan gear.", keywords:["bookstore","textbooks","books","ulrichs","gear","apparel","supplies","merch","state street"], ext:true, login:false},
+  {name:"UMS Performing Arts", url:"https://ums.org/", category:"Campus Life", desc:"University Musical Society concerts and theater at Hill Auditorium, with $12 student tickets.", keywords:["ums","hill auditorium","concerts","theater","theatre","performing arts","student tickets","music","cheap tickets"], ext:true, login:false},
+
+  // Career
+  {name:"University Career Center", url:"https://careercenter.umich.edu/", category:"Career", desc:"Career coaching, resume and cover letter reviews, mock interviews, and career fairs.", keywords:["career","career center","jobs","internship","coaching","resume","interview","fair","advising"], login:false},
+  {name:"Handshake", url:"https://umich.joinhandshake.com/", category:"Career", desc:"U-M's job board for internships, full-time roles, and on-campus employer events.", keywords:["handshake","jobs","internship","recruiting","apply","employers","job board","career fair"], login:true},
+  {name:"U-M Alumni Association", url:"https://alumni.umich.edu/", category:"Career", desc:"Mentoring, networking, and alumni club connections that start well before you graduate.", keywords:["alumni","network","mentor","benefits","graduates","connections","alumni association"], login:false},
+
+  // Sports & Traditions
+  {name:"MGoBlue", url:"https://mgoblue.com/", category:"Sports & Traditions", desc:"Official athletics site: schedules, scores, rosters, and news across every Michigan sport.", keywords:["athletics","mgoblue","sports","schedule","scores","roster","games","football","basketball"], ext:true, login:false},
+  {name:"Student Tickets", url:"https://mgoblue.com/sports/2018/6/6/student-ticket-information", category:"Sports & Traditions", desc:"How students buy season packages, claim seats, and transfer tickets for the Big House and Crisler.", keywords:["tickets","student tickets","football tickets","big house","crisler","season","claim","transfer","yost"], ext:true, login:false},
+  {name:"Michigan Marching Band", url:"https://michiganmarchingband.com/", category:"Sports & Traditions", desc:"The MMB: how to join from any school or college, plus gameday and rehearsal info.", keywords:["marching band","mmb","band","join","gameday","music","spirit","audition"], ext:true, login:false},
+
+  // Housing
+  {name:"Michigan Housing", url:"https://housing.umich.edu/", category:"Housing", desc:"Residence halls, apartments, rates, the housing application, and room selection.", keywords:["housing","dorms","residence halls","apply","rates","room selection","roommate","move in","northwood"], login:false},
+  {name:"Beyond the Diag (Off-Campus)", url:"https://offcampus.umich.edu/", category:"Housing", desc:"Off-campus housing help: lease review, neighborhood guides, and when to actually start looking.", keywords:["off campus","apartments","lease","landlord","roommates","beyond the diag","rent","subletting"], login:false},
+
+  // Health & Safety
+  {name:"University Health & Counseling", url:"https://uhc.umich.edu/", category:"Health & Safety", desc:"UHC combines medical care and counseling (formerly UHS and CAPS): appointments, pharmacy, and 24/7 crisis support.", keywords:["uhs","caps","uhc","health","counseling","mental health","doctor","therapy","crisis","pharmacy","appointment","sick"], login:false},
+  {name:"Wolverine Wellness", url:"https://wolverinewellness.umich.edu/", category:"Health & Safety", desc:"Wellness coaching, alcohol and other drug support, sexual health resources, and stress help.", keywords:["wellness","coaching","stress","sleep","alcohol","recovery","sexual health","wellbeing"], login:false},
+  {name:"Services for Students with Disabilities", url:"https://ssd.umich.edu/", category:"Health & Safety", desc:"Register for academic accommodations, testing services, and access support.", keywords:["ssd","disability","accommodations","accessibility","testing","access","ada","register"], login:false},
+  {name:"SAPAC", url:"https://sapac.umich.edu/", category:"Health & Safety", desc:"Confidential advocacy and a 24-hour crisis line for sexual assault, IPV, and stalking.", keywords:["sapac","sexual assault","crisis line","confidential","advocacy","survivor","stalking","title ix","support"], login:false},
+  {name:"Division of Public Safety & Security", url:"https://dpss.umich.edu/", category:"Health & Safety", desc:"U-M police, safety escorts, emergency alerts, and how to report something.", keywords:["dpss","police","safety","escort","emergency","alert","report","security","crime"], login:false},
+  {name:"Dean of Students", url:"https://deanofstudents.umich.edu/", category:"Health & Safety", desc:"Where to go when life goes sideways: emergency support, absences, and student conduct.", keywords:["dean of students","emergency","absence","support","conduct","crisis","help","advocacy"], login:false},
+  {name:"Maize & Blue Cupboard", url:"https://mbc.studentlife.umich.edu/", category:"Health & Safety", desc:"Free groceries, produce, and household supplies. Just swipe your MCard, no questions asked.", keywords:["food pantry","mbc","cupboard","free food","groceries","basic needs","food insecurity","hungry"], login:false},
+
+  // New Wolverines (seasonal, for incoming students)
+  {name:"New Student Programs", url:"https://onsp.umich.edu/", category:"New Wolverines", desc:"ONSP runs orientation and the first-year transition. This is your starting line.", keywords:["onsp","new student","orientation","incoming","freshman","transfer","start","welcome"], login:false},
+  {name:"Go Blue Orientation", url:"https://onsp.umich.edu/orientation", category:"New Wolverines", desc:"The required orientation sequence: online course, virtual advising, and your on-campus day.", keywords:["orientation","go blue orientation","register","advising","required","sessions","incoming"], login:false},
+  {name:"Undergraduate Admissions", url:"https://admissions.umich.edu/", category:"New Wolverines", desc:"Requirements, deadlines, admitted-student steps, and application status.", keywords:["admissions","apply","application","admitted","deadline","status","transfer","requirements"], login:false},
+  {name:"Placement & Credit", url:"https://lsa.umich.edu/advising/plan-your-time-at-michigan/orientation/placement-and-credit.html", category:"New Wolverines", desc:"Which placement exams you owe, and how AP, IB, and transfer credit land on your record.", keywords:["placement","credit","ap credit","ib","transfer credit","exams","incoming","advising"], login:false},
+  {name:"Math Placement Test", url:"https://prep.math.lsa.umich.edu/placement/", category:"New Wolverines", desc:"Take this before orientation. Your advisor needs the score to register you for math.", keywords:["math placement","placement test","calculus","precalculus","exam","incoming","before orientation"], login:false}
+];
+
+/* ---------- helpers ---------- */
+function hostOf(url){
+  try{ return new URL(url).hostname.replace(/^www\./,""); }
+  catch(err){ return url; }
+}
+function slug(text){
+  return text.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function esc(text){
+  return text.replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+
+/* Click and suggestion tracking. Fails silently if SCRIPT_URL is empty or unreachable. */
+function track(payload){
+  if(!SCRIPT_URL) return;
+  try{
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(SCRIPT_URL, new Blob([body], {type:"text/plain;charset=UTF-8"}));
+    }else{
+      fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"}, body:body});
+    }
+  }catch(err){ /* intentionally ignored */ }
+}
+
+/* ---------- render sections ---------- */
+const main = document.getElementById("main");
+const nav = document.getElementById("nav");
+const noresults = document.getElementById("noresults");
+
+document.getElementById("linkcount").textContent = LINKS.length + " LINKS";
+
+const INCOMING = "New Wolverines";
+
+function makeCard(link){
+  const card = document.createElement("a");
+  card.className = "card";
+  card.href = link.url;
+  card.target = "_blank";
+  card.rel = "noopener";
+  card.dataset.search = [link.name, link.category, link.desc, (link.keywords || []).join(" ")]
+    .join(" ").toLowerCase();
+  card.innerHTML =
+    '<div class="cardtop"><h3>' + esc(link.name.toUpperCase()) + '</h3>' +
+    (link.login ? '<span class="badge" title="Requires your uniqname login">UNIQNAME</span>'
+      : link.ext ? '<span class="badge" title="Third-party site, not run by U-M">EXTERNAL</span>' : "") +
+    '</div>' +
+    '<p>' + esc(link.desc) + '</p>' +
+    '<span class="host"><span class="hosturl">' + esc(hostOf(link.url)) + '</span> <span class="arw">&gt;&gt;</span></span>';
+  card.addEventListener("click", () => {
+    track({type:"click", name:link.name, url:link.url, category:link.category,
+      ts:new Date().toISOString(), ref:location.href});
+  });
+  return card;
+}
+
+/* prominent "start here" callout for incoming students, pulled to the very top */
+const incomingItems = LINKS.filter(link => link.category === INCOMING);
+if(incomingItems.length){
+  const chip = document.createElement("a");
+  chip.href = "#" + slug(INCOMING);
+  chip.textContent = "START HERE";
+  nav.appendChild(chip);
+
+  const admit = document.createElement("section");
+  admit.className = "section admit";
+  admit.id = slug(INCOMING);
+  admit.innerHTML =
+    '<div class="admit-head">' +
+      '<span class="admit-eyebrow">FALL 2026 ADMITS</span>' +
+      '<h2>NEW WOLVERINE? START HERE.</h2>' +
+    '</div>' +
+    '<p class="admit-note">First things first. A couple of these have deadlines that block registration.</p>' +
+    '<div class="grid"></div>';
+  const agrid = admit.querySelector(".grid");
+  incomingItems.forEach(link => agrid.appendChild(makeCard(link)));
+  main.insertBefore(admit, noresults);
+}
+
+CATEGORIES.forEach(category => {
+  if(category === INCOMING) return;
+  const items = LINKS.filter(link => link.category === category);
+  if(!items.length) return;
+
+  const id = slug(category);
+
+  const chip = document.createElement("a");
+  chip.href = "#" + id;
+  chip.textContent = category.toUpperCase();
+  nav.appendChild(chip);
+
+  const section = document.createElement("section");
+  section.className = "section";
+  section.id = id;
+
+  const head = document.createElement("div");
+  head.className = "sechead";
+  head.innerHTML =
+    '<h2>' + esc(category.toUpperCase()) + '</h2>' +
+    '<span class="count">' + items.length + ' LINKS</span>';
+  section.appendChild(head);
+
+  const rule = document.createElement("div");
+  rule.className = "secrule";
+  section.appendChild(rule);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  items.forEach(link => grid.appendChild(makeCard(link)));
+  section.appendChild(grid);
+  main.insertBefore(section, noresults);
+});
+
+/* ---------- suggest-a-link form ---------- */
+const suggest = document.createElement("section");
+suggest.className = "suggest";
+suggest.id = "suggest";
+suggest.innerHTML =
+  '<div class="sh"><canvas id="shFace" aria-hidden="true"></canvas><span class="t">SUGGEST A LINK</span></div>' +
+  '<div class="body">' +
+    '<p class="lede">Know a link every Wolverine needs that isn&rsquo;t here? Send it over. If it&rsquo;s useful, it goes on the page.</p>' +
+    '<form id="suggestForm" novalidate>' +
+      '<div class="frow">' +
+        '<div class="field"><label for="sName">LINK NAME</label><input id="sName" name="name" required maxlength="120" placeholder="e.g. Duderstadt Center"></div>' +
+        '<div class="field"><label for="sUrl">URL</label><input id="sUrl" name="url" type="url" required maxlength="400" placeholder="https://&hellip;"></div>' +
+        '<div class="field full"><label for="sWhy">WHY IT BELONGS</label><textarea id="sWhy" name="why" rows="3" maxlength="600" placeholder="What is it and who needs it?"></textarea></div>' +
+      '</div>' +
+      '<div class="submitrow"><button class="send" type="submit">SEND IT &gt;&gt;</button><span class="formnote" id="formnote" role="status"></span></div>' +
+    '</form>' +
+  '</div>';
+main.insertBefore(suggest, noresults);
+drawSprite(document.getElementById("shFace"), "face");
+
+document.getElementById("suggestForm").addEventListener("submit", function(event){
+  event.preventDefault();
+  const name = document.getElementById("sName").value.trim();
+  const url = document.getElementById("sUrl").value.trim();
+  const why = document.getElementById("sWhy").value.trim();
+  const note = document.getElementById("formnote");
+  if(!name || !url) return;
+
+  if(SCRIPT_URL){
+    track({type:"suggestion", name:name, url:url, why:why, ts:new Date().toISOString(), ref:location.href});
+    note.textContent = "Thanks, got it. We'll take a look.";
+    note.classList.add("ok");
+    this.reset();
+  }else{
+    const subject = encodeURIComponent("Wolverine Links suggestion: " + name);
+    const bodyText = encodeURIComponent("Link name: " + name + "\nURL: " + url + "\nWhy it belongs: " + why);
+    window.location.href = "mailto:" + SUGGEST_MAILTO + "?subject=" + subject + "&body=" + bodyText;
+    note.textContent = "Opening your email app.";
+    note.classList.add("ok");
+  }
+  setTimeout(() => { note.textContent = ""; note.classList.remove("ok"); }, 6000);
+});
+
+/* ---------- live search ---------- */
+const search = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
+const sections = Array.from(main.querySelectorAll(".section"));
+
+function matches(haystack, terms){
+  return terms.every(term => haystack.includes(term));
+}
+
+function applyFilter(){
+  const query = search.value.trim().toLowerCase();
+  const terms = query.split(/\s+/).filter(Boolean);
+  clearBtn.style.display = query ? "block" : "none";
+
+  let anyVisible = false;
+  sections.forEach(section => {
+    let sectionVisible = false;
+    section.querySelectorAll(".card").forEach(card => {
+      const show = !terms.length || matches(card.dataset.search, terms);
+      card.style.display = show ? "" : "none";
+      if(show) sectionVisible = true;
+    });
+    section.style.display = sectionVisible ? "" : "none";
+    if(sectionVisible) anyVisible = true;
+  });
+
+  noresults.style.display = anyVisible ? "none" : "block";
+  if(!anyVisible) document.getElementById("nrterm").textContent = "“" + search.value.trim().toUpperCase() + "”";
+}
+
+search.addEventListener("input", applyFilter);
+clearBtn.addEventListener("click", () => { search.value = ""; applyFilter(); search.focus(); });
+search.addEventListener("keydown", event => { if(event.key === "Escape"){ search.value = ""; applyFilter(); } });
+</script>
+</body>
+</html>

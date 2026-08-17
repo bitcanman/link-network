@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buckeye Links | Ohio State University Links, All in One Place</title>
+<meta name="description" content="Every link an Ohio State University (OSU) student needs: BuckeyeLink, Carmen, class search, tuition, financial aid, CABS, dining and more, rounded up on one page for Buckeyes in Columbus. Unofficial, student-built.">
+<meta property="og:title" content="Buckeye Links">
+<meta property="og:description" content="Every link an Ohio State student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://linkcowboy.com/buckeyes">
+<meta property="og:image" content="https://linkcowboy.com/buckeyes-og.png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Buckeye Links">
+<meta name="twitter:description" content="Every link an Ohio State student actually needs, rounded up on one page. Unofficial, student-built.">
+<meta name="twitter:image" content="https://linkcowboy.com/buckeyes-og.png">
+<meta name="theme-color" content="#bb0000">
+<link rel="canonical" href="https://linkcowboy.com/buckeyes">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23bb0000'/%3E%3Crect x='4' y='2' width='8' height='12' fill='%236b4423'/%3E%3Crect x='2' y='4' width='12' height='8' fill='%236b4423'/%3E%3Crect x='3' y='3' width='10' height='10' fill='%236b4423'/%3E%3Crect x='5' y='6' width='6' height='4' fill='%23e8b088'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/*
+ * Buckeye Links, the Link Cowboy family style, gone Columbus.
+ * Pixel sprites drawn on canvas, Press Start 2P headings, hard shadows,
+ * and scarlet (#bb0000) over gray, cream, and buckeye brown.
+ */
+:root{
+  --ink:#2b2016;
+  --cream:#f6eed9;
+  --card:#fffaf0;
+  --brand:#bb0000;
+  --brand-d:#8f0000;
+  --gray:#666666;
+  --black:#1c1a1a;
+  --muted:rgba(43,32,22,.72);
+  --sky1:#9ec8e2; --sky2:#c2dced; --sky3:#e6e6dc;
+  --grass1:#7ea158; --grass2:#668447;
+  --px:'Press Start 2P',monospace;
+  --body:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:118px;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  color:var(--ink);
+  background:var(--cream);
+  line-height:1.55;
+  overflow-x:hidden;
+}
+a{color:inherit}
+canvas{image-rendering:pixelated;display:block}
+
+/* ---------- masthead scene ---------- */
+.masthead{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(to bottom, var(--sky1) 0 35%, var(--sky2) 35% 70%, var(--sky3) 70% 100%);
+  border-bottom:4px solid var(--ink);
+}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;top:26px;right:6vw;width:calc(9px * 7)}
+.cloud{position:absolute;width:calc(16px * 5);opacity:.95;animation:drift linear infinite}
+.cloud.c2{width:calc(16px * 4)}
+.cloud.c3{width:calc(16px * 3);opacity:.85}
+@keyframes drift{from{transform:translateX(-25vw)}to{transform:translateX(115vw)}}
+.treeline{position:absolute;left:0;right:0;bottom:52px;height:0}
+.treeline .tree{position:absolute;bottom:-6px}
+.river{
+  position:absolute;left:0;right:0;bottom:0;height:56px;
+  background:linear-gradient(to bottom, var(--grass1) 0 55%, var(--grass2) 55% 100%);
+}
+.river::before{ /* pixel-stepped turf edge */
+  content:"";position:absolute;left:0;right:0;top:-6px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--grass1) 0 14px, transparent 14px 24px,
+    var(--grass1) 24px 34px, transparent 34px 48px);
+}
+.dam{position:absolute;right:5vw;bottom:8px}
+.dam canvas{width:calc(22px * 4)}
+.swimmer{
+  position:absolute;bottom:6px;left:0;
+  --swim-max:72vw;
+  animation:swim 40s linear infinite alternate;animation-delay:-10s;
+}
+.swimmer canvas{width:calc(14px * 4);animation:faceflip 80s linear infinite;animation-delay:-10s}
+@keyframes swim{from{transform:translateX(2vw)}to{transform:translateX(var(--swim-max))}}
+@keyframes faceflip{0%,49.99%{transform:scaleX(1)}50%,100%{transform:scaleX(-1)}}
+.floatlog{position:absolute;bottom:12px;left:0;animation:logdrift 40s linear infinite;animation-delay:-22s}
+.floatlog canvas{width:calc(8px * 4);animation:spin 1s steps(4) infinite}
+@keyframes logdrift{from{transform:translateX(108vw)}to{transform:translateX(-18vw)}}
+@keyframes spin{from{rotate:0deg}to{rotate:-360deg}}
+
+.topbar{position:relative;z-index:2;max-width:1140px;margin:0 auto;padding:16px 20px 0;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.dealschip{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:#deaa4e;
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  white-space:nowrap;
+}
+.dealschip:hover,.dealschip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.backlink{
+  display:inline-block;
+  font-family:var(--px);font-size:11px;line-height:1;
+  color:var(--ink);text-decoration:none;
+  background:var(--cream);
+  border:4px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:12px 15px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.backlink:hover,.backlink:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.backlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.giveback{display:inline-block;margin-top:18px;font-family:var(--px);font-size:8px;line-height:1.5;color:#fff;text-decoration:none;background:var(--brand);border:3px solid var(--ink);box-shadow:3px 3px 0 rgba(43,32,22,.7);padding:8px 11px;opacity:.92;transition:transform .12s steps(2),box-shadow .12s steps(2),opacity .12s}
+.giveback:hover,.giveback:focus-visible{transform:translate(-2px,-2px);box-shadow:5px 5px 0 rgba(43,32,22,.8);opacity:1;outline:none}
+.giveback:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+
+.hero{position:relative;z-index:2;text-align:center;padding:30px 20px 190px}
+.mascot{width:calc(12px * 6);margin:0 auto 18px;filter:drop-shadow(3px 3px 0 rgba(43,32,22,.2))}
+h1{
+  font-family:var(--px);
+  font-size:clamp(20px,4.6vw,42px);
+  line-height:1.3;letter-spacing:.02em;
+  text-shadow:4px 4px 0 rgba(255,255,255,.65);
+}
+h1 .bk{color:var(--brand)}
+.tag{
+  font-family:var(--px);
+  font-size:clamp(8px,1.5vw,11px);
+  margin-top:16px;line-height:2;color:#4a5a4e;
+}
+.blurb{
+  margin:14px auto 0;max-width:48ch;
+  font-size:clamp(14px,1.9vw,16px);font-weight:500;
+  color:var(--muted);
+}
+.blurb b{font-weight:700;border-bottom:3px solid var(--brand);color:var(--ink)}
+.edition{
+  font-family:var(--px);font-size:8px;line-height:1;
+  margin-top:20px;color:#5c6156;
+  display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;
+}
+.edition .dot{width:6px;height:6px;background:var(--brand)}
+
+/* ---------- sticky search + nav ---------- */
+.sticky{
+  position:sticky;top:0;z-index:50;
+  background:var(--black);
+  border-bottom:4px solid var(--brand);
+}
+.searchwrap{
+  max-width:1140px;margin:0 auto;
+  padding:12px 20px 8px;
+  display:flex;align-items:center;gap:14px;
+}
+.searchlabel{font-family:var(--px);font-size:10px;color:var(--cream);white-space:nowrap}
+.searchbox{position:relative;flex:1}
+#search{
+  width:100%;
+  font-family:var(--body);font-weight:500;font-size:16px;
+  padding:11px 42px 11px 12px;
+  border:3px solid var(--ink);
+  background:var(--card);color:var(--ink);
+  outline:none;border-radius:0;
+}
+#search::placeholder{color:#8b7f6d;font-weight:400}
+#search:focus{box-shadow:0 0 0 3px var(--brand)}
+.searchbox .ico{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--brand-d);pointer-events:none}
+.searchbox .clear{
+  position:absolute;right:8px;top:50%;transform:translateY(-50%);
+  border:2px solid var(--ink);background:var(--brand);color:#fff;
+  width:26px;height:26px;font-size:15px;line-height:1;cursor:pointer;display:none;
+}
+.nav{
+  max-width:1140px;margin:0 auto;
+  display:flex;gap:10px;overflow-x:auto;
+  padding:6px 20px 14px;scrollbar-width:none;
+}
+.nav::-webkit-scrollbar{display:none}
+.nav a{
+  font-family:var(--px);font-size:8px;line-height:1;
+  white-space:nowrap;text-decoration:none;
+  color:var(--cream);
+  border:3px solid rgba(246,238,217,.45);
+  padding:8px 10px;
+  transition:background .12s steps(2),color .12s steps(2),border-color .12s steps(2);
+}
+.nav a:hover,.nav a:focus-visible{background:var(--brand);border-color:var(--brand);color:#fff;outline:none}
+
+/* ---------- sections + cards ---------- */
+main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
+.section{margin-top:40px;scroll-margin-top:118px}
+.sechead{display:flex;align-items:center;gap:14px}
+.sechead h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(13px,2.4vw,17px);line-height:1.5;
+  color:var(--ink);
+}
+.sechead .count{font-family:var(--px);font-size:8px;color:var(--brand-d);white-space:nowrap}
+.secrule{
+  height:6px;margin-top:10px;
+  background:repeating-linear-gradient(to right, var(--brand) 0 14px, var(--gray) 14px 22px);
+}
+.grid{
+  display:grid;gap:22px;margin-top:20px;
+  grid-template-columns:repeat(auto-fill,minmax(255px,1fr));
+}
+.card{
+  display:flex;flex-direction:column;
+  background:var(--card);
+  border:3px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  padding:16px 15px 14px;
+  text-decoration:none;color:var(--ink);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+  min-height:122px;
+}
+.card:hover,.card:focus-visible{
+  transform:translate(-3px,-3px);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  outline:none;
+}
+.card:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.card:focus-visible{outline:3px dashed var(--brand);outline-offset:3px}
+.cardtop{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card h3{
+  font-family:var(--px);font-weight:400;
+  font-size:10px;line-height:1.7;letter-spacing:.02em;
+}
+.card:hover h3,.card:focus-visible h3{color:var(--brand-d)}
+.badge{
+  font-family:var(--px);font-size:7px;line-height:1;
+  white-space:nowrap;
+  border:2px solid var(--brand);color:var(--brand-d);
+  padding:4px 5px;margin-top:2px;
+}
+.card p{font-size:13.5px;color:var(--muted);margin-top:9px;flex:1}
+.card .host{
+  font-family:var(--body);font-weight:700;font-size:12px;
+  color:var(--brand-d);margin-top:12px;
+  display:flex;align-items:center;gap:6px;min-width:0;
+}
+.card .host .hosturl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.card .host .arw{font-family:var(--px);font-size:8px;flex:none}
+.card:hover .host .arw,.card:focus-visible .host .arw{animation:nudge .6s steps(2) infinite}
+@keyframes nudge{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.noresults{
+  display:none;text-align:center;padding:56px 16px;
+  font-family:var(--px);font-size:10px;line-height:2;color:var(--muted);
+}
+.noresults b{color:var(--brand-d)}
+
+/* ---------- "start here" admit callout ---------- */
+.section.admit{
+  background:var(--card);
+  border:4px solid var(--brand);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  overflow:hidden;
+}
+.section.admit .admit-head{
+  background:var(--brand);
+  border-bottom:4px solid var(--ink);
+  padding:15px 18px;
+}
+.section.admit .admit-eyebrow{
+  display:block;font-family:var(--px);font-size:8px;line-height:1;
+  color:rgba(255,255,255,.82);margin-bottom:9px;letter-spacing:.04em;
+}
+.section.admit .admit-head h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(12px,2.2vw,15px);line-height:1.45;color:#fff;
+}
+.section.admit .admit-note{
+  padding:15px 18px 2px;margin:0;
+  font-size:14px;font-weight:500;color:var(--muted);
+}
+.section.admit .grid{padding:0 18px}
+
+/* ---------- suggest a link ---------- */
+.suggest{
+  margin-top:52px;
+  background:var(--card);
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+}
+.suggest .sh{
+  background:var(--brand);
+  border-bottom:4px solid var(--ink);
+  padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+}
+.suggest .sh canvas{width:calc(12px * 2)}
+.suggest .sh .t{font-family:var(--px);font-size:clamp(11px,2vw,14px);color:#fff;line-height:1.5}
+.suggest .body{padding:18px 18px 20px}
+.suggest .lede{font-size:14.5px;color:var(--muted);max-width:60ch;margin-bottom:18px}
+.frow{display:grid;gap:16px;grid-template-columns:1fr 1fr}
+.field{display:flex;flex-direction:column}
+.field.full{grid-column:1/-1}
+.field label{
+  font-family:var(--px);font-size:8px;line-height:1;
+  color:var(--ink);margin-bottom:7px;
+}
+.field input,.field textarea{
+  font-family:var(--body);font-size:15px;color:var(--ink);
+  width:100%;padding:10px 11px;
+  border:3px solid var(--ink);background:#fff;
+  outline:none;resize:vertical;border-radius:0;
+}
+.field input:focus,.field textarea:focus{box-shadow:0 0 0 3px var(--brand)}
+.submitrow{display:flex;align-items:center;gap:16px;margin-top:18px;flex-wrap:wrap}
+button.send{
+  font-family:var(--px);font-size:10px;
+  color:#fff;background:var(--brand);
+  border:3px solid var(--ink);
+  padding:13px 22px;cursor:pointer;
+  box-shadow:5px 5px 0 rgba(43,32,22,.8);
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+button.send:hover{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(43,32,22,.8)}
+button.send:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.formnote{font-size:13.5px;font-weight:500;color:var(--muted)}
+.formnote.ok{color:var(--brand-d);font-weight:700}
+
+/* ---------- footer ---------- */
+footer{
+  margin-top:52px;
+  background:var(--black);color:#c9c2ba;
+  border-top:4px solid var(--brand);
+  position:relative;
+}
+footer::before{ /* pixel notches on the footer edge */
+  content:"";position:absolute;left:0;right:0;top:-10px;height:6px;
+  background:repeating-linear-gradient(to right,
+    var(--brand) 0 14px, transparent 14px 24px,
+    var(--brand) 24px 34px, transparent 34px 48px);
+}
+.footwrap{max-width:1140px;margin:0 auto;padding:30px 20px 34px;text-align:center}
+.footwrap .beavrow{display:flex;justify-content:center;align-items:flex-end;gap:26px;margin-bottom:18px}
+.footwrap .beavrow canvas{width:calc(9px * 3);opacity:.95}
+.footwrap .beavrow canvas.mid{width:calc(12px * 3)}
+.disclaimer{font-size:13px;max-width:66ch;margin:0 auto 16px;line-height:1.7}
+.disclaimer b{color:#fff}
+.family{font-family:var(--px);font-size:8px;line-height:2;color:var(--cream)}
+.family a{color:#ff6b6b;text-decoration:none;border-bottom:2px solid var(--brand);padding-bottom:2px}
+.family a:hover,.family a:focus-visible{color:#fff;outline:none}
+.copyright{margin-top:12px;font-family:var(--px);font-size:7px;line-height:2;color:#8a837c}
+.copyright .px-star{color:var(--brand)}
+
+@media (max-width:640px){
+  html{scroll-padding-top:112px}
+  .section{scroll-margin-top:112px}
+  .searchlabel{display:none}
+  .frow{grid-template-columns:1fr}
+  .hero{padding:22px 16px 160px}
+  .card{min-height:0}
+  .swimmer canvas{width:calc(14px * 3)}
+  .dam canvas{width:calc(22px * 3)}
+  .cloud.c3{display:none}
+  .topbar{padding:14px 14px 0}
+  .backlink,.dealschip{font-size:8px;padding:9px 10px;border-width:3px;box-shadow:3px 3px 0 rgba(43,32,22,.8)}
+  .sun{top:84px;right:5vw;width:calc(9px * 5)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto}
+  .cloud,.swimmer,.swimmer canvas,.floatlog,.floatlog canvas,.card,.backlink,button.send,.card .host .arw{animation:none;transition:none}
+  .swimmer{left:8vw}
+  .floatlog{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="scene" aria-hidden="true">
+    <canvas class="sun" data-sprite="sun"></canvas>
+    <canvas class="cloud c1" data-sprite="cloud" style="top:34px;animation-duration:90s;animation-delay:-18s"></canvas>
+    <canvas class="cloud c2" data-sprite="cloud" style="top:96px;animation-duration:125s;animation-delay:-64s"></canvas>
+    <canvas class="cloud c3" data-sprite="cloud" style="top:20px;animation-duration:105s;animation-delay:-95s"></canvas>
+    <div class="treeline" id="treeline"></div>
+    <div class="river">
+      <div class="dam"><canvas data-sprite="horseshoe"></canvas></div>
+      <div class="floatlog"><canvas data-sprite="nut"></canvas></div>
+      <div class="swimmer"><canvas id="marcher" data-sprite="march0"></canvas></div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <a class="backlink" href="https://linkcowboy.com">&lt;&lt; LINK COWBOY</a>
+    <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+  </div>
+
+  <div class="hero">
+    <canvas class="mascot" data-sprite="face" role="img" aria-label="Pixel buckeye"></canvas>
+    <h1><span class="bk">BUCKEYE</span> LINKS</h1>
+    <p class="tag">EVERY OHIO STATE LINK.<br>ONE PAGE. O-H!</p>
+    <p class="blurb">Every link an <b>Ohio State University</b> student actually needs: BuckeyeLink, Carmen, class search, tuition, CABS, dining, and everything else scattered across a few hundred osu.edu sites, rounded up so you stop hunting for it. Unofficial and student-built for Buckeyes in Columbus.</p>
+    <div class="edition">
+      <span>VOL. 1</span><i class="dot"></i><span>AUTUMN 2026</span><i class="dot"></i><span id="linkcount">LINKS</span>
+    </div>
+    <a class="giveback" href="https://www.buckeyefoodalliance.org/" target="_blank" rel="noopener">SUPPORT BUCKEYE FOOD ALLIANCE &gt;&gt;</a>
+  </div>
+</header>
+
+<div class="sticky">
+  <div class="searchwrap">
+    <span class="searchlabel">SEARCH</span>
+    <div class="searchbox">
+      <input id="search" type="text" autocomplete="off" spellcheck="false"
+        placeholder="Try &ldquo;cabs&rdquo;, &ldquo;tickets&rdquo;, &ldquo;financial aid&rdquo;, &ldquo;buckid&rdquo;&hellip;"
+        aria-label="Search all links by name, category, or keyword">
+      <span class="ico" aria-hidden="true">&#9906;</span>
+      <button class="clear" id="clearBtn" type="button" aria-label="Clear search">&times;</button>
+    </div>
+  </div>
+  <nav class="nav" id="nav" aria-label="Jump to category"></nav>
+</div>
+
+<main id="main">
+  <div class="noresults" id="noresults">NOTHING MATCHES <b id="nrterm"></b>.<br>TRY ANOTHER WORD, OR SUGGEST THE LINK YOU&rsquo;RE MISSING BELOW.</div>
+</main>
+
+<footer>
+  <div class="footwrap">
+    <div class="beavrow" aria-hidden="true">
+      <canvas data-sprite="tree_sm"></canvas>
+      <canvas class="mid" data-sprite="face"></canvas>
+      <canvas data-sprite="tree_sm"></canvas>
+    </div>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with or endorsed by The Ohio State University. Links point to official Ohio State and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.1.</p>
+    <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
+    <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> BUILT SOMEWHERE OFF HIGH STREET</p>
+  </div>
+</footer>
+
+<script>
+/*
+ * Buckeye Links
+ * Paste your deployed Google Apps Script Web App URL into SCRIPT_URL to
+ * turn on click tracking and the suggest-a-link form. Leave it empty to
+ * disable tracking; the form then falls back to the mailto below.
+ */
+const SCRIPT_URL = "";                          // e.g. "https://script.google.com/macros/s/AKfyc.../exec"
+const SUGGEST_MAILTO = "jn32456@my.utexas.edu";  // fallback inbox when SCRIPT_URL is empty
+
+/* ---------- pixel sprites (Link Cowboy style) ---------- */
+const PIX = {
+  palette:{
+    "h":"#8b5e34","H":"#5c3d21","k":"#e8b088","R":"#bb0000","r":"#8f0000",
+    "g":"#9aa3ad","a":"#6f7780","P":"#ffffff","V":"#1e1812",
+    "c":"#4f8f4a","e":"#356b33","n":"#5c3a21","Y":"#e3c14a",
+    "G":"#ffd35c","W":"#ffffff"
+  },
+  sprites:{
+    face:[
+      "...HHHHHH...",
+      "..HhhhhhhH..",
+      ".HhhhhhhhhH.",
+      "HhhhhhhhhhhH",
+      "HhhhkkkkhhhH",
+      "HhhkkkkkkhhH",
+      "HhhkkkkkkhhH",
+      "HhhhkkkkhhhH",
+      "HhhhhhhhhhhH",
+      ".HhhhhhhhhH.",
+      "..HhhhhhhH..",
+      "...HHHHHH..."
+    ],
+    march0:[
+      "....RRRR......",
+      "...RRRRRR.....",
+      "...RkkkkR.....",
+      "....kVkV......",
+      "...RRRRRR..YY.",
+      "..RRRRRRR.YYYY",
+      "..RRRRRRRYY..Y",
+      "..RRRRRRRYY..Y",
+      "...RRRRRR.YYYY",
+      "...RR..RR..YY.",
+      "...RR..RR.....",
+      "..VVV..VVV...."
+    ],
+    march1:[
+      "....RRRR......",
+      "...RRRRRR.....",
+      "...RkkkkR.....",
+      "....kVkV......",
+      "...RRRRRR..YY.",
+      "..RRRRRRR.YYYY",
+      "..RRRRRRRYY..Y",
+      "..RRRRRRRYY..Y",
+      "...RRRRRR.YYYY",
+      "...RRRRRR..YY.",
+      "..RR....RR....",
+      ".VVV....VVV..."
+    ],
+    horseshoe:[
+      "....RRRRRRRRRRRRRR....",
+      "..RRggggggggggggggRR..",
+      ".RRgaaaaaaaaaaaaaagRR.",
+      "RRgaaRRRRRRRRRRRRaagRR",
+      "RRgaaRcccccccccccaagRR",
+      "RRgaaRRRRRRRRRRRRaagRR",
+      "RRgaaaaaaaaaaaaaaaagRR",
+      "RRgggggggggggggggggggR",
+      "RRRRRRRRRRRRRRRRRRRRRR"
+    ],
+    nut:[
+      "..HHHH..",
+      ".HhhhhH.",
+      "HhhkkhhH",
+      "HhhkkhhH",
+      ".HhhhhH.",
+      "..HHHH.."
+    ],
+    tree:[
+      "...ccccc...",
+      "..cccceec..",
+      ".ccceecccc.",
+      "cccccceeccc",
+      "ccceccccecc",
+      ".ccceecccc.",
+      "..ccccccc..",
+      "...ccccc...",
+      "....nnn....",
+      "....nnn....",
+      "....nnn....",
+      "....nnn...."
+    ],
+    tree_sm:[
+      "...ccc...",
+      "..ccccc..",
+      ".ccceecc.",
+      "cccccceec",
+      ".cceccccc",
+      "..ccccc..",
+      "...nnn...",
+      "...nnn...",
+      "...nnn..."
+    ],
+    sun:[
+      "....G....",
+      "..GGGGG..",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "GGGGGGGGG",
+      ".GGGGGGG.",
+      ".GGGGGGG.",
+      "..GGGGG..",
+      "....G...."
+    ],
+    cloud:[
+      ".....WWWWW......",
+      "....WWWWWWWW....",
+      "...WWWWWWWWWW...",
+      ".WWWWWWWWWWWWWW.",
+      ".WWWWWWWWWWWWWW.",
+      "................"
+    ]
+  }
+};
+
+function drawSprite(canvas, name){
+  const map = PIX.sprites[name];
+  if(!map) return;
+  const h = map.length, w = map[0].length;
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0,0,w,h);
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const c = PIX.palette[map[y][x]];
+      if(c){ ctx.fillStyle = c; ctx.fillRect(x,y,1,1); }
+    }
+  }
+}
+document.querySelectorAll("canvas[data-sprite]").forEach(c => drawSprite(c, c.dataset.sprite));
+
+/* buckeye treeline along the horizon (seeded, deterministic) */
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const rand = mulberry32(1870); /* Ohio State founded 1870 */
+const treeline = document.getElementById("treeline");
+for(let i=0; i<24; i++){
+  const holder = document.createElement("div");
+  holder.className = "tree";
+  const cv = document.createElement("canvas");
+  drawSprite(cv, "tree");
+  const s = 3 + Math.floor(rand()*3); /* 3x - 5x */
+  cv.style.width = (cv.width * s) + "px";
+  holder.style.left = (rand()*97) + "vw";
+  holder.style.bottom = (-8 + rand()*10) + "px";
+  holder.style.zIndex = s; /* bigger trees in front */
+  holder.appendChild(cv);
+  treeline.appendChild(holder);
+}
+
+/* sousaphone marching animation */
+const marcher = document.getElementById("marcher");
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(!reduced){
+  let step = 0;
+  setInterval(() => { step ^= 1; drawSprite(marcher, "march" + step); }, 330);
+}
+
+/* ---------- link data ---------- */
+const CATEGORIES = [
+  "Essentials",
+  "Classes & Registration",
+  "Money",
+  "Getting Around",
+  "Campus Life",
+  "Career",
+  "Sports & Traditions",
+  "Housing",
+  "Health & Safety",
+  "New Buckeyes"
+];
+
+const LINKS = [
+  // Essentials
+  {name:"BuckeyeLink", url:"https://buckeyelink.osu.edu/", category:"Essentials", desc:"The student center for registration, grades, financial aid, your bill, and your records.", keywords:["buckeyelink","buckeye link","portal","student center","registration","grades","records","bill"], login:true},
+  {name:"CarmenCanvas", url:"https://carmen.osu.edu/", category:"Essentials", desc:"Course sites, assignments, grades, and quizzes for every class you're enrolled in.", keywords:["carmen","canvas","lms","coursework","assignments","grades","instructure","course site"], login:true},
+  {name:"my.osu.edu", url:"https://my.osu.edu/", category:"Essentials", desc:"Manage your name.# account: password, email alias, and university directory settings.", keywords:["my osu","account","password","name.#","reset","email alias","directory","username"], login:true},
+  {name:"BuckeyePass", url:"https://buckeyepass.osu.edu/", category:"Essentials", desc:"Ohio State's Duo two-factor: enroll a device, add a backup, and fix a lost phone.", keywords:["buckeyepass","duo","two factor","2fa","mfa","authentication","lost phone","security"], login:false},
+  {name:"IT Service Desk", url:"https://it.osu.edu/help", category:"Essentials", desc:"Where to go when your login, Wi-Fi, email, or software stops cooperating. 24/7 support.", keywords:["it","help","helpdesk","support","service desk","wifi","password","broken","8help"], login:false},
+  {name:"Office of Technology & Digital Innovation", url:"https://it.osu.edu/", category:"Essentials", desc:"Free software, Microsoft 365, storage, Zoom, and every centrally supported IT service.", keywords:["it","software","microsoft","office 365","onedrive","zoom","storage","free software","otdi"], login:false},
+  {name:"University Libraries", url:"https://library.osu.edu/", category:"Essentials", desc:"Thompson and the rest: catalog, databases, study rooms, and research help.", keywords:["library","thompson","study rooms","research","databases","books","reserves","18th floor"], login:false},
+  {name:"BuckID", url:"https://buckid.osu.edu/", category:"Essentials", desc:"Your Ohio State ID: add funds, check balances, see accepted merchants, and report it lost.", keywords:["buckid","id card","student id","add funds","balance","lost card","dining dollars","merchants"], login:false},
+
+  // Classes & Registration
+  {name:"Class Search", url:"https://classes.osu.edu/", category:"Classes & Registration", desc:"Search live sections by subject, term, instructor, campus, and open seats before you enroll.", keywords:["class search","schedule","sections","open seats","course search","enroll","register","classes"], login:false},
+  {name:"Office of the University Registrar", url:"https://registrar.osu.edu/", category:"Classes & Registration", desc:"Registration policies, records, enrollment verification, and the fix for schedule problems.", keywords:["registrar","records","enrollment","verification","policy","withdraw","drop","forms"], login:false},
+  {name:"Academic Calendar", url:"https://registrar.osu.edu/academic-calendar/", category:"Classes & Registration", desc:"Semester start and end dates, drop and withdrawal deadlines, breaks, and finals week.", keywords:["academic calendar","dates","deadlines","semester","breaks","holidays","drop deadline","autumn"], login:false},
+  {name:"Final Exam Schedule", url:"https://registrar.osu.edu/staff-resources/class-catalog-and-space/final-exams-schedule/", category:"Classes & Registration", desc:"Maps your class meeting times to exam dates and rooms for finals week.", keywords:["finals","final exams","exam schedule","finals week","exam times","when is my final"], login:false},
+  {name:"Degree Audit", url:"https://registrar.osu.edu/student-hub/degree-audit-students/", category:"Classes & Registration", desc:"Run your advising report to see exactly which requirements are done and which aren't.", keywords:["degree audit","advising report","requirements","graduation","progress","gen ed","what do i need"], login:false},
+  {name:"Transcripts & Verifications", url:"https://registrar.osu.edu/student-hub/transcripts-and-verifications/", category:"Classes & Registration", desc:"Order official transcripts and enrollment verification for jobs, insurance, or grad school.", keywords:["transcript","official transcript","enrollment verification","records","order","grad school"], login:false},
+  {name:"Academic Advising", url:"https://advising.osu.edu/", category:"Classes & Registration", desc:"Find your college's advising office, book an appointment, and clear a registration hold.", keywords:["advising","advisor","appointment","hold","major","change major","plan","schedule"], login:false},
+  {name:"Dennis Learning Center", url:"https://dennislearningcenter.osu.edu/", category:"Classes & Registration", desc:"Academic coaching and courses on studying, time management, and motivation. Free to students.", keywords:["dennis","learning center","academic coaching","study skills","time management","motivation","tutoring"], login:false},
+  {name:"Center for the Study & Teaching of Writing", url:"https://cstw.osu.edu/", category:"Classes & Registration", desc:"The Writing Center: free consultations on any writing, at any stage, for any course.", keywords:["writing center","cstw","writing","essays","papers","feedback","consultation","proofread"], login:false},
+  {name:"Undergraduate Education", url:"https://oaa.osu.edu/", category:"Classes & Registration", desc:"Academic policy, honors and scholars, and university-wide undergraduate programs.", keywords:["academic affairs","policy","honors","scholars","undergraduate","academic integrity","coam"], login:false},
+
+  // Money
+  {name:"Student Financial Aid", url:"https://sfa.osu.edu/", category:"Money", desc:"FAFSA, grants, loans, work-study, and how to keep your aid from being cancelled.", keywords:["financial aid","fafsa","grants","loans","work study","aid","money","sap","sfa"], login:false},
+  {name:"ScholarshipUniverse", url:"https://osu.scholarshipuniverse.com/", category:"Money", desc:"Ohio State's scholarship matching portal. Answer the questions once, get matched to awards.", keywords:["scholarships","scholarship universe","apply","awards","funding","free money","match"], login:true},
+  {name:"Merit Scholarships", url:"https://undergrad.osu.edu/cost-and-aid/merit-based-scholarships", category:"Money", desc:"University merit awards, what they require, and how they renew year to year.", keywords:["merit","scholarship","morrill","land grant","renew","award","undergraduate","trustees"], login:false},
+  {name:"Statement of Account", url:"https://buckeyelink.osu.edu/tuition-and-fees/statement-of-account", category:"Money", desc:"Your bill: what's on it, when it's due, and what a hold will stop you from doing.", keywords:["bill","statement of account","tuition","due date","balance","hold","pay","fees"], login:false},
+  {name:"Payment Plans", url:"https://buckeyelink.osu.edu/tuition-and-fees/payment-plans", category:"Money", desc:"Split your semester bill into scheduled installments instead of one lump sum.", keywords:["payment plan","installments","monthly payments","tuition option","split","budget"], login:false},
+  {name:"Office of the Bursar", url:"https://busfin.osu.edu/bursar", category:"Money", desc:"Where payments post, refund policies, 1098-T tax forms, and past-due account questions.", keywords:["bursar","payment","refund","1098-t","tax","past due","collections","account"], login:false},
+  {name:"Federal Work-Study Jobs", url:"https://sfa.osu.edu/jobs", category:"Money", desc:"Browse work-study and student jobs on campus and see what you're eligible for.", keywords:["work study","student job","on campus job","employment","hiring","part time","paycheck"], login:false},
+
+  // Getting Around
+  {name:"CABS Campus Bus", url:"https://ttm.osu.edu/cabs", category:"Getting Around", desc:"Free campus bus routes, service times, and live tracking for CABS.", keywords:["cabs","bus","campus bus","routes","shuttle","live tracking","transit","times"], login:false},
+  {name:"Transportation & Traffic Management", url:"https://ttm.osu.edu/", category:"Getting Around", desc:"Buses, bikes, EV charging, traffic alerts, and the university's transportation services.", keywords:["ttm","transportation","bike","ev","traffic","alerts","construction","getting around"], login:false},
+  {name:"CampusParc (Parking)", url:"https://osu.campusparc.com/", category:"Getting Around", desc:"Ohio State's parking operator: permits, rates, garages, visitor parking, and citations.", keywords:["parking","permit","campusparc","garage","lot","citation","ticket","car","commute"], ext:true, login:false},
+  {name:"COTA", url:"https://cota.com/", category:"Getting Around", desc:"Columbus city buses. Ohio State students ride free with a validated BuckID.", keywords:["cota","city bus","columbus","free ride","transit","routes","buckid","off campus"], ext:true, login:false},
+  {name:"Campus Map", url:"https://maps.osu.edu/", category:"Getting Around", desc:"Buildings, classrooms, parking, dining, and accessible routes on one interactive map.", keywords:["map","directions","buildings","find","wayfinding","where is","classroom"], login:false},
+
+  // Campus Life
+  {name:"Ohio Union", url:"https://ohiounion.osu.edu/", category:"Campus Life", desc:"The Union: events, meeting rooms, food, study space, and most student services.", keywords:["ohio union","union","events","study space","reserve","hours","food","student services"], login:false},
+  {name:"Student Activities", url:"https://activities.osu.edu/", category:"Campus Life", desc:"Student organizations, involvement programs, sorority and fraternity life, and leadership.", keywords:["activities","involvement","clubs","organizations","leadership","get involved","join"], login:false},
+  {name:"Find a Student Org", url:"https://activities.osu.edu/involvement/student-organizations/find-a-student-org/", category:"Campus Life", desc:"Searchable directory of 1,400-plus registered student organizations, plus how to start one.", keywords:["student org","clubs","organizations","directory","search","join","start a club","find"], login:false},
+  {name:"Sorority & Fraternity Life", url:"https://sfl.osu.edu/", category:"Campus Life", desc:"Councils, chapters, recruitment timelines, and what going Greek at Ohio State involves.", keywords:["greek life","fraternity","sorority","sfl","recruitment","rush","panhellenic","ifc","chapters"], login:false},
+  {name:"Recreational Sports", url:"https://recsports.osu.edu/", category:"Campus Life", desc:"The RPAC and every other rec facility: memberships, hours, pools, and courts.", keywords:["rpac","rec sports","gym","fitness","pool","courts","workout","facilities","hours"], login:false},
+  {name:"Intramural Sports", url:"https://recsports.osu.edu/programs/intramural-sports/", category:"Campus Life", desc:"Leagues and tournaments in flag football, basketball, soccer, volleyball, and more.", keywords:["intramural","im sports","leagues","flag football","basketball","soccer","teams","sign up"], login:false},
+  {name:"Dining Services", url:"https://dining.osu.edu/", category:"Campus Life", desc:"Dining hall menus and hours, campus restaurants, and where your BuckID actually works.", keywords:["dining","food","menus","dining hall","traditions","hours","eat","restaurants","cafe"], login:false},
+  {name:"Dining Plans", url:"https://dining.osu.edu/dining-plans", category:"Campus Life", desc:"Compare plans, see what's required on campus, and figure out swipes versus dining dollars.", keywords:["meal plan","dining plan","swipes","dining dollars","change plan","required","block"], login:false},
+  {name:"Barnes & Noble @ Ohio State", url:"https://buckeyelink.osu.edu/task/all/bookstore", category:"Campus Life", desc:"Textbooks, course materials, rentals, supplies, and Buckeye gear on North High Street.", keywords:["bookstore","textbooks","books","rental","gear","apparel","supplies","merch","barnes noble"], login:false},
+  {name:"Education Abroad", url:"https://globaleducation.osu.edu/", category:"Campus Life", desc:"Search Ohio State study abroad programs, costs, and scholarships, and start an application.", keywords:["study abroad","education abroad","global","international","exchange","travel","semester abroad"], login:false},
+  {name:"Office of International Affairs", url:"https://oia.osu.edu/", category:"Campus Life", desc:"Visa and immigration advising, work authorization, and support for international students.", keywords:["international","visa","f-1","opt","cpt","immigration","i-20","oia","isss","advising"], login:false},
+  {name:"Esports & Game Studies", url:"https://esports.osu.edu/", category:"Campus Life", desc:"The esports arena in the Union, varsity and club teams, and open play hours.", keywords:["esports","gaming","arena","games","varsity","club","play","tournaments"], login:false},
+
+  // Career
+  {name:"Buckeye Careers", url:"https://careers.osu.edu/", category:"Career", desc:"Career coaching, resume reviews, mock interviews, and the fairs worth clearing your schedule for.", keywords:["career","careers","jobs","internship","coaching","resume","interview","fair","advising"], login:false},
+  {name:"Handshake", url:"https://osu.joinhandshake.com/", category:"Career", desc:"Ohio State's job board for internships, full-time roles, and on-campus employer events.", keywords:["handshake","jobs","internship","recruiting","apply","employers","job board","career fair"], login:true},
+
+  // Sports & Traditions
+  {name:"Ohio State Buckeyes", url:"https://ohiostatebuckeyes.com/", category:"Sports & Traditions", desc:"Official athletics site: schedules, scores, rosters, and news across every Buckeye sport.", keywords:["athletics","buckeyes","sports","schedule","scores","roster","games","basketball","hockey"], ext:true, login:false},
+  {name:"Football Student Tickets", url:"https://ohiostatebuckeyes.com/feature/football-student-tickets", category:"Sports & Traditions", desc:"How the student ticket lottery works: ranks, request windows, packages, and transfers.", keywords:["tickets","student tickets","football tickets","lottery","rank","package","horseshoe","transfer","claim"], ext:true, login:false},
+  {name:"Ticketed Sports", url:"https://ohiostatebuckeyes.com/tickets/", category:"Sports & Traditions", desc:"Every ticketed Buckeye sport in one place, including the free and low-cost student seats.", keywords:["tickets","basketball tickets","hockey","volleyball","free","student section","buy"], ext:true, login:false},
+  {name:"Traditions", url:"https://ohiostatebuckeyes.com/traditions/", category:"Sports & Traditions", desc:"Script Ohio, Carmen Ohio, the rivalry, and the rest of the things you're expected to know.", keywords:["traditions","script ohio","carmen ohio","fight song","rivalry","michigan","mirror lake","history"], ext:true, login:false},
+  {name:"TBDBITL Marching Band", url:"https://tbdbitl.osu.edu/", category:"Sports & Traditions", desc:"The Best Damn Band In The Land: auditions, gameday, and how to actually get in.", keywords:["marching band","tbdbitl","band","audition","gameday","script ohio","sousaphone","music"], login:false},
+
+  // Housing
+  {name:"Student Life Housing", url:"https://housing.osu.edu/", category:"Housing", desc:"Residence halls, rates, the housing contract, room selection, and the on-campus requirement.", keywords:["housing","dorms","residence halls","apply","rates","room selection","roommate","move in","contract"], login:false},
+  {name:"Off-Campus & Commuter Life", url:"https://offcampus.osu.edu/", category:"Housing", desc:"Off-campus housing search, lease help, landlord issues, and commuter student resources.", keywords:["off campus","apartments","lease","landlord","roommates","commuter","rent","sublet","search"], login:false},
+
+  // Health & Safety
+  {name:"Student Health Services", url:"https://shs.osu.edu/", category:"Health & Safety", desc:"On-campus clinic and pharmacy: appointments, immunizations, and same-day care.", keywords:["student health","shs","clinic","doctor","pharmacy","appointment","sick","immunization","medical"], login:false},
+  {name:"Counseling & Consultation Service", url:"https://ccs.osu.edu/", category:"Health & Safety", desc:"CCS provides counseling, group therapy, and 24/7 crisis support for enrolled students.", keywords:["ccs","counseling","mental health","therapy","crisis","24/7","anxiety","depression","help"], login:false},
+  {name:"Student Wellness Center", url:"https://swc.osu.edu/", category:"Health & Safety", desc:"Wellness coaching, recovery support, sexual health, financial coaching, and stress resources.", keywords:["wellness","swc","coaching","stress","sleep","recovery","sexual health","financial coaching","wellbeing"], login:false},
+  {name:"Student Life Disability Services", url:"https://slds.osu.edu/", category:"Health & Safety", desc:"Register for accommodations, testing services, note-taking, and access support.", keywords:["slds","disability","accommodations","accessibility","testing","access","ada","register","notes"], login:false},
+  {name:"Department of Public Safety", url:"https://dps.osu.edu/", category:"Health & Safety", desc:"Ohio State police, safety escorts, Rides, and how to report something.", keywords:["police","dps","public safety","escort","report","emergency","crime","lyft","rides","security"], login:false},
+  {name:"Campus Status & Alerts", url:"https://dps.osu.edu/campus-status", category:"Health & Safety", desc:"Buckeye Alert notifications, closures, and current campus emergency status.", keywords:["buckeye alert","alert","emergency","closure","snow day","status","notification","text alerts"], login:false},
+  {name:"Student Advocacy Center", url:"https://advocacy.osu.edu/", category:"Health & Safety", desc:"Where to go when life goes sideways: help navigating a crisis, an appeal, or a hard semester.", keywords:["advocacy","help","crisis","appeal","withdraw","emergency","support","navigate","dean"], login:false},
+  {name:"Buckeye Food Alliance", url:"https://www.buckeyefoodalliance.org/", category:"Health & Safety", desc:"Student-run food pantry with free groceries, produce, and toiletries. Just bring your BuckID.", keywords:["food pantry","buckeye food alliance","free food","groceries","basic needs","food insecurity","hungry"], ext:true, login:false},
+
+  // New Buckeyes (seasonal, for incoming students)
+  {name:"University Orientation", url:"https://orientation.osu.edu/", category:"New Buckeyes", desc:"Required orientation: the two-day session where you meet an advisor and register for classes.", keywords:["orientation","new student","register","advising","required","sessions","incoming","first year"], login:false},
+  {name:"First Year Experience", url:"https://fye.osu.edu/", category:"New Buckeyes", desc:"Welcome Week, first-year programs, and everything designed to make campus feel like home.", keywords:["fye","first year","welcome week","programs","incoming","transition","freshman","survival"], login:false},
+  {name:"Get Your BuckID", url:"https://buckid.osu.edu/", category:"New Buckeyes", desc:"Your BuckID opens buildings, pays for dining, and gets you on COTA free. Do this early.", keywords:["buckid","id card","get id","photo","incoming","first year","access","dining"], login:false},
+  {name:"Housing Contract", url:"https://housing.osu.edu/", category:"New Buckeyes", desc:"First and second years live on campus. Sign the contract and do room selection on time.", keywords:["housing contract","dorm","apply housing","residence hall","incoming","roommate","requirement"], login:false},
+  {name:"Financial Aid Checklist", url:"https://buckeyelink.osu.edu/financial-aid/", category:"New Buckeyes", desc:"Accept your aid, finish loan entrance counseling, and clear the to-dos before term starts.", keywords:["financial aid","accept aid","to do list","loans","entrance counseling","incoming","checklist"], login:false},
+  {name:"Plan Your First Schedule", url:"https://classes.osu.edu/", category:"New Buckeyes", desc:"Look at what's actually offered before your advising session so you show up with a plan.", keywords:["class search","first schedule","pick classes","incoming","what to take","sections","plan"], login:false}
+];
+
+/* ---------- helpers ---------- */
+function hostOf(url){
+  try{ return new URL(url).hostname.replace(/^www\./,""); }
+  catch(err){ return url; }
+}
+function slug(text){
+  return text.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+}
+function esc(text){
+  return text.replace(/[&<>"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));
+}
+
+/* Click and suggestion tracking. Fails silently if SCRIPT_URL is empty or unreachable. */
+function track(payload){
+  if(!SCRIPT_URL) return;
+  try{
+    const body = JSON.stringify(payload);
+    if(navigator.sendBeacon){
+      navigator.sendBeacon(SCRIPT_URL, new Blob([body], {type:"text/plain;charset=UTF-8"}));
+    }else{
+      fetch(SCRIPT_URL, {method:"POST", mode:"no-cors", keepalive:true,
+        headers:{"Content-Type":"text/plain;charset=UTF-8"}, body:body});
+    }
+  }catch(err){ /* intentionally ignored */ }
+}
+
+/* ---------- render sections ---------- */
+const main = document.getElementById("main");
+const nav = document.getElementById("nav");
+const noresults = document.getElementById("noresults");
+
+document.getElementById("linkcount").textContent = LINKS.length + " LINKS";
+
+const INCOMING = "New Buckeyes";
+
+function makeCard(link){
+  const card = document.createElement("a");
+  card.className = "card";
+  card.href = link.url;
+  card.target = "_blank";
+  card.rel = "noopener";
+  card.dataset.search = [link.name, link.category, link.desc, (link.keywords || []).join(" ")]
+    .join(" ").toLowerCase();
+  card.innerHTML =
+    '<div class="cardtop"><h3>' + esc(link.name.toUpperCase()) + '</h3>' +
+    (link.login ? '<span class="badge" title="Requires your name.# login">OSU LOGIN</span>'
+      : link.ext ? '<span class="badge" title="Third-party site, not run by Ohio State">EXTERNAL</span>' : "") +
+    '</div>' +
+    '<p>' + esc(link.desc) + '</p>' +
+    '<span class="host"><span class="hosturl">' + esc(hostOf(link.url)) + '</span> <span class="arw">&gt;&gt;</span></span>';
+  card.addEventListener("click", () => {
+    track({type:"click", name:link.name, url:link.url, category:link.category,
+      ts:new Date().toISOString(), ref:location.href});
+  });
+  return card;
+}
+
+/* prominent "start here" callout for incoming students, pulled to the very top */
+const incomingItems = LINKS.filter(link => link.category === INCOMING);
+if(incomingItems.length){
+  const chip = document.createElement("a");
+  chip.href = "#" + slug(INCOMING);
+  chip.textContent = "START HERE";
+  nav.appendChild(chip);
+
+  const admit = document.createElement("section");
+  admit.className = "section admit";
+  admit.id = slug(INCOMING);
+  admit.innerHTML =
+    '<div class="admit-head">' +
+      '<span class="admit-eyebrow">AUTUMN 2026 ADMITS</span>' +
+      '<h2>NEW BUCKEYE? START HERE.</h2>' +
+    '</div>' +
+    '<p class="admit-note">First things first. A couple of these have deadlines that block registration.</p>' +
+    '<div class="grid"></div>';
+  const agrid = admit.querySelector(".grid");
+  incomingItems.forEach(link => agrid.appendChild(makeCard(link)));
+  main.insertBefore(admit, noresults);
+}
+
+CATEGORIES.forEach(category => {
+  if(category === INCOMING) return;
+  const items = LINKS.filter(link => link.category === category);
+  if(!items.length) return;
+
+  const id = slug(category);
+
+  const chip = document.createElement("a");
+  chip.href = "#" + id;
+  chip.textContent = category.toUpperCase();
+  nav.appendChild(chip);
+
+  const section = document.createElement("section");
+  section.className = "section";
+  section.id = id;
+
+  const head = document.createElement("div");
+  head.className = "sechead";
+  head.innerHTML =
+    '<h2>' + esc(category.toUpperCase()) + '</h2>' +
+    '<span class="count">' + items.length + ' LINKS</span>';
+  section.appendChild(head);
+
+  const rule = document.createElement("div");
+  rule.className = "secrule";
+  section.appendChild(rule);
+
+  const grid = document.createElement("div");
+  grid.className = "grid";
+  items.forEach(link => grid.appendChild(makeCard(link)));
+  section.appendChild(grid);
+  main.insertBefore(section, noresults);
+});
+
+/* ---------- suggest-a-link form ---------- */
+const suggest = document.createElement("section");
+suggest.className = "suggest";
+suggest.id = "suggest";
+suggest.innerHTML =
+  '<div class="sh"><canvas id="shNut" aria-hidden="true"></canvas><span class="t">SUGGEST A LINK</span></div>' +
+  '<div class="body">' +
+    '<p class="lede">Know a link every Buckeye needs that isn&rsquo;t here? Send it over. If it&rsquo;s useful, it goes on the page.</p>' +
+    '<form id="suggestForm" novalidate>' +
+      '<div class="frow">' +
+        '<div class="field"><label for="sName">LINK NAME</label><input id="sName" name="name" required maxlength="120" placeholder="e.g. Mirror Lake Reservations"></div>' +
+        '<div class="field"><label for="sUrl">URL</label><input id="sUrl" name="url" type="url" required maxlength="400" placeholder="https://&hellip;"></div>' +
+        '<div class="field full"><label for="sWhy">WHY IT BELONGS</label><textarea id="sWhy" name="why" rows="3" maxlength="600" placeholder="What is it and who needs it?"></textarea></div>' +
+      '</div>' +
+      '<div class="submitrow"><button class="send" type="submit">SEND IT &gt;&gt;</button><span class="formnote" id="formnote" role="status"></span></div>' +
+    '</form>' +
+  '</div>';
+main.insertBefore(suggest, noresults);
+drawSprite(document.getElementById("shNut"), "face");
+
+document.getElementById("suggestForm").addEventListener("submit", function(event){
+  event.preventDefault();
+  const name = document.getElementById("sName").value.trim();
+  const url = document.getElementById("sUrl").value.trim();
+  const why = document.getElementById("sWhy").value.trim();
+  const note = document.getElementById("formnote");
+  if(!name || !url) return;
+
+  if(SCRIPT_URL){
+    track({type:"suggestion", name:name, url:url, why:why, ts:new Date().toISOString(), ref:location.href});
+    note.textContent = "Thanks, got it. We'll take a look.";
+    note.classList.add("ok");
+    this.reset();
+  }else{
+    const subject = encodeURIComponent("Buckeye Links suggestion: " + name);
+    const bodyText = encodeURIComponent("Link name: " + name + "\nURL: " + url + "\nWhy it belongs: " + why);
+    window.location.href = "mailto:" + SUGGEST_MAILTO + "?subject=" + subject + "&body=" + bodyText;
+    note.textContent = "Opening your email app.";
+    note.classList.add("ok");
+  }
+  setTimeout(() => { note.textContent = ""; note.classList.remove("ok"); }, 6000);
+});
+
+/* ---------- live search ---------- */
+const search = document.getElementById("search");
+const clearBtn = document.getElementById("clearBtn");
+const sections = Array.from(main.querySelectorAll(".section"));
+
+function matches(haystack, terms){
+  return terms.every(term => haystack.includes(term));
+}
+
+function applyFilter(){
+  const query = search.value.trim().toLowerCase();
+  const terms = query.split(/\s+/).filter(Boolean);
+  clearBtn.style.display = query ? "block" : "none";
+
+  let anyVisible = false;
+  sections.forEach(section => {
+    let sectionVisible = false;
+    section.querySelectorAll(".card").forEach(card => {
+      const show = !terms.length || matches(card.dataset.search, terms);
+      card.style.display = show ? "" : "none";
+      if(show) sectionVisible = true;
+    });
+    section.style.display = sectionVisible ? "" : "none";
+    if(sectionVisible) anyVisible = true;
+  });
+
+  noresults.style.display = anyVisible ? "none" : "block";
+  if(!anyVisible) document.getElementById("nrterm").textContent = "“" + search.value.trim().toUpperCase() + "”";
+}
+
+search.addEventListener("input", applyFilter);
+clearBtn.addEventListener("click", () => { search.value = ""; applyFilter(); search.focus(); });
+search.addEventListener("keydown", event => { if(event.key === "Escape"){ search.value = ""; applyFilter(); } });
+</script>
+</body>
+</html>
