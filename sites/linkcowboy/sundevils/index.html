@@ -110,7 +110,7 @@ canvas{image-rendering:pixelated;display:block}
 .dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
 .backlink{
   display:inline-block;
-  font-family:var(--px);font-size:11px;line-height:1;
+  font-family:var(--px);font-size:11px;line-height:1;white-space:nowrap;
   color:var(--ink);text-decoration:none;
   background:var(--cream);
   border:4px solid var(--ink);
@@ -120,9 +120,6 @@ canvas{image-rendering:pixelated;display:block}
 }
 .backlink:hover,.backlink:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
 .backlink:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
-.giveback{display:inline-block;margin-top:18px;font-family:var(--px);font-size:8px;line-height:1.5;color:#fff;text-decoration:none;background:var(--brand);border:3px solid var(--ink);box-shadow:3px 3px 0 rgba(43,32,22,.7);padding:8px 11px;opacity:.92;transition:transform .12s steps(2),box-shadow .12s steps(2),opacity .12s}
-.giveback:hover,.giveback:focus-visible{transform:translate(-2px,-2px);box-shadow:5px 5px 0 rgba(43,32,22,.8);opacity:1;outline:none}
-.giveback:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
 
 .hero{position:relative;z-index:2;text-align:center;padding:30px 20px 190px}
 .mascot{width:calc(11px * 6);margin:0 auto 18px;filter:drop-shadow(3px 3px 0 rgba(43,32,22,.2))}
@@ -369,6 +366,20 @@ footer::before{ /* pixel notches on the footer edge */
   .backlink,.dealschip{font-size:8px;padding:9px 10px;border-width:3px;box-shadow:3px 3px 0 rgba(43,32,22,.8)}
   .sun{top:84px;right:5vw;width:calc(9px * 5)}
 }
+@media (max-width:400px){
+  .topbar{padding:12px 10px 0;gap:8px}
+  .backlink,.dealschip{font-size:7px;padding:8px 8px;border-width:3px;box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+  .hero{padding:16px 12px 140px}
+  .mascot{width:calc(11px * 4);margin-bottom:12px}
+  h1{font-size:clamp(16px,7.2vw,26px)}
+  .tag{font-size:8px;margin-top:12px;line-height:1.9}
+  .blurb{font-size:13.5px;margin-top:12px}
+  .edition{font-size:7px;gap:8px;margin-top:14px}
+  .sun{top:70px;right:3vw;width:calc(9px * 4)}
+  .cloud.c2{display:none}
+  .sechead h2{font-size:12px}
+  .card h3{font-size:9px}
+}
 @media (prefers-reduced-motion:reduce){
   *{scroll-behavior:auto}
   .cloud,.swimmer,.swimmer canvas,.floatlog,.floatlog canvas,.card,.backlink,button.send,.card .host .arw{animation:none;transition:none}
@@ -406,7 +417,6 @@ footer::before{ /* pixel notches on the footer edge */
     <div class="edition">
       <span>VOL. 1</span><i class="dot"></i><span>FALL 2026</span><i class="dot"></i><span id="linkcount">LINKS</span>
     </div>
-    <a class="giveback" href="https://www.pitchforkpantry.org/support-us" target="_blank" rel="noopener">FEED A SUN DEVIL, GIVE HERE &gt;&gt;</a>
   </div>
 </header>
 
