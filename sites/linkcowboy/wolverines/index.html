@@ -85,8 +85,9 @@ canvas{image-rendering:pixelated;display:block}
 .diagm{position:absolute;right:10vw;bottom:14px;z-index:6}
 .diagm canvas{width:calc(14px * 4)}
 /* Burton Tower, standing tall on the left rather than a bowl on the right.
-   It sits behind the treeline on purpose, so the trees give it some depth. */
-.tower{position:absolute;left:6vw;bottom:50px;z-index:2}
+   It sits in front of the treeline and the pavement so the full shaft and
+   base are visible -- behind them it read as a chopped-off floating block. */
+.tower{position:absolute;left:6vw;bottom:46px;z-index:7}
 .tower canvas{width:calc(12px * 6)}
 .walker{
   position:absolute;bottom:6px;left:0;z-index:8;
@@ -369,7 +370,6 @@ footer::before{ /* pixel notches on the footer edge */
   .hero{padding:22px 16px 160px}
   .card{min-height:0}
   .walker canvas{width:calc(27px * 2)}
-  .tower{z-index:7}
   .tower canvas{width:calc(12px * 4)}
   .diagm canvas{width:calc(14px * 3)}
   .leaves{display:none}
