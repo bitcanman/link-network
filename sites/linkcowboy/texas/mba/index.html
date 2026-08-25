@@ -307,7 +307,39 @@ main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
   padding:15px 18px 2px;margin:0;
   font-size:14px;font-weight:500;color:var(--muted);
 }
-.section.admit .grid{padding:0 18px}
+.section.admit .grid{padding:0 18px 20px}   /* bottom pad so card shadows aren't clipped */
+
+/* ---------- "quick class access" box, side by side with the admit callout ---------- */
+/* spacing lives on the children, so the row collapses to nothing when a search hides both */
+.toprow{
+  display:grid;gap:22px;align-items:start;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));
+}
+.toprow .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,215px),1fr));gap:16px}
+.section.myclasses{
+  background:var(--card);
+  border:4px solid var(--ink);
+  box-shadow:8px 8px 0 rgba(43,32,22,.8);
+  overflow:hidden;
+}
+.section.myclasses .admit-head{
+  background:var(--ink);
+  border-bottom:4px solid var(--orange);
+  padding:15px 18px;
+}
+.section.myclasses .admit-eyebrow{
+  display:block;font-family:var(--px);font-size:8px;line-height:1;
+  color:rgba(246,238,217,.82);margin-bottom:9px;letter-spacing:.04em;
+}
+.section.myclasses .admit-head h2{
+  font-family:var(--px);font-weight:400;
+  font-size:clamp(12px,2.2vw,15px);line-height:1.45;color:var(--cream);
+}
+.section.myclasses .admit-note{
+  padding:15px 18px 2px;margin:0;
+  font-size:14px;font-weight:500;color:var(--muted);
+}
+.section.myclasses .grid{padding:0 18px 20px}
 
 /* ---------- suggest a link ---------- */
 .suggest{
@@ -473,7 +505,7 @@ footer::before{ /* pixel notches on the footer edge */
       <canvas data-sprite="head"></canvas>
       <canvas class="bb" data-sprite="bluebonnet"></canvas>
     </div>
-    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.1.</p>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.2.</p>
     <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
     <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
   </div>
@@ -817,7 +849,11 @@ function makeCard(link){
   return card;
 }
 
-/* prominent "start here" callout for incoming students, pulled to the very top */
+/* prominent "start here" callout for incoming students, pulled to the very top,
+   with the every-semester "quick class access" shortcuts sitting beside it */
+const topRow = document.createElement("div");
+topRow.className = "toprow";
+
 const incomingItems = LINKS.filter(link => link.category === INCOMING);
 if(incomingItems.length){
   const chip = document.createElement("a");
@@ -837,8 +873,38 @@ if(incomingItems.length){
     '<div class="grid"></div>';
   const agrid = admit.querySelector(".grid");
   incomingItems.forEach(link => agrid.appendChild(makeCard(link)));
-  main.insertBefore(admit, noresults);
+  topRow.appendChild(admit);
 }
+
+/* Kept out of LINKS on purpose - Class Schedule duplicates the MyUT card below,
+   so counting these would inflate the link count. */
+const MY_CLASSES = [
+  {name:"Class Schedule", url:"https://my.utexas.edu/", category:"Quick Class Access", desc:"Your registered classes, times, and rooms in MyUT.", keywords:["class schedule","my classes","myut","registration","courses","times"], login:true},
+  {name:"2026 MBA Class List", url:"https://secure.mccombs.utexas.edu/ClassList", category:"Quick Class Access", desc:"Look up who else is in your cohort and your sections.", keywords:["class list","cohort","classmates","roster","directory","mccombs"], login:true},
+  {name:"MBA Course Descriptions", url:"https://utexas.app.box.com/s/b6iyc008v2332km9jd6vb4r78y4ik2ms", category:"Quick Class Access", desc:"What each MBA course actually covers, in one PDF.", keywords:["course descriptions","catalog","syllabus","electives","courses","box"]}
+];
+{
+  const chip = document.createElement("a");
+  chip.href = "#my-classes";
+  chip.textContent = "QUICK CLASS ACCESS";
+  nav.appendChild(chip);
+
+  const mine = document.createElement("section");
+  mine.className = "section myclasses";
+  mine.id = "my-classes";
+  mine.innerHTML =
+    '<div class="admit-head">' +
+      '<span class="admit-eyebrow">EVERY SEMESTER</span>' +
+      '<h2>QUICK CLASS ACCESS</h2>' +
+    '</div>' +
+    '<p class="admit-note">Your schedule, the cohort class list, and what each course covers.</p>' +
+    '<div class="grid"></div>';
+  const mgrid = mine.querySelector(".grid");
+  MY_CLASSES.forEach(link => mgrid.appendChild(makeCard(link)));
+  topRow.appendChild(mine);
+}
+
+main.insertBefore(topRow, noresults);
 
 CATEGORIES.forEach(category => {
   if(category === INCOMING) return;
