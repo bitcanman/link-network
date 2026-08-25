@@ -151,11 +151,19 @@
   .section.admit .section-head h2{color:var(--brand-deep);}
   .section.admit .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
 
-  /* two callouts side by side above the main directory */
-  /* spacing lives on the children, so the row collapses to nothing when a search hides both */
-  .top-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,330px),1fr));gap:18px;align-items:start;}
+  /* Two callouts side by side above the main directory. The admit box is the narrow
+     one so Quick Class Access gets room to hold all three cards on a single row;
+     stretch keeps their tops and bottoms flush. Spacing lives on the children, so
+     the row collapses to nothing when a search hides both. */
+  .top-row{display:grid;grid-template-columns:minmax(0,0.92fr) minmax(0,2.08fr);gap:18px;align-items:stretch;}
   .top-row .section{margin:14px 0 42px;}
-  .top-row .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,232px),1fr));}
+  .top-row.solo{grid-template-columns:minmax(0,1fr);}   /* search hid one side */
+  .section.admit .grid{grid-template-columns:minmax(0,1fr);}
+  .section.myclasses .grid{grid-template-columns:repeat(3,minmax(0,1fr));}
+  @media (max-width:980px){
+    .top-row{grid-template-columns:minmax(0,1fr);}
+    .section.myclasses .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,232px),1fr));}
+  }
   .section.myclasses{background:var(--panel);border:1.5px solid var(--line);border-radius:16px;padding:24px 22px 22px;}
   .section.myclasses .section-head .eyebrow{color:var(--muted);}
   .section.myclasses .myclasses-note{font-size:13px;color:var(--muted);margin:-6px 0 4px;}
@@ -406,7 +414,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.4.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.5.
     </p>
   </div>
 </footer>
@@ -694,6 +702,10 @@
       if(!hasCards){ sec.style.display = (catMatch && !term) ? "" : "none"; }
       else { sec.style.display = (catMatch && secVisible>0) ? "" : "none"; }
     });
+    // if a filter hid one of the two top callouts, let the survivor span the full row
+    const topRow = document.querySelector(".top-row");
+    const topVisible = Array.prototype.filter.call(topRow.children, function(s){ return s.style.display !== "none"; }).length;
+    topRow.classList.toggle("solo", topVisible === 1);
     countEl.textContent = (term||activeCat!=="all") ? (shown+" shown") : (total+" links");
     emptyEl.style.display = (shown===0) ? "block" : "none";
     document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");

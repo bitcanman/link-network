@@ -310,12 +310,21 @@ main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
 .section.admit .grid{padding:0 18px 20px}   /* bottom pad so card shadows aren't clipped */
 
 /* ---------- "quick class access" box, side by side with the admit callout ---------- */
-/* spacing lives on the children, so the row collapses to nothing when a search hides both */
+/* The admit box is the narrow one so Quick Class Access gets room to hold all three
+   cards on a single row; stretch keeps their tops and bottoms flush. Spacing lives on
+   the children, so the row collapses to nothing when a search hides both. */
 .toprow{
-  display:grid;gap:22px;align-items:start;
-  grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));
+  display:grid;gap:22px;align-items:stretch;
+  grid-template-columns:minmax(0,0.9fr) minmax(0,2.1fr);
 }
-.toprow .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,215px),1fr));gap:16px}
+.toprow.solo{grid-template-columns:minmax(0,1fr)}   /* search hid one side */
+.toprow .grid{gap:16px}
+.section.admit .grid{grid-template-columns:minmax(0,1fr)}
+.section.myclasses .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:980px){
+  .toprow{grid-template-columns:minmax(0,1fr)}
+  .section.myclasses .grid{grid-template-columns:repeat(auto-fill,minmax(min(100%,215px),1fr))}
+}
 .section.myclasses{
   background:var(--card);
   border:4px solid var(--ink);
@@ -505,7 +514,7 @@ footer::before{ /* pixel notches on the footer edge */
       <canvas data-sprite="head"></canvas>
       <canvas class="bb" data-sprite="bluebonnet"></canvas>
     </div>
-    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.2.</p>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.3.</p>
     <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
     <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
   </div>
@@ -1008,6 +1017,11 @@ function applyFilter(){
     section.style.display = sectionVisible ? "" : "none";
     if(sectionVisible) anyVisible = true;
   });
+
+  // if a search hid one of the two top callouts, let the survivor span the full row
+  const topRow = document.querySelector(".toprow");
+  const topVisible = Array.prototype.filter.call(topRow.children, s => s.style.display !== "none").length;
+  topRow.classList.toggle("solo", topVisible === 1);
 
   noresults.style.display = anyVisible ? "none" : "block";
   if(!anyVisible) document.getElementById("nrterm").textContent = "“" + search.value.trim().toUpperCase() + "”";
