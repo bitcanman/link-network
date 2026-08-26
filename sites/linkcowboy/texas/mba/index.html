@@ -318,7 +318,8 @@ main{max-width:1140px;margin:0 auto;padding:10px 20px 48px}
   grid-template-columns:minmax(0,0.9fr) minmax(0,2.1fr);
 }
 .toprow.solo{grid-template-columns:minmax(0,1fr)}   /* search hid one side */
-.toprow .grid{gap:16px}
+.toprow .section{display:flex;flex-direction:column}
+.toprow .grid{gap:16px;flex:1;align-content:stretch}   /* cards absorb the shorter box's slack */
 .section.admit .grid{grid-template-columns:minmax(0,1fr)}
 .section.myclasses .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
 @media (max-width:980px){
@@ -514,7 +515,7 @@ footer::before{ /* pixel notches on the footer edge */
       <canvas data-sprite="head"></canvas>
       <canvas class="bb" data-sprite="bluebonnet"></canvas>
     </div>
-    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.3.</p>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.4.</p>
     <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
     <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
   </div>
@@ -770,6 +771,7 @@ const LINKS = [
   {name:"Recruit McCombs (12twenty)", url:"https://mccombs-utexas.12twenty.com/login?ReturnUrl=%2Fdashboard%2F", category:"Careers", desc:"McCombs MBA job board, OCR, and employer events.", keywords:["recruit mccombs","12twenty","job board","ocr","internship","employers"], login:true},
 
   // UT Essentials
+  {name:"Contact UT (All Departments)", url:"https://www.utexas.edu/contact-us", category:"UT Essentials", desc:"Phone numbers and offices for every UT department in one place.", keywords:["contact","phone","directory","departments","offices","help","who do i call"], login:false},
   {name:"UT AI Tools", url:"https://tech.utexas.edu/services-tools/ai", category:"UT Essentials", desc:"University-approved AI tools and guidance for students.", keywords:["ai","chatgpt","copilot","tools","approved","tech"], login:false},
   {name:"UT EID Self-Service", url:"https://www.utexas.edu/eid", category:"UT Essentials", desc:"Look up or reset your EID and password.", keywords:["eid","password","reset","account","login"], login:false},
   {name:"DUO / Multi-Factor Setup", url:"https://mfa.login.utexas.edu/", category:"UT Essentials", desc:"Required to log into Canvas, MyUT, and more.", keywords:["duo","mfa","two factor","2fa","authentication"], login:true},
@@ -796,7 +798,8 @@ const LINKS = [
   {name:"Rankings (U.S. News)", url:"https://www.usnews.com/best-graduate-schools/top-business-schools/university-of-texas-austin-01255", category:"For Prospectives", desc:"See where McCombs lands among U.S. business schools.", keywords:["rankings","us news","best business schools","rank"], login:false, ext:true},
 
   // Fall Admits
-  {name:"Graduate Application Portal", url:"https://force.mccombs.utexas.edu/MBA/s/login/?ec=302&startURL=%2FMBA%2Fs%2Fft-mba-admit-community%2Fstudent-resources%2Fdeposited-student-information", category:"Fall Admits", desc:"Your admitted-student portal - deposit info, checklists, and next steps.", keywords:["admit portal","deposit","checklist","next steps","admitted","incoming"], login:true}
+  {name:"Graduate Application Portal", url:"https://force.mccombs.utexas.edu/MBA/s/login/?ec=302&startURL=%2FMBA%2Fs%2Fft-mba-admit-community%2Fstudent-resources%2Fdeposited-student-information", category:"Fall Admits", desc:"Your admitted-student portal - deposit info, checklists, and next steps.", keywords:["admit portal","deposit","checklist","next steps","admitted","incoming"], login:true},
+  {name:"2026 McCombs Events", url:"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3", category:"Fall Admits", desc:"Dates, locations, and details for this year's McCombs events.", keywords:["events","calendar","dates","socials","schedule","mccombs events","airtable"], ext:true}
 ];
 
 /* ---------- helpers ---------- */
