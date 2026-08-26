@@ -156,7 +156,9 @@
      stretch keeps their tops and bottoms flush. Spacing lives on the children, so
      the row collapses to nothing when a search hides both. */
   .top-row{display:grid;grid-template-columns:minmax(0,0.92fr) minmax(0,2.08fr);gap:18px;align-items:stretch;}
-  .top-row .section{margin:14px 0 42px;}
+  .top-row .section{margin:14px 0 42px;display:flex;flex-direction:column;}
+  .top-row .grid{flex:1;align-content:stretch;}   /* cards absorb the shorter box's slack */
+  .top-row .card .host{margin-top:auto;padding-top:8px;}   /* ...so pin the host line to the bottom */
   .top-row.solo{grid-template-columns:minmax(0,1fr);}   /* search hid one side */
   .section.admit .grid{grid-template-columns:minmax(0,1fr);}
   .section.myclasses .grid{grid-template-columns:repeat(3,minmax(0,1fr));}
@@ -414,7 +416,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.5.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.6.
     </p>
   </div>
 </footer>
@@ -524,6 +526,7 @@
 
 
     {cat:"incomingmba", name:"Graduate Application Portal", desc:"Your admitted-student portal - deposit info, checklists, and next steps.", url:"https://force.mccombs.utexas.edu/MBA/s/login/?ec=302&startURL=%2FMBA%2Fs%2Fft-mba-admit-community%2Fstudent-resources%2Fdeposited-student-information", login:true},
+    {cat:"incomingmba", name:"2026 McCombs Events", desc:"Dates, locations, and details for this year's McCombs events.", url:"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3", ext:true},
 
     {cat:"prospective", name:"Compare MBA Programs", desc:"Full-Time vs. Evening vs. Executive vs. Weekend.", url:"https://www.mccombs.utexas.edu/graduate/mba/explore-mba-programs/"},
     {cat:"prospective", name:"How to Apply", desc:"Deadlines, components, and the application process.", url:"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/admissions/application-process/"},
