@@ -145,6 +145,23 @@ h1 .bv{color:var(--orange)}
 }
 .edition .dot{width:6px;height:6px;background:var(--orange)}
 
+/* ---------- voter registration chip (under the edition line / audience tabs) ---------- */
+.votechip{
+  display:flex;align-items:center;gap:9px;
+  margin:18px auto 0;width:max-content;max-width:calc(100% - 8px);
+  font-family:var(--px);font-size:8px;line-height:1.6;
+  text-decoration:none;color:var(--ink);
+  background:var(--cream);
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 rgba(43,32,22,.8);
+  padding:10px 13px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.votechip:hover,.votechip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.votechip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.votechip .vdot{width:7px;height:7px;background:var(--orange);flex:none}
+@media (max-width:640px){ .votechip{font-size:7px;padding:9px 11px;border-width:3px} }
+
 /* ---------- sticky search + nav ---------- */
 .sticky{
   position:sticky;top:0;z-index:50;
@@ -398,6 +415,7 @@ footer::before{ /* pixel notches on the footer edge */
     <div class="edition">
       <span>VOL. 1</span><i class="dot"></i><span>FALL 2026 EDITION</span><i class="dot"></i><span id="linkcount">LINKS</span>
     </div>
+    <a class="votechip" href="https://ova.elections.il.gov/" target="_blank" rel="noopener"><i class="vdot"></i>REGISTER TO VOTE IN ILLINOIS</a>
   </div>
 </header>
 

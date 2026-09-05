@@ -170,6 +170,18 @@
   .section.myclasses .section-head .eyebrow{color:var(--muted);}
   .section.myclasses .myclasses-note{font-size:13px;color:var(--muted);margin:-6px 0 4px;}
 
+  /* ---------- Voter registration chip (sits beside the hero headline) ---------- */
+  .hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap;}
+  .hero-head h1{margin-bottom:0;}
+  .hero-head{margin-bottom:16px;}   /* h1's old bottom margin, moved to the row */
+  .votechip{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;margin-top:22px;text-decoration:none;
+    font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--brand-deep);background:var(--panel);border:1.5px solid #E8C9A8;border-radius:9px;padding:9px 13px;
+    transition:border-color .12s,color .12s,transform .12s;}
+  .votechip:hover{border-color:var(--brand);color:var(--brand);transform:translateY(-1px);}
+  .votechip .vdot{width:7px;height:7px;border-radius:50%;background:var(--brand);flex:0 0 auto;}
+  @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;font-size:10px;padding:8px 11px;} }
+
   /* ---------- Band (alternating section) ---------- */
   .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
 
@@ -304,7 +316,10 @@
 
 <section class="hero" id="top">
   <div class="wrap">
-    <h1>The UT McCombs MBA<br><span class="u">link directory.</span></h1>
+    <div class="hero-head">
+      <h1>The UT McCombs MBA<br><span class="u">link directory.</span></h1>
+    <a class="votechip" href="https://www.votetexas.gov/register-to-vote/" target="_blank" rel="noopener"><span class="vdot"></span>Register to vote in Texas</a>
+    </div>
     <p class="lede">Registration, Canvas, course schedules, clubs, study abroad, careers, tuition. All the stuff scattered across a dozen sites, gathered into one place. <strong class="bookmark-me">Bookmark Me!</strong></p>
   </div>
 </section>
@@ -416,7 +431,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.6.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v0.7.
     </p>
   </div>
 </footer>

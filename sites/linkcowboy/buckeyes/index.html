@@ -148,6 +148,23 @@ h1 .bk{color:var(--brand)}
 }
 .edition .dot{width:6px;height:6px;background:var(--brand)}
 
+/* ---------- voter registration chip (under the edition line / audience tabs) ---------- */
+.votechip{
+  display:flex;align-items:center;gap:9px;
+  margin:18px auto 0;width:max-content;max-width:calc(100% - 8px);
+  font-family:var(--px);font-size:8px;line-height:1.6;
+  text-decoration:none;color:var(--ink);
+  background:var(--cream);
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 rgba(43,32,22,.8);
+  padding:10px 13px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.votechip:hover,.votechip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.votechip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.votechip .vdot{width:7px;height:7px;background:var(--brand);flex:none}
+@media (max-width:640px){ .votechip{font-size:7px;padding:9px 11px;border-width:3px} }
+
 /* ---------- sticky search + nav ---------- */
 .sticky{
   position:sticky;top:0;z-index:50;
@@ -419,6 +436,7 @@ footer::before{ /* pixel notches on the footer edge */
     <div class="edition">
       <span>VOL. 1</span><i class="dot"></i><span>AUTUMN 2026</span><i class="dot"></i><span id="linkcount">LINKS</span>
     </div>
+    <a class="votechip" href="https://olvr.ohiosos.gov/" target="_blank" rel="noopener"><i class="vdot"></i>REGISTER TO VOTE IN OHIO</a>
   </div>
 </header>
 
@@ -447,7 +465,7 @@ footer::before{ /* pixel notches on the footer edge */
       <canvas class="mid" data-sprite="face"></canvas>
       <canvas data-sprite="tree_sm"></canvas>
     </div>
-    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with or endorsed by The Ohio State University. Links point to official Ohio State and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.1.</p>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with or endorsed by The Ohio State University. Links point to official Ohio State and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.2.</p>
     <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
     <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> BUILT SOMEWHERE OFF HIGH STREET</p>
   </div>

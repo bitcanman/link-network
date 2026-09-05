@@ -153,6 +153,23 @@ h1 .lh{color:var(--orange)}
 }
 .edition .dot{width:6px;height:6px;background:var(--orange)}
 
+/* ---------- voter registration chip (under the edition line / audience tabs) ---------- */
+.votechip{
+  display:flex;align-items:center;gap:9px;
+  margin:18px auto 0;width:max-content;max-width:calc(100% - 8px);
+  font-family:var(--px);font-size:8px;line-height:1.6;
+  text-decoration:none;color:var(--ink);
+  background:var(--cream);
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 rgba(43,32,22,.8);
+  padding:10px 13px;
+  transition:transform .12s steps(2), box-shadow .12s steps(2);
+}
+.votechip:hover,.votechip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.votechip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.votechip .vdot{width:7px;height:7px;background:var(--orange);flex:none}
+@media (max-width:640px){ .votechip{font-size:7px;padding:9px 11px;border-width:3px} }
+
 /* ---------- audience tab switch (undergrad / MBA) ---------- */
 .aud-tabs{
   display:flex;justify-content:center;gap:0;
@@ -487,6 +504,7 @@ footer::before{ /* pixel notches on the footer edge */
       <a class="aud-tab" href="/texas">UNDERGRAD</a>
       <a class="aud-tab" href="/texas/mba" aria-current="page">MBA</a>
     </nav>
+    <a class="votechip" href="https://www.votetexas.gov/register-to-vote/" target="_blank" rel="noopener"><i class="vdot"></i>REGISTER TO VOTE IN TEXAS</a>
   </div>
 </header>
 
@@ -515,7 +533,7 @@ footer::before{ /* pixel notches on the footer edge */
       <canvas data-sprite="head"></canvas>
       <canvas class="bb" data-sprite="bluebonnet"></canvas>
     </div>
-    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.4.</p>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official UT, McCombs, and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.5.</p>
     <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
     <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
   </div>
