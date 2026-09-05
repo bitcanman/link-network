@@ -153,17 +153,13 @@
   .section.admit .section-head h2{color:var(--brand-deep);}
   .section.admit .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
 
-  /* ---------- Voter registration chip (sits beside the hero headline) ---------- */
-  .hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap;}
+  /* ---------- Voter registration button (sits beside the hero headline) ---------- */
+  /* Same .btn component as the Student Deals button; .votechip only sizes and places it.
+     Deliberately not .btn-head - that one hides itself under 860px, and this shouldn't. */
+  .hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap;margin-bottom:16px;}
   .hero-head h1{margin-bottom:0;}
-  .hero-head{margin-bottom:16px;}   /* h1's old bottom margin, moved to the row */
-  .votechip{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;margin-top:22px;text-decoration:none;
-    font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;
-    color:var(--brand-deep);background:var(--panel);border:1.5px solid #E8C9A8;border-radius:9px;padding:9px 13px;
-    transition:border-color .12s,color .12s,transform .12s;}
-  .votechip:hover{border-color:var(--brand);color:var(--brand);transform:translateY(-1px);}
-  .votechip .vdot{width:7px;height:7px;border-radius:50%;background:var(--brand);flex:0 0 auto;}
-  @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;font-size:10px;padding:8px 11px;} }
+  .votechip{flex:0 0 auto;margin-top:22px;font-size:12.5px;padding:9px 13px;white-space:nowrap;}
+  @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;} }
 
   /* ---------- Band (alternating section) ---------- */
   .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
@@ -299,7 +295,7 @@
   <div class="wrap">
     <div class="hero-head">
       <h1>The UT Austin undergrad<br><span class="u">link directory.</span></h1>
-    <a class="votechip" href="https://www.votetexas.gov/register-to-vote/" target="_blank" rel="noopener"><span class="vdot"></span>Register to vote in Texas</a>
+    <a class="btn votechip" href="https://www.votetexas.gov/register-to-vote/" target="_blank" rel="noopener">Register to Vote in Texas</a>
     </div>
     <p class="lede">Registration, Canvas, housing, orientation, immunization requirements, clubs, financial aid. All the stuff scattered across a dozen sites, gathered into one place. <strong class="bookmark-me">Bookmark Me!</strong></p>
   </div>
