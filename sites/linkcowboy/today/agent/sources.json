@@ -1,0 +1,102 @@
+{
+  "school": "ut",
+  "school_name": "UT Austin",
+  "campus_center": {
+    "lat": 30.2849,
+    "lng": -97.7341
+  },
+  "sources": [
+    {
+      "id": "rambler-happy-hour",
+      "name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "type": "roundup",
+      "notes": "Student-housing blog, updated for 2026. Good candidate generator; verify against business sites."
+    },
+    {
+      "id": "citycast-cheap-eats",
+      "name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "type": "roundup"
+    },
+    {
+      "id": "austinot-cheap-eats",
+      "name": "Austinot: Back-to-school cheap eats near UT (roundup)",
+      "url": "https://austinot.com/ut-austin-cheap-eats",
+      "type": "roundup"
+    },
+    {
+      "id": "dirty-martins",
+      "name": "Dirty Martin's Place",
+      "url": "https://www.dirtymartins.com/",
+      "type": "business",
+      "neighborhood": "West Campus"
+    },
+    {
+      "id": "cain-abels",
+      "name": "Cain & Abel's",
+      "url": "https://abels.com/",
+      "type": "business",
+      "neighborhood": "West Campus"
+    },
+    {
+      "id": "pluckers-west-campus",
+      "name": "Pluckers Wing Bar (West Campus)",
+      "url": "https://www.pluckers.com/",
+      "type": "business",
+      "neighborhood": "West Campus"
+    },
+    {
+      "id": "el-arroyo",
+      "name": "El Arroyo",
+      "url": "https://elarroyo.com/",
+      "type": "business",
+      "neighborhood": "Downtown"
+    },
+    {
+      "id": "crown-anchor",
+      "name": "Crown & Anchor Pub",
+      "url": "https://www.crownandanchorpub.com/",
+      "type": "business",
+      "neighborhood": "North Campus"
+    },
+    {
+      "id": "posse-east",
+      "name": "Posse East",
+      "url": "https://www.posseeast.com/",
+      "type": "business",
+      "neighborhood": "North Campus"
+    },
+    {
+      "id": "taco-joint",
+      "name": "Taco Joint",
+      "url": "https://www.tacojointaustin.com/",
+      "type": "business",
+      "neighborhood": "West Campus"
+    },
+    {
+      "id": "kerbey-lane",
+      "name": "Kerbey Lane Cafe (UT)",
+      "url": "https://kerbeylanecafe.com/",
+      "type": "business",
+      "neighborhood": "The Drag"
+    },
+    {
+      "id": "cabo-bobs",
+      "name": "Cabo Bob's",
+      "url": "https://www.cabobobs.com/",
+      "type": "business",
+      "neighborhood": "The Drag"
+    },
+    {
+      "id": "maudies",
+      "name": "Maudie's Tex-Mex",
+      "url": "https://www.maudies.com/",
+      "type": "business",
+      "neighborhood": "West Austin"
+    }
+  ],
+  "blocklist": [
+    "Bar Moxy"
+  ]
+}

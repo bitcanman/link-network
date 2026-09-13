@@ -20,3 +20,7 @@
 # ship inside this folder (downloaded from the current Netlify deploy).
 
 # Deploy check: 2026-07-28 — verifying GitHub App webhook fires builds.
+
+# Netlify Functions live alongside the static site (relative to the base directory).
+[functions]
+  directory = "netlify/functions"

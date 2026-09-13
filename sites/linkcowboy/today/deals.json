@@ -1,0 +1,670 @@
+{
+  "school": "ut",
+  "school_name": "UT Austin",
+  "generated_at": "2026-09-13T16:00:00+00:00",
+  "stale_days": 45,
+  "crawl_log": [
+    {
+      "source": "rambler-happy-hour",
+      "fetched": true,
+      "deals_found": 21
+    },
+    {
+      "source": "citycast-cheap-eats",
+      "fetched": true,
+      "deals_found": 7
+    },
+    {
+      "source": "austinot-cheap-eats",
+      "fetched": true,
+      "deals_found": 1
+    }
+  ],
+  "stats": {
+    "added": 29,
+    "refreshed": 0,
+    "expired": 0,
+    "total": 28
+  },
+  "deals": [
+    {
+      "id": "cb569c61e7fa",
+      "business": "Cain & Abel's",
+      "deal": "$1.50 domestic bottles (\"Dollar Beer\" Tuesday)",
+      "category": "drink",
+      "days": [
+        "Tue"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "907 W 24th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "082b4a94faec",
+      "business": "Cain & Abel's",
+      "deal": "$3 Mexican Candies & Modelos",
+      "category": "drink",
+      "days": [
+        "Wed"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "907 W 24th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "df2a919bf380",
+      "business": "Cain & Abel's",
+      "deal": "$3 mimosas (until 3pm Sat, all day Sun)",
+      "category": "drink",
+      "days": [
+        "Sat",
+        "Sun"
+      ],
+      "times": "Sat until 3pm; Sun all day",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "907 W 24th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "e6c745376b33",
+      "business": "Cain & Abel's",
+      "deal": "$4 wells, $1 off pitchers, $8 teas",
+      "category": "drink",
+      "days": [
+        "Fri"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "907 W 24th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "e9d995a5ce46",
+      "business": "Cain & Abel's",
+      "deal": "$4 wells, $8 teas, $1 off drafts",
+      "category": "drink",
+      "days": [
+        "Mon"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "907 W 24th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "8fa5e4fd7482",
+      "business": "Cain & Abel's",
+      "deal": "$8 Texas Teas",
+      "category": "drink",
+      "days": [
+        "Thu"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "907 W 24th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "ea691cfe0b79",
+      "business": "Crown & Anchor Pub",
+      "deal": "Budget pub burgers and cheap taps; accepts Bevo Bucks",
+      "category": "both",
+      "days": [
+        "daily"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "North Campus",
+      "address": "",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "low",
+      "source_url": "https://austinot.com/ut-austin-cheap-eats",
+      "source_name": "Austinot: Back-to-school cheap eats near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "3ada0c661075",
+      "business": "Dirty Martin's Place",
+      "deal": "$1 wings",
+      "category": "food",
+      "days": [
+        "Thu"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "9245fa41ebbd",
+      "business": "Dirty Martin's Place",
+      "deal": "$10 bacon cheeseburger + side",
+      "category": "food",
+      "days": [
+        "Wed"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "ccc9f7c6e803",
+      "business": "Dirty Martin's Place",
+      "deal": "$10 cheeseburger + side",
+      "category": "food",
+      "days": [
+        "Mon"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "574a2f33213e",
+      "business": "Dirty Martin's Place",
+      "deal": "$10 chicken sandwich + side",
+      "category": "food",
+      "days": [
+        "Fri"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "efefcdb7e07f",
+      "business": "Dirty Martin's Place",
+      "deal": "$10 double cheeseburger on Texas toast + side",
+      "category": "food",
+      "days": [
+        "Tue"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "34fa3e7dde65",
+      "business": "Dirty Martin's Place",
+      "deal": "$10 mimosa carafes",
+      "category": "drink",
+      "days": [
+        "Sat",
+        "Sun"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "a9268ac7b270",
+      "business": "Dirty Martin's Place",
+      "deal": "$12 Lone Star pitchers, $3 well shots, $4 house margs",
+      "category": "drink",
+      "days": [
+        "Mon"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "deb16a1b29e4",
+      "business": "Dirty Martin's Place",
+      "deal": "$2 Lone Star tallboys, $2 well shots",
+      "category": "drink",
+      "days": [
+        "Tue"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "dc7ee1a2f05f",
+      "business": "Dirty Martin's Place",
+      "deal": "$5 small cheeseburgers, $3.50 tallboys, $5 Longhorn Iced Teas",
+      "category": "both",
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "times": "2-6pm",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2808 Guadalupe St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "5756e2926810",
+      "business": "El Arroyo",
+      "deal": "$6 house margs, $3 domestic / $4 craft beers, $2 off queso, $5 off quesadillas",
+      "category": "both",
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "times": "3-6pm weekdays; all day Thu",
+      "requirements": [],
+      "neighborhood": "Downtown",
+      "address": "1624 W 5th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "066ffd3ee1aa",
+      "business": "Maudie's Tex-Mex",
+      "deal": "$6 appetizers (queso, guac, nachos) and $1 off all beer",
+      "category": "both",
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "times": "3-6:30pm Tue-Fri; Mon until close",
+      "requirements": [],
+      "neighborhood": "West Austin",
+      "address": "2608 W 7th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "2f256cb9e398",
+      "business": "Pluckers Wing Bar",
+      "deal": "$2.50 Bud Light & Michelob Ultra pints",
+      "category": "drink",
+      "days": [
+        "Mon"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2222 Rio Grande St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "c9f2281bf3db",
+      "business": "Pluckers Wing Bar",
+      "deal": "$3 off regular cocktails, $1 off Dos Equis pints (Texas Tuesday)",
+      "category": "drink",
+      "days": [
+        "Tue"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2222 Rio Grande St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "71093c247bc3",
+      "business": "Pluckers Wing Bar",
+      "deal": "$5.50 8oz frozen ritas; $1 off Bud Light & Ultra pints",
+      "category": "drink",
+      "days": [
+        "Thu"
+      ],
+      "times": "",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2222 Rio Grande St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "b37733b94c37",
+      "business": "Pluckers Wing Bar",
+      "deal": "Happy hour: $1 off 24oz Mother Plucker mugs, $1 off cocktails & frozen ritas",
+      "category": "drink",
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri"
+      ],
+      "times": "3-5pm",
+      "requirements": [
+        "21+"
+      ],
+      "neighborhood": "West Campus",
+      "address": "2222 Rio Grande St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "high",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "e3897347e251",
+      "business": "Pluckers Wing Bar",
+      "deal": "Live team trivia at 7:30pm; $2 off 24oz Dos Equis mugs",
+      "category": "entertainment",
+      "days": [
+        "Wed"
+      ],
+      "times": "7:30pm",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "2222 Rio Grande St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "cd5b1f977be4",
+      "business": "Posse East",
+      "deal": "All appetizers under $10",
+      "category": "food",
+      "days": [
+        "daily"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "North Campus",
+      "address": "",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "8ae8dd003f62",
+      "business": "RA Sushi",
+      "deal": "Discounted happy hour menu: rolls, nigiri, apps, drinks",
+      "category": "both",
+      "days": [
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+      ],
+      "times": "Tue-Sat 3-6pm & 9pm-close; Sun 3pm-close; Mon all day",
+      "requirements": [],
+      "neighborhood": "Downtown",
+      "address": "117 W 4th St",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "8cc184e5da7f",
+      "business": "Taco Joint",
+      "deal": "Tacos $3-$4.50; fajita salad $9.95",
+      "category": "food",
+      "days": [
+        "daily"
+      ],
+      "times": "",
+      "requirements": [],
+      "neighborhood": "West Campus",
+      "address": "",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus",
+      "source_name": "City Cast Austin: Where to eat near UT for cheap (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "0ab39b9fb814",
+      "business": "Upstairs at Caroline",
+      "deal": "$4 tacos and $9 guava margaritas (Taco Tuesday)",
+      "category": "both",
+      "days": [
+        "Tue"
+      ],
+      "times": "3-6pm",
+      "requirements": [],
+      "neighborhood": "Downtown",
+      "address": "621 Congress Ave #201",
+      "alcohol": true,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    },
+    {
+      "id": "d963101fefca",
+      "business": "Upstairs at Caroline",
+      "deal": "Yappy Hour: bring your dog for 25% off",
+      "category": "both",
+      "days": [
+        "Sun"
+      ],
+      "times": "all day",
+      "requirements": [],
+      "neighborhood": "Downtown",
+      "address": "621 Congress Ave #201",
+      "alcohol": false,
+      "expires_at": null,
+      "confidence": "medium",
+      "source_url": "https://www.rambleratx.com/resources/happy-hour-ut-austin/",
+      "source_name": "Rambler ATX: Happy Hour Near UT (roundup)",
+      "source_type": "roundup",
+      "verified_at": "2026-09-13",
+      "first_seen": "2026-09-13"
+    }
+  ],
+  "note": "Seed crawl. Entries came from roundup articles, not the businesses' own sites, so most are 'medium' confidence until the nightly agent re-verifies them against business pages."
+}

@@ -1,0 +1,29 @@
+name: Nightly deals crawl
+
+on:
+  schedule:
+    - cron: "0 9 * * *"   # 4am Central, every day
+  workflow_dispatch:       # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r sites/linkcowboy/today/agent/requirements.txt
+      - name: Run the deals agent
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python sites/linkcowboy/today/agent/extract_deals.py --sources sites/linkcowboy/today/agent/sources.json --out sites/linkcowboy/today/deals.json
+      - name: Commit updated deals.json
+        run: |
+          git config user.name "deals-agent"
+          git config user.email "deals-agent@users.noreply.github.com"
+          git add sites/linkcowboy/today/deals.json
+          git diff --cached --quiet || git commit -m "deals: nightly crawl $(date -u +%F)"
+          git push

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Today's Round-Up near UT Austin | Link Cowboy</title>
+<meta name="description" content="Press the button. The cowboy rounds up today's food and drink specials near UT Austin, checked against real sources, with one-tap directions.">
+<meta property="og:title" content="Today's Round-Up near UT Austin | Link Cowboy">
+<meta property="og:description" content="One press. Today's specials near campus, checked nightly, directions included.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#bf5700">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#2b2016; --cream:#f6eed9; --card:#fffaf0; --gold:#deaa4e; --gold-d:#a87c28;
+  --orange:#bf5700; --orange-d:#8f4100; --rust:#b5522c; --mute:#6f6355;
+  --sky1:#9dd3e8; --sky2:#a8daec; --sky3:#bce6f2;
+  --grass1:#a4c96b; --grass2:#8cb757; --grass3:#7aa64b; --grass4:#6e9843;
+  --px:'Press Start 2P',monospace; --body:'Space Grotesk',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--body);color:var(--ink);background:var(--cream);min-height:100dvh}
+canvas{image-rendering:pixelated;display:block}
+.wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+.pxchip{display:inline-block;font-family:var(--px);font-size:8px;line-height:1;color:var(--ink);text-decoration:none;background:var(--cream);border:3px solid var(--ink);box-shadow:4px 4px 0 rgba(43,32,22,.8);padding:8px 10px;transition:transform .12s steps(2),box-shadow .12s steps(2)}
+.pxchip:hover,.pxchip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
+.pxchip.orange{background:var(--orange);color:#fff}
+
+/* ---------- masthead scene (UT sky + prairie, same sprites as linkcowboy.com) ---------- */
+.masthead{position:relative;overflow:hidden;background:linear-gradient(to bottom,var(--sky1) 0 35%,var(--sky2) 35% 70%,var(--sky3) 70% 100%);border-bottom:4px solid var(--ink)}
+.scene{position:absolute;inset:0;pointer-events:none}
+.sun{position:absolute;top:22px;right:6vw;width:calc(9px * 6)}
+.cloud{position:absolute;width:calc(16px * 5);opacity:.95;animation:drift linear infinite}
+.cloud.c2{width:calc(16px * 4)}
+@keyframes drift{from{transform:translateX(-25vw)}to{transform:translateX(115vw)}}
+.prairie{position:absolute;left:0;right:0;bottom:0;height:118px;background:linear-gradient(to bottom,var(--grass1) 0 18%,var(--grass2) 18% 45%,var(--grass3) 45% 75%,var(--grass4) 75% 100%)}
+.prairie::before{content:"";position:absolute;left:0;right:0;top:-6px;height:6px;background:repeating-linear-gradient(to right,var(--grass1) 0 18px,transparent 18px 30px,var(--grass1) 30px 42px,transparent 42px 60px)}
+.cactus{position:absolute;bottom:58px}
+.cactus canvas{width:calc(9px * 4)}
+.deco{position:absolute}
+.deco canvas{width:calc(var(--w) * 4)}
+.tweed{position:absolute;bottom:16px;left:0;animation:roll 30s linear infinite;animation-delay:-9s}
+.tweed canvas{width:calc(8px * 4);animation:spin 1.1s steps(4) infinite}
+@keyframes roll{from{transform:translateX(110vw)}to{transform:translateX(-20vw)}}
+@keyframes spin{from{rotate:0deg}to{rotate:-360deg}}
+
+.topbar{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:16px 18px 0;max-width:720px;margin:0 auto}
+.stage{position:relative;z-index:2;text-align:center;padding:22px 18px 92px;max-width:720px;margin:0 auto}
+.rider{display:inline-block;margin:0 auto}
+.rider canvas{width:calc(42px * 5)}
+.rider.run canvas{animation:trot .38s steps(2) infinite}
+@keyframes trot{50%{transform:translateY(-3px)}}
+h1{font-family:var(--px);font-size:clamp(13px,3.2vw,21px);line-height:1.65;margin-top:8px;text-shadow:4px 4px 0 rgba(255,255,255,.75)}
+h1 span{display:block;color:var(--orange);font-size:.7em;margin-top:6px;text-shadow:3px 3px 0 rgba(255,255,255,.75)}
+@media (prefers-reduced-motion:reduce){.cloud,.tweed,.tweed canvas,.rider.run canvas{animation:none}.tweed{display:none}}
+
+/* ---------- controls ---------- */
+.controlbar{text-align:center;padding:22px 18px 6px}
+.runbtn{font-family:var(--px);font-size:11px;background:var(--orange);color:#fff;border:3px solid var(--ink);box-shadow:5px 5px 0 rgba(43,32,22,.85);padding:16px 20px;cursor:pointer;transition:transform .12s steps(2),box-shadow .12s steps(2)}
+.runbtn:hover,.runbtn:focus-visible{transform:translate(-2px,-2px);box-shadow:7px 7px 0 rgba(43,32,22,.85);outline:none}
+.runbtn[disabled]{cursor:progress;opacity:.85;transform:none}
+.status{margin-top:14px;min-height:22px;font-size:14px;font-weight:500;color:rgba(43,32,22,.85)}
+.status .sq{display:inline-block;width:8px;height:8px;background:var(--grass2);border:2px solid var(--ink);margin-right:8px}
+.opts{margin-top:8px;font-size:13px;color:rgba(43,32,22,.8)}
+.opts label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
+.opts input{appearance:none;width:15px;height:15px;border:2px solid var(--ink);background:var(--card);display:grid;place-content:center;cursor:pointer}
+.opts input::before{content:"";width:7px;height:7px;background:var(--ink);transform:scale(0)}
+.opts input:checked::before{transform:scale(1)}
+.opts input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+/* ---------- the round-up ---------- */
+.roundup{padding:18px 0 44px;display:flex;flex-direction:column;gap:14px}
+.deal{background:var(--card);border:3px solid var(--ink);box-shadow:5px 5px 0 rgba(43,32,22,.85);padding:14px 16px 12px;position:relative;opacity:0;transform:translateY(14px) scale(.96)}
+.deal.in{animation:pop .32s cubic-bezier(.2,.9,.3,1.3) forwards}
+@keyframes pop{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.deal{opacity:1;transform:none}.deal.in{animation:none}}
+.deal.top{border-color:var(--orange-d);box-shadow:5px 5px 0 var(--orange)}
+.deal.top::before{content:"TOP PICK";position:absolute;top:-13px;left:12px;font-family:var(--px);font-size:7px;background:var(--orange);color:#fff;border:2px solid var(--ink);padding:4px 6px}
+.deal.is-new::after{content:"NEW";position:absolute;top:-13px;right:12px;font-family:var(--px);font-size:7px;background:var(--gold);border:2px solid var(--ink);padding:4px 6px}
+.deal .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.deal h3{font-size:17px;font-weight:700}
+.deal .nb{font-size:12px;color:var(--mute)}
+.deal .what{font-size:16px;font-weight:500;line-height:1.4;margin-top:4px}
+.deal .meta{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;margin-top:8px;font-size:12px;color:var(--mute)}
+.pill{border:2px solid var(--ink);padding:1px 7px;font-weight:700;font-size:11px;color:var(--ink);background:var(--cream)}
+.pill.warn{background:#f3d6c5;border-color:var(--rust);color:#6d2f15}
+.deal .meta a{color:var(--ink)}
+.deal .go{margin-top:10px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.navbtn{font-family:var(--px);font-size:8px;text-decoration:none;color:#fff;background:var(--orange);border:2px solid var(--ink);box-shadow:3px 3px 0 rgba(43,32,22,.85);padding:9px 11px;transition:transform .12s steps(2),box-shadow .12s steps(2)}
+.navbtn:hover,.navbtn:focus-visible{transform:translate(-1px,-1px);box-shadow:4px 4px 0 rgba(43,32,22,.85);outline:none}
+.navbtn.alt{background:var(--cream);color:var(--ink)}
+.empty{background:var(--card);border:3px dashed var(--ink);padding:22px;font-size:15px;line-height:1.5;opacity:0}
+.empty.in{animation:pop .32s forwards}
+
+footer{background:var(--ink);color:#cbbfae;border-top:4px solid var(--orange);padding:22px 0 26px}
+footer p{font-size:12.5px;line-height:1.7}
+footer b{color:#fff}
+footer a{color:var(--gold)}
+.copyright{font-family:var(--px);font-size:7px;line-height:2;color:#8c8175;margin-top:8px}
+@media (max-width:520px){.rider canvas{width:calc(42px * 4)}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="scene" aria-hidden="true">
+    <canvas class="sun" data-sprite="sun"></canvas>
+    <canvas class="cloud c1" data-sprite="cloud" style="top:14px;animation-duration:95s;animation-delay:-20s"></canvas>
+    <canvas class="cloud c2" data-sprite="cloud" style="top:64px;animation-duration:130s;animation-delay:-70s"></canvas>
+    <div class="prairie"></div>
+    <div class="cactus" style="left:6vw"><canvas data-sprite="cactus"></canvas></div>
+    <div class="tweed"><canvas data-sprite="tumbleweed"></canvas></div>
+    <div id="flowers"></div>
+  </div>
+  <div class="topbar">
+    <a class="pxchip" href="https://linkcowboy.com">&larr; LINK COWBOY</a>
+    <a class="pxchip orange" href="https://longhornlinks.com">&#9733; UT LINKS</a>
+  </div>
+  <div class="stage">
+    <div class="rider" id="rig"><canvas id="cowboy" data-sprite="cowboy0" role="img" aria-label="Pixel cowboy on horseback"></canvas></div>
+    <h1>TODAY'S ROUND-UP<span id="daylabel"></span></h1>
+  </div>
+</header>
+
+<section class="wrap controlbar">
+  <button class="runbtn" id="runbtn" type="button">ROUND 'EM UP</button>
+  <div class="status" id="status"><span class="sq"></span>Ready when you are.</div>
+  <div class="opts"><label><input type="checkbox" id="foodOnly"> Skip the bar deals</label></div>
+</section>
+
+<main class="wrap roundup" id="roundup" aria-live="polite"></main>
+
+<footer>
+  <div class="wrap">
+    <p><b>Unofficial and student-built.</b> Every special links to the page it came from and is re-checked nightly; confirm with the venue before you go. Drink specials are for guests 21 and over. Not affiliated with UT Austin or any business listed.</p>
+    <p>Run a spot near campus? <a href="mailto:hello@linkcowboy.com?subject=List%20our%20special">Ask to be listed.</a> Something out of date? <a href="mailto:hello@linkcowboy.com?subject=Stale%20deal">Tell us.</a></p>
+    <p class="copyright">&copy; 2026 LINK COWBOY &#9733; MADE DEEP IN THE HEART OF TEXAS</p>
+  </div>
+</footer>
+
+<script id="sprites" type="application/json">{"palette":{"h":"#8b5e34","H":"#6b4423","k":"#e8b088","s":"#4a6db5","S":"#385696","j":"#2f426e","b":"#4a2e18","r":"#c43c2c","B":"#a4652f","D":"#804c22","M":"#5c3317","W":"#f0ead6","V":"#1e1812","A":"#8b3a2a","G":"#deaa4e","R":"#a67c40","P":"#ffffff","c":"#4a7c3e","e":"#3a6430","t":"#a08252","o":"#bf5700","O":"#964400","m":"#500000","g":"#5a8c42","u":"#3a58ac"},"sprites":{"cowboy0":["..........................................","..........................................","..........................................","..........................................","..........................................","..........................................","..........................................","..........................................","............hhhhhhh.......................","...........hHHHHHHHh......................","..............kkk.........................","..............kkV............M.M..........","..............kkk............M.M..........","..............rrr............BBBBBB.......","..............sss...........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssssssss.....MBBBBBWWVW.....",".............sssSSssskk...MBBBBBBVWWW.....",".............sssss.....VVVVVVVVVV.........","..............SSSS.......MBBBB............","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBBBBBB............","..MMBBBBBBBBBAjjjAAABBBBBBBB..............",".MM.BBBBBBBBBAjjjBBABBBBBBBB..............",".MM.BBBBBBBBBBBjjBBBBBBBBBBB..............",".MM.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......WW..WW...........WW.WW..............","......WW..WW...........WW.WW..............","......VV..VV...........VV.VV..............","..........................................","..........................................",".........................................."],"cowboy1":["..........................................","..........................................","..........................................","..........................................","..........................................","..........................................","..........................................","..........................................","............hhhhhhh.......................","...........hHHHHHHHh......................","..............kkk.........................","..............kkV.........................","..............kkk............M.M..........","..............rrr............M.M..........","..............sss............BBBBBB.......",".............sssss..........BBBVBWWW......",".............sssssssss......BBBBBWWWW.....",".............sssSSssskk....MBBBBBWWVW.....",".............sssss.....VVVVVVVVBBVWWW.....","..............SSSS.......MMBBB.VV.........","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBMBBBB............","M.MMBBBBBBBBBAjjjAAABBBBBBBB..............","M.M.BBBBBBBBBAjjjBBABBBBBBBB..............","M.M.BBBBBBBBBBBjjBBBBBBBBBBB..............","..M.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..WW...........WW.BB..............","......WW..WW...........WW.WW..............","......WW..VV...........VV.WW..............","......VV..................VV..............","..........................................","..........................................",".........................................."],"lasso00":["..........................................","..........................................","...........RRRRRRRRRR.....................",".........RR..........RR...................","...........RRRRRRRRRRR....................",".....................R....................",".....................R....................",".....................R....................","............hhhhhhh..R....................","...........hHHHHHHHh.R....................","..............kkk....R....................","..............kkV...R........M.M..........","..............kkk..k.........M.M..........","..............rrr.s..........BBBBBB.......","..............ssss..........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssss.........MBBBBBWWVW.....",".............sssss........MBBBBBBVWWW.....",".............sssss.......VVVVVVVV.........","..............SSSS.......MBBBB............","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBBBBBB............","..MMBBBBBBBBBAjjjAAABBBBBBBB..............",".MM.BBBBBBBBBAjjjBBABBBBBBBB..............",".MM.BBBBBBBBBBBjjBBBBBBBBBBB..............",".MM.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......WW..WW...........WW.WW..............","......WW..WW...........WW.WW..............","......VV..VV...........VV.VV..............","..........................................","..........................................",".........................................."],"lasso01":["..........................................","..........................................","...........RRRRRRRRRR.....................",".........RR..........RR...................","...........RRRRRRRRRRR....................",".....................R....................",".....................R....................",".....................R....................","............hhhhhhh..R....................","...........hHHHHHHHh.R....................","..............kkk....R....................","..............kkV...R.....................","..............kkk..k.........M.M..........","..............rrr.s..........M.M..........","..............ssss...........BBBBBB.......",".............sssss..........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssss.........MBBBBBWWVW.....",".............sssss.......VVVVVVBBVWWW.....","..............SSSS.......MMBBB.VV.........","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBMBBBB............","M.MMBBBBBBBBBAjjjAAABBBBBBBB..............","M.M.BBBBBBBBBAjjjBBABBBBBBBB..............","M.M.BBBBBBBBBBBjjBBBBBBBBBBB..............","..M.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..WW...........WW.BB..............","......WW..WW...........WW.WW..............","......WW..VV...........VV.WW..............","......VV..................VV..............","..........................................","..........................................",".........................................."],"lasso10":["..........................................","..........................................",".............RRRRRRRRR....................",".........R.RR......RR.R...................",".........RRRRRRRRRR..R....................",".....................R....................",".....................R....................",".....................R....................","............hhhhhhh..R....................","...........hHHHHHHHh.R....................","..............kkk....R....................","..............kkV...R........M.M..........","..............kkk..k.........M.M..........","..............rrr.s..........BBBBBB.......","..............ssss..........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssss.........MBBBBBWWVW.....",".............sssss........MBBBBBBVWWW.....",".............sssss.......VVVVVVVV.........","..............SSSS.......MBBBB............","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBBBBBB............","..MMBBBBBBBBBAjjjAAABBBBBBBB..............",".MM.BBBBBBBBBAjjjBBABBBBBBBB..............",".MM.BBBBBBBBBBBjjBBBBBBBBBBB..............",".MM.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......WW..WW...........WW.WW..............","......WW..WW...........WW.WW..............","......VV..VV...........VV.VV..............","..........................................","..........................................",".........................................."],"lasso11":["..........................................","..........................................",".............RRRRRRRRR....................",".........R.RR......RR.R...................",".........RRRRRRRRRR..R....................",".....................R....................",".....................R....................",".....................R....................","............hhhhhhh..R....................","...........hHHHHHHHh.R....................","..............kkk....R....................","..............kkV...R.....................","..............kkk..k.........M.M..........","..............rrr.s..........M.M..........","..............ssss...........BBBBBB.......",".............sssss..........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssss.........MBBBBBWWVW.....",".............sssss.......VVVVVVBBVWWW.....","..............SSSS.......MMBBB.VV.........","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBMBBBB............","M.MMBBBBBBBBBAjjjAAABBBBBBBB..............","M.M.BBBBBBBBBAjjjBBABBBBBBBB..............","M.M.BBBBBBBBBBBjjBBBBBBBBBBB..............","..M.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..WW...........WW.BB..............","......WW..WW...........WW.WW..............","......WW..VV...........VV.WW..............","......VV..................VV..............","..........................................","..........................................",".........................................."],"lasso20":["..........................................","..........................................","...........RR.............................",".........RRRRRRRRRRRRRR...................","...................RRR....................",".....................R....................",".....................R....................",".....................R....................","............hhhhhhh..R....................","...........hHHHHHHHh.R....................","..............kkk....R....................","..............kkV...R........M.M..........","..............kkk..k.........M.M..........","..............rrr.s..........BBBBBB.......","..............ssss..........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssss.........MBBBBBWWVW.....",".............sssss........MBBBBBBVWWW.....",".............sssss.......VVVVVVVV.........","..............SSSS.......MBBBB............","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBBBBBB............","..MMBBBBBBBBBAjjjAAABBBBBBBB..............",".MM.BBBBBBBBBAjjjBBABBBBBBBB..............",".MM.BBBBBBBBBBBjjBBBBBBBBBBB..............",".MM.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......WW..WW...........WW.WW..............","......WW..WW...........WW.WW..............","......VV..VV...........VV.VV..............","..........................................","..........................................",".........................................."],"lasso21":["..........................................","..........................................","...........RR.............................",".........RRRRRRRRRRRRRR...................","...................RRR....................",".....................R....................",".....................R....................",".....................R....................","............hhhhhhh..R....................","...........hHHHHHHHh.R....................","..............kkk....R....................","..............kkV...R.....................","..............kkk..k.........M.M..........","..............rrr.s..........M.M..........","..............ssss...........BBBBBB.......",".............sssss..........BBBVBWWW......",".............sssss..........BBBBBWWWW.....",".............sssss.........MBBBBBWWVW.....",".............sssss.......VVVVVVBBVWWW.....","..............SSSS.......MMBBB.VV.........","...M.DDDDDDDDAjjjAAADDDDDMBBBB............","..MMDBBBBBBBBAjjjAAABBBBBMBBBB............","M.MMBBBBBBBBBAjjjAAABBBBBBBB..............","M.M.BBBBBBBBBAjjjBBABBBBBBBB..............","M.M.BBBBBBBBBBBjjBBBBBBBBBBB..............","..M.DBBBBBBBBBBbjBBBBBBBBBBD..............","..MM.DDDDDDDDDDbbbDDDDDDDD................","..M...BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..BB...........BB.BB..............","......BB..WW...........WW.BB..............","......WW..WW...........WW.WW..............","......WW..VV...........VV.WW..............","......VV..................VV..............","..........................................","..........................................",".........................................."],"cloud":[".....WWWWW......","....WWWWWWWW....","...WWWWWWWWWW...",".WWWWWWWWWWWWWW.",".WWWWWWWWWWWWWW.","................"],"sun":["....G....","..GGGGG..",".GGGGGGG.",".GGGGGGG.","GGGGGGGGG",".GGGGGGG.",".GGGGGGG.","..GGGGG..","....G...."],"cactus":[".........","....ec...","....cc..c",".c..ce..c",".c..ccccc",".c..ccccc",".cccec...",".ccccc...","....cc...","....ce...","....cc...","....cc..."],"tumbleweed":["...t....","..tttt..",".ttt.tt.","ttt.ttt.",".t.t.ttt",".tttt.t.","..tttt..","....t..."],"bluebonnet":["Wu.","uuu",".u.",".g.",".g."],"tuft":["..g..","g.g.g","g.g.g"]}}</script>
+<script id="seed" type="application/json">{"school":"ut","school_name":"UT Austin","generated_at":"2026-09-13T16:00:00+00:00","stale_days":45,"crawl_log":[{"source":"rambler-happy-hour","fetched":true,"deals_found":21},{"source":"citycast-cheap-eats","fetched":true,"deals_found":7},{"source":"austinot-cheap-eats","fetched":true,"deals_found":1}],"stats":{"added":29,"refreshed":0,"expired":0,"total":28},"deals":[{"id":"cb569c61e7fa","business":"Cain & Abel's","deal":"$1.50 domestic bottles (\"Dollar Beer\" Tuesday)","category":"drink","days":["Tue"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"907 W 24th St","alcohol":true,"expires_at":null,"confidence":"high","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"082b4a94faec","business":"Cain & Abel's","deal":"$3 Mexican Candies & Modelos","category":"drink","days":["Wed"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"907 W 24th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"df2a919bf380","business":"Cain & Abel's","deal":"$3 mimosas (until 3pm Sat, all day Sun)","category":"drink","days":["Sat","Sun"],"times":"Sat until 3pm; Sun all day","requirements":["21+"],"neighborhood":"West Campus","address":"907 W 24th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"e6c745376b33","business":"Cain & Abel's","deal":"$4 wells, $1 off pitchers, $8 teas","category":"drink","days":["Fri"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"907 W 24th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"e9d995a5ce46","business":"Cain & Abel's","deal":"$4 wells, $8 teas, $1 off drafts","category":"drink","days":["Mon"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"907 W 24th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"8fa5e4fd7482","business":"Cain & Abel's","deal":"$8 Texas Teas","category":"drink","days":["Thu"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"907 W 24th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"ea691cfe0b79","business":"Crown & Anchor Pub","deal":"Budget pub burgers and cheap taps; accepts Bevo Bucks","category":"both","days":["daily"],"times":"","requirements":[],"neighborhood":"North Campus","address":"","alcohol":true,"expires_at":null,"confidence":"low","source_url":"https://austinot.com/ut-austin-cheap-eats","source_name":"Austinot: Back-to-school cheap eats near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"3ada0c661075","business":"Dirty Martin's Place","deal":"$1 wings","category":"food","days":["Thu"],"times":"","requirements":[],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":false,"expires_at":null,"confidence":"high","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"9245fa41ebbd","business":"Dirty Martin's Place","deal":"$10 bacon cheeseburger + side","category":"food","days":["Wed"],"times":"","requirements":[],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":false,"expires_at":null,"confidence":"high","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"ccc9f7c6e803","business":"Dirty Martin's Place","deal":"$10 cheeseburger + side","category":"food","days":["Mon"],"times":"","requirements":[],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":false,"expires_at":null,"confidence":"high","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"574a2f33213e","business":"Dirty Martin's Place","deal":"$10 chicken sandwich + side","category":"food","days":["Fri"],"times":"","requirements":[],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":false,"expires_at":null,"confidence":"high","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"efefcdb7e07f","business":"Dirty Martin's Place","deal":"$10 double cheeseburger on Texas toast + side","category":"food","days":["Tue"],"times":"","requirements":[],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":false,"expires_at":null,"confidence":"high","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"34fa3e7dde65","business":"Dirty Martin's Place","deal":"$10 mimosa carafes","category":"drink","days":["Sat","Sun"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"a9268ac7b270","business":"Dirty Martin's Place","deal":"$12 Lone Star pitchers, $3 well shots, $4 house margs","category":"drink","days":["Mon"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"deb16a1b29e4","business":"Dirty Martin's Place","deal":"$2 Lone Star tallboys, $2 well shots","category":"drink","days":["Tue"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":true,"expires_at":null,"confidence":"high","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"dc7ee1a2f05f","business":"Dirty Martin's Place","deal":"$5 small cheeseburgers, $3.50 tallboys, $5 Longhorn Iced Teas","category":"both","days":["Mon","Tue","Wed","Thu","Fri"],"times":"2-6pm","requirements":[],"neighborhood":"West Campus","address":"2808 Guadalupe St","alcohol":true,"expires_at":null,"confidence":"high","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"5756e2926810","business":"El Arroyo","deal":"$6 house margs, $3 domestic / $4 craft beers, $2 off queso, $5 off quesadillas","category":"both","days":["Mon","Tue","Wed","Thu","Fri"],"times":"3-6pm weekdays; all day Thu","requirements":[],"neighborhood":"Downtown","address":"1624 W 5th St","alcohol":true,"expires_at":null,"confidence":"high","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"066ffd3ee1aa","business":"Maudie's Tex-Mex","deal":"$6 appetizers (queso, guac, nachos) and $1 off all beer","category":"both","days":["Mon","Tue","Wed","Thu","Fri"],"times":"3-6:30pm Tue-Fri; Mon until close","requirements":[],"neighborhood":"West Austin","address":"2608 W 7th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"2f256cb9e398","business":"Pluckers Wing Bar","deal":"$2.50 Bud Light & Michelob Ultra pints","category":"drink","days":["Mon"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"2222 Rio Grande St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"c9f2281bf3db","business":"Pluckers Wing Bar","deal":"$3 off regular cocktails, $1 off Dos Equis pints (Texas Tuesday)","category":"drink","days":["Tue"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"2222 Rio Grande St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"71093c247bc3","business":"Pluckers Wing Bar","deal":"$5.50 8oz frozen ritas; $1 off Bud Light & Ultra pints","category":"drink","days":["Thu"],"times":"","requirements":["21+"],"neighborhood":"West Campus","address":"2222 Rio Grande St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"b37733b94c37","business":"Pluckers Wing Bar","deal":"Happy hour: $1 off 24oz Mother Plucker mugs, $1 off cocktails & frozen ritas","category":"drink","days":["Mon","Tue","Wed","Thu","Fri"],"times":"3-5pm","requirements":["21+"],"neighborhood":"West Campus","address":"2222 Rio Grande St","alcohol":true,"expires_at":null,"confidence":"high","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"e3897347e251","business":"Pluckers Wing Bar","deal":"Live team trivia at 7:30pm; $2 off 24oz Dos Equis mugs","category":"entertainment","days":["Wed"],"times":"7:30pm","requirements":[],"neighborhood":"West Campus","address":"2222 Rio Grande St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"cd5b1f977be4","business":"Posse East","deal":"All appetizers under $10","category":"food","days":["daily"],"times":"","requirements":[],"neighborhood":"North Campus","address":"","alcohol":false,"expires_at":null,"confidence":"medium","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"8ae8dd003f62","business":"RA Sushi","deal":"Discounted happy hour menu: rolls, nigiri, apps, drinks","category":"both","days":["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],"times":"Tue-Sat 3-6pm & 9pm-close; Sun 3pm-close; Mon all day","requirements":[],"neighborhood":"Downtown","address":"117 W 4th St","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"8cc184e5da7f","business":"Taco Joint","deal":"Tacos $3-$4.50; fajita salad $9.95","category":"food","days":["daily"],"times":"","requirements":[],"neighborhood":"West Campus","address":"","alcohol":false,"expires_at":null,"confidence":"medium","source_url":"https://austin.citycast.fm/food-drink/spots-austin-ut-where-cheap-eat-campus","source_name":"City Cast Austin: Where to eat near UT for cheap (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"0ab39b9fb814","business":"Upstairs at Caroline","deal":"$4 tacos and $9 guava margaritas (Taco Tuesday)","category":"both","days":["Tue"],"times":"3-6pm","requirements":[],"neighborhood":"Downtown","address":"621 Congress Ave #201","alcohol":true,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"},{"id":"d963101fefca","business":"Upstairs at Caroline","deal":"Yappy Hour: bring your dog for 25% off","category":"both","days":["Sun"],"times":"all day","requirements":[],"neighborhood":"Downtown","address":"621 Congress Ave #201","alcohol":false,"expires_at":null,"confidence":"medium","source_url":"https://www.rambleratx.com/resources/happy-hour-ut-austin/","source_name":"Rambler ATX: Happy Hour Near UT (roundup)","source_type":"roundup","verified_at":"2026-09-13","first_seen":"2026-09-13"}],"note":"Seed crawl. Entries came from roundup articles, not the businesses' own sites, so most are 'medium' confidence until the nightly agent re-verifies them against business pages."}</script>
+<script>
+(function(){
+  /* ---- sprites: same data as linkcowboy.com ---- */
+  const DATA=JSON.parse(document.getElementById("sprites").textContent);
+  function draw(canvas,name){
+    const map=DATA.sprites[name]; if(!map) return;
+    const h=map.length,w=map[0].length; canvas.width=w; canvas.height=h;
+    const ctx=canvas.getContext("2d"); ctx.clearRect(0,0,w,h);
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++){const c=DATA.palette[map[y][x]]; if(c){ctx.fillStyle=c;ctx.fillRect(x,y,1,1);}}
+  }
+  document.querySelectorAll("canvas[data-sprite]").forEach(c=>draw(c,c.dataset.sprite));
+  // bluebonnets + tufts scattered on the prairie
+  (function(){
+    const holder=document.getElementById("flowers"); let seed=1845;
+    const rand=()=>{seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff;};
+    for(let i=0;i<12;i++){
+      const isF=rand()<0.5, el=document.createElement("div"); el.className="deco";
+      const cv=document.createElement("canvas"); draw(cv,isF?"bluebonnet":"tuft");
+      el.style.setProperty("--w",(isF?3:5)+"px"); el.style.left=(4+rand()*88)+"vw"; el.style.bottom=(20+rand()*46)+"px";
+      el.appendChild(cv); holder.appendChild(el);
+    }
+  })();
+
+  /* ---- rider animation: walk cycle idle, lasso sequence while the agent runs ---- */
+  const cowboy=document.getElementById("cowboy"), rig=document.getElementById("rig");
+  const reduced=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let walk=0, roping=false;
+  if(!reduced) setInterval(()=>{ walk^=1; if(!roping) draw(cowboy,"cowboy"+walk); },380);
+  const SEQ=[0,1,2,1];
+  function ropeStart(){ roping=true; rig.classList.add("run"); let i=0;
+    ropeStart.t=setInterval(()=>{ draw(cowboy,"lasso"+SEQ[i%4]+walk); i++; },140); }
+  function ropeStop(){ clearInterval(ropeStart.t); roping=false; rig.classList.remove("run"); draw(cowboy,"cowboy"+walk); }
+
+  /* ---- data ---- */
+  const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], LONG=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  const ti=(new Date().getDay()+6)%7, today=DAYS[ti];
+  document.getElementById("daylabel").textContent=LONG[ti].toUpperCase()+" NEAR UT AUSTIN";
+  const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return ""}};
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  const status=$("#status"), out=$("#roundup"), btn=$("#runbtn");
+  let data=null, newIds=new Set(), ran=false;
+  const say=t=>{status.innerHTML=`<span class="sq"></span>${esc(t)}`;};
+  async function load(){ try{const r=await fetch("deals.json",{cache:"no-store"}); if(!r.ok) throw 0; data=await r.json();}
+    catch{ data=JSON.parse(document.getElementById("seed").textContent); } }
+  const idFor=d=>(d.business+"|"+d.deal).toLowerCase().replace(/\s+/g," ").trim();
+  const todays=()=>{const f=$("#foodOnly").checked; return data.deals.filter(d=>(d.days.includes("daily")||d.days.includes(today))&&!(f&&d.alcohol));};
+  const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+
+  /* one-tap directions: Google Maps opens the native app on phones and starts navigation */
+  function mapsUrl(d){
+    const q=[d.business,d.address,"Austin, TX"].filter(Boolean).join(", ");
+    return "https://www.google.com/maps/dir/?api=1&destination="+encodeURIComponent(q)+"&travelmode=walking";
+  }
+  function card(d,isTop){
+    const reqs=(d.requirements||[]).map(r=>`<span class="pill warn">${esc(r)}</span>`).join("");
+    const conf=d.confidence==="low"?`<span class="pill warn">unconfirmed</span>`:"";
+    return `<article class="deal${isTop?' top':''}${newIds.has(d.id)?' is-new':''}">
+      <div class="row"><h3>${esc(d.business)}</h3><span class="nb">${esc(d.neighborhood||"")}${d.address?" · "+esc(d.address):""}</span></div>
+      <p class="what">${esc(d.deal)}</p>
+      <div class="meta">${d.times?`<span class="pill">${esc(d.times)}</span>`:`<span class="pill">${d.days.includes("daily")?"every day":"today"}</span>`}${reqs}${conf}
+        <span>via <a href="${esc(d.source_url)}" target="_blank" rel="noopener">${esc(host(d.source_url))}</a></span></div>
+      <div class="go"><a class="navbtn" href="${mapsUrl(d)}" target="_blank" rel="noopener">&#9654; NAVIGATE</a></div>
+    </article>`;
+  }
+  async function reveal(){
+    out.innerHTML=""; const list=shuffle(todays());
+    if(!list.length){ out.innerHTML=`<div class="empty">Nothing on the books for ${LONG[ti]} with that filter. Uncheck "skip the bar deals", or come back tomorrow.</div>`; requestAnimationFrame(()=>out.firstElementChild.classList.add("in")); return; }
+    const highs=list.filter(d=>d.confidence==="high"); const top=highs.length?highs[Math.floor(Math.random()*highs.length)]:list[0];
+    list.sort((a,b)=>(b===top)-(a===top));
+    out.innerHTML=list.map(d=>card(d,d===top)).join("");
+    const cards=[...out.children];
+    for(let i=0;i<cards.length;i++){cards[i].classList.add("in"); say(`${i+1} of ${cards.length} rounded up`); await sleep(220);}
+    say(`${cards.length} special${cards.length===1?"":"s"} for ${LONG[ti]}${ran?"":" (from last night's crawl)"}`);
+  }
+  async function runAgent(){
+    try{ const r=await fetch("/.netlify/functions/generate-deals?limit=3"); const o=await r.json();
+      if(o.error) return {ok:false};
+      const day=new Date().toISOString().slice(0,10); let added=0;
+      for(const d of o.deals){ const k=idFor(d), hit=data.deals.find(x=>idFor(x)===k);
+        if(hit) hit.verified_at=day;
+        else{ const nd={...d,id:"live-"+Math.random().toString(36).slice(2,8),days:Array.isArray(d.days)?d.days:[d.days||"daily"],requirements:d.requirements||[],alcohol:!!d.alcohol}; data.deals.push(nd); newIds.add(nd.id); added++; } }
+      return {ok:true,added,sources:o.log.length};
+    }catch{ return {ok:false}; }
+  }
+  btn.addEventListener("click", async()=>{
+    btn.disabled=true; out.innerHTML=""; ropeStart(); say("Saddling up");
+    const t0=Date.now(), lines=["Reading the sources","Pulling out the specials","Checking what's still good"]; let li=0;
+    const tick=setInterval(()=>say(lines[li++%lines.length]),800);
+    const res=await runAgent(); await sleep(Math.max(0,2600-(Date.now()-t0))); clearInterval(tick);
+    ran=res.ok; ropeStop();
+    say(res.ok?`Read ${res.sources} sources, ${res.added} new`:"Agent's offline here, showing last night's crawl");
+    await sleep(320); await reveal();
+    btn.disabled=false; btn.textContent="ROUND 'EM UP AGAIN";
+  });
+  $("#foodOnly").addEventListener("change",()=>{ if(out.children.length) reveal(); });
+  load();
+})();
+</script>
+</body>
+</html>
