@@ -113,6 +113,8 @@ canvas{image-rendering:pixelated;display:block}
 }
 .dealschip:hover,.dealschip:focus-visible{transform:translate(-2px,-2px);box-shadow:6px 6px 0 rgba(43,32,22,.8);outline:none}
 .dealschip:active{transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(43,32,22,.8)}
+.dealschip.green{background:#4F7A32;color:var(--cream)}
+.topbar-right{display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
 .backlink{
   display:inline-block;
   font-family:var(--px);font-size:11px;line-height:1;
@@ -447,7 +449,10 @@ footer::before{ /* pixel notches on the footer edge */
 
   <div class="topbar">
     <a class="backlink" href="https://linkcowboy.com">&lt;&lt; LINK COWBOY</a>
-    <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+    <div class="topbar-right">
+      <a class="dealschip green" href="https://linkcowboy.com/today">RESTAURANT ROUND-UP</a>
+      <a class="dealschip" href="/deals">&#9733; STUDENT DEALS</a>
+    </div>
   </div>
 
   <div class="hero">
@@ -491,7 +496,7 @@ footer::before{ /* pixel notches on the footer edge */
       <canvas data-sprite="head"></canvas>
       <canvas class="bb" data-sprite="bluebonnet"></canvas>
     </div>
-    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin. Links point to official UT and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.2.</p>
+    <p class="disclaimer"><b>Unofficial and student-built.</b> Not affiliated with, endorsed by, or operated by The University of Texas at Austin. Links point to official UT and third-party sites, and you should always verify deadlines and requirements on the official page. Found a broken or missing link? Suggest a fix above. Prototype v0.3.</p>
     <p class="family">PART OF THE <a href="https://linkcowboy.com">LINK COWBOY</a> FAMILY</p>
     <p class="copyright">&copy; 2026 LINK COWBOY LLC <span class="px-star">&#9632;</span> MADE DEEP IN THE HEART OF TEXAS</p>
   </div>

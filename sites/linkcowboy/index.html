@@ -119,6 +119,7 @@ canvas{image-rendering:pixelated; display:block}
 .navrow .chip:hover, .navrow .chip:focus-visible{transform:translate(-2px,-2px); box-shadow:7px 7px 0 rgba(43,32,22,.8); outline:none}
 .navrow .chip:active{transform:translate(2px,2px); box-shadow:3px 3px 0 rgba(43,32,22,.8)}
 .navrow .chip.gold{background:var(--gold)}
+.navrow .chip.green{background:#4F7A32; color:var(--cream)}
 
 /* ---------- mobile hamburger menu ---------- */
 .menu{display:none; position:absolute; top:14px; right:14px; z-index:5}
@@ -147,6 +148,7 @@ canvas{image-rendering:pixelated; display:block}
 }
 .menu-panel a:last-child{border-bottom:none}
 .menu-panel a.gold{color:#a87c28}
+.menu-panel a.green{color:#4F7A32}
 .menu-panel a:hover, .menu-panel a:focus-visible{background:var(--gold); color:var(--ink); outline:none}
 
 /* ---------- content ---------- */
@@ -300,14 +302,14 @@ footer .px-star{color:var(--gold)}
 
 <nav class="navrow" aria-label="Site">
   <a class="chip" href="/about">ABOUT</a>
-  <a class="chip" href="/today">TODAY&#39;S ROUND-UP</a>
+  <a class="chip green" href="/today">RESTAURANT ROUND-UP</a>
   <a class="chip gold" href="/deals">&#9733; STUDENT DEALS</a>
 </nav>
 <div class="menu">
   <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="menuPanel">&#9776;</button>
   <nav class="menu-panel" id="menuPanel" aria-label="Site" hidden>
     <a href="/about">ABOUT</a>
-    <a href="/today">TODAY&#39;S ROUND-UP</a>
+    <a class="green" href="/today">RESTAURANT ROUND-UP</a>
     <a class="gold" href="/deals">&#9733; STUDENT DEALS</a>
   </nav>
 </div>
