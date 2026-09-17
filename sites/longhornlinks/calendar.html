@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<!--
+  Longhorn Links - MBA event calendar.
+  Same design system as index.html / mba.html: Archivo + Public Sans + Spline
+  Sans Mono, the warm palette, rounded panels. Calendar-specific rules are
+  namespaced cx- so they can't collide with the shared component CSS above.
+  Event data is the #seed block below; events.json overrides it when present.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Every McCombs MBA recruiting and club event in one calendar. Filter by the track you are recruiting for, subscribe once, add any event to your phone in one tap." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://longhornlinks.com/calendar.html" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<meta name="theme-color" content="#BF5700" />
+<title>Event Calendar | Longhorn Links MBA</title>
+<meta property="og:title" content="Event Calendar | Longhorn Links MBA" />
+<meta property="og:description" content="One calendar for McCombs MBA recruiting and club events. Filter by track, subscribe once." />
+<meta property="og:type" content="website" />
+<meta property="og:url" content="https://longhornlinks.com/calendar.html" />
+<meta property="og:image" content="https://longhornlinks.com/og-image.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&family=Press+Start+2P&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --brand:#BF5700;        /* deep teal/petrol - distinct from UT orange */
+    --brand-deep:#8F4200;
+    --brand-tint:#F7E4D2;
+    --ink:#221B14;
+    --bg:#F6F1E8;           /* warm off-white field */
+    --band:#EFE6D8;         /* alternating band */
+    --panel:#FFFFFF;
+    --line:#E4D9C9;
+    --muted:#6B6157;
+    --dark:#211913;         /* utility bar + footer */
+    --dark-line:#3D3025;
+    --focus:#1457D6;
+    --open:#3F7A3F;--wait:#9A6B12;--closed:#9A3636;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px;}
+  .display{font-family:"Archivo","Public Sans",sans-serif;}
+  .mono{font-family:"Spline Sans Mono",monospace;}
+  :focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
+  a{color:inherit;}
+
+  /* ---------- Utility bar (tier 1) ---------- */
+  .utility{background:var(--dark);color:#E9DACA;}
+  .utility-inner{display:flex;align-items:center;justify-content:flex-end;gap:18px;height:38px;font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:0;text-transform:uppercase;}
+  .utility a,.utility button{color:#E9DACA;text-decoration:none;background:none;border:none;font:inherit;cursor:pointer;padding:0;}
+  .utility a:hover,.utility button:hover{color:#fff;}
+  .utility .pill{margin-right:auto;display:inline-flex;align-items:center;gap:7px;color:#A9917A;}
+  .utility .pill .dot{width:7px;height:7px;border-radius:50%;background:#E08A3C;}
+
+  .utility .backlink{margin-right:auto;display:inline-flex;align-items:center;gap:8px;color:#E9DACA;text-decoration:none;line-height:1.4;}
+  .utility .backlink:hover{color:#fff;}
+  .utility .backlink .arw{color:#BF5700;font-weight:700;}
+  .utility .disc{color:#8E7E6A;}
+
+  /* ---------- Main header (tier 2) ---------- */
+  header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bottom:3px solid var(--brand);}
+  .main-inner{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px;}
+  .wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .wordmark .mark{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;background:var(--brand);color:#fff;border-radius:8px;font-size:19px;}
+  .wordmark .wm-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1;color:var(--ink);white-space:nowrap;}
+  .wordmark .wm-sub{font-family:"Spline Sans Mono",monospace;font-size:9px;white-space:nowrap;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  nav.sections{display:flex;gap:2px;flex-wrap:nowrap;}
+  nav.sections a{font-size:12.5px;font-weight:600;color:var(--ink);text-decoration:none;padding:8px 9px;border-radius:7px;white-space:nowrap;}
+  nav.sections a:hover{background:var(--brand-tint);color:var(--brand-deep);}
+
+  /* ---------- Audience tabs ---------- */
+  .aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
+  .aud-tabs{display:flex;gap:8px;padding:10px 0;}
+  .aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
+  .aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
+  .aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
+
+  .btn-head{font-size:12.5px;padding:9px 13px;white-space:nowrap;flex:0 0 auto;}
+  /* ---------- Hero ---------- */
+  .hero{padding:62px 0 44px;border-bottom:1px solid var(--line);}
+  .hero .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-deep);}
+  .hero h1{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(34px,6vw,60px);line-height:1.04;letter-spacing:-.03em;margin:14px 0 16px;}
+  .hero h1 .u{color:var(--brand);}
+  .hero .bookmark-me{color:var(--ink);font-weight:700;}
+  .hero p.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:58ch;margin:0;}
+  .hero .btn-hero-ghost{background:transparent;color:var(--brand-deep);border:2px solid var(--brand);}
+  .hero .btn-hero-ghost:hover{background:var(--brand-tint);}
+  .hero .btn-hero{margin-top:26px;font-size:16.5px;font-weight:700;padding:16px 28px;border-radius:12px;}
+
+  /* ---------- Controls ---------- */
+  .controls{position:sticky;top:62px;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 0;}
+  .search-row{display:flex;gap:12px;align-items:center;}
+  .search{flex:1;position:relative;}
+  .search input{width:100%;font-family:inherit;font-size:16px;padding:11px 16px 11px 44px;border:1.5px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);}
+  .search input::placeholder{color:#A69C90;}
+  .search input:focus{border-color:var(--brand);}
+  .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);}
+  .search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:"Spline Sans Mono",monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:2px 7px;background:var(--bg);}
+  .count{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--muted);white-space:nowrap;letter-spacing:.04em;}
+  .chips{display:none;flex-wrap:wrap;gap:7px;margin-top:11px;}
+  .controls:focus-within .chips{display:flex;}
+  .controls.filter-active .chips{display:flex;}
+  .chip{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;padding:6px 11px;border-radius:7px;border:1.5px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;text-transform:uppercase;transition:all .12s ease;}
+  .chip:hover{border-color:var(--brand);color:var(--brand-deep);}
+  .chip.active{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+  .newtab-note{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.02em;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px;}
+  .newtab-note svg{width:13px;height:13px;color:var(--brand);flex:0 0 auto;}
+  @media (max-width:640px){ .newtab-note{font-size:10px;} }
+  /* ---------- Sections + cards ---------- */
+  main{padding:48px 0 0;}
+  .section{margin-bottom:42px;scroll-margin-top:170px;}
+  .section-head{margin-bottom:16px;}
+  .section-head .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);}
+  .section-head h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:5px 0 0;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;}
+  .card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 17px 14px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}
+  .card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
+  .card .ttl{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
+  .card .name{font-weight:700;font-size:15.5px;line-height:1.22;}
+  .card .desc{font-size:13px;color:var(--muted);line-height:1.45;}
+  .card .host{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:#AC9F8F;margin-top:3px;}
+  .arrow{flex:0 0 auto;color:#C9BCAC;transition:color .12s,transform .12s;}
+  .card:hover .arrow{color:var(--brand);transform:translate(2px,-2px);}
+  .badge{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font-family:"Spline Sans Mono",monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:5px;font-weight:500;}
+  .badge.login{background:var(--brand);color:#fff;}
+  .badge.ext{background:var(--ink);color:#fff;}
+  .badge svg{width:10px;height:10px;}
+  .empty{display:none;text-align:center;color:var(--muted);padding:50px 0;font-size:15px;}
+
+  .section.admit{background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:16px;padding:24px 22px 22px;margin-top:14px;}
+  .section.admit .section-head h2{color:var(--brand-deep);}
+  .section.admit .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
+
+  /* ---------- Voter registration button (sits beside the hero headline) ---------- */
+  /* Same .btn component as the Student Deals button; .votechip only sizes and places it.
+     Deliberately not .btn-head - that one hides itself under 860px, and this shouldn't. */
+  .hero-head{display:flex;align-items:flex-start;justify-content:space-between;gap:22px;flex-wrap:wrap;margin-bottom:16px;}
+  .hero-head h1{margin-bottom:0;}
+  .votechip{flex:0 0 auto;margin-top:22px;font-size:12.5px;padding:9px 13px;white-space:nowrap;}
+  @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;} }
+
+  /* ---------- Band (alternating section) ---------- */
+  .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
+
+  /* ---------- Registration mockup ---------- */
+  .mock-wrap{position:relative;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel);}
+  .mock-top{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:var(--dark);color:#F4EBE1;}
+  .mock-top h3{margin:0;font-family:"Archivo",sans-serif;font-weight:600;font-size:17px;}
+  .mock-top .term{font-family:"Spline Sans Mono",monospace;font-size:12px;color:#CBB49C;letter-spacing:.04em;}
+  table.mock{width:100%;border-collapse:collapse;font-size:13.5px;}
+  table.mock th{text-align:left;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:11px 20px;border-bottom:1px solid var(--line);background:var(--bg);}
+  table.mock td{padding:13px 20px;border-bottom:1px solid var(--line);}
+  table.mock tr:last-child td{border-bottom:none;}
+  .uniq{font-family:"Spline Sans Mono",monospace;color:var(--brand-deep);font-weight:500;}
+  .stat-pill{font-family:"Spline Sans Mono",monospace;font-size:10.5px;padding:3px 9px;border-radius:5px;text-transform:uppercase;letter-spacing:.03em;}
+  .stat-pill.open{background:#E2EFE2;color:var(--open);}
+  .stat-pill.wait{background:#F7EBD2;color:var(--wait);}
+  .stat-pill.closed{background:#F2DFDF;color:var(--closed);}
+  .mock-veil{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,rgba(235,231,221,.55),rgba(235,231,221,.95));backdrop-filter:blur(2px);text-align:center;padding:26px;}
+  .mock-veil .lock{width:34px;height:34px;color:var(--brand);}
+  .mock-veil p{margin:0;max-width:44ch;font-size:14px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;border:none;cursor:pointer;transition:background .12s;}
+  .btn:hover{background:var(--brand-deep);}
+  .mock-note{font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:var(--muted);margin-top:6px;}
+
+  /* ---------- Stats ---------- */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin:14px 0;}
+  .stat-card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px;}
+  .stat-card .big{font-family:"Archivo",sans-serif;font-weight:800;font-size:24px;line-height:.95;color:var(--brand);}
+  .stat-card .lbl{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.3;}
+
+  /* ---------- Footer ---------- */
+  footer{background:var(--dark);color:#E9DACA;margin-top:36px;padding:50px 0 40px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:32px;}
+  .foot-brand .fb-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:22px;color:#fff;}
+  .foot-brand p{color:#B49B84;font-size:13px;max-width:34ch;margin:10px 0 16px;line-height:1.5;}
+  .foot-brand .btn{font-size:13px;}
+  footer h5{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8E7E6A;margin:0 0 12px;}
+  footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
+  footer ul a{color:#E9DACA;text-decoration:none;font-size:13.5px;}
+  footer ul a:hover{color:#fff;}
+  .legal{margin-top:34px;border-top:1px solid var(--dark-line);padding-top:20px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:#8E7E6A;line-height:1.7;}
+
+  /* ---------- Modal form ---------- */
+  .modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(19,32,30,.55);}
+  .modal.open{display:flex;}
+  .modal-box{background:var(--panel);border-radius:16px;max-width:480px;width:100%;padding:26px;max-height:90vh;overflow:auto;}
+  .modal-box h3{font-family:"Archivo",sans-serif;font-weight:800;font-size:22px;margin:0 0 4px;}
+  .modal-box .sub{color:var(--muted);font-size:13.5px;margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px;}
+  .field input,.field select{width:100%;font-family:inherit;font-size:15px;padding:11px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);}
+  .field input:focus,.field select:focus{border-color:var(--brand);background:var(--panel);}
+  .radio-row{display:flex;gap:18px;}
+  .radio-row label{display:flex;align-items:center;gap:7px;text-transform:none;font-weight:500;font-size:14px;color:var(--ink);letter-spacing:0;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;}
+  .btn-ghost{background:none;border:1.5px solid var(--line);color:var(--ink);font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;cursor:pointer;}
+  .btn-ghost:hover{border-color:var(--muted);}
+  .form-msg{font-size:13.5px;margin-top:6px;display:none;}
+  .form-msg.ok{display:block;color:var(--open);}
+  .form-msg.err{display:block;color:var(--closed);}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;}
+
+  @media (max-width:860px){ nav.sections{display:none;} .btn-head{display:none;} }
+  @media (max-width:640px){
+    .hero{padding:32px 0 22px;}
+    .hero h1{font-size:clamp(28px,8vw,40px);}
+    .hero .bookmark-me{color:var(--ink);font-weight:700;}
+  .hero p.lede{font-size:15px;}
+    .hero .btn-hero{width:100%;justify-content:center;font-size:15px;padding:14px 18px;}
+    .aud-tab{padding:8px 14px;font-size:11.5px;}
+    .section-head h2{font-size:19px;}
+    .section.admit{padding:16px 13px 14px;}
+    .card{padding:13px 14px 12px;}
+    .card .name{font-size:14.5px;}
+    .card .desc{font-size:12.5px;}
+    .stats{grid-template-columns:1fr 1fr;gap:8px;}
+    .stat-card .big{font-size:20px;}
+    .stat-card .lbl{font-size:10.5px;}
+    .mock-veil p{font-size:13px;}
+    table.mock{font-size:12px;}
+    table.mock th, table.mock td{padding:9px 12px;}
+    .count,.search kbd{display:none;}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:26px;}
+    .foot-brand{grid-column:1 / -1;}
+    .utility-inner{gap:14px;}
+    .controls{position:static;padding:12px 0;}
+    .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .chips::-webkit-scrollbar{display:none;}
+    .section{scroll-margin-top:84px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+  /* ---------- MBA Calendar ---------- */
+  .sub-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
+  .sub-tabs{display:flex;gap:26px;padding:0;}
+  .sub-tab{position:relative;font-size:14px;font-weight:600;color:var(--muted);text-decoration:none;padding:12px 2px;border-bottom:2.5px solid transparent;margin-bottom:-1px;}
+  .sub-tab:hover{color:var(--brand-deep);}
+  .sub-tab.active{color:var(--ink);border-bottom-color:var(--brand);}
+
+  /* hero */
+  .cx-hero{padding:52px 0 0;border-bottom:1px solid var(--line);}
+  .cx-hero .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--brand-deep);}
+  .cx-hero h1{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(32px,5.4vw,54px);line-height:1.04;letter-spacing:-.03em;margin:13px 0 15px;max-width:15ch;}
+  .cx-hero h1 .u{color:var(--brand);}
+  .cx-hero .lede{font-size:clamp(15px,1.8vw,18px);color:var(--muted);max-width:56ch;margin:0;}
+  .cx-herorow{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap;}
+  .cx-herocopy{flex:1 1 430px;min-width:0;}
+  /* "next up" card — the hero earns its space by answering "what's next" */
+  .cx-next{flex:0 0 auto;width:min(360px,100%);background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:17px 19px 15px;margin-bottom:4px;}
+  .cx-next .lab{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--brand);}
+  .cx-next .when{font-family:"Spline Sans Mono",monospace;font-size:12px;color:var(--muted);margin-top:9px;letter-spacing:.03em;}
+  .cx-next .what{font-family:"Archivo",sans-serif;font-weight:700;font-size:17px;line-height:1.25;margin:5px 0 0;}
+  .cx-next .where{font-size:13px;color:var(--muted);margin-top:5px;}
+  .cx-next .go{display:inline-flex;gap:7px;align-items:center;margin-top:12px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;color:var(--brand-deep);}
+  .cx-next .go:hover{color:var(--brand);}
+  .cx-stats{display:flex;gap:26px;flex-wrap:wrap;padding:22px 0 20px;margin-top:26px;border-top:1px solid var(--line);}
+  .cx-stat b{display:block;font-family:"Archivo",sans-serif;font-weight:800;font-size:23px;line-height:1;}
+  .cx-stat span{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+
+  /* controls */
+  .cx-controls{position:sticky;top:62px;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 0;}
+  .cx-controls .wrap{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+  .cx-sel{position:relative;}
+  .cx-sel select{appearance:none;font-family:inherit;font-size:13.5px;color:var(--ink);background:var(--panel);
+    border:1.5px solid var(--line);border-radius:9px;padding:9px 34px 9px 13px;cursor:pointer;}
+  .cx-sel select:focus{border-color:var(--brand);outline:none;}
+  .cx-sel svg{position:absolute;right:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted);pointer-events:none;}
+  .cx-icon{display:grid;place-items:center;width:38px;height:38px;border:1.5px solid var(--line);border-radius:9px;background:var(--panel);cursor:pointer;color:var(--muted);}
+  .cx-icon svg{width:17px;height:17px;}
+  .cx-icon:hover{border-color:var(--brand);color:var(--brand-deep);}
+  .cx-sub{margin-left:auto;}
+
+  main.cx-main{padding:30px 0 0;}
+  .cx-cal{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 20px 16px;}
+  .cx-calhead{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+  .cx-calhead h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:19px;margin:0;flex:1;text-align:center;}
+  .cx-nav{display:flex;gap:6px;}
+  .cx-nav button,.cx-seg button{font-family:inherit;border:1.5px solid var(--line);background:var(--panel);color:var(--muted);border-radius:8px;cursor:pointer;}
+  .cx-nav button{width:32px;height:32px;font-size:18px;line-height:1;}
+  .cx-nav button:hover{border-color:var(--brand);color:var(--brand-deep);}
+  .cx-seg{display:flex;gap:6px;}
+  .cx-seg button{font-size:12px;padding:7px 12px;}
+  .cx-seg button[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600;}
+  .cx-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:5px;}
+  .cx-dow span{text-align:center;font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.08em;color:var(--muted);}
+  .cx-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;}
+  .cx-days.week{grid-template-columns:repeat(7,1fr);}
+  .cx-d{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    min-height:58px;font-family:inherit;font-size:14px;color:var(--ink);
+    background:transparent;border:1.5px solid transparent;border-radius:9px;cursor:pointer;transition:all .12s;}
+  .cx-d:hover{border-color:var(--line);}
+  .cx-d.out{color:#C4B9A8;}
+  .cx-d.today{font-weight:700;color:var(--brand-deep);}
+  .cx-d.today::after{content:"";position:absolute;inset:0;border:1.5px dashed #E8C9A8;border-radius:9px;}
+  .cx-d.sel{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:700;}
+  .cx-d.sel.today::after{border-color:rgba(255,255,255,.55);}
+  .cx-d small{font-family:"Spline Sans Mono",monospace;font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
+  .cx-d.sel small{color:rgba(255,255,255,.8);}
+  .cx-dots{display:flex;gap:3px;height:5px;}
+  .cx-dots i{width:4px;height:4px;border-radius:50%;background:var(--brand);}
+  .cx-d.sel .cx-dots i{background:#fff;}
+  .cx-d .n{font-family:"Spline Sans Mono",monospace;font-size:9px;color:var(--brand);}
+  .cx-d.sel .n{color:#fff;}
+  .cx-season{margin-top:14px;padding-top:13px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);}
+  .cx-season b{color:var(--ink);font-weight:600;}
+
+  .cx-day{margin-top:24px;}
+  .cx-dayhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;}
+  .cx-dayhead h3{font-family:"Archivo",sans-serif;font-weight:700;font-size:22px;margin:0;}
+  .cx-dayhead .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  .cx-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px 18px 15px;margin-bottom:11px;transition:border-color .12s,box-shadow .12s;}
+  .cx-card:hover{border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
+  .cx-card .name{font-family:"Archivo",sans-serif;font-weight:700;font-size:17px;line-height:1.25;}
+  .cx-card .meta{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.02em;color:var(--muted);margin-top:7px;}
+  .cx-card .meta b{color:var(--brand-deep);}
+  .cx-card .desc{font-size:14px;color:var(--muted);line-height:1.5;margin:9px 0 0;}
+  .cx-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px;}
+  .cx-badge{font-family:"Spline Sans Mono",monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:5px;background:var(--band);color:var(--muted);}
+  .cx-badge.ext{background:var(--ink);color:#fff;}
+  .cx-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;}
+  .cx-b{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;
+    border:none;border-radius:8px;padding:8px 12px;cursor:pointer;background:var(--brand);color:#fff;}
+  .cx-b:hover{background:var(--brand-deep);}
+  .cx-b.ghost{background:transparent;color:var(--brand-deep);border:1.5px solid #E8C9A8;}
+  .cx-b.ghost:hover{border-color:var(--brand);color:var(--brand);background:transparent;}
+  .cx-empty{background:var(--band);border-radius:12px;padding:26px 22px;text-align:center;color:var(--muted);font-size:14.5px;}
+  .cx-empty b{color:var(--ink);}
+
+  .cx-paste{margin-top:26px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+  .cx-paste summary{cursor:pointer;padding:15px 18px;font-weight:600;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+  .cx-paste summary::-webkit-details-marker{display:none;}
+  .cx-paste summary span{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
+  .cx-paste .body{padding:0 18px 17px;border-top:1px solid var(--line);}
+  .cx-paste p{font-size:13.5px;color:var(--muted);margin:14px 0 11px;}
+  .cx-paste textarea{width:100%;min-height:82px;font-family:inherit;font-size:14px;padding:11px 13px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);resize:vertical;}
+  .cx-paste textarea:focus{border-color:var(--brand);outline:none;}
+  .cx-paste .row{display:flex;align-items:center;gap:11px;margin-top:11px;}
+  .cx-paste .status{font-family:"Spline Sans Mono",monospace;font-size:11px;color:var(--muted);}
+  .cx-disc{font-size:13px;color:var(--muted);line-height:1.6;margin:30px 0 0;padding:20px 0 0;border-top:1px solid var(--line);}
+
+  .cx-sheet{position:fixed;inset:0;background:rgba(34,27,20,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:60;}
+  .cx-sheet.open{display:flex;}
+  .cx-sheet .box{background:var(--panel);border-radius:16px;padding:26px 24px 22px;max-width:460px;width:100%;}
+  .cx-sheet h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:21px;margin:0 0 9px;}
+  .cx-sheet p{font-size:14px;color:var(--muted);margin:0 0 15px;}
+  .cx-feed{display:flex;gap:8px;margin-bottom:13px;}
+  .cx-feed input{flex:1;min-width:0;font-family:"Spline Sans Mono",monospace;font-size:11.5px;padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--muted);}
+  .cx-sheet .acts{display:flex;gap:8px;flex-wrap:wrap;}
+  .cx-sheet .close{margin-top:15px;background:none;border:none;font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer;text-decoration:underline;padding:0;}
+
+  @media (max-width:640px){
+    .cx-controls{position:static;}
+    .cx-hero{padding:28px 0 0;}
+    .cx-next{width:100%;}
+    .cx-cal{padding:13px 12px 12px;}
+    .cx-d{min-height:46px;font-size:13px;}
+    .cx-calhead h2{font-size:16px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="utility">
+  <div class="wrap utility-inner">
+    <a class="backlink" href="https://linkcowboy.com"><span class="arw">&larr;</span> Back to LinkCowboy</a>
+    <span class="disc">Unofficial &middot; Student-built</span>
+    <a href="/mba.html#suggest">Suggest a link</a>
+  </div>
+</div>
+
+<header class="main">
+  <div class="wrap main-inner">
+    <a class="wordmark" href="/mba.html">
+      <span class="mark" aria-hidden="true">&#9733;</span>
+      <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">Texas McCombs MBA</span></span>
+    </a>
+    <nav class="sections" aria-label="Jump to section">
+      <a href="/mba.html">Links</a>
+      <a href="#calendar">Calendar</a>
+      <a href="#paste">Paste an event</a>
+    </nav>
+    <a class="btn btn-head" href="https://linkcowboy.com/today" target="_blank" rel="noopener">Restaurant Round-Up</a>
+    <a class="btn btn-head" href="https://linkcowboy.com/deals" target="_blank" rel="noopener">Student Deals</a>
+  </div>
+</header>
+
+<div class="aud-wrap"><div class="wrap"><div class="aud-tabs">
+  <a class="aud-tab" href="/">Undergrad</a>
+  <a class="aud-tab active" href="/mba.html">MBA</a>
+</div></div></div>
+
+<div class="sub-wrap"><div class="wrap sub-tabs">
+  <a class="sub-tab" href="/mba.html">Links</a>
+  <a class="sub-tab active" href="/calendar.html" aria-current="page">Calendar</a>
+</div></div>
+
+<section class="cx-hero" id="top">
+  <div class="wrap">
+    <div class="cx-herorow">
+      <div class="cx-herocopy">
+        <span class="eyebrow">McCombs MBA &middot; Fall 2026</span>
+        <h1>Every event,<br><span class="u">one calendar.</span></h1>
+        <p class="lede">Info sessions, coffee chats, case comps, mixers, treks. Filter to the track you're recruiting for, tap a day, and put it on your phone in one go.</p>
+      </div>
+      <aside class="cx-next" id="nextUp" hidden>
+        <span class="lab">Next up</span>
+        <p class="when" id="nextWhen"></p>
+        <p class="what" id="nextWhat"></p>
+        <p class="where" id="nextWhere"></p>
+        <a class="go" href="#calendar" id="nextGo">Jump to it &rarr;</a>
+      </aside>
+    </div>
+    <div class="cx-stats">
+      <div class="cx-stat"><b id="statEvents">&mdash;</b><span>Events ahead</span></div>
+      <div class="cx-stat"><b id="statTracks">&mdash;</b><span>Tracks</span></div>
+      <div class="cx-stat"><b id="statThrough">&mdash;</b><span>Booked through</span></div>
+      <div class="cx-stat"><b id="statWeek">&mdash;</b><span>Next 7 days</span></div>
+    </div>
+  </div>
+</section>
+
+<div class="cx-controls">
+  <div class="wrap">
+    <div class="cx-sel"><select id="track" aria-label="Recruiting track"></select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+    <div class="cx-sel"><select id="who" aria-label="Who is running it">
+      <option value="all">All events</option>
+      <option value="school">McCombs-run only</option>
+      <option value="other">Partner &amp; external</option>
+    </select><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></div>
+    <button class="cx-icon" id="todayBtn" type="button" title="Jump to today" aria-label="Jump to today"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></button>
+    <button class="btn cx-sub" id="subBtn" type="button">Subscribe</button>
+  </div>
+</div>
+
+<main class="cx-main"><div class="wrap">
+  <section class="cx-cal" id="calendar" aria-label="Calendar">
+    <div class="cx-calhead">
+      <div class="cx-nav"><button id="prev" type="button" aria-label="Previous">&#8249;</button><button id="next" type="button" aria-label="Next">&#8250;</button></div>
+      <h2 id="calTitle"></h2>
+      <div class="cx-seg" role="group" aria-label="View"><button id="vMonth" type="button" aria-pressed="true">Month</button><button id="vWeek" type="button" aria-pressed="false">Week</button></div>
+    </div>
+    <div class="cx-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+    <div id="grid" class="cx-days"></div>
+    <div class="cx-season" id="season"></div>
+  </section>
+
+  <section class="cx-day" aria-live="polite">
+    <div class="cx-dayhead"><h3 id="dayTitle"></h3><span class="eyebrow" id="dayCount"></span></div>
+    <div id="dayList"></div>
+  </section>
+
+  <details class="cx-paste" id="paste">
+    <summary>Paste an event from a message <span>WhatsApp, email</span></summary>
+    <div class="body">
+      <p>Drop the text here and it becomes an event you can add to your calendar. Nothing is read from your chats and nothing is stored.</p>
+      <textarea id="pasteText" placeholder="e.g. Nike CEO fireside chat Thu 10/22 at 6pm, RRH 1.200, RSVP by Tuesday"></textarea>
+      <div class="row"><button class="cx-b" id="pasteBtn" type="button">Turn it into an event</button><span class="status" id="pasteStatus"></span></div>
+      <div id="pasteOut" style="margin-top:12px"></div>
+    </div>
+  </details>
+
+  <p class="cx-disc">Unofficial and student-built. Events come from public calendars and pages; confirm details with the host before you show up. This is not a replacement for official McCombs communication &mdash; keep reading your university email.</p>
+</div></main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="fb-name">Longhorn Links</div>
+        <p>A University of Texas student-led link directory. Stop hunting across a dozen sites for the link you need.</p>
+        <a class="btn" href="/mba.html">&#10022; Back to the MBA directory</a>
+      </div>
+      <div><h5>MBA</h5><ul>
+        <li><a href="/mba.html">All MBA links</a></li>
+        <li><a href="/calendar.html">Event calendar</a></li>
+        <li><a href="/mba.html#cat-academics">Academics</a></li>
+        <li><a href="/mba.html#cat-careers">Careers</a></li>
+      </ul></div>
+      <div><h5>Around campus</h5><ul>
+        <li><a href="https://linkcowboy.com/today" target="_blank" rel="noopener">Restaurant Round-Up</a></li>
+        <li><a href="https://linkcowboy.com/deals" target="_blank" rel="noopener">Student Deals</a></li>
+        <li><a href="/mba.html#cat-clubs">Clubs</a></li>
+      </ul></div>
+      <div><h5>More</h5><ul>
+        <li><a href="/">Undergrad version</a></li>
+        <li><a href="https://linkcowboy.com" target="_blank" rel="noopener">Link Cowboy</a></li>
+        <li><a href="https://linkcowboy.com/about" target="_blank" rel="noopener">About</a></li>
+      </ul></div>
+    </div>
+    <p class="disclaimer">
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business.
+      Event times and locations change &mdash; confirm with the host. Prototype v0.1.
+    </p>
+  </div>
+</footer>
+
+<div class="cx-sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="box">
+    <h2 id="sheetTitle">Subscribe once</h2>
+    <p id="sheetDesc">Add this feed to your phone's calendar and new events show up on their own.</p>
+    <div class="cx-feed"><input id="feedUrl" readonly aria-label="Feed URL"><button class="cx-b ghost" id="copyFeed" type="button">Copy</button></div>
+    <div class="acts"><a class="cx-b" id="appleFeed" href="#">Apple / iPhone</a><a class="cx-b ghost" id="googleFeed" href="#" target="_blank" rel="noopener">Google Calendar</a></div>
+    <button class="close" id="closeSheet" type="button">Close</button>
+  </div>
+</div>
+
+<script id="seed" type="application/json">{"school":"ut-mba","school_name":"Texas McCombs MBA","timezone":"America/Chicago","generated_at":"2026-09-17T15:00:00+00:00","tracks":["consulting","finance","tech","energy","cpg-marketing","entrepreneurship","healthcare","recruiting","social"],"crawl_log":[{"source":"mccombs-calendar-page","fetched":true,"events_found":1},{"source":"brumley-tvl","fetched":true,"events_found":3},{"source":"austin-tech-week","fetched":true,"events_found":1},{"source":"mba-airtable-view","fetched":true,"events_found":9}],"stats":{"added":15,"refreshed":0,"dropped":0,"total":15},"events":[{"id":"33a3c2f88084","title":"Sports Fellows Applicants Happy Hour","org":"Sports Fellows","start":"2026-09-17T18:30","end":null,"all_day":false,"location":"Scholz Garten","description":"All Sports Fellows applicants: join the current fellows for a happy hour before applications close.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["recruiting","social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"a4ebe08f5bfe","title":"McCombs TnD with Med School","org":"McCombs FT MBA","start":"2026-09-17T20:00","end":null,"all_day":false,"location":"Mean Eyed Cat","description":"Thursday night TnD with the Dell Med students.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"53848dbcce04","title":"Marketing Camp 2026","org":"Marketing Fellows","start":"2026-09-18T09:00","end":"2026-09-18T17:00","all_day":false,"location":"Rowling Hall","description":"Day-long look at what a career in marketing could look like. Keynote from Carl Loredo (President, Pizza Hut); mini case competition presented by KFC. Food provided.","url":"https://marketing-camp-2026.eventfarm.com","tracks":["consulting","cpg-marketing","recruiting"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"00e4d5c32537","title":"SEMA 2026 Nike Trek","org":"SEMA (Sports & Entertainment Management Association)","start":"2026-09-18T12:30","end":"2026-09-18T17:00","all_day":false,"location":"Nike WHQ, One Bowerman Drive, Beaverton, OR","description":"On-campus agenda (Pacific time): 11:00 to 12:30 storytelling campus tour covering Nike heritage and campus orientation, then sessions through the afternoon.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["cpg-marketing","recruiting"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"fca6e7776dec","title":"MBAA Gala","org":"BGBA (Black Graduate Business Association)","start":"2026-09-19T17:30","end":null,"all_day":false,"location":"AT&T Conference Center","description":"The MBAA Annual Gala is the flagship celebration of Black excellence at McCombs, bringing together alumni, students, and faculty since 2023.","url":"https://yialzalv.gensparkspace.com","tracks":["social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"18b5c1fa1b71","title":"PGA Frisco HQ Visit","org":"Golf Club","start":"2026-10-09T12:30","end":"2026-10-09T14:00","all_day":false,"location":"PGA of America HQ, Frisco, TX","description":"Leadership panel and networking. $25 for lunch. Sign up in the Golf Club spreadsheet (UT login).","url":"https://utexas.sharepoint.com/:x:/s/GolfClub2027/IQAvwjYBhhk3S7ZtzsDVwMckAQy-QYdJYEH_miE_CJzCWZDl?e=ZWLaRC","tracks":["recruiting","social"],"affiliation":"school","source_url":"","source_name":"WhatsApp (shared by a student)","confidence":"high","verified_at":"2026-09-17"},{"id":"8f281c2483aa","title":"The War Below: Lithium, Copper, and the Global Battle to Power Our Lives","org":"Global Sustainability Leadership Institute","start":"2026-10-13T17:30","end":"2026-10-13T19:30","all_day":false,"location":"RRH 1.200 (Crum Auditorium)","description":"Dinner and conversation on critical minerals, global supply chains, and the energy transition with author Ernest Scheyder. Conversation 5:30-6:30, dinner 6:30-7:30.","url":"https://calendar.mccombs.utexas.edu/event/11576","tracks":["energy","social"],"affiliation":"school","source_url":"https://calendar.mccombs.utexas.edu/","source_name":"McCombs Events Calendar","confidence":"high","verified_at":"2026-09-17"},{"id":"8b7cbdbfc622","title":"GBC + MPO Texas vs. Florida Tailgate","org":"GBC + MPO","start":"2026-10-17T09:00","end":"2026-10-17T11:00","all_day":false,"location":"Rowling Hall Courtyard","description":"Tailgate starts at 9am and runs through the 11am kickoff. Food and drinks provided. Open to all McCombs students and guests.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"53cbde6243a8","title":"MAC Happy Hour","org":"MAC","start":"2026-10-19T17:00","end":null,"all_day":false,"location":"TBD (off-campus bar)","description":"Happy hour at a bar off campus to kick off MAC.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"},{"id":"bc9338634c37","title":"Austin Tech Week 2026","org":"Austin Tech Week (formerly Austin Startup Week)","start":"2026-10-26T00:00","end":"2026-10-30T00:00","all_day":true,"location":"Venues across Austin","description":"Five days of sessions, founder meetups, and the Startup Crawl. External event; strong MBA turnout every year.","url":"https://www.austintech.com/","tracks":["tech","entrepreneurship"],"affiliation":"partner","source_url":"https://www.austintech.com/","source_name":"Austin Tech Week","confidence":"high","verified_at":"2026-09-17"},{"id":"6203c93bcd8d","title":"TVL Investment Competition Info Session (Fall 2026)","org":"Brumley Institute for Graduate Entrepreneurship","start":"2026-10-28T12:00","end":"2026-10-28T12:30","all_day":false,"location":"Virtual","description":"Learn how the Texas Venture Labs Investment Competition works and whether you're eligible to compete on December 11.","url":"https://www.eventbrite.com/e/tvl-investment-competition-information-session-fall-2026-tickets-1991989432014","tracks":["finance","entrepreneurship","recruiting"],"affiliation":"school","source_url":"https://www.eventbrite.com/e/tvl-investment-competition-information-session-fall-2026-tickets-1991989432014","source_name":"Brumley Institute (Eventbrite)","confidence":"high","verified_at":"2026-09-17"},{"id":"143e42fc4c57","title":"TVLIC application deadline","org":"Brumley Institute for Graduate Entrepreneurship","start":"2026-11-08T00:00","end":null,"all_day":true,"location":"","description":"Last day to apply for the Fall 2026 Texas Venture Labs Investment Competition.","url":"https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/","tracks":["finance"],"affiliation":"school","source_url":"https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/","source_name":"Brumley Institute / Texas Venture Labs","confidence":"high","verified_at":"2026-09-17"},{"id":"3379a732b4a8","title":"JMBA Shabbat Dinner","org":"JMBA","start":"2026-11-13T00:00","end":null,"all_day":true,"location":"TBA","description":"Open to all. The McCombs program is invited to JMBA's bi-annual Shabbat dinner. Save the date; time and location to come.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"medium","verified_at":"2026-09-17"},{"id":"524d85313ec7","title":"Texas Venture Labs Investment Competition (Fall 2026)","org":"Brumley Institute for Graduate Entrepreneurship","start":"2026-12-11T09:00","end":"2026-12-11T18:00","all_day":false,"location":"Rowling Hall; finals in Crum Auditorium","description":"UT System graduate students pitch to investors for a cash prize pool. Semifinals in the morning, finals and awards in the afternoon; open to the public.","url":"https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/","tracks":["finance","entrepreneurship"],"affiliation":"school","source_url":"https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/","source_name":"Brumley Institute / Texas Venture Labs","confidence":"high","verified_at":"2026-09-17"},{"id":"f03288dd7ee5","title":"GBAT Heavenly Tahoe Ski Trip","org":"GBAT","start":"2027-01-27T00:00","end":"2027-01-31T00:00","all_day":true,"location":"Heavenly Resort, Lake Tahoe, CA","description":"Wednesday/Thursday Jan 27-28 through Sunday Jan 31.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","tracks":["social"],"affiliation":"school","source_url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","source_name":"McCombs FT MBA Events (Airtable)","confidence":"high","verified_at":"2026-09-17"}],"note":"Seed 2026-09-17: 15 real events (5 from public pages, 9 from the McCombs FT MBA Events Airtable gallery, 1 pasted from WhatsApp). No samples."}</script>
+<script>
+(function(){
+  const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return ""}};
+  const LABEL={consulting:"Consulting",finance:"Finance",tech:"Tech",energy:"Energy",'cpg-marketing':"CPG & Marketing",entrepreneurship:"Entrepreneurship",healthcare:"Healthcare",recruiting:"Recruiting",social:"Social",general:"Other"};
+  const TZ="America/Chicago", MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const FEED_BASE=location.origin+location.pathname.replace(/[^/]*$/,"")+"feeds/";
+  const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const today=new Date(); today.setHours(0,0,0,0); const todayISO=iso(today);
+  let data=null, view="month", cursor=new Date(today), selected=todayISO, track="all", who="all";
+
+  async function load(){
+    try{const r=await fetch("events.json",{cache:"no-store"}); if(!r.ok) throw 0; data=await r.json();}
+    catch{ data=JSON.parse($("#seed").textContent); }
+    data.events=data.events.filter(e=>e.start.slice(0,10)>=todayISO);
+    const present=new Set(data.events.flatMap(e=>e.tracks));
+    $("#track").innerHTML=`<option value="all">All tracks</option>`+data.tracks.filter(t=>present.has(t)).map(t=>`<option value="${t}">${LABEL[t]||t}</option>`).join("")+(present.has("general")?`<option value="general">Other</option>`:"");
+    if(!eventsOn(todayISO).length){ const n=visible().find(e=>e.start.slice(0,10)>todayISO); if(n){ selected=n.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); } }
+    render();
+  }
+
+  const visible=()=>data.events.filter(e=>(track==="all"||e.tracks.includes(track))&&(who==="all"||(who==="school"?e.affiliation==="school":e.affiliation!=="school")));
+  const eventsOn=d=>visible().filter(e=>e.start.slice(0,10)===d);
+  const fmtT=s=>new Date(s).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",timeZone:TZ}).replace(":00","");
+
+  /* ---------- hero: next-up card + stats ---------- */
+  function renderHero(){
+    const list=visible(), next=list[0];
+    const card=$("#nextUp");
+    if(next){
+      const d=new Date(next.start.slice(0,10)+"T12:00:00");
+      const day=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+      $("#nextWhen").textContent=next.all_day?day+" · all day":day+" · "+fmtT(next.start);
+      $("#nextWhat").textContent=next.title;
+      $("#nextWhere").textContent=[next.org,next.location].filter(Boolean).join(" · ");
+      $("#nextGo").onclick=()=>{selected=next.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); render();};
+      card.hidden=false;
+    } else card.hidden=true;
+
+    const wk=new Date(today); wk.setDate(wk.getDate()+7); const wkISO=iso(wk);
+    $("#statEvents").textContent=list.length;
+    $("#statTracks").textContent=new Set(list.flatMap(e=>e.tracks).filter(t=>t!=="general")).size;
+    const last=list.length?list[list.length-1].start:null;
+    $("#statThrough").textContent=last?new Date(last.slice(0,10)+"T12:00:00").toLocaleDateString("en-US",{month:"short"}):"\u2014";
+    $("#statWeek").textContent=list.filter(e=>e.start.slice(0,10)<wkISO).length;
+  }
+
+  /* ---------- calendar ---------- */
+  function dayCell(d, extra=""){
+    const k=iso(d), n=eventsOn(k).length, dots=Math.min(n,3);
+    return `<button type="button" class="cx-d${k===todayISO?' today':''}${k===selected?' sel':''}${extra}" data-d="${k}" aria-label="${d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}, ${n} event${n===1?'':'s'}">
+      ${view==="week"?`<small>${d.toLocaleDateString('en-US',{weekday:'short'})}</small>`:""}<span>${d.getDate()}</span>
+      ${n>3?`<span class="n">${n}</span>`:`<span class="cx-dots">${"<i></i>".repeat(dots)}</span>`}</button>`;
+  }
+  function renderCal(){
+    const g=$("#grid"); g.className=view==="month"?"cx-days":"cx-days week"; let html="";
+    if(view==="month"){
+      const first=new Date(cursor.getFullYear(),cursor.getMonth(),1), start=new Date(first); start.setDate(1-first.getDay());
+      for(let i=0;i<42;i++){ const d=new Date(start); d.setDate(start.getDate()+i); html+=dayCell(d, d.getMonth()!==cursor.getMonth()?" out":""); }
+      $("#calTitle").textContent=`${MONTHS[cursor.getMonth()]} ${cursor.getFullYear()}`;
+    } else {
+      const start=new Date(cursor); start.setDate(cursor.getDate()-cursor.getDay());
+      for(let i=0;i<7;i++){ const d=new Date(start); d.setDate(start.getDate()+i); html+=dayCell(d); }
+      const end=new Date(start); end.setDate(start.getDate()+6);
+      $("#calTitle").textContent=`${start.toLocaleDateString('en-US',{month:'short',day:'numeric'})} to ${end.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+    }
+    g.innerHTML=html;
+    g.querySelectorAll(".cx-d").forEach(b=>b.onclick=()=>{selected=b.dataset.d; cursor=new Date(selected+"T12:00:00"); render();});
+    // key by year-month so Jan 2027 sorts after Dec 2026 rather than jumping to the front
+    const per={}; visible().forEach(e=>{const k=e.start.slice(0,7); per[k]=(per[k]||0)+1;});
+    const keys=Object.keys(per).sort();
+    $("#season").innerHTML=keys.length?`This semester: `+keys.map(k=>`<b>${MONTHS[+k.slice(5,7)-1].slice(0,3)}</b> ${per[k]}`).join(" · ")+`. When it thins out, recruiting for this track is winding down.`:"No events for this filter yet.";
+  }
+
+  /* ---------- day panel ---------- */
+  const stamp=(s,ad)=>ad?s.slice(0,10).replace(/-/g,""):s.replace(/[-:]/g,"")+"00";
+  function icsFor(e){ const end=e.end||e.start, p=e.all_day?";VALUE=DATE":`;TZID=${TZ}`, desc=((e.description||"")+(e.url?"\\n\\n"+e.url:"")).replace(/,/g,"\\,");
+    return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Longhorn Links//Events//EN","BEGIN:VEVENT",`UID:${e.id}@longhornlinks.com`,`DTSTART${p}:${stamp(e.start,e.all_day)}`,`DTEND${p}:${stamp(end,e.all_day)}`,`SUMMARY:${e.title}`,`LOCATION:${e.location||""}`,`DESCRIPTION:${desc}`,`URL:${e.url||""}`,"END:VEVENT","END:VCALENDAR"].join("\r\n"); }
+  const gcal=e=>{const end=e.end||e.start; return "https://calendar.google.com/calendar/render?"+new URLSearchParams({action:"TEMPLATE",text:e.title,details:(e.description||"")+(e.url?"\n"+e.url:""),location:e.location||"",ctz:TZ,dates:`${stamp(e.start,e.all_day)}/${stamp(end,e.all_day)}`});};
+  window.dl=id=>{const e=data.events.find(x=>x.id===id)||(window._pasted||[]).find(x=>x.id===id); if(!e) return;
+    const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([icsFor(e)],{type:"text/calendar"})); a.download=e.title.replace(/[^a-z0-9]+/gi,"-").toLowerCase()+".ics"; a.click();};
+  function card(e){
+    const time=e.all_day?"All day":fmtT(e.start)+(e.end?` to ${fmtT(e.end)}`:"");
+    const tr=e.tracks.filter(t=>t!=="general").map(t=>`<span class="cx-badge">${esc(LABEL[t]||t)}</span>`).join("");
+    const aff=e.affiliation!=="school"?`<span class="cx-badge ext">${esc(e.affiliation)}</span>`:"";
+    return `<article class="cx-card">
+      <div class="name">${esc(e.title)}</div>
+      <div class="meta"><b>${esc(time)}</b>${e.location?` · ${esc(e.location)}`:""}</div>
+      <div class="meta">${esc(e.org)}${e.source_url?` · via ${esc(host(e.source_url))}`:""}</div>
+      ${e.description?`<p class="desc">${esc(e.description)}</p>`:""}
+      <div class="cx-badges">${tr}${aff}</div>
+      <div class="cx-acts"><button class="cx-b" onclick="dl('${e.id}')" type="button">Add to phone</button><a class="cx-b ghost" href="${gcal(e)}" target="_blank" rel="noopener">Google Cal</a>${e.url?`<a class="cx-b ghost" href="${esc(e.url)}" target="_blank" rel="noopener">Details</a>`:""}</div>
+    </article>`;
+  }
+  function renderDay(){
+    const d=new Date(selected+"T12:00:00"), list=eventsOn(selected);
+    $("#dayTitle").textContent=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
+    $("#dayCount").textContent=list.length?`${list.length} event${list.length===1?"":"s"}`:"";
+    if(list.length){ $("#dayList").innerHTML=list.map(card).join(""); return; }
+    const next=visible().find(e=>e.start.slice(0,10)>selected);
+    $("#dayList").innerHTML=`<div class="cx-empty">Nothing on this day for that filter.${next?` Next up: <b>${esc(next.title)}</b> on ${new Date(next.start).toLocaleDateString('en-US',{month:'short',day:'numeric'})}.<br><br><button class="cx-b" type="button" id="jump">Jump there</button>`:" Nothing later this semester either, which usually means recruiting for this track has wound down."}</div>`;
+    const j=$("#jump"); if(j) j.onclick=()=>{selected=next.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); render();};
+  }
+  function render(){ renderHero(); renderCal(); renderDay(); }
+
+  /* ---------- wiring ---------- */
+  $("#track").onchange=e=>{track=e.target.value; render();};
+  $("#who").onchange=e=>{who=e.target.value; render();};
+  $("#prev").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()-1); else cursor.setDate(cursor.getDate()-7); renderCal(); };
+  $("#next").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()+1); else cursor.setDate(cursor.getDate()+7); renderCal(); };
+  $("#todayBtn").onclick=()=>{selected=todayISO; cursor=new Date(today); render();};
+  $("#vMonth").onclick=()=>{view="month"; $("#vMonth").setAttribute("aria-pressed","true"); $("#vWeek").setAttribute("aria-pressed","false"); renderCal();};
+  $("#vWeek").onclick=()=>{view="week"; $("#vWeek").setAttribute("aria-pressed","true"); $("#vMonth").setAttribute("aria-pressed","false"); renderCal();};
+
+  function openSheet(){ const t=track, url=FEED_BASE+t+".ics";
+    $("#feedUrl").value=url; $("#appleFeed").href=url.replace(/^https?:/,"webcal:"); $("#googleFeed").href="https://calendar.google.com/calendar/r/settings/addbyurl?cid="+encodeURIComponent(url);
+    $("#sheetDesc").textContent=`${t==="all"?"All tracks":LABEL[t]||t}. Add it once and new events show up on their own. In Google: Other calendars, +, From URL.`;
+    $("#sheet").classList.add("open"); }
+  $("#subBtn").onclick=openSheet; $("#closeSheet").onclick=()=>$("#sheet").classList.remove("open");
+  $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").classList.remove("open");});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#sheet").classList.remove("open");});
+  $("#copyFeed").onclick=()=>{navigator.clipboard?.writeText($("#feedUrl").value);$("#copyFeed").textContent="Copied";setTimeout(()=>$("#copyFeed").textContent="Copy",1500);};
+
+  $("#pasteBtn").onclick=async()=>{ const text=$("#pasteText").value.trim(); if(!text) return;
+    $("#pasteStatus").textContent="reading"; $("#pasteOut").innerHTML="";
+    try{ const r=await fetch("/.netlify/functions/parse-event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})}); const o=await r.json(); if(o.error) throw new Error(o.error);
+      window._pasted=(o.events||[]).map((e,i)=>({...e,id:"paste-"+i,tracks:["general"],affiliation:"external",org:e.org||"From your message",location:e.location||"",description:e.description||"",url:e.url||"",source_url:""}));
+      $("#pasteStatus").textContent=window._pasted.length?`${window._pasted.length} found`:"no dated event in that text"; $("#pasteOut").innerHTML=window._pasted.map(card).join("");
+    }catch{ $("#pasteStatus").textContent="needs the parse-event function deployed"; } };
+
+  load();
+})();
+</script>
+</body>
+</html>

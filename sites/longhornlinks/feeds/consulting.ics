@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Longhorn Links//MBA Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Longhorn Links MBA — Consulting
+X-WR-TIMEZONE:America/Chicago
+BEGIN:VEVENT
+UID:53848dbcce04@longhornlinks.com
+DTSTART;TZID=America/Chicago:20260918T090000
+DTEND;TZID=America/Chicago:20260918T170000
+SUMMARY:Marketing Camp 2026
+LOCATION:Rowling Hall
+DESCRIPTION:Day-long look at what a career in marketing could look like. Keynote from Carl Loredo (President\, Pizza Hut); mini case competition presented by KFC. Food provided.\n\nhttps://marketing-camp-2026.eventfarm.com
+URL:https://marketing-camp-2026.eventfarm.com
+END:VEVENT
+END:VCALENDAR

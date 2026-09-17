@@ -1,0 +1,35 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Longhorn Links//MBA Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Longhorn Links MBA — Finance
+X-WR-TIMEZONE:America/Chicago
+BEGIN:VEVENT
+UID:6203c93bcd8d@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261028T120000
+DTEND;TZID=America/Chicago:20261028T123000
+SUMMARY:TVL Investment Competition Info Session (Fall 2026)
+LOCATION:Virtual
+DESCRIPTION:Learn how the Texas Venture Labs Investment Competition works and whether you're eligible to compete on December 11.\n\nhttps://www.eventbrite.com/e/tvl-investment-competition-information-session-fall-2026-tickets-1991989432014
+URL:https://www.eventbrite.com/e/tvl-investment-competition-information-session-fall-2026-tickets-1991989432014
+END:VEVENT
+BEGIN:VEVENT
+UID:143e42fc4c57@longhornlinks.com
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261108
+SUMMARY:TVLIC application deadline
+LOCATION:
+DESCRIPTION:Last day to apply for the Fall 2026 Texas Venture Labs Investment Competition.\n\nhttps://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+URL:https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+END:VEVENT
+BEGIN:VEVENT
+UID:524d85313ec7@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261211T090000
+DTEND;TZID=America/Chicago:20261211T180000
+SUMMARY:Texas Venture Labs Investment Competition (Fall 2026)
+LOCATION:Rowling Hall; finals in Crum Auditorium
+DESCRIPTION:UT System graduate students pitch to investors for a cash prize pool. Semifinals in the morning\, finals and awards in the afternoon; open to the public.\n\nhttps://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+URL:https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+END:VEVENT
+END:VCALENDAR

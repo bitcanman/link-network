@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Longhorn Links//MBA Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Longhorn Links MBA — Tech
+X-WR-TIMEZONE:America/Chicago
+BEGIN:VEVENT
+UID:bc9338634c37@longhornlinks.com
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261030
+SUMMARY:Austin Tech Week 2026
+LOCATION:Venues across Austin
+DESCRIPTION:Five days of sessions\, founder meetups\, and the Startup Crawl. External event; strong MBA turnout every year.\n\nhttps://www.austintech.com/
+URL:https://www.austintech.com/
+END:VEVENT
+END:VCALENDAR

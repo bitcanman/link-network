@@ -1,0 +1,143 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Longhorn Links//MBA Events//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:Longhorn Links MBA — All tracks
+X-WR-TIMEZONE:America/Chicago
+BEGIN:VEVENT
+UID:33a3c2f88084@longhornlinks.com
+DTSTART;TZID=America/Chicago:20260917T183000
+DTEND;TZID=America/Chicago:20260917T183000
+SUMMARY:Sports Fellows Applicants Happy Hour
+LOCATION:Scholz Garten
+DESCRIPTION:All Sports Fellows applicants: join the current fellows for a happy hour before applications close.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+BEGIN:VEVENT
+UID:a4ebe08f5bfe@longhornlinks.com
+DTSTART;TZID=America/Chicago:20260917T200000
+DTEND;TZID=America/Chicago:20260917T200000
+SUMMARY:McCombs TnD with Med School
+LOCATION:Mean Eyed Cat
+DESCRIPTION:Thursday night TnD with the Dell Med students.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+BEGIN:VEVENT
+UID:53848dbcce04@longhornlinks.com
+DTSTART;TZID=America/Chicago:20260918T090000
+DTEND;TZID=America/Chicago:20260918T170000
+SUMMARY:Marketing Camp 2026
+LOCATION:Rowling Hall
+DESCRIPTION:Day-long look at what a career in marketing could look like. Keynote from Carl Loredo (President\, Pizza Hut); mini case competition presented by KFC. Food provided.\n\nhttps://marketing-camp-2026.eventfarm.com
+URL:https://marketing-camp-2026.eventfarm.com
+END:VEVENT
+BEGIN:VEVENT
+UID:00e4d5c32537@longhornlinks.com
+DTSTART;TZID=America/Chicago:20260918T123000
+DTEND;TZID=America/Chicago:20260918T170000
+SUMMARY:SEMA 2026 Nike Trek
+LOCATION:Nike WHQ\, One Bowerman Drive\, Beaverton\, OR
+DESCRIPTION:On-campus agenda (Pacific time): 11:00 to 12:30 storytelling campus tour covering Nike heritage and campus orientation\, then sessions through the afternoon.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+BEGIN:VEVENT
+UID:fca6e7776dec@longhornlinks.com
+DTSTART;TZID=America/Chicago:20260919T173000
+DTEND;TZID=America/Chicago:20260919T173000
+SUMMARY:MBAA Gala
+LOCATION:AT&T Conference Center
+DESCRIPTION:The MBAA Annual Gala is the flagship celebration of Black excellence at McCombs\, bringing together alumni\, students\, and faculty since 2023.\n\nhttps://yialzalv.gensparkspace.com
+URL:https://yialzalv.gensparkspace.com
+END:VEVENT
+BEGIN:VEVENT
+UID:18b5c1fa1b71@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261009T123000
+DTEND;TZID=America/Chicago:20261009T140000
+SUMMARY:PGA Frisco HQ Visit
+LOCATION:PGA of America HQ\, Frisco\, TX
+DESCRIPTION:Leadership panel and networking. $25 for lunch. Sign up in the Golf Club spreadsheet (UT login).\n\nhttps://utexas.sharepoint.com/:x:/s/GolfClub2027/IQAvwjYBhhk3S7ZtzsDVwMckAQy-QYdJYEH_miE_CJzCWZDl?e=ZWLaRC
+URL:https://utexas.sharepoint.com/:x:/s/GolfClub2027/IQAvwjYBhhk3S7ZtzsDVwMckAQy-QYdJYEH_miE_CJzCWZDl?e=ZWLaRC
+END:VEVENT
+BEGIN:VEVENT
+UID:8f281c2483aa@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261013T173000
+DTEND;TZID=America/Chicago:20261013T193000
+SUMMARY:The War Below: Lithium\, Copper\, and the Global Battle to Power Our Lives
+LOCATION:RRH 1.200 (Crum Auditorium)
+DESCRIPTION:Dinner and conversation on critical minerals\, global supply chains\, and the energy transition with author Ernest Scheyder. Conversation 5:30-6:30\, dinner 6:30-7:30.\n\nhttps://calendar.mccombs.utexas.edu/event/11576
+URL:https://calendar.mccombs.utexas.edu/event/11576
+END:VEVENT
+BEGIN:VEVENT
+UID:8b7cbdbfc622@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261017T090000
+DTEND;TZID=America/Chicago:20261017T110000
+SUMMARY:GBC + MPO Texas vs. Florida Tailgate
+LOCATION:Rowling Hall Courtyard
+DESCRIPTION:Tailgate starts at 9am and runs through the 11am kickoff. Food and drinks provided. Open to all McCombs students and guests.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+BEGIN:VEVENT
+UID:53cbde6243a8@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261019T170000
+DTEND;TZID=America/Chicago:20261019T170000
+SUMMARY:MAC Happy Hour
+LOCATION:TBD (off-campus bar)
+DESCRIPTION:Happy hour at a bar off campus to kick off MAC.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+BEGIN:VEVENT
+UID:bc9338634c37@longhornlinks.com
+DTSTART;VALUE=DATE:20261026
+DTEND;VALUE=DATE:20261030
+SUMMARY:Austin Tech Week 2026
+LOCATION:Venues across Austin
+DESCRIPTION:Five days of sessions\, founder meetups\, and the Startup Crawl. External event; strong MBA turnout every year.\n\nhttps://www.austintech.com/
+URL:https://www.austintech.com/
+END:VEVENT
+BEGIN:VEVENT
+UID:6203c93bcd8d@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261028T120000
+DTEND;TZID=America/Chicago:20261028T123000
+SUMMARY:TVL Investment Competition Info Session (Fall 2026)
+LOCATION:Virtual
+DESCRIPTION:Learn how the Texas Venture Labs Investment Competition works and whether you're eligible to compete on December 11.\n\nhttps://www.eventbrite.com/e/tvl-investment-competition-information-session-fall-2026-tickets-1991989432014
+URL:https://www.eventbrite.com/e/tvl-investment-competition-information-session-fall-2026-tickets-1991989432014
+END:VEVENT
+BEGIN:VEVENT
+UID:143e42fc4c57@longhornlinks.com
+DTSTART;VALUE=DATE:20261108
+DTEND;VALUE=DATE:20261108
+SUMMARY:TVLIC application deadline
+LOCATION:
+DESCRIPTION:Last day to apply for the Fall 2026 Texas Venture Labs Investment Competition.\n\nhttps://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+URL:https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+END:VEVENT
+BEGIN:VEVENT
+UID:3379a732b4a8@longhornlinks.com
+DTSTART;VALUE=DATE:20261113
+DTEND;VALUE=DATE:20261113
+SUMMARY:JMBA Shabbat Dinner
+LOCATION:TBA
+DESCRIPTION:Open to all. The McCombs program is invited to JMBA's bi-annual Shabbat dinner. Save the date; time and location to come.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+BEGIN:VEVENT
+UID:524d85313ec7@longhornlinks.com
+DTSTART;TZID=America/Chicago:20261211T090000
+DTEND;TZID=America/Chicago:20261211T180000
+SUMMARY:Texas Venture Labs Investment Competition (Fall 2026)
+LOCATION:Rowling Hall; finals in Crum Auditorium
+DESCRIPTION:UT System graduate students pitch to investors for a cash prize pool. Semifinals in the morning\, finals and awards in the afternoon; open to the public.\n\nhttps://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+URL:https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/
+END:VEVENT
+BEGIN:VEVENT
+UID:f03288dd7ee5@longhornlinks.com
+DTSTART;VALUE=DATE:20270127
+DTEND;VALUE=DATE:20270131
+SUMMARY:GBAT Heavenly Tahoe Ski Trip
+LOCATION:Heavenly Resort\, Lake Tahoe\, CA
+DESCRIPTION:Wednesday/Thursday Jan 27-28 through Sunday Jan 31.\n\nhttps://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+URL:https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3
+END:VEVENT
+END:VCALENDAR
