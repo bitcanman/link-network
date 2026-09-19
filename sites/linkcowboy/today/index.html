@@ -99,7 +99,11 @@ footer p{font-size:12.5px;line-height:1.7}
 footer b{color:#fff}
 footer a{color:var(--gold)}
 .copyright{font-family:var(--px);font-size:7px;line-height:2;color:#8c8175;margin-top:8px}
-@media (max-width:520px){.rider canvas{width:calc(42px * 4)}}
+@media (max-width:520px){.rider canvas{width:calc(42px * 4)}
+  /* LONGHORN LINKS is a wider label than the old UT LINKS; shrink the chips so the row still fits */
+  .topbar{padding:12px 12px 0;gap:8px}
+  .pxchip{font-size:7px;padding:7px 8px}
+}
 </style>
 </head>
 <body>
@@ -116,7 +120,7 @@ footer a{color:var(--gold)}
   </div>
   <div class="topbar">
     <a class="pxchip" href="https://linkcowboy.com">&larr; LINK COWBOY</a>
-    <a class="pxchip orange" href="https://longhornlinks.com">&#9733; UT LINKS</a>
+    <a class="pxchip orange" href="https://longhornlinks.com">&#9733; LONGHORN LINKS</a>
   </div>
   <div class="stage">
     <div class="rider" id="rig"><canvas id="cowboy" data-sprite="cowboy0" role="img" aria-label="Pixel cowboy on horseback"></canvas></div>
