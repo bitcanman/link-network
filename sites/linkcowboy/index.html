@@ -107,21 +107,9 @@ canvas{image-rendering:pixelated; display:block}
 .cactus canvas{width:calc(9px * 4)}
 .deco{position:absolute}
 
-/* ---------- desktop nav (chips lined up on the right) ---------- */
-.navrow{position:absolute; top:20px; right:20px; z-index:5; display:flex; gap:12px}
-.navrow .chip{
-  font-family:'Press Start 2P',monospace; font-size:11px; line-height:1; white-space:nowrap;
-  color:var(--ink); text-decoration:none;
-  background:var(--cream); border:4px solid var(--ink);
-  box-shadow:5px 5px 0 rgba(43,32,22,.8); padding:12px 15px;
-  transition:transform .12s steps(2), box-shadow .12s steps(2);
-}
-.navrow .chip:hover, .navrow .chip:focus-visible{transform:translate(-2px,-2px); box-shadow:7px 7px 0 rgba(43,32,22,.8); outline:none}
-.navrow .chip:active{transform:translate(2px,2px); box-shadow:3px 3px 0 rgba(43,32,22,.8)}
-.navrow .chip.gold{background:var(--gold)}
-
-/* ---------- mobile hamburger menu ---------- */
-.menu{display:none; position:absolute; top:14px; right:14px; z-index:5}
+/* ---------- site nav: hamburger at every width ---------- */
+/* the only site nav, at every width */
+.menu{display:block; position:absolute; top:20px; right:20px; z-index:5}
 .menu-btn{
   font-family:'Press Start 2P',monospace; font-size:15px; line-height:1;
   color:var(--ink); cursor:pointer;
@@ -265,8 +253,7 @@ footer .px-star{color:var(--gold)}
 
 @media (max-width:720px){
   :root{--field-h:30vh}
-  .navrow{display:none}
-  .menu{display:block}
+  .menu{top:14px; right:14px}
   .rider{--ride-max:58vw}
   .rider canvas{width:calc(42px * 3)}
   main{padding-bottom:calc(var(--field-h) * .55)}
@@ -298,11 +285,6 @@ footer .px-star{color:var(--gold)}
   <div class="tweed"><canvas data-sprite="tumbleweed"></canvas></div>
 </div>
 
-<nav class="navrow" aria-label="Site">
-  <a class="chip" href="/about">ABOUT</a>
-  <a class="chip gold" href="/today">RESTAURANT ROUND-UP</a>
-  <a class="chip gold" href="/deals">&#9733; STUDENT DEALS</a>
-</nav>
 <div class="menu">
   <button class="menu-btn" id="menuBtn" aria-label="Menu" aria-expanded="false" aria-controls="menuPanel">&#9776;</button>
   <nav class="menu-panel" id="menuPanel" aria-label="Site" hidden>
