@@ -178,6 +178,42 @@
   .votechip{margin-top:22px;font-size:13.5px;}
   @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;} }
 
+  /* ---------- Customize my layout (no login, localStorage) ---------- */
+  .lay-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 20px;}
+  .lay-btn{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
+    min-height:38px;padding:9px 13px;border-radius:8px;border:1.5px solid var(--line);
+    background:var(--panel);color:var(--muted);cursor:pointer;transition:all .12s ease;}
+  .lay-btn:hover{border-color:var(--brand);color:var(--brand-deep);}
+  .lay-btn.on{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .lay-note{font-size:13px;color:var(--muted);flex:1 1 220px;min-width:0;}
+
+  .sh-text{min-width:0;}
+  .sec-tools{display:none;gap:6px;margin-left:auto;flex:0 0 auto;}
+  body.editing #sections .section-head{display:flex;align-items:flex-start;gap:12px;}
+  body.editing #sections .sec-tools{display:flex;}
+  .sec-tools button{width:44px;height:44px;display:grid;place-items:center;padding:0;
+    border:1.5px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);
+    cursor:pointer;transition:all .12s ease;}
+  .sec-tools button:hover:not([disabled]){border-color:var(--brand);color:var(--brand-deep);}
+  .sec-tools button[disabled]{opacity:.3;cursor:default;}
+  .sec-tools button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .sec-tools svg{width:18px;height:18px;}
+  .section.user-hidden{opacity:.5;}
+
+  .cardwrap{position:relative;display:flex;}
+  .cardwrap > .card{flex:1;min-width:0;}
+  .pin-btn{position:absolute;top:-10px;right:-10px;width:44px;height:44px;display:grid;place-items:center;
+    padding:0;border:1.5px solid var(--line);border-radius:50%;background:var(--panel);color:var(--muted);
+    cursor:pointer;z-index:3;box-shadow:0 3px 10px -4px rgba(12,40,38,.5);transition:all .12s ease;}
+  .pin-btn:hover{border-color:var(--brand);color:var(--brand-deep);}
+  .pin-btn[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .pin-btn svg{width:17px;height:17px;}
+  @media (max-width:640px){
+    body.editing #sections .section-head{flex-wrap:wrap;}
+    .sec-tools{margin-left:0;}
+    .lay-note{flex-basis:100%;}
+  }
+
   /* ---------- Band (alternating section) ---------- */
   .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
 
@@ -342,6 +378,7 @@
     <div class="grid" id="grid-quicklinks"></div>
   </div>
 
+  <div class="lay-bar" id="layBar"></div>
   <div id="sections"></div>
   <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
 </main>
@@ -407,7 +444,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v1.4.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v1.5.
     </p>
   </div>
 </footer>
@@ -569,37 +606,270 @@
       + '<div class="host">'+host(l.url)+'</div></a>';
   }
 
-  // Build category sections
   const sectionsEl = document.getElementById("sections");
-  CATS.forEach((c,i)=>{
-    const items = LINKS.filter(l=>l.cat===c.id);
-    if(!items.length) return;
-    const sec = document.createElement("div");
-    sec.className="section"; sec.dataset.cat=c.id; sec.id="cat-"+c.id;
-    sec.innerHTML = '<div class="section-head"><span class="eyebrow">'+String(i+1).padStart(2,"0")+' / '+CATS.length+'</span>'
-      + '<h2>'+c.label+'</h2></div>'
-      + '<div class="grid">'+items.map(cardHTML).join("")+'</div>';
-    sectionsEl.appendChild(sec);
-  });
   document.getElementById("grid-quicklinks").innerHTML = QUICKLINKS.map(cardHTML).join("");
 
-  // Chips
+  // Chips follow the user's section order and skip hidden sections
   const chipsEl = document.getElementById("chips");
-  const allCats = [{id:"all",label:"All"}, ...CATS, {id:"mock",label:"Registration Preview"}];
   let activeCat = "all";
-  allCats.forEach(c=>{
-    const b=document.createElement("button");
-    b.className="chip"+(c.id==="all"?" active":"");
-    b.textContent=c.label; b.dataset.cat=c.id; b.setAttribute("role","tab");
-    b.onclick=()=>{
-      activeCat=c.id;
-      document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
-      b.classList.add("active");
-      if(c.id!=="all"){ const t=document.getElementById("cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
-      applyFilter();
-    };
-    chipsEl.appendChild(b);
+  function buildChips(){
+    const list = [{id:"all",label:"All"}];
+    if(layout.pinned.length) list.push({id:"mylinks",label:"My links"});
+    layout.order.forEach(function(id){
+      if(layout.hidden.indexOf(id) >= 0) return;
+      const c = CATS.find(function(x){ return x.id===id; });
+      if(c && LINKS.some(function(l){ return l.cat===id; })) list.push(c);
+    });
+    list.push({id:"mock",label:"Registration Preview"});
+    if(!list.some(function(c){ return c.id===activeCat; })) activeCat = "all";
+    chipsEl.innerHTML = "";
+    list.forEach(function(c){
+      const b=document.createElement("button");
+      b.className="chip"+(c.id===activeCat?" active":"");
+      b.textContent=c.label; b.dataset.cat=c.id; b.setAttribute("role","tab");
+      b.onclick=function(){
+        activeCat=c.id;
+        document.querySelectorAll(".chip").forEach(function(x){ x.classList.remove("active"); });
+        b.classList.add("active");
+        if(c.id!=="all"){ const t=document.getElementById("cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+        applyFilter();
+      };
+      chipsEl.appendChild(b);
+    });
+  }
+
+  /* ---------- Customize layout: reorder, hide, pin. No login, no cookies. ---------- */
+  const LAYOUT_KEY = "ll_layout_general_v1";
+  const CAT_IDS = CATS.map(function(c){ return c.id; });
+  const LINK_URLS = {}; LINKS.forEach(function(l){ LINK_URLS[l.url] = l; });
+  const DEFAULT_LAYOUT = function(){ return {order:CAT_IDS.slice(), hidden:[], pinned:[]}; };
+  let layout = DEFAULT_LAYOUT();
+  let editing = false;
+
+  const ICON = {
+    up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
+    down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+    eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>',
+    eyeoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.1 10.1 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 5.1-5.9M9.9 4.2A10.1 10.1 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22"/></svg>',
+    pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg>'
+  };
+
+  /* Resilience: drop sections and pins that no longer exist, append new sections at the bottom. */
+  function sanitizeLayout(o){
+    if(!o || typeof o !== "object") return null;
+    const seen = {}; const order = [];
+    if(Object.prototype.toString.call(o.order) === "[object Array]"){
+      o.order.forEach(function(id){
+        if(typeof id === "string" && CAT_IDS.indexOf(id) >= 0 && !seen[id]){ seen[id] = 1; order.push(id); }
+      });
+    }
+    CAT_IDS.forEach(function(id){ if(!seen[id]) order.push(id); });
+    const hidden = [], hseen = {};
+    if(Object.prototype.toString.call(o.hidden) === "[object Array]"){
+      o.hidden.forEach(function(id){
+        if(typeof id === "string" && CAT_IDS.indexOf(id) >= 0 && !hseen[id]){ hseen[id] = 1; hidden.push(id); }
+      });
+    }
+    const pinned = [], pseen = {};
+    if(Object.prototype.toString.call(o.pinned) === "[object Array]"){
+      o.pinned.forEach(function(u){
+        if(typeof u === "string" && LINK_URLS[u] && !pseen[u]){ pseen[u] = 1; pinned.push(u); }
+      });
+    }
+    return {order:order, hidden:hidden, pinned:pinned};
+  }
+  function loadLayout(){
+    try{
+      const raw = localStorage.getItem(LAYOUT_KEY);
+      if(!raw) return null;
+      return sanitizeLayout(JSON.parse(raw));
+    }catch(e){ return null; }
+  }
+  function saveLayout(){ try{ localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout)); }catch(e){} }
+  function clearStoredLayout(){ try{ localStorage.removeItem(LAYOUT_KEY); }catch(e){} }
+
+  function encodeLayout(){
+    try{
+      const json = JSON.stringify({o:layout.order, h:layout.hidden, p:layout.pinned});
+      return btoa(unescape(encodeURIComponent(json))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+    }catch(e){ return ""; }
+  }
+  function decodeLayout(str){
+    try{
+      let b = String(str).replace(/-/g,"+").replace(/_/g,"/");
+      while(b.length % 4) b += "=";
+      const o = JSON.parse(decodeURIComponent(escape(atob(b))));
+      return sanitizeLayout({order:o.o, hidden:o.h, pinned:o.p});
+    }catch(e){ return null; }
+  }
+
+  function trackLayout(type, extra){
+    if(!ANALYTICS_ENDPOINT) return;
+    try{
+      let body = "type=" + encodeURIComponent(type);
+      if(extra){ Object.keys(extra).forEach(function(k){ body += "&" + k + "=" + encodeURIComponent(extra[k]); }); }
+      navigator.sendBeacon(ANALYTICS_ENDPOINT, new Blob([body], {type:"application/x-www-form-urlencoded"}));
+    }catch(e){}
+  }
+
+  function gridHTML(items){
+    if(!editing) return items.map(cardHTML).join("");
+    return items.map(function(l){
+      const on = layout.pinned.indexOf(l.url) >= 0;
+      return '<div class="cardwrap">' + cardHTML(l)
+        + '<button type="button" class="pin-btn" data-url="' + esc(l.url) + '" aria-pressed="' + (on?"true":"false")
+        + '" aria-label="' + (on?"Unpin ":"Pin ") + esc(l.name) + '" title="' + (on?"Unpin from My links":"Pin to My links") + '">'
+        + ICON.pin + '</button></div>';
+    }).join("");
+  }
+
+  function sectionHead(eyebrow, label, id, idx, isHidden){
+    let tools = "";
+    if(id){
+      tools = '<div class="sec-tools">'
+        + '<button type="button" data-act="up" data-id="' + id + '" aria-label="Move ' + esc(label) + ' up"' + (idx===0?" disabled":"") + '>' + ICON.up + '</button>'
+        + '<button type="button" data-act="down" data-id="' + id + '" aria-label="Move ' + esc(label) + ' down"' + (idx===layout.order.length-1?" disabled":"") + '>' + ICON.down + '</button>'
+        + '<button type="button" data-act="vis" data-id="' + id + '" aria-pressed="' + (isHidden?"true":"false")
+        + '" aria-label="' + (isHidden?"Show ":"Hide ") + esc(label) + '">' + (isHidden?ICON.eyeoff:ICON.eye) + '</button>'
+        + '</div>';
+    }
+    return '<div class="section-head"><div class="sh-text"><span class="eyebrow">' + eyebrow + '</span><h2>' + label + '</h2></div>' + tools + '</div>';
+  }
+
+  function renderSections(){
+    sectionsEl.innerHTML = "";
+    const visible = layout.order.filter(function(id){ return layout.hidden.indexOf(id) < 0 && LINKS.some(function(l){ return l.cat===id; }); });
+
+    const pins = layout.pinned.map(function(u){ return LINK_URLS[u]; }).filter(Boolean);
+    if(pins.length){
+      const sec = document.createElement("div");
+      sec.className = "section"; sec.dataset.cat = "mylinks"; sec.id = "cat-mylinks";
+      sec.innerHTML = sectionHead("Pinned", "My links", null, 0, false) + '<div class="grid">' + gridHTML(pins) + '</div>';
+      sectionsEl.appendChild(sec);
+    }
+
+    layout.order.forEach(function(id){
+      const c = CATS.find(function(x){ return x.id===id; });
+      if(!c) return;
+      const items = LINKS.filter(function(l){ return l.cat===id; });
+      if(!items.length) return;
+      const isHidden = layout.hidden.indexOf(id) >= 0;
+      const eyebrow = isHidden ? "Hidden" : (String(visible.indexOf(id)+1).padStart(2,"0") + " / " + visible.length);
+      const sec = document.createElement("div");
+      sec.className = "section" + (isHidden ? " user-hidden" : "");
+      sec.dataset.cat = id; sec.id = "cat-" + id;
+      if(isHidden) sec.dataset.userhidden = "1";
+      sec.innerHTML = sectionHead(eyebrow, c.label, id, layout.order.indexOf(id), isHidden)
+        + '<div class="grid">' + gridHTML(items) + '</div>';
+      sectionsEl.appendChild(sec);
+    });
+
+    buildChips();
+    applyFilter();
+  }
+
+  function moveSection(id, dir){
+    const i = layout.order.indexOf(id);
+    const j = i + (dir === "up" ? -1 : 1);
+    if(i < 0 || j < 0 || j >= layout.order.length) return;
+    layout.order[i] = layout.order[j]; layout.order[j] = id;
+    saveLayout(); trackLayout("layout_move", {catId:id, direction:dir}); renderSections();
+  }
+  function toggleSection(id){
+    const i = layout.hidden.indexOf(id);
+    if(i >= 0){ layout.hidden.splice(i,1); trackLayout("layout_show", {catId:id}); }
+    else { layout.hidden.push(id); trackLayout("layout_hide", {catId:id}); }
+    saveLayout(); renderSections();
+  }
+  function togglePin(url){
+    const i = layout.pinned.indexOf(url);
+    if(i >= 0){ layout.pinned.splice(i,1); trackLayout("layout_unpin", {url:url}); }
+    else { layout.pinned.push(url); trackLayout("layout_pin", {url:url}); }
+    saveLayout(); renderSections();
+  }
+
+  sectionsEl.addEventListener("click", function(e){
+    const tool = e.target.closest ? e.target.closest("[data-act]") : null;
+    if(tool){ e.preventDefault(); if(tool.disabled) return;
+      if(tool.dataset.act === "vis") toggleSection(tool.dataset.id); else moveSection(tool.dataset.id, tool.dataset.act);
+      return; }
+    const pin = e.target.closest ? e.target.closest(".pin-btn") : null;
+    if(pin){ e.preventDefault(); e.stopPropagation(); togglePin(pin.dataset.url); }
   });
+
+  function copyShareLink(btn){
+    const code = encodeLayout();
+    if(!code) return;
+    const url = location.origin + location.pathname + "?layout=" + code;
+    const original = btn.textContent;
+    const done = function(){ btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = original; }, 1600); };
+    const fallback = function(){
+      try{
+        const ta = document.createElement("textarea");
+        ta.value = url; ta.setAttribute("readonly",""); ta.style.cssText = "position:absolute;left:-9999px";
+        document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done();
+      }catch(e){ btn.textContent = "Copy failed"; setTimeout(function(){ btn.textContent = original; }, 1600); }
+    };
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done, fallback); }
+      else fallback();
+    }catch(e){ fallback(); }
+    trackLayout("layout_share");
+  }
+
+  const layBar = document.getElementById("layBar");
+  function renderBar(){
+    layBar.innerHTML = "";
+    const toggle = document.createElement("button");
+    toggle.type = "button"; toggle.className = "lay-btn" + (editing ? " on" : "");
+    toggle.textContent = editing ? "Done" : "Customize layout";
+    toggle.setAttribute("aria-pressed", editing ? "true" : "false");
+    toggle.onclick = function(){
+      editing = !editing;
+      document.body.classList.toggle("editing", editing);
+      renderBar(); renderSections();
+    };
+    layBar.appendChild(toggle);
+
+    if(editing){
+      const reset = document.createElement("button");
+      reset.type = "button"; reset.className = "lay-btn"; reset.textContent = "Reset to default";
+      reset.onclick = function(){
+        clearStoredLayout(); layout = DEFAULT_LAYOUT(); trackLayout("layout_reset"); renderBar(); renderSections();
+      };
+      layBar.appendChild(reset);
+
+      const share = document.createElement("button");
+      share.type = "button"; share.className = "lay-btn"; share.textContent = "Copy my layout link";
+      share.onclick = function(){ copyShareLink(share); };
+      layBar.appendChild(share);
+    }
+
+    const note = document.createElement("span");
+    note.className = "lay-note";
+    note.textContent = editing
+      ? "Arrows reorder a section, the eye hides it, the pin adds a link to My links. Saved on this device only."
+      : "";
+    layBar.appendChild(note);
+  }
+
+  (function initLayout(){
+    let shared = null;
+    try{
+      const params = new URLSearchParams(location.search);
+      const raw = params.get("layout");
+      if(raw){
+        shared = decodeLayout(raw);
+        try{
+          params.delete("layout");
+          const qs = params.toString();
+          history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
+        }catch(e){}
+      }
+    }catch(e){}
+    if(shared){ layout = shared; saveLayout(); }
+    else { const stored = loadLayout(); if(stored) layout = stored; }
+  })();
 
   /* ---------- Smart search: synonyms, stemming, typo tolerance, graceful fallback ---------- */
   const STOPW = {"my":1,"the":1,"a":1,"an":1,"for":1,"to":1,"me":1,"i":1,"of":1,"in":1,"on":1,"do":1,"how":1,"where":1,"is":1,"ut":1,"find":1,"get":1,"school":1,"college":1,"university":1,"campus":1,"texas":1,"austin":1,"utexas":1,"longhorn":1,"longhorns":1,"student":1,"students":1,"mccombs":1,"link":1,"links":1,"page":1,"website":1,"site":1,"info":1,"information":1};
@@ -681,6 +951,9 @@
       const catMatch = (activeCat==="all") || (activeCat===cat) ||
                        (activeCat==="mock" && sec.id==="cat-mock") ||
                        (activeCat==="quicklinks" && sec.id==="quick-links");
+      // A section the user hid stays hidden while browsing, but a search still reaches
+      // into it, and edit mode shows it (dimmed) so it can be brought back.
+      const suppressed = sec.dataset.userhidden === "1" && !editing && !term;
       let secVisible = 0;
       sec.querySelectorAll(".card").forEach(card=>{
         var hits = 0;
@@ -688,7 +961,7 @@
           var words = cardWords(card);
           for(var ti=0; ti<terms.length; ti++){ if(termHits(terms[ti], card.dataset.text, words)) hits++; }
         }
-        const ok = catMatch && (!term || terms.length===0 || hits>=need);
+        const ok = !suppressed && catMatch && (!term || terms.length===0 || hits>=need);
         card.style.display = ok ? "" : "none";
         if(ok){secVisible++; shown++;}
       });
@@ -708,7 +981,8 @@
     if(e.key==="/" && document.activeElement!==q && !document.getElementById("modal").classList.contains("open")){ e.preventDefault(); q.focus(); }
     if(e.key==="Escape"){ if(document.getElementById("modal").classList.contains("open")) closeForm(); else { q.value=""; applyFilter(); q.blur(); } }
   });
-  applyFilter();
+  renderBar();
+  renderSections();
 
   /* ---------- Click tracking (privacy-respecting: no cookies, no PII) ---------- */
   document.addEventListener("click", e=>{
