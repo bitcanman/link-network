@@ -178,41 +178,29 @@
   .votechip{margin-top:22px;font-size:13.5px;}
   @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;} }
 
-  /* ---------- Customize my layout (no login, localStorage) ---------- */
-  .lay-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:0 0 20px;}
+
+  /* ---------- Customize Quick Links (no login, localStorage) ---------- */
+  .lay-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 0;}
   .lay-btn{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
     min-height:38px;padding:9px 13px;border-radius:8px;border:1.5px solid var(--line);
     background:var(--panel);color:var(--muted);cursor:pointer;transition:all .12s ease;}
   .lay-btn:hover{border-color:var(--brand);color:var(--brand-deep);}
   .lay-btn.on{background:var(--brand);border-color:var(--brand);color:#fff;}
   .lay-note{font-size:13px;color:var(--muted);flex:1 1 220px;min-width:0;}
+  #quick-empty[hidden]{display:none;}
 
-  .sh-text{min-width:0;}
-  .sec-tools{display:none;gap:6px;margin-left:auto;flex:0 0 auto;}
-  body.editing #sections .section-head{display:flex;align-items:flex-start;gap:12px;}
-  body.editing #sections .sec-tools{display:flex;}
-  .sec-tools button{width:44px;height:44px;display:grid;place-items:center;padding:0;
-    border:1.5px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);
+  /* In edit mode each card grows a tool row underneath, so nothing overlaps the card itself. */
+  .cardwrap{display:flex;flex-direction:column;gap:8px;min-width:0;}
+  .cardwrap > .card{flex:1;}
+  .qk-tools{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;}
+  .qk-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
+    padding:0 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);
     cursor:pointer;transition:all .12s ease;}
-  .sec-tools button:hover:not([disabled]){border-color:var(--brand);color:var(--brand-deep);}
-  .sec-tools button[disabled]{opacity:.3;cursor:default;}
-  .sec-tools button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .sec-tools svg{width:18px;height:18px;}
-  .section.user-hidden{opacity:.5;}
-
-  .cardwrap{position:relative;display:flex;}
-  .cardwrap > .card{flex:1;min-width:0;}
-  .pin-btn{position:absolute;top:-10px;right:-10px;width:44px;height:44px;display:grid;place-items:center;
-    padding:0;border:1.5px solid var(--line);border-radius:50%;background:var(--panel);color:var(--muted);
-    cursor:pointer;z-index:3;box-shadow:0 3px 10px -4px rgba(12,40,38,.5);transition:all .12s ease;}
-  .pin-btn:hover{border-color:var(--brand);color:var(--brand-deep);}
-  .pin-btn[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff;}
-  .pin-btn svg{width:17px;height:17px;}
-  @media (max-width:640px){
-    body.editing #sections .section-head{flex-wrap:wrap;}
-    .sec-tools{margin-left:0;}
-    .lay-note{flex-basis:100%;}
-  }
+  .qk-btn.wide{flex:1;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;}
+  .qk-btn:hover:not([disabled]){border-color:var(--brand);color:var(--brand-deep);}
+  .qk-btn[disabled]{opacity:.3;cursor:default;}
+  .qk-btn[aria-pressed="true"]{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-deep);}
+  .qk-btn svg{width:17px;height:17px;flex:0 0 auto;}
 
   /* ---------- Band (alternating section) ---------- */
   .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
@@ -375,10 +363,11 @@
       <h2>Quick Links</h2>
     </div>
     <p class="admit-note">The handful you actually open over and over.</p>
+    <p class="admit-note" id="quick-empty" hidden></p>
+    <div class="lay-bar" id="layBar"></div>
     <div class="grid" id="grid-quicklinks"></div>
   </div>
 
-  <div class="lay-bar" id="layBar"></div>
   <div id="sections"></div>
   <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
 </main>
@@ -606,104 +595,82 @@
       + '<div class="host">'+host(l.url)+'</div></a>';
   }
 
-  const sectionsEl = document.getElementById("sections");
-  document.getElementById("grid-quicklinks").innerHTML = QUICKLINKS.map(cardHTML).join("");
+  // Build category sections
+  /* ---------- Customize Quick Links: reorder, add, remove. No login, no cookies. ---------- */
+  const QUICK_KEY = "ll_quick_general_v1";
+  const DEFAULT_QUICK = QUICKLINKS.map(function(l){ return l.url; });
+  // Every link the box can hold, keyed by URL. Quick Links wins on a duplicate URL
+  // because its description is written for the box.
+  const LINK_BY_URL = {};
+  QUICKLINKS.forEach(function(l){ LINK_BY_URL[l.url] = l; });
+  LINKS.forEach(function(l){ if(!LINK_BY_URL[l.url]) LINK_BY_URL[l.url] = l; });
 
-  // Chips follow the user's section order and skip hidden sections
-  const chipsEl = document.getElementById("chips");
-  let activeCat = "all";
-  function buildChips(){
-    const list = [{id:"all",label:"All"}];
-    if(layout.pinned.length) list.push({id:"mylinks",label:"My links"});
-    layout.order.forEach(function(id){
-      if(layout.hidden.indexOf(id) >= 0) return;
-      const c = CATS.find(function(x){ return x.id===id; });
-      if(c && LINKS.some(function(l){ return l.cat===id; })) list.push(c);
-    });
-    list.push({id:"mock",label:"Registration Preview"});
-    if(!list.some(function(c){ return c.id===activeCat; })) activeCat = "all";
-    chipsEl.innerHTML = "";
-    list.forEach(function(c){
-      const b=document.createElement("button");
-      b.className="chip"+(c.id===activeCat?" active":"");
-      b.textContent=c.label; b.dataset.cat=c.id; b.setAttribute("role","tab");
-      b.onclick=function(){
-        activeCat=c.id;
-        document.querySelectorAll(".chip").forEach(function(x){ x.classList.remove("active"); });
-        b.classList.add("active");
-        if(c.id!=="all"){ const t=document.getElementById("cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
-        applyFilter();
-      };
-      chipsEl.appendChild(b);
-    });
-  }
-
-  /* ---------- Customize layout: reorder, hide, pin. No login, no cookies. ---------- */
-  const LAYOUT_KEY = "ll_layout_general_v1";
-  const CAT_IDS = CATS.map(function(c){ return c.id; });
-  const LINK_URLS = {}; LINKS.forEach(function(l){ LINK_URLS[l.url] = l; });
-  const DEFAULT_LAYOUT = function(){ return {order:CAT_IDS.slice(), hidden:[], pinned:[]}; };
-  let layout = DEFAULT_LAYOUT();
+  let quick = {order:[], hidden:[]};
   let editing = false;
 
   const ICON = {
     up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
     down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
-    eye:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>',
-    eyeoff:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.9 17.9A10.1 10.1 0 0 1 12 19c-7 0-11-7-11-7a18.5 18.5 0 0 1 5.1-5.9M9.9 4.2A10.1 10.1 0 0 1 12 4c7 0 11 7 11 7a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22"/></svg>',
-    pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17v5M9 3h6l-1 6 3 3v2H7v-2l3-3z"/></svg>'
+    x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    star:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6.1L12 16.8 6.6 19.7l1.2-6.1L3.3 9.4l6.1-.8z"/></svg>'
   };
 
-  /* Resilience: drop sections and pins that no longer exist, append new sections at the bottom. */
-  function sanitizeLayout(o){
-    if(!o || typeof o !== "object") return null;
-    const seen = {}; const order = [];
-    if(Object.prototype.toString.call(o.order) === "[object Array]"){
-      o.order.forEach(function(id){
-        if(typeof id === "string" && CAT_IDS.indexOf(id) >= 0 && !seen[id]){ seen[id] = 1; order.push(id); }
-      });
-    }
-    CAT_IDS.forEach(function(id){ if(!seen[id]) order.push(id); });
-    const hidden = [], hseen = {};
-    if(Object.prototype.toString.call(o.hidden) === "[object Array]"){
-      o.hidden.forEach(function(id){
-        if(typeof id === "string" && CAT_IDS.indexOf(id) >= 0 && !hseen[id]){ hseen[id] = 1; hidden.push(id); }
-      });
-    }
-    const pinned = [], pseen = {};
-    if(Object.prototype.toString.call(o.pinned) === "[object Array]"){
-      o.pinned.forEach(function(u){
-        if(typeof u === "string" && LINK_URLS[u] && !pseen[u]){ pseen[u] = 1; pinned.push(u); }
-      });
-    }
-    return {order:order, hidden:hidden, pinned:pinned};
+  /* Resilience: only URLs that still exist survive a load, so a link we retire
+     later just drops out instead of rendering a dead card. */
+  function knownURLs(arr){
+    const out = [], seen = {};
+    if(Object.prototype.toString.call(arr) !== "[object Array]") return out;
+    arr.forEach(function(u){
+      if(typeof u === "string" && LINK_BY_URL[u] && !seen[u]){ seen[u] = 1; out.push(u); }
+    });
+    return out;
   }
-  function loadLayout(){
+  function sanitizeQuick(o){
+    if(!o || typeof o !== "object") return null;
+    return {order:knownURLs(o.order), hidden:knownURLs(o.hidden)};
+  }
+  /* The saved order drives the box. Any default the user has not removed and has
+     never reordered lands at the end, so a quick link added to the site later
+     still shows up for people who already customized. */
+  function resolveQuick(){
+    const out = [], seen = {};
+    quick.order.forEach(function(u){
+      if(seen[u] || quick.hidden.indexOf(u) >= 0) return;
+      seen[u] = 1; out.push(u);
+    });
+    DEFAULT_QUICK.forEach(function(u){
+      if(seen[u] || quick.hidden.indexOf(u) >= 0) return;
+      seen[u] = 1; out.push(u);
+    });
+    return out;
+  }
+
+  function loadQuick(){
     try{
-      const raw = localStorage.getItem(LAYOUT_KEY);
+      const raw = localStorage.getItem(QUICK_KEY);
       if(!raw) return null;
-      return sanitizeLayout(JSON.parse(raw));
+      return sanitizeQuick(JSON.parse(raw));
     }catch(e){ return null; }
   }
-  function saveLayout(){ try{ localStorage.setItem(LAYOUT_KEY, JSON.stringify(layout)); }catch(e){} }
-  function clearStoredLayout(){ try{ localStorage.removeItem(LAYOUT_KEY); }catch(e){} }
+  function saveQuick(){ try{ localStorage.setItem(QUICK_KEY, JSON.stringify(quick)); }catch(e){} }
+  function clearStoredQuick(){ try{ localStorage.removeItem(QUICK_KEY); }catch(e){} }
 
-  function encodeLayout(){
+  function encodeQuick(){
     try{
-      const json = JSON.stringify({o:layout.order, h:layout.hidden, p:layout.pinned});
+      const json = JSON.stringify({o:quick.order, h:quick.hidden});
       return btoa(unescape(encodeURIComponent(json))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
     }catch(e){ return ""; }
   }
-  function decodeLayout(str){
+  function decodeQuick(str){
     try{
       let b = String(str).replace(/-/g,"+").replace(/_/g,"/");
       while(b.length % 4) b += "=";
       const o = JSON.parse(decodeURIComponent(escape(atob(b))));
-      return sanitizeLayout({order:o.o, hidden:o.h, pinned:o.p});
+      return sanitizeQuick({order:o.o, hidden:o.h});
     }catch(e){ return null; }
   }
 
-  function trackLayout(type, extra){
+  function trackQuick(type, extra){
     if(!ANALYTICS_ENDPOINT) return;
     try{
       let body = "type=" + encodeURIComponent(type);
@@ -712,93 +679,86 @@
     }catch(e){}
   }
 
+  function toolBtn(act, url, label, icon, disabled, pressed, text){
+    return '<button type="button" class="qk-btn' + (text ? " wide" : "") + '" data-qact="' + act + '" data-url="' + esc(url) + '"'
+      + (disabled ? " disabled" : "")
+      + (pressed === undefined ? "" : ' aria-pressed="' + (pressed ? "true" : "false") + '"')
+      + ' aria-label="' + esc(label) + '" title="' + esc(label) + '">'
+      + icon + (text ? '<span>' + text + '</span>' : '') + '</button>';
+  }
+
+  /* Cards in the directory below get a star that adds them to the box. */
   function gridHTML(items){
     if(!editing) return items.map(cardHTML).join("");
+    const inBox = {}; resolveQuick().forEach(function(u){ inBox[u] = 1; });
     return items.map(function(l){
-      const on = layout.pinned.indexOf(l.url) >= 0;
-      return '<div class="cardwrap">' + cardHTML(l)
-        + '<button type="button" class="pin-btn" data-url="' + esc(l.url) + '" aria-pressed="' + (on?"true":"false")
-        + '" aria-label="' + (on?"Unpin ":"Pin ") + esc(l.name) + '" title="' + (on?"Unpin from My links":"Pin to My links") + '">'
-        + ICON.pin + '</button></div>';
+      const on = inBox[l.url] === 1;
+      return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
+        + toolBtn("fav", l.url, on ? "Remove " + l.name + " from Quick Links" : "Add " + l.name + " to Quick Links",
+                  ICON.star, false, on, on ? "In Quick Links" : "Add to Quick Links")
+        + '</div></div>';
     }).join("");
   }
 
-  function sectionHead(eyebrow, label, id, idx, isHidden){
-    let tools = "";
-    if(id){
-      tools = '<div class="sec-tools">'
-        + '<button type="button" data-act="up" data-id="' + id + '" aria-label="Move ' + esc(label) + ' up"' + (idx===0?" disabled":"") + '>' + ICON.up + '</button>'
-        + '<button type="button" data-act="down" data-id="' + id + '" aria-label="Move ' + esc(label) + ' down"' + (idx===layout.order.length-1?" disabled":"") + '>' + ICON.down + '</button>'
-        + '<button type="button" data-act="vis" data-id="' + id + '" aria-pressed="' + (isHidden?"true":"false")
-        + '" aria-label="' + (isHidden?"Show ":"Hide ") + esc(label) + '">' + (isHidden?ICON.eyeoff:ICON.eye) + '</button>'
-        + '</div>';
+  const quickGrid = document.getElementById("grid-quicklinks");
+  const quickEmpty = document.getElementById("quick-empty");
+  function renderQuick(){
+    const urls = resolveQuick();
+    quickGrid.innerHTML = urls.map(function(u, i){
+      const l = LINK_BY_URL[u];
+      if(!editing) return cardHTML(l);
+      return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
+        + toolBtn("up", u, "Move " + l.name + " up", ICON.up, i === 0)
+        + toolBtn("down", u, "Move " + l.name + " down", ICON.down, i === urls.length - 1)
+        + toolBtn("remove", u, "Remove " + l.name + " from Quick Links", ICON.x, false)
+        + '</div></div>';
+    }).join("");
+    if(quickEmpty){
+      quickEmpty.hidden = urls.length > 0;
+      quickEmpty.textContent = editing
+        ? "Star any link further down the page to add it here."
+        : "No quick links yet. Tap Customize Quick Links to add the ones you use.";
     }
-    return '<div class="section-head"><div class="sh-text"><span class="eyebrow">' + eyebrow + '</span><h2>' + label + '</h2></div>' + tools + '</div>';
   }
 
-  function renderSections(){
-    sectionsEl.innerHTML = "";
-    const visible = layout.order.filter(function(id){ return layout.hidden.indexOf(id) < 0 && LINKS.some(function(l){ return l.cat===id; }); });
+  function refreshLayout(){ renderQuick(); renderSections(); applyFilter(); }
 
-    const pins = layout.pinned.map(function(u){ return LINK_URLS[u]; }).filter(Boolean);
-    if(pins.length){
-      const sec = document.createElement("div");
-      sec.className = "section"; sec.dataset.cat = "mylinks"; sec.id = "cat-mylinks";
-      sec.innerHTML = sectionHead("Pinned", "My links", null, 0, false) + '<div class="grid">' + gridHTML(pins) + '</div>';
-      sectionsEl.appendChild(sec);
-    }
-
-    layout.order.forEach(function(id){
-      const c = CATS.find(function(x){ return x.id===id; });
-      if(!c) return;
-      const items = LINKS.filter(function(l){ return l.cat===id; });
-      if(!items.length) return;
-      const isHidden = layout.hidden.indexOf(id) >= 0;
-      const eyebrow = isHidden ? "Hidden" : (String(visible.indexOf(id)+1).padStart(2,"0") + " / " + visible.length);
-      const sec = document.createElement("div");
-      sec.className = "section" + (isHidden ? " user-hidden" : "");
-      sec.dataset.cat = id; sec.id = "cat-" + id;
-      if(isHidden) sec.dataset.userhidden = "1";
-      sec.innerHTML = sectionHead(eyebrow, c.label, id, layout.order.indexOf(id), isHidden)
-        + '<div class="grid">' + gridHTML(items) + '</div>';
-      sectionsEl.appendChild(sec);
-    });
-
-    buildChips();
-    applyFilter();
+  function moveQuick(url, dir){
+    const list = resolveQuick();
+    const i = list.indexOf(url), j = i + (dir === "up" ? -1 : 1);
+    if(i < 0 || j < 0 || j >= list.length) return;
+    list[i] = list[j]; list[j] = url;
+    quick.order = list;
+    saveQuick(); trackQuick("quick_move", {url:url, direction:dir}); refreshLayout();
+  }
+  function removeQuick(url){
+    quick.order = resolveQuick().filter(function(u){ return u !== url; });
+    if(quick.hidden.indexOf(url) < 0) quick.hidden.push(url);
+    saveQuick(); trackQuick("quick_remove", {url:url}); refreshLayout();
+  }
+  function addQuick(url){
+    if(!LINK_BY_URL[url]) return;
+    const list = resolveQuick();
+    if(list.indexOf(url) >= 0) return;
+    list.push(url);
+    quick.order = list;
+    const h = quick.hidden.indexOf(url); if(h >= 0) quick.hidden.splice(h, 1);
+    saveQuick(); trackQuick("quick_add", {url:url}); refreshLayout();
   }
 
-  function moveSection(id, dir){
-    const i = layout.order.indexOf(id);
-    const j = i + (dir === "up" ? -1 : 1);
-    if(i < 0 || j < 0 || j >= layout.order.length) return;
-    layout.order[i] = layout.order[j]; layout.order[j] = id;
-    saveLayout(); trackLayout("layout_move", {catId:id, direction:dir}); renderSections();
-  }
-  function toggleSection(id){
-    const i = layout.hidden.indexOf(id);
-    if(i >= 0){ layout.hidden.splice(i,1); trackLayout("layout_show", {catId:id}); }
-    else { layout.hidden.push(id); trackLayout("layout_hide", {catId:id}); }
-    saveLayout(); renderSections();
-  }
-  function togglePin(url){
-    const i = layout.pinned.indexOf(url);
-    if(i >= 0){ layout.pinned.splice(i,1); trackLayout("layout_unpin", {url:url}); }
-    else { layout.pinned.push(url); trackLayout("layout_pin", {url:url}); }
-    saveLayout(); renderSections();
-  }
-
-  sectionsEl.addEventListener("click", function(e){
-    const tool = e.target.closest ? e.target.closest("[data-act]") : null;
-    if(tool){ e.preventDefault(); if(tool.disabled) return;
-      if(tool.dataset.act === "vis") toggleSection(tool.dataset.id); else moveSection(tool.dataset.id, tool.dataset.act);
-      return; }
-    const pin = e.target.closest ? e.target.closest(".pin-btn") : null;
-    if(pin){ e.preventDefault(); e.stopPropagation(); togglePin(pin.dataset.url); }
-  });
+  document.addEventListener("click", function(e){
+    const btn = e.target.closest ? e.target.closest("[data-qact]") : null;
+    if(!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    if(btn.disabled) return;
+    const url = btn.dataset.url, act = btn.dataset.qact;
+    if(act === "remove") removeQuick(url);
+    else if(act === "fav"){ if(resolveQuick().indexOf(url) >= 0) removeQuick(url); else addQuick(url); }
+    else moveQuick(url, act);
+  }, true);
 
   function copyShareLink(btn){
-    const code = encodeLayout();
+    const code = encodeQuick();
     if(!code) return;
     const url = location.origin + location.pathname + "?layout=" + code;
     const original = btn.textContent;
@@ -814,7 +774,7 @@
       if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done, fallback); }
       else fallback();
     }catch(e){ fallback(); }
-    trackLayout("layout_share");
+    trackQuick("quick_share");
   }
 
   const layBar = document.getElementById("layBar");
@@ -822,12 +782,12 @@
     layBar.innerHTML = "";
     const toggle = document.createElement("button");
     toggle.type = "button"; toggle.className = "lay-btn" + (editing ? " on" : "");
-    toggle.textContent = editing ? "Done" : "Customize layout";
+    toggle.textContent = editing ? "Done" : "Customize Quick Links";
     toggle.setAttribute("aria-pressed", editing ? "true" : "false");
     toggle.onclick = function(){
       editing = !editing;
       document.body.classList.toggle("editing", editing);
-      renderBar(); renderSections();
+      renderBar(); refreshLayout();
     };
     layBar.appendChild(toggle);
 
@@ -835,7 +795,8 @@
       const reset = document.createElement("button");
       reset.type = "button"; reset.className = "lay-btn"; reset.textContent = "Reset to default";
       reset.onclick = function(){
-        clearStoredLayout(); layout = DEFAULT_LAYOUT(); trackLayout("layout_reset"); renderBar(); renderSections();
+        clearStoredQuick(); quick = {order:[], hidden:[]};
+        trackQuick("quick_reset"); renderBar(); refreshLayout();
       };
       layBar.appendChild(reset);
 
@@ -843,23 +804,21 @@
       share.type = "button"; share.className = "lay-btn"; share.textContent = "Copy my layout link";
       share.onclick = function(){ copyShareLink(share); };
       layBar.appendChild(share);
-    }
 
-    const note = document.createElement("span");
-    note.className = "lay-note";
-    note.textContent = editing
-      ? "Arrows reorder a section, the eye hides it, the pin adds a link to My links. Saved on this device only."
-      : "";
-    layBar.appendChild(note);
+      const note = document.createElement("span");
+      note.className = "lay-note";
+      note.textContent = "Arrows reorder, the X removes, and the star on any link below adds it here. Saved on this device only.";
+      layBar.appendChild(note);
+    }
   }
 
-  (function initLayout(){
+  (function initQuick(){
     let shared = null;
     try{
       const params = new URLSearchParams(location.search);
       const raw = params.get("layout");
       if(raw){
-        shared = decodeLayout(raw);
+        shared = decodeQuick(raw);
         try{
           params.delete("layout");
           const qs = params.toString();
@@ -867,9 +826,50 @@
         }catch(e){}
       }
     }catch(e){}
-    if(shared){ layout = shared; saveLayout(); }
-    else { const stored = loadLayout(); if(stored) layout = stored; }
+    if(shared){ quick = shared; saveQuick(); }
+    else { const stored = loadQuick(); if(stored) quick = stored; }
   })();
+  renderBar();
+  renderQuick();
+
+  const sectionsEl = document.getElementById("sections");
+  function renderExtraGrids(){
+    const p = document.getElementById("grid-prospective");
+    if(p) p.innerHTML = gridHTML(LINKS.filter(l=>l.cat==="prospective"));
+  }
+  function renderSections(){
+    sectionsEl.innerHTML = "";
+    CATS.forEach((c,i)=>{
+      const items = LINKS.filter(l=>l.cat===c.id);
+      if(!items.length) return;
+      const sec = document.createElement("div");
+      sec.className="section"; sec.dataset.cat=c.id; sec.id="cat-"+c.id;
+      sec.innerHTML = '<div class="section-head"><span class="eyebrow">'+String(i+1).padStart(2,"0")+' / '+CATS.length+'</span>'
+        + '<h2>'+c.label+'</h2></div>'
+        + '<div class="grid">'+gridHTML(items)+'</div>';
+      sectionsEl.appendChild(sec);
+    });
+    renderExtraGrids();
+  }
+  renderSections();
+
+  // Chips
+  const chipsEl = document.getElementById("chips");
+  const allCats = [{id:"all",label:"All"}, ...CATS, {id:"mock",label:"Registration Preview"}];
+  let activeCat = "all";
+  allCats.forEach(c=>{
+    const b=document.createElement("button");
+    b.className="chip"+(c.id==="all"?" active":"");
+    b.textContent=c.label; b.dataset.cat=c.id; b.setAttribute("role","tab");
+    b.onclick=()=>{
+      activeCat=c.id;
+      document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+      b.classList.add("active");
+      if(c.id!=="all"){ const t=document.getElementById("cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+      applyFilter();
+    };
+    chipsEl.appendChild(b);
+  });
 
   /* ---------- Smart search: synonyms, stemming, typo tolerance, graceful fallback ---------- */
   const STOPW = {"my":1,"the":1,"a":1,"an":1,"for":1,"to":1,"me":1,"i":1,"of":1,"in":1,"on":1,"do":1,"how":1,"where":1,"is":1,"ut":1,"find":1,"get":1,"school":1,"college":1,"university":1,"campus":1,"texas":1,"austin":1,"utexas":1,"longhorn":1,"longhorns":1,"student":1,"students":1,"mccombs":1,"link":1,"links":1,"page":1,"website":1,"site":1,"info":1,"information":1};
@@ -951,9 +951,6 @@
       const catMatch = (activeCat==="all") || (activeCat===cat) ||
                        (activeCat==="mock" && sec.id==="cat-mock") ||
                        (activeCat==="quicklinks" && sec.id==="quick-links");
-      // A section the user hid stays hidden while browsing, but a search still reaches
-      // into it, and edit mode shows it (dimmed) so it can be brought back.
-      const suppressed = sec.dataset.userhidden === "1" && !editing && !term;
       let secVisible = 0;
       sec.querySelectorAll(".card").forEach(card=>{
         var hits = 0;
@@ -961,8 +958,10 @@
           var words = cardWords(card);
           for(var ti=0; ti<terms.length; ti++){ if(termHits(terms[ti], card.dataset.text, words)) hits++; }
         }
-        const ok = !suppressed && catMatch && (!term || terms.length===0 || hits>=need);
+        const ok = catMatch && (!term || terms.length===0 || hits>=need);
         card.style.display = ok ? "" : "none";
+        const wrap = card.parentElement;
+        if(wrap && wrap.classList.contains("cardwrap")) wrap.style.display = ok ? "" : "none";
         if(ok){secVisible++; shown++;}
       });
       const hasCards = sec.querySelectorAll(".card").length>0;
@@ -981,8 +980,7 @@
     if(e.key==="/" && document.activeElement!==q && !document.getElementById("modal").classList.contains("open")){ e.preventDefault(); q.focus(); }
     if(e.key==="Escape"){ if(document.getElementById("modal").classList.contains("open")) closeForm(); else { q.value=""; applyFilter(); q.blur(); } }
   });
-  renderBar();
-  renderSections();
+  applyFilter();
 
   /* ---------- Click tracking (privacy-respecting: no cookies, no PII) ---------- */
   document.addEventListener("click", e=>{

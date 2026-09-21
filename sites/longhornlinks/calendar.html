@@ -77,7 +77,14 @@
 
   /* ---------- Audience tabs ---------- */
   .aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
-  .aud-tabs{display:flex;gap:8px;padding:10px 0;}
+  .aud-tabs{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap;}
+  /* Links/Calendar shares the audience row so it never costs a second band of height. */
+  .view-tabs{margin-left:auto;display:flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel);}
+  .view-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 16px;}
+  .view-tab + .view-tab{border-left:1.5px solid var(--line);}
+  .view-tab:hover{color:var(--brand-deep);}
+  .view-tab.active{background:var(--brand-tint);color:var(--brand-deep);font-weight:600;}
+  @media (max-width:520px){ .view-tabs{margin-left:0;} .view-tab{padding:8px 13px;font-size:11.5px;} }
   .aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
   .aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
   .aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
@@ -253,11 +260,6 @@
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
   /* ---------- MBA Calendar ---------- */
-  .sub-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
-  .sub-tabs{display:flex;justify-content:center;gap:40px;padding:0;}
-  .sub-tab{position:relative;font-size:19px;font-weight:600;color:var(--muted);text-decoration:none;padding:17px 4px;border-bottom:3.5px solid transparent;margin-bottom:-1px;}
-  .sub-tab:hover{color:var(--brand-deep);}
-  .sub-tab.active{color:var(--ink);border-bottom-color:var(--brand);}
 
   /* hero */
   .cx-hero{padding:52px 0 0;border-bottom:1px solid var(--line);}
@@ -408,12 +410,11 @@
 <div class="aud-wrap"><div class="wrap"><div class="aud-tabs">
   <a class="aud-tab" href="/">General</a>
   <a class="aud-tab active" href="/mba.html">MBA</a>
+  <div class="view-tabs" role="tablist" aria-label="MBA view">
+    <a class="view-tab" href="/mba.html">Links</a>
+    <a class="view-tab active" href="/calendar.html" aria-current="page">Calendar</a>
+  </div>
 </div></div></div>
-
-<div class="sub-wrap"><div class="wrap sub-tabs">
-  <a class="sub-tab" href="/mba.html">Links</a>
-  <a class="sub-tab active" href="/calendar.html" aria-current="page">Calendar</a>
-</div></div>
 
 <section class="cx-hero" id="top">
   <div class="wrap">
@@ -509,7 +510,7 @@
     </div>
     <p class="disclaimer">
       Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business.
-      Event times and locations change &mdash; confirm with the host. Prototype v0.4.
+      Event times and locations change &mdash; confirm with the host. Prototype v0.5.
     </p>
   </div>
 </footer>
