@@ -26,9 +26,6 @@ import re
 import sys
 from pathlib import Path
 
-import requests
-from bs4 import BeautifulSoup
-
 MODEL = "claude-sonnet-4-6"
 UA = "LinkCowboyDealsBot/0.1 (+https://linkcowboy.com; student project; contact via site)"
 
@@ -60,6 +57,9 @@ Rules:
 
 def fetch_text(url: str, timeout: int = 20) -> str:
     """Fetch a page and reduce it to readable text. Returns '' on failure."""
+    import requests
+    from bs4 import BeautifulSoup
+
     try:
         r = requests.get(url, headers={"User-Agent": UA}, timeout=timeout)
         r.raise_for_status()
@@ -109,7 +109,7 @@ def normalize(item: dict, source: dict, today: str) -> dict:
     days = item.get("days") or []
     if isinstance(days, str):
         days = [days]
-    return {
+    normalized = {
         "id": deal_id(item),
         "business": item["business"].strip(),
         "deal": item["deal"].strip(),
@@ -128,20 +128,34 @@ def normalize(item: dict, source: dict, today: str) -> dict:
         "verified_at": today,
         "first_seen": today,
     }
+    # Absence means "not supplied"; explicit null/empty values clear old data.
+    for key in ("category", "days", "times", "requirements", "address", "alcohol", "expires_at", "confidence"):
+        if key not in item:
+            normalized.pop(key)
+    if "neighborhood" not in item and "neighborhood" not in source:
+        normalized.pop("neighborhood")
+    return normalized
 
 
 def merge(existing: list, fresh: list, stale_days: int, today: str) -> tuple[list, dict]:
     """Merge fresh deals into existing ones; re-verify matches, expire the rest."""
-    by_id = {d["id"]: d for d in existing}
+    by_id = {d["id"]: dict(d) for d in existing}
+    mutable = ("business", "deal", "category", "days", "times", "requirements",
+               "neighborhood", "address", "alcohol", "expires_at", "confidence",
+               "source_url", "source_name", "source_type")
     added, refreshed = 0, 0
     for d in fresh:
         if d["id"] in by_id:
             keep = by_id[d["id"]]
-            keep.update({k: d[k] for k in ("deal", "times", "requirements", "confidence", "expires_at") if d.get(k)})
+            keep.update({k: d[k] for k in mutable if k in d})
             keep["verified_at"] = today
             refreshed += 1
         else:
-            by_id[d["id"]] = d
+            by_id[d["id"]] = {
+                "category": "both", "days": [], "times": "", "requirements": [],
+                "neighborhood": "", "address": "", "alcohol": False,
+                "expires_at": None, "confidence": "medium", **d,
+            }
             added += 1
 
     cutoff = (dt.date.fromisoformat(today) - dt.timedelta(days=stale_days)).isoformat()

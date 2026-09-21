@@ -361,16 +361,6 @@
   .cx-empty{background:var(--band);border-radius:12px;padding:26px 22px;text-align:center;color:var(--muted);font-size:14.5px;}
   .cx-empty b{color:var(--ink);}
 
-  .cx-paste{margin-top:26px;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
-  .cx-paste summary{cursor:pointer;padding:15px 18px;font-weight:600;font-size:14.5px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;}
-  .cx-paste summary::-webkit-details-marker{display:none;}
-  .cx-paste summary span{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);}
-  .cx-paste .body{padding:0 18px 17px;border-top:1px solid var(--line);}
-  .cx-paste p{font-size:13.5px;color:var(--muted);margin:14px 0 11px;}
-  .cx-paste textarea{width:100%;min-height:82px;font-family:inherit;font-size:14px;padding:11px 13px;border:1.5px solid var(--line);border-radius:9px;background:var(--bg);color:var(--ink);resize:vertical;}
-  .cx-paste textarea:focus{border-color:var(--brand);outline:none;}
-  .cx-paste .row{display:flex;align-items:center;gap:11px;margin-top:11px;}
-  .cx-paste .status{font-family:"Spline Sans Mono",monospace;font-size:11px;color:var(--muted);}
   .cx-disc{font-size:13px;color:var(--muted);line-height:1.6;margin:30px 0 0;padding:20px 0 0;border-top:1px solid var(--line);}
 
   .cx-sheet{position:fixed;inset:0;background:rgba(34,27,20,.55);display:none;align-items:center;justify-content:center;padding:20px;z-index:60;}
@@ -433,7 +423,7 @@
       <div class="cx-herocopy">
         <span class="eyebrow">McCombs MBA &middot; Fall 2026</span>
         <h1>Every event,<br><span class="u">one calendar.</span></h1>
-        <p class="lede">Info sessions, coffee chats, case comps, mixers, treks. Filter to the track you're recruiting for, tap a day, and put it on your phone in one go.</p>
+        <p class="lede">Info sessions, coffee chats, case comps, mixers, treks. Filter to the track you're recruiting for, tap a day, and put it on your phone in one go. All times are Central.</p>
       </div>
       <aside class="cx-next" id="nextUp" hidden>
         <span class="lab">Next up</span>
@@ -482,16 +472,6 @@
     <div id="dayList"></div>
   </section>
 
-  <details class="cx-paste" id="paste">
-    <summary>Paste an event from a message <span>WhatsApp, email</span></summary>
-    <div class="body">
-      <p>Drop the text here and it becomes an event you can add to your calendar. Nothing is read from your chats and nothing is stored.</p>
-      <textarea id="pasteText" placeholder="e.g. Nike CEO fireside chat Thu 10/22 at 6pm, RRH 1.200, RSVP by Tuesday"></textarea>
-      <div class="row"><button class="cx-b" id="pasteBtn" type="button">Turn it into an event</button><span class="status" id="pasteStatus"></span></div>
-      <div id="pasteOut" style="margin-top:12px"></div>
-    </div>
-  </details>
-
   <p class="cx-disc">Unofficial and student-built. Events come from public calendars and pages; confirm details with the host before you show up. This is not a replacement for official McCombs communication &mdash; keep reading your university email.</p>
 </div></main>
 
@@ -521,7 +501,7 @@
     </div>
     <p class="disclaimer">
       Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business.
-      Event times and locations change &mdash; confirm with the host. Prototype v0.6.
+      Event times and locations change &mdash; confirm with the host. Prototype v0.7.
     </p>
   </div>
 </footer>
@@ -545,7 +525,12 @@
   const TZ="America/Chicago", MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
   const FEED_BASE=location.origin+location.pathname.replace(/[^/]*$/,"")+"feeds/";
   const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
-  const today=new Date(); today.setHours(0,0,0,0); const todayISO=iso(today);
+  function campusDay(now=new Date()){
+    const parts=new Intl.DateTimeFormat("en-US",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(now);
+    const get=type=>parts.find(p=>p.type===type).value;
+    return `${get("year")}-${get("month")}-${get("day")}`;
+  }
+  const todayISO=campusDay(), today=new Date(todayISO+"T12:00:00");
   let data=null, view="month", cursor=new Date(today), selected=todayISO, track="all", who="all";
 
   async function load(){
@@ -560,7 +545,15 @@
 
   const visible=()=>data.events.filter(e=>(track==="all"||e.tracks.includes(track))&&(who==="all"||(who==="school"?e.affiliation==="school":e.affiliation!=="school")));
   const eventsOn=d=>visible().filter(e=>e.start.slice(0,10)===d);
-  const fmtT=s=>new Date(s).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit",timeZone:TZ}).replace(":00","");
+  function fmtT(s){
+    // Offset-free feed timestamps already represent Central wall time. Use UTC
+    // only as a neutral container so the visitor's timezone cannot shift them.
+    const hasOffset=/(Z|[+-]\d{2}:?\d{2})$/i.test(s);
+    return new Date(hasOffset?s:s+"Z").toLocaleTimeString("en-US",{
+      hour:"numeric",minute:"2-digit",timeZone:hasOffset?TZ:"UTC"
+    }).replace(":00","");
+  }
+  function moveMonth(date, delta){ return new Date(date.getFullYear(),date.getMonth()+delta,1,12); }
 
   /* ---------- hero: next-up card + stats ---------- */
   function renderHero(){
@@ -616,7 +609,7 @@
   function icsFor(e){ const end=e.end||e.start, p=e.all_day?";VALUE=DATE":`;TZID=${TZ}`, desc=((e.description||"")+(e.url?"\\n\\n"+e.url:"")).replace(/,/g,"\\,");
     return ["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Longhorn Links//Events//EN","BEGIN:VEVENT",`UID:${e.id}@longhornlinks.com`,`DTSTART${p}:${stamp(e.start,e.all_day)}`,`DTEND${p}:${stamp(end,e.all_day)}`,`SUMMARY:${e.title}`,`LOCATION:${e.location||""}`,`DESCRIPTION:${desc}`,`URL:${e.url||""}`,"END:VEVENT","END:VCALENDAR"].join("\r\n"); }
   const gcal=e=>{const end=e.end||e.start; return "https://calendar.google.com/calendar/render?"+new URLSearchParams({action:"TEMPLATE",text:e.title,details:(e.description||"")+(e.url?"\n"+e.url:""),location:e.location||"",ctz:TZ,dates:`${stamp(e.start,e.all_day)}/${stamp(end,e.all_day)}`});};
-  window.dl=id=>{const e=data.events.find(x=>x.id===id)||(window._pasted||[]).find(x=>x.id===id); if(!e) return;
+  window.dl=id=>{const e=data.events.find(x=>x.id===id); if(!e) return;
     const a=document.createElement("a"); a.href=URL.createObjectURL(new Blob([icsFor(e)],{type:"text/calendar"})); a.download=e.title.replace(/[^a-z0-9]+/gi,"-").toLowerCase()+".ics"; a.click();};
   function card(e){
     const time=e.all_day?"All day":fmtT(e.start)+(e.end?` to ${fmtT(e.end)}`:"");
@@ -673,8 +666,8 @@
   /* ---------- wiring ---------- */
   $("#track").onchange=e=>{track=e.target.value; render();};
   $("#who").onchange=e=>{who=e.target.value; render();};
-  $("#prev").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()-1); else cursor.setDate(cursor.getDate()-7); renderCal(); renderList(); };
-  $("#next").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()+1); else cursor.setDate(cursor.getDate()+7); renderCal(); renderList(); };
+  $("#prev").onclick=()=>{ if(view==="month") cursor=moveMonth(cursor,-1); else cursor.setDate(cursor.getDate()-7); renderCal(); renderList(); };
+  $("#next").onclick=()=>{ if(view==="month") cursor=moveMonth(cursor,1); else cursor.setDate(cursor.getDate()+7); renderCal(); renderList(); };
   $("#todayBtn").onclick=()=>{selected=todayISO; cursor=new Date(today); render();};
   $("#vMonth").onclick=()=>{view="month"; $("#vMonth").setAttribute("aria-pressed","true"); $("#vWeek").setAttribute("aria-pressed","false"); renderCal(); renderList();};
   $("#vWeek").onclick=()=>{view="week"; $("#vWeek").setAttribute("aria-pressed","true"); $("#vMonth").setAttribute("aria-pressed","false"); renderCal(); renderList();};
@@ -687,13 +680,6 @@
   $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").classList.remove("open");});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#sheet").classList.remove("open");});
   $("#copyFeed").onclick=()=>{navigator.clipboard?.writeText($("#feedUrl").value);$("#copyFeed").textContent="Copied";setTimeout(()=>$("#copyFeed").textContent="Copy",1500);};
-
-  $("#pasteBtn").onclick=async()=>{ const text=$("#pasteText").value.trim(); if(!text) return;
-    $("#pasteStatus").textContent="reading"; $("#pasteOut").innerHTML="";
-    try{ const r=await fetch("/.netlify/functions/parse-event",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})}); const o=await r.json(); if(o.error) throw new Error(o.error);
-      window._pasted=(o.events||[]).map((e,i)=>({...e,id:"paste-"+i,tracks:["general"],affiliation:"external",org:e.org||"From your message",location:e.location||"",description:e.description||"",url:e.url||"",source_url:""}));
-      $("#pasteStatus").textContent=window._pasted.length?`${window._pasted.length} found`:"no dated event in that text"; $("#pasteOut").innerHTML=window._pasted.map(card).join("");
-    }catch{ $("#pasteStatus").textContent="needs the parse-event function deployed"; } };
 
   load();
 })();

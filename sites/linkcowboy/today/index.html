@@ -63,6 +63,7 @@ h1 span{display:block;color:var(--orange);font-size:.7em;margin-top:6px;text-sha
 .runbtn[disabled]{cursor:progress;opacity:.85;transform:none}
 .status{margin-top:14px;min-height:22px;font-size:14px;font-weight:500;color:rgba(43,32,22,.85)}
 .status .sq{display:inline-block;width:8px;height:8px;background:var(--grass2);border:2px solid var(--ink);margin-right:8px}
+.freshness{margin-top:8px;font-size:12px;line-height:1.5;color:var(--mute)}
 .opts{margin-top:8px;font-size:13px;color:rgba(43,32,22,.8)}
 .opts label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;user-select:none}
 .opts input{appearance:none;width:15px;height:15px;border:2px solid var(--ink);background:var(--card);display:grid;place-content:center;cursor:pointer}
@@ -129,8 +130,9 @@ footer a{color:var(--gold)}
 </header>
 
 <section class="wrap controlbar">
-  <button class="runbtn" id="runbtn" type="button">ROUND 'EM UP</button>
+  <button class="runbtn" id="runbtn" type="button" disabled>ROUND 'EM UP</button>
   <div class="status" id="status"><span class="sq"></span>Ready when you are.</div>
+  <p class="freshness" id="freshness" aria-live="polite"></p>
   <div class="opts"><label><input type="checkbox" id="foodOnly"> Skip the bar deals</label></div>
 </section>
 
@@ -138,7 +140,7 @@ footer a{color:var(--gold)}
 
 <footer>
   <div class="wrap">
-    <p><b>Unofficial and student-built.</b> Every special links to the page it came from and is re-checked nightly; confirm with the venue before you go. Drink specials are for guests 21 and over. Not affiliated with UT Austin or any business listed.</p>
+    <p><b>Unofficial and student-built.</b> Every special links to the page it came from. We attempt to refresh the roundup nightly; check the update date above and confirm with the venue before you go. Drink specials are for guests 21 and over. Not affiliated with UT Austin or any business listed.</p>
     <p>Run a spot near campus? <a href="mailto:hello@linkcowboy.com?subject=List%20our%20special">Ask to be listed.</a> Something out of date? <a href="mailto:hello@linkcowboy.com?subject=Stale%20deal">Tell us.</a></p>
     <p class="copyright">&copy; 2026 LINK COWBOY &#9733; MADE DEEP IN THE HEART OF TEXAS</p>
   </div>
@@ -181,18 +183,55 @@ footer a{color:var(--gold)}
 
   /* ---- data ---- */
   const DAYS=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"], LONG=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-  const ti=(new Date().getDay()+6)%7, today=DAYS[ti];
-  document.getElementById("daylabel").textContent=LONG[ti].toUpperCase()+" NEAR UT AUSTIN";
+  const TZ="America/Chicago";
+  function campusDay(now=new Date()){
+    const parts=new Intl.DateTimeFormat("en-US",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit"}).formatToParts(now);
+    const get=type=>parts.find(p=>p.type===type).value;
+    return `${get("year")}-${get("month")}-${get("day")}`;
+  }
+  function isCurrentDeal(deal, day, staleDays){
+    const isDate=s=>typeof s==="string" && /^\d{4}-\d{2}-\d{2}$/.test(s) &&
+      Number.isFinite(Date.parse(s+"T00:00:00Z")) && new Date(s+"T00:00:00Z").toISOString().slice(0,10)===s;
+    const cutoff=new Date(day+"T00:00:00Z"); cutoff.setUTCDate(cutoff.getUTCDate()-staleDays);
+    return isDate(deal.verified_at) && deal.verified_at>=cutoff.toISOString().slice(0,10) && deal.verified_at<=day &&
+      (deal.expires_at==null || (isDate(deal.expires_at) && deal.expires_at>=day));
+  }
+  function formatUpdated(value){
+    const date=new Date(value);
+    return value && Number.isFinite(date.getTime()) ? date.toLocaleString("en-US",{
+      timeZone:TZ,month:"short",day:"numeric",year:"numeric",hour:"numeric",minute:"2-digit",timeZoneName:"short"
+    }) : "date unavailable";
+  }
+  let ti, today;
+  function updateDay(){
+    const day=campusDay(); ti=(new Date(day+"T12:00:00Z").getUTCDay()+6)%7; today=DAYS[ti];
+    document.getElementById("daylabel").textContent=LONG[ti].toUpperCase()+" NEAR UT AUSTIN";
+    return day;
+  }
+  updateDay();
   const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   const host=u=>{try{return new URL(u).hostname.replace(/^www\./,"")}catch{return ""}};
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   const status=$("#status"), out=$("#roundup"), btn=$("#runbtn");
-  let data=null, newIds=new Set(), ran=false;
+  let data=null, newIds=new Set(), ran=false, liveAt=null;
   const say=t=>{status.innerHTML=`<span class="sq"></span>${esc(t)}`;};
-  async function load(){ try{const r=await fetch("deals.json",{cache:"no-store"}); if(!r.ok) throw 0; data=await r.json();}
-    catch{ data=JSON.parse(document.getElementById("seed").textContent); } }
+  function showFreshness(){
+    const saved=`Saved roundup updated ${formatUpdated(data.generated_at)}.`;
+    $("#freshness").textContent=saved+(liveAt?` Live sources checked ${formatUpdated(liveAt)}.`:"");
+  }
+  async function load(){
+    try{const r=await fetch("deals.json",{cache:"no-store",signal:AbortSignal.timeout(10000)}); if(!r.ok) throw 0;
+      const loaded=await r.json(); if(!Array.isArray(loaded.deals)) throw 0; data=loaded;
+    }catch{ data=JSON.parse(document.getElementById("seed").textContent); }
+    showFreshness(); btn.disabled=false;
+  }
   const idFor=d=>(d.business+"|"+d.deal).toLowerCase().replace(/\s+/g," ").trim();
-  const todays=()=>{const f=$("#foodOnly").checked; return data.deals.filter(d=>(d.days.includes("daily")||d.days.includes(today))&&!(f&&d.alcohol));};
+  const todays=()=>{
+    const f=$("#foodOnly").checked, day=updateDay();
+    const staleDays=Number.isInteger(data.stale_days)&&data.stale_days>=0?data.stale_days:45;
+    return data.deals.filter(d=>isCurrentDeal(d,day,staleDays) && Array.isArray(d.days) &&
+      (d.days.includes("daily")||d.days.includes(today)) && !(f&&d.alcohol));
+  };
   const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 
   /* one-tap directions: Google Maps opens the native app on phones and starts navigation */
@@ -213,33 +252,38 @@ footer a{color:var(--gold)}
   }
   async function reveal(){
     out.innerHTML=""; const list=shuffle(todays());
-    if(!list.length){ out.innerHTML=`<div class="empty">Nothing on the books for ${LONG[ti]} with that filter. Uncheck "skip the bar deals", or come back tomorrow.</div>`; requestAnimationFrame(()=>out.firstElementChild.classList.add("in")); return; }
+    if(!list.length){ out.innerHTML=`<div class="empty">No current specials for ${LONG[ti]} with that filter. Expired and out-of-date offers are hidden. Check back after the next update.</div>`; requestAnimationFrame(()=>out.firstElementChild.classList.add("in")); say("No current specials to show."); return; }
     const highs=list.filter(d=>d.confidence==="high"); const top=highs.length?highs[Math.floor(Math.random()*highs.length)]:list[0];
     list.sort((a,b)=>(b===top)-(a===top));
     out.innerHTML=list.map(d=>card(d,d===top)).join("");
     const cards=[...out.children];
     for(let i=0;i<cards.length;i++){cards[i].classList.add("in"); say(`${i+1} of ${cards.length} rounded up`); await sleep(220);}
-    say(`${cards.length} special${cards.length===1?"":"s"} for ${LONG[ti]}${ran?"":" (from last night's crawl)"}`);
+    say(`${cards.length} special${cards.length===1?"":"s"} for ${LONG[ti]}${ran?"":" (saved roundup)"}`);
   }
   async function runAgent(){
-    try{ const r=await fetch("/.netlify/functions/generate-deals?limit=3"); const o=await r.json();
-      if(o.error) return {ok:false};
-      const day=new Date().toISOString().slice(0,10); let added=0;
+    try{ const r=await fetch("/api/generate-deals?limit=3",{signal:AbortSignal.timeout(35000)});
+      if(!r.ok) return {ok:false}; const o=await r.json();
+      if(o.error||!Array.isArray(o.deals)||!Array.isArray(o.log)) return {ok:false};
+      let added=0;
       for(const d of o.deals){ const k=idFor(d), hit=data.deals.find(x=>idFor(x)===k);
-        if(hit) hit.verified_at=day;
+        if(hit) Object.assign(hit,d,{id:hit.id,first_seen:hit.first_seen});
         else{ const nd={...d,id:"live-"+Math.random().toString(36).slice(2,8),days:Array.isArray(d.days)?d.days:[d.days||"daily"],requirements:d.requirements||[],alcohol:!!d.alcohol}; data.deals.push(nd); newIds.add(nd.id); added++; } }
-      return {ok:true,added,sources:o.log.length};
+      liveAt=o.ran_at; showFreshness();
+      return {ok:true,added,sources:o.log.filter(s=>s.ok).length,cached:o.cached};
     }catch{ return {ok:false}; }
   }
   btn.addEventListener("click", async()=>{
     btn.disabled=true; out.innerHTML=""; ropeStart(); say("Saddling up");
     const t0=Date.now(), lines=["Reading the sources","Pulling out the specials","Checking what's still good"]; let li=0;
     const tick=setInterval(()=>say(lines[li++%lines.length]),800);
-    const res=await runAgent(); await sleep(Math.max(0,2600-(Date.now()-t0))); clearInterval(tick);
-    ran=res.ok; ropeStop();
-    say(res.ok?`Read ${res.sources} sources, ${res.added} new`:"Agent's offline here, showing last night's crawl");
-    await sleep(320); await reveal();
-    btn.disabled=false; btn.textContent="ROUND 'EM UP AGAIN";
+    try{
+      const res=await runAgent(); await sleep(Math.max(0,2600-(Date.now()-t0))); clearInterval(tick);
+      ran=res.ok; ropeStop();
+      say(res.ok?`${res.cached?"Reused recent results from":"Read"} ${res.sources} sources, ${res.added} new`:"Live update unavailable, showing the saved roundup");
+      await sleep(320); await reveal();
+    }finally{
+      clearInterval(tick); ropeStop(); btn.disabled=false; btn.textContent="ROUND 'EM UP AGAIN";
+    }
   });
   $("#foodOnly").addEventListener("change",()=>{ if(out.children.length) reveal(); });
   load();
