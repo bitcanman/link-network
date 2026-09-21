@@ -185,22 +185,32 @@
     min-height:38px;padding:9px 13px;border-radius:8px;border:1.5px solid var(--line);
     background:var(--panel);color:var(--muted);cursor:pointer;transition:all .12s ease;}
   .lay-btn:hover{border-color:var(--brand);color:var(--brand-deep);}
-  .lay-btn.on{background:var(--brand);border-color:var(--brand);color:#fff;}
-  .lay-note{font-size:13px;color:var(--muted);flex:1 1 220px;min-width:0;}
+  .lay-btn.primary{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.06em;
+    min-height:42px;padding:10px 17px;background:var(--brand);border-color:var(--brand);color:#fff;}
+  .lay-btn.primary:hover{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff;}
+  .lay-btn.primary svg{width:15px;height:15px;}
+  .lay-btn.on{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .lay-btn.on:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .lay-note{font-size:13px;color:var(--brand-deep);flex:1 1 160px;min-width:0;}
   #quick-empty[hidden]{display:none;}
 
-  /* In edit mode each card grows a tool row underneath, so nothing overlaps the card itself. */
+  /* In edit mode each card grows its own tool row underneath, so nothing overlaps the card. */
   .cardwrap{display:flex;flex-direction:column;gap:8px;min-width:0;}
   .cardwrap > .card{flex:1;}
   .qk-tools{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;}
   .qk-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
     padding:0 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);
     cursor:pointer;transition:all .12s ease;}
-  .qk-btn.wide{flex:1;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;}
+  .qk-btn.wide{font-family:"Spline Sans Mono",monospace;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
   .qk-btn:hover:not([disabled]){border-color:var(--brand);color:var(--brand-deep);}
   .qk-btn[disabled]{opacity:.3;cursor:default;}
   .qk-btn[aria-pressed="true"]{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-deep);}
   .qk-btn svg{width:17px;height:17px;flex:0 0 auto;}
+  /* The grid runs left to right until it collapses to one column, so the arrows
+     point the way the tile actually moves. */
+  .ic-stack{display:none;}
+  .ic-row,.ic-stack{align-items:center;}
+  @media (max-width:606px){ .ic-row{display:none;} .ic-stack{display:inline-flex;} }
 
   /* ---------- Band (alternating section) ---------- */
   .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
@@ -362,7 +372,6 @@
       <span class="eyebrow">Every week</span>
       <h2>Quick Links</h2>
     </div>
-    <p class="admit-note">The handful you actually open over and over.</p>
     <p class="admit-note" id="quick-empty" hidden></p>
     <div class="lay-bar" id="layBar"></div>
     <div class="grid" id="grid-quicklinks"></div>
@@ -433,7 +442,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v1.5.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v1.6.
     </p>
   </div>
 </footer>
@@ -598,12 +607,15 @@
   // Build category sections
   /* ---------- Customize Quick Links: reorder, add, remove. No login, no cookies. ---------- */
   const QUICK_KEY = "ll_quick_general_v1";
-  const DEFAULT_QUICK = QUICKLINKS.map(function(l){ return l.url; });
-  // Every link the box can hold, keyed by URL. Quick Links wins on a duplicate URL
-  // because its description is written for the box.
-  const LINK_BY_URL = {};
-  QUICKLINKS.forEach(function(l){ LINK_BY_URL[l.url] = l; });
-  LINKS.forEach(function(l){ if(!LINK_BY_URL[l.url]) LINK_BY_URL[l.url] = l; });
+  /* Identity is the tile, not the destination. Four Global Studies tiles share one
+     URL, and starring one of them should not flip the other three. */
+  function idOf(l){ return l.cat + "|" + l.name; }
+  const DEFAULT_QUICK = QUICKLINKS.map(idOf);
+  const LINK_BY_ID = {};
+  QUICKLINKS.concat(LINKS).forEach(function(l){ const k = idOf(l); if(!LINK_BY_ID[k]) LINK_BY_ID[k] = l; });
+  /* The box's own shortcut for a destination, so the directory's "Canvas (LMS)"
+     tile knows the box already has Canvas and does not offer a second copy. */
+  const QUICK_BY_URL = {}; QUICKLINKS.forEach(function(l){ QUICK_BY_URL[l.url] = idOf(l); });
 
   let quick = {order:[], hidden:[]};
   let editing = false;
@@ -611,36 +623,44 @@
   const ICON = {
     up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
     down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
+    left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
+    right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
     x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
     star:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6.1L12 16.8 6.6 19.7l1.2-6.1L3.3 9.4l6.1-.8z"/></svg>'
   };
+  /* Left/right matches the grid on a wide screen, up/down matches the single
+     column on a phone. CSS shows whichever pair is true at that width. */
+  const PAIR = {
+    earlier:'<span class="ic-row">' + ICON.left + '</span><span class="ic-stack">' + ICON.up + '</span>',
+    later:'<span class="ic-row">' + ICON.right + '</span><span class="ic-stack">' + ICON.down + '</span>'
+  };
 
-  /* Resilience: only URLs that still exist survive a load, so a link we retire
+  /* Resilience: only tiles that still exist survive a load, so a link we retire
      later just drops out instead of rendering a dead card. */
-  function knownURLs(arr){
+  function knownIDs(arr){
     const out = [], seen = {};
     if(Object.prototype.toString.call(arr) !== "[object Array]") return out;
-    arr.forEach(function(u){
-      if(typeof u === "string" && LINK_BY_URL[u] && !seen[u]){ seen[u] = 1; out.push(u); }
+    arr.forEach(function(k){
+      if(typeof k === "string" && LINK_BY_ID[k] && !seen[k]){ seen[k] = 1; out.push(k); }
     });
     return out;
   }
   function sanitizeQuick(o){
     if(!o || typeof o !== "object") return null;
-    return {order:knownURLs(o.order), hidden:knownURLs(o.hidden)};
+    return {order:knownIDs(o.order), hidden:knownIDs(o.hidden)};
   }
   /* The saved order drives the box. Any default the user has not removed and has
      never reordered lands at the end, so a quick link added to the site later
      still shows up for people who already customized. */
   function resolveQuick(){
     const out = [], seen = {};
-    quick.order.forEach(function(u){
-      if(seen[u] || quick.hidden.indexOf(u) >= 0) return;
-      seen[u] = 1; out.push(u);
+    quick.order.forEach(function(k){
+      if(seen[k] || quick.hidden.indexOf(k) >= 0) return;
+      seen[k] = 1; out.push(k);
     });
-    DEFAULT_QUICK.forEach(function(u){
-      if(seen[u] || quick.hidden.indexOf(u) >= 0) return;
-      seen[u] = 1; out.push(u);
+    DEFAULT_QUICK.forEach(function(k){
+      if(seen[k] || quick.hidden.indexOf(k) >= 0) return;
+      seen[k] = 1; out.push(k);
     });
     return out;
   }
@@ -679,23 +699,24 @@
     }catch(e){}
   }
 
-  function toolBtn(act, url, label, icon, disabled, pressed, text){
-    return '<button type="button" class="qk-btn' + (text ? " wide" : "") + '" data-qact="' + act + '" data-url="' + esc(url) + '"'
+  function toolBtn(act, id, label, inner, disabled, pressed, wide){
+    return '<button type="button" class="qk-btn' + (wide ? " wide" : "") + '" data-qact="' + act + '" data-id="' + esc(id) + '"'
       + (disabled ? " disabled" : "")
       + (pressed === undefined ? "" : ' aria-pressed="' + (pressed ? "true" : "false") + '"')
-      + ' aria-label="' + esc(label) + '" title="' + esc(label) + '">'
-      + icon + (text ? '<span>' + text + '</span>' : '') + '</button>';
+      + ' aria-label="' + esc(label) + '" title="' + esc(label) + '">' + inner + '</button>';
   }
 
-  /* Cards in the directory below get a star that adds them to the box. */
+  /* Every card in the directory gets its own star. State is per tile. */
   function gridHTML(items){
     if(!editing) return items.map(cardHTML).join("");
-    const inBox = {}; resolveQuick().forEach(function(u){ inBox[u] = 1; });
+    const inBox = {}; resolveQuick().forEach(function(k){ inBox[k] = 1; });
     return items.map(function(l){
-      const on = inBox[l.url] === 1;
+      const id = idOf(l);
+      const alt = QUICK_BY_URL[l.url];
+      const on = inBox[id] === 1 || (alt ? inBox[alt] === 1 : false);
       return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
-        + toolBtn("fav", l.url, on ? "Remove " + l.name + " from Quick Links" : "Add " + l.name + " to Quick Links",
-                  ICON.star, false, on, on ? "In Quick Links" : "Add to Quick Links")
+        + toolBtn("fav", id, on ? "Remove " + l.name + " from Quick Links" : "Add " + l.name + " to Quick Links",
+                  ICON.star + '<span>' + (on ? "Added" : "Add") + '</span>', false, on, true)
         + '</div></div>';
     }).join("");
   }
@@ -703,18 +724,18 @@
   const quickGrid = document.getElementById("grid-quicklinks");
   const quickEmpty = document.getElementById("quick-empty");
   function renderQuick(){
-    const urls = resolveQuick();
-    quickGrid.innerHTML = urls.map(function(u, i){
-      const l = LINK_BY_URL[u];
+    const ids = resolveQuick();
+    quickGrid.innerHTML = ids.map(function(k, i){
+      const l = LINK_BY_ID[k];
       if(!editing) return cardHTML(l);
       return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
-        + toolBtn("up", u, "Move " + l.name + " up", ICON.up, i === 0)
-        + toolBtn("down", u, "Move " + l.name + " down", ICON.down, i === urls.length - 1)
-        + toolBtn("remove", u, "Remove " + l.name + " from Quick Links", ICON.x, false)
+        + toolBtn("earlier", k, "Move " + l.name + " earlier", PAIR.earlier, i === 0)
+        + toolBtn("later", k, "Move " + l.name + " later", PAIR.later, i === ids.length - 1)
+        + toolBtn("remove", k, "Remove " + l.name + " from Quick Links", ICON.x, false)
         + '</div></div>';
     }).join("");
     if(quickEmpty){
-      quickEmpty.hidden = urls.length > 0;
+      quickEmpty.hidden = ids.length > 0;
       quickEmpty.textContent = editing
         ? "Star any link further down the page to add it here."
         : "No quick links yet. Tap Customize Quick Links to add the ones you use.";
@@ -723,27 +744,27 @@
 
   function refreshLayout(){ renderQuick(); renderSections(); applyFilter(); }
 
-  function moveQuick(url, dir){
+  function moveQuick(id, dir){
     const list = resolveQuick();
-    const i = list.indexOf(url), j = i + (dir === "up" ? -1 : 1);
+    const i = list.indexOf(id), j = i + (dir === "earlier" ? -1 : 1);
     if(i < 0 || j < 0 || j >= list.length) return;
-    list[i] = list[j]; list[j] = url;
+    list[i] = list[j]; list[j] = id;
     quick.order = list;
-    saveQuick(); trackQuick("quick_move", {url:url, direction:dir}); refreshLayout();
+    saveQuick(); trackQuick("quick_move", {link:id, direction:dir}); refreshLayout();
   }
-  function removeQuick(url){
-    quick.order = resolveQuick().filter(function(u){ return u !== url; });
-    if(quick.hidden.indexOf(url) < 0) quick.hidden.push(url);
-    saveQuick(); trackQuick("quick_remove", {url:url}); refreshLayout();
+  function removeQuick(id){
+    quick.order = resolveQuick().filter(function(k){ return k !== id; });
+    if(quick.hidden.indexOf(id) < 0) quick.hidden.push(id);
+    saveQuick(); trackQuick("quick_remove", {link:id}); refreshLayout();
   }
-  function addQuick(url){
-    if(!LINK_BY_URL[url]) return;
+  function addQuick(id){
+    if(!LINK_BY_ID[id]) return;
     const list = resolveQuick();
-    if(list.indexOf(url) >= 0) return;
-    list.push(url);
+    if(list.indexOf(id) >= 0) return;
+    list.push(id);
     quick.order = list;
-    const h = quick.hidden.indexOf(url); if(h >= 0) quick.hidden.splice(h, 1);
-    saveQuick(); trackQuick("quick_add", {url:url}); refreshLayout();
+    const h = quick.hidden.indexOf(id); if(h >= 0) quick.hidden.splice(h, 1);
+    saveQuick(); trackQuick("quick_add", {link:id}); refreshLayout();
   }
 
   document.addEventListener("click", function(e){
@@ -751,10 +772,17 @@
     if(!btn) return;
     e.preventDefault(); e.stopPropagation();
     if(btn.disabled) return;
-    const url = btn.dataset.url, act = btn.dataset.qact;
-    if(act === "remove") removeQuick(url);
-    else if(act === "fav"){ if(resolveQuick().indexOf(url) >= 0) removeQuick(url); else addQuick(url); }
-    else moveQuick(url, act);
+    const id = btn.dataset.id, act = btn.dataset.qact;
+    if(act === "remove"){ removeQuick(id); return; }
+    if(act === "fav"){
+      const list = resolveQuick();
+      if(list.indexOf(id) >= 0){ removeQuick(id); return; }
+      const l = LINK_BY_ID[id], alt = l && QUICK_BY_URL[l.url];
+      if(alt && list.indexOf(alt) >= 0) removeQuick(alt);
+      else addQuick(id);
+      return;
+    }
+    moveQuick(id, act);
   }, true);
 
   function copyShareLink(btn){
@@ -781,8 +809,8 @@
   function renderBar(){
     layBar.innerHTML = "";
     const toggle = document.createElement("button");
-    toggle.type = "button"; toggle.className = "lay-btn" + (editing ? " on" : "");
-    toggle.textContent = editing ? "Done" : "Customize Quick Links";
+    toggle.type = "button"; toggle.className = "lay-btn primary" + (editing ? " on" : "");
+    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize Quick Links</span>";
     toggle.setAttribute("aria-pressed", editing ? "true" : "false");
     toggle.onclick = function(){
       editing = !editing;
@@ -807,7 +835,7 @@
 
       const note = document.createElement("span");
       note.className = "lay-note";
-      note.textContent = "Arrows reorder, the X removes, and the star on any link below adds it here. Saved on this device only.";
+      note.textContent = "Saved on this device.";
       layBar.appendChild(note);
     }
   }
