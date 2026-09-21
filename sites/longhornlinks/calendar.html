@@ -332,6 +332,17 @@
   .cx-dayhead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:14px;}
   .cx-dayhead h3{font-family:"Archivo",sans-serif;font-weight:700;font-size:22px;margin:0;}
   .cx-dayhead .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+  /* The list under the calendar covers the whole visible month, split by day. */
+  .cx-group{margin-bottom:26px;scroll-margin-top:18px;}
+  .cx-group:last-child{margin-bottom:0;}
+  .cx-grouphead{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    margin:0 0 11px;padding-bottom:8px;border-bottom:1.5px solid var(--line);}
+  .cx-grouphead .d{font-family:"Archivo",sans-serif;font-weight:700;font-size:16.5px;color:var(--ink);}
+  .cx-grouphead .c{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  .cx-group.sel .cx-grouphead{border-bottom-color:var(--brand);}
+  .cx-group.sel .cx-grouphead .d{color:var(--brand-deep);}
+
   .cx-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px 18px 15px;margin-bottom:11px;transition:border-color .12s,box-shadow .12s;}
   .cx-card:hover{border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
   .cx-card .name{font-family:"Archivo",sans-serif;font-weight:700;font-size:17px;line-height:1.25;}
@@ -466,7 +477,7 @@
     <div class="cx-season" id="season"></div>
   </section>
 
-  <section class="cx-day" aria-live="polite">
+  <section class="cx-day">
     <div class="cx-dayhead"><h3 id="dayTitle"></h3><span class="eyebrow" id="dayCount"></span></div>
     <div id="dayList"></div>
   </section>
@@ -510,7 +521,7 @@
     </div>
     <p class="disclaimer">
       Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business.
-      Event times and locations change &mdash; confirm with the host. Prototype v0.5.
+      Event times and locations change &mdash; confirm with the host. Prototype v0.6.
     </p>
   </div>
 </footer>
@@ -540,7 +551,7 @@
   async function load(){
     try{const r=await fetch("events.json",{cache:"no-store"}); if(!r.ok) throw 0; data=await r.json();}
     catch{ data=JSON.parse($("#seed").textContent); }
-    data.events=data.events.filter(e=>e.start.slice(0,10)>=todayISO);
+    data.events=data.events.filter(e=>e.start.slice(0,10)>=todayISO).sort((a,b)=>a.start<b.start?-1:a.start>b.start?1:0);
     const present=new Set(data.events.flatMap(e=>e.tracks));
     $("#track").innerHTML=`<option value="all">All tracks</option>`+data.tracks.filter(t=>present.has(t)).map(t=>`<option value="${t}">${LABEL[t]||t}</option>`).join("")+(present.has("general")?`<option value="general">Other</option>`:"");
     if(!eventsOn(todayISO).length){ const n=visible().find(e=>e.start.slice(0,10)>todayISO); if(n){ selected=n.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); } }
@@ -561,7 +572,7 @@
       $("#nextWhen").textContent=next.all_day?day+" · all day":day+" · "+fmtT(next.start);
       $("#nextWhat").textContent=next.title;
       $("#nextWhere").textContent=[next.org,next.location].filter(Boolean).join(" · ");
-      $("#nextGo").onclick=()=>{selected=next.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); render();};
+      $("#nextGo").onclick=()=>{selected=next.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); render(); scrollToDay();};
       card.hidden=false;
     } else card.hidden=true;
 
@@ -593,7 +604,7 @@
       $("#calTitle").textContent=`${start.toLocaleDateString('en-US',{month:'short',day:'numeric'})} to ${end.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
     }
     g.innerHTML=html;
-    g.querySelectorAll(".cx-d").forEach(b=>b.onclick=()=>{selected=b.dataset.d; cursor=new Date(selected+"T12:00:00"); render();});
+    g.querySelectorAll(".cx-d").forEach(b=>b.onclick=()=>{selected=b.dataset.d; cursor=new Date(selected+"T12:00:00"); render(); scrollToDay();});
     // key by year-month so Jan 2027 sorts after Dec 2026 rather than jumping to the front
     const per={}; visible().forEach(e=>{const k=e.start.slice(0,7); per[k]=(per[k]||0)+1;});
     const keys=Object.keys(per).sort();
@@ -620,25 +631,53 @@
       <div class="cx-acts"><button class="cx-b" onclick="dl('${e.id}')" type="button">Add to phone</button><a class="cx-b ghost" href="${gcal(e)}" target="_blank" rel="noopener">Google Cal</a>${e.url?`<a class="cx-b ghost" href="${esc(e.url)}" target="_blank" rel="noopener">Details</a>`:""}</div>
     </article>`;
   }
-  function renderDay(){
-    const d=new Date(selected+"T12:00:00"), list=eventsOn(selected);
-    $("#dayTitle").textContent=d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"});
-    $("#dayCount").textContent=list.length?`${list.length} event${list.length===1?"":"s"}`:"";
-    if(list.length){ $("#dayList").innerHTML=list.map(card).join(""); return; }
-    const next=visible().find(e=>e.start.slice(0,10)>selected);
-    $("#dayList").innerHTML=`<div class="cx-empty">Nothing on this day for that filter.${next?` Next up: <b>${esc(next.title)}</b> on ${new Date(next.start).toLocaleDateString('en-US',{month:'short',day:'numeric'})}.<br><br><button class="cx-b" type="button" id="jump">Jump there</button>`:" Nothing later this semester either, which usually means recruiting for this track has wound down."}</div>`;
-    const j=$("#jump"); if(j) j.onclick=()=>{selected=next.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); render();};
+  /* Whatever span the calendar is showing, the list underneath covers all of it.
+     Picking a day scrolls to that day rather than hiding the rest of the month. */
+  function span(){
+    if(view==="month"){
+      const y=cursor.getFullYear(), m=cursor.getMonth();
+      return {from:iso(new Date(y,m,1)), to:iso(new Date(y,m+1,0)), label:`${MONTHS[m]} ${y}`, word:"this month"};
+    }
+    const s=new Date(cursor); s.setDate(cursor.getDate()-cursor.getDay());
+    const e=new Date(s); e.setDate(s.getDate()+6);
+    const f={month:'short',day:'numeric'};
+    return {from:iso(s), to:iso(e), word:"this week",
+            label:`${s.toLocaleDateString('en-US',f)} to ${e.toLocaleDateString('en-US',f)}`};
   }
-  function render(){ renderHero(); renderCal(); renderDay(); }
+  function renderList(){
+    const sp=span();
+    const list=visible().filter(e=>{const k=e.start.slice(0,10); return k>=sp.from && k<=sp.to;});
+    $("#dayTitle").textContent=sp.label;
+    $("#dayCount").textContent=list.length?`${list.length} event${list.length===1?"":"s"}`:"";
+    if(!list.length){
+      const next=visible().find(e=>e.start.slice(0,10)>sp.to);
+      $("#dayList").innerHTML=`<div class="cx-empty">Nothing ${sp.word} for that filter.${next?` Next up: <b>${esc(next.title)}</b> on ${new Date(next.start).toLocaleDateString('en-US',{month:'short',day:'numeric'})}.<br><br><button class="cx-b" type="button" id="jump">Jump there</button>`:" Nothing later this semester either, which usually means recruiting for this track has wound down."}</div>`;
+      const j=$("#jump"); if(j) j.onclick=()=>{selected=next.start.slice(0,10); cursor=new Date(selected+"T12:00:00"); render(); scrollToDay();};
+      return;
+    }
+    const byDay={}; list.forEach(e=>{const k=e.start.slice(0,10); (byDay[k]=byDay[k]||[]).push(e);});
+    $("#dayList").innerHTML=Object.keys(byDay).sort().map(k=>{
+      const d=new Date(k+"T12:00:00"), n=byDay[k].length;
+      return `<section class="cx-group${k===selected?" sel":""}" id="day-${k}">
+        <h4 class="cx-grouphead"><span class="d">${d.toLocaleDateString("en-US",{weekday:"long",month:"long",day:"numeric"})}</span>
+        <span class="c">${n} event${n===1?"":"s"}${k===todayISO?" \u00b7 today":""}</span></h4>
+        ${byDay[k].map(card).join("")}</section>`;
+    }).join("");
+  }
+  function scrollToDay(){
+    const t=document.getElementById("day-"+selected);
+    if(t) t.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+  function render(){ renderHero(); renderCal(); renderList(); }
 
   /* ---------- wiring ---------- */
   $("#track").onchange=e=>{track=e.target.value; render();};
   $("#who").onchange=e=>{who=e.target.value; render();};
-  $("#prev").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()-1); else cursor.setDate(cursor.getDate()-7); renderCal(); };
-  $("#next").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()+1); else cursor.setDate(cursor.getDate()+7); renderCal(); };
+  $("#prev").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()-1); else cursor.setDate(cursor.getDate()-7); renderCal(); renderList(); };
+  $("#next").onclick=()=>{ if(view==="month") cursor.setMonth(cursor.getMonth()+1); else cursor.setDate(cursor.getDate()+7); renderCal(); renderList(); };
   $("#todayBtn").onclick=()=>{selected=todayISO; cursor=new Date(today); render();};
-  $("#vMonth").onclick=()=>{view="month"; $("#vMonth").setAttribute("aria-pressed","true"); $("#vWeek").setAttribute("aria-pressed","false"); renderCal();};
-  $("#vWeek").onclick=()=>{view="week"; $("#vWeek").setAttribute("aria-pressed","true"); $("#vMonth").setAttribute("aria-pressed","false"); renderCal();};
+  $("#vMonth").onclick=()=>{view="month"; $("#vMonth").setAttribute("aria-pressed","true"); $("#vWeek").setAttribute("aria-pressed","false"); renderCal(); renderList();};
+  $("#vWeek").onclick=()=>{view="week"; $("#vWeek").setAttribute("aria-pressed","true"); $("#vMonth").setAttribute("aria-pressed","false"); renderCal(); renderList();};
 
   function openSheet(){ const t=track, url=FEED_BASE+t+".ics";
     $("#feedUrl").value=url; $("#appleFeed").href=url.replace(/^https?:/,"webcal:"); $("#googleFeed").href="https://calendar.google.com/calendar/r/settings/addbyurl?cid="+encodeURIComponent(url);
