@@ -174,7 +174,7 @@
   .section.admit .section-head h2,.section.quick .section-head h2{color:var(--brand-deep);}
   .section.admit .admit-note,.section.quick .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
 
-  /* My Links sits full width above the directory, same as the undergrad page. */
+  /* My Quick Links sits full width above the directory, same as the undergrad page. */
   .section.quick{margin-top:14px;}
 
   /* ---------- Voter registration button (sits beside the hero headline) ---------- */
@@ -189,7 +189,7 @@
   @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;} }
 
 
-  /* ---------- Customize My Links (no login, localStorage) ---------- */
+  /* ---------- Customize My Quick Links (no login, localStorage) ---------- */
   .lay-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 0;}
   .lay-btn{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
     min-height:38px;padding:9px 13px;border-radius:8px;border:1.5px solid var(--line);
@@ -234,6 +234,7 @@
     .lay-actions .lay-btn{flex:1 1 0;min-width:0;justify-content:center;padding:10px 6px;
       font-size:11px;letter-spacing:.04em;}
     .lay-actions .lay-btn.primary svg{display:none;}   /* the label needs the width more */
+    .lbl-long{display:none;}                           /* "Customize" carries it on a phone */
   }
 
   /* Custom sections carry their own controls in edit mode. Editorial ones do not. */
@@ -252,7 +253,7 @@
     .sec-tools{margin-left:0;}
   }
 
-  /* ---------- My Links (the student's own, local to this device) ---------- */
+  /* ---------- My Quick Links (the student's own, local to this device) ---------- */
   .badge.mine{background:var(--brand-tint);color:var(--brand-deep);}
   .my-tip{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:-4px 0 14px;
     background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:10px;padding:10px 12px;
@@ -431,8 +432,7 @@
 <main class="wrap">
   <div class="section quick" id="quick-links" data-cat="quicklinks">
     <div class="section-head">
-      <span class="eyebrow">Every week</span>
-      <h2>My Links</h2>
+      <h2>My Quick Links</h2>
     </div>
     <div id="my-tips"></div>
     <p class="admit-note" id="quick-empty" hidden></p>
@@ -512,7 +512,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.4.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.5.
     </p>
   </div>
 </footer>
@@ -555,7 +555,7 @@
 <div class="modal" id="mymodal" role="dialog" aria-modal="true" aria-labelledby="mymodal-title">
   <div class="modal-box">
     <h3 id="mymodal-title">Add a link</h3>
-    <p class="sub">For the niche things this page does not list. It lands in My Links at the top.</p>
+    <p class="sub">For the niche things this page does not list. It lands in My Quick Links at the top.</p>
     <div class="field"><label for="m-name">Name</label><input id="m-name" type="text" maxlength="80" placeholder="e.g. My section's study group doc" /></div>
     <div class="field"><label for="m-url">URL</label><input id="m-url" type="text" placeholder="paste a link, or type a domain" /></div>
     <div class="field"><label for="m-note">Note (optional)</label><input id="m-note" type="text" maxlength="120" placeholder="one line to remind you what it is" /></div>
@@ -654,7 +654,7 @@
     {cat:"prospective", name:"Rankings (U.S. News)", desc:"See where McCombs lands among U.S. business schools.", url:"https://www.usnews.com/best-graduate-schools/top-business-schools/university-of-texas-austin-01255", ext:true},
   ];
 
-  // Rendered into the My Links box at the top. Kept out of LINKS so the
+  // Rendered into the My Quick Links box at the top. Kept out of LINKS so the
   // footer count and the category sections are not double-counted.
   const QUICKLINKS = [
     {cat:"quicklinks", name:"Canvas", desc:"Your courses, assignments, and grades.", url:"https://utexas.instructure.com/", login:true},
@@ -680,7 +680,7 @@
     {id:"newssports",   label:"UT News & Sports"},
   ];
 
-  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.prospective = "For Prospectives"; CAT_LABEL.quicklinks = "My Links";
+  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.prospective = "For Prospectives"; CAT_LABEL.quicklinks = "My Quick Links";
 
   const lockSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   const arrowSVG = '<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
@@ -700,7 +700,7 @@
   /* ---------- Personal links and custom sections. No login, no account, this device. ---------- */
   const MY_KEY = "ll_mylinks_mba_v1", CAT_KEY = "ll_customcats_mba_v1", IOSTIP_KEY = "ll_iostip_mba_v1";
   const MY_MAX = 50, CAT_MAX = 10, MY_NAME_MAX = 80, MY_NOTE_MAX = 120, CAT_NAME_MAX = 40;
-  const HOME_CAT = "quicklinks";   // My Links, the box at the top, and the fallback bucket
+  const HOME_CAT = "quicklinks";   // My Quick Links, the box at the top, and the fallback bucket
 
   /* esc() above is enough for the attributes it is used on, but personal text is
      the one thing on this page we did not write, so it gets the full set. */
@@ -755,7 +755,7 @@
   const isCustom = id => customCats.some(function(c){ return c.id === id; });
   const catExists = id => id === HOME_CAT || BUILTIN_IDS[id] === 1 || isCustom(id);
   function catLabel(id){
-    if(id === HOME_CAT) return "My Links";
+    if(id === HOME_CAT) return "My Quick Links";
     const b = CATS.filter(function(c){ return c.id === id; })[0];
     if(b) return b.label;
     const c = customCats.filter(function(x){ return x.id === id; })[0];
@@ -763,7 +763,7 @@
   }
   /* Every section a link can be filed under, in the order they appear on the page. */
   function sectionCatalog(){
-    return [{id:HOME_CAT, label:"My Links"}]
+    return [{id:HOME_CAT, label:"My Quick Links"}]
       .concat(customCats.map(function(c){ return {id:c.id, label:c.label, custom:true, hidden:!!c.hidden}; }))
       .concat(CATS.map(function(c){ return {id:c.id, label:c.label}; }));
   }
@@ -793,7 +793,7 @@
       const v = myValidate(raw.name, raw.url, raw.note);
       if(v.err || seen[v.url]) return;
       seen[v.url] = 1;
-      /* A section that no longer exists falls back to My Links so the link survives. */
+      /* A section that no longer exists falls back to My Quick Links so the link survives. */
       const cat = typeof raw.cat === "string" && catExists(raw.cat) ? raw.cat : HOME_CAT;
       const m = {id: typeof raw.id === "string" && raw.id ? raw.id : newId("m"),
                  name:v.name, url:v.url, note:v.note, cat:cat,
@@ -907,7 +907,7 @@
       const msg = n ? 'Delete "' + escAll(c.label) + '"? It holds ' + n + ' link' + (n === 1 ? "" : "s") + '.'
                     : 'Delete "' + escAll(c.label) + '"?';
       return '<div class="sec-tools rowy"><span class="my-confirm">' + msg + '</span>'
-        + (n ? catToolBtn("del-move", c.id, "Delete the section and move its links to My Links", "<span>Move links to My Links</span>") : "")
+        + (n ? catToolBtn("del-move", c.id, "Delete the section and move its links to My Quick Links", "<span>Move links to My Quick Links</span>") : "")
         + catToolBtn("del-all", c.id, n ? "Delete the section and its links" : "Delete the section", "<span>" + (n ? "Delete links too" : "Delete") + "</span>")
         + catToolBtn("del-no", c.id, "Keep the section", "<span>Cancel</span>") + '</div>';
     }
@@ -1172,7 +1172,7 @@
   loadPersonal();
 
   // Build category sections
-  /* ---------- Customize My Links: reorder, add, remove. No login, no cookies. ---------- */
+  /* ---------- Customize My Quick Links: reorder, add, remove. No login, no cookies. ---------- */
   const QUICK_KEY = "ll_quick_mba_v1";
   /* Identity is the tile, not the destination. Four Global Studies tiles share one
      URL, and starring one of them should not flip the other three. */
@@ -1238,7 +1238,7 @@
       if(seen[k] || quick.hidden.indexOf(k) >= 0) return;
       seen[k] = 1; out.push(k);
     });
-    /* A personal link filed under My Links lives in the box and nowhere else,
+    /* A personal link filed under My Quick Links lives in the box and nowhere else,
        so it is always present rather than opt-in like the built-in tiles. */
     myLinks.forEach(function(m){
       if(m.cat !== HOME_CAT) return;
@@ -1304,7 +1304,7 @@
       const alt = QUICK_BY_URL[l.url];
       const on = inBox[id] === 1 || (alt ? inBox[alt] === 1 : false);
       return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
-        + toolBtn("fav", id, on ? "Remove " + l.name + " from My Links" : "Add " + l.name + " to My Links",
+        + toolBtn("fav", id, on ? "Remove " + l.name + " from My Quick Links" : "Add " + l.name + " to My Quick Links",
                   ICON.star + '<span>' + (on ? "Added" : "Add") + '</span>', false, on, true)
         + '</div></div>';
     }).join("");
@@ -1324,7 +1324,7 @@
       return '<div class="cardwrap">' + anyCard(l) + '<div class="qk-tools">'
         + toolBtn("earlier", k, "Move " + l.name + " earlier", PAIR.earlier, i === 0)
         + toolBtn("later", k, "Move " + l.name + " later", PAIR.later, i === ids.length - 1)
-        + (homeMine ? myToolsHTML(l) : toolBtn("remove", k, "Remove " + l.name + " from My Links", ICON.x, false))
+        + (homeMine ? myToolsHTML(l) : toolBtn("remove", k, "Remove " + l.name + " from My Quick Links", ICON.x, false))
         + '</div></div>';
     }).join("");
     const tips = document.getElementById("my-tips");
@@ -1333,7 +1333,7 @@
       quickEmpty.hidden = ids.length > 0;
       quickEmpty.textContent = editing
         ? "Star any link further down the page, or use Add a link to make your own."
-        : "Nothing here yet. Tap Customize My Links to pick the ones you use.";
+        : "Nothing here yet. Tap Customize My Quick Links to pick the ones you use.";
     }
   }
 
@@ -1405,7 +1405,7 @@
     layBar.innerHTML = "";
     const toggle = document.createElement("button");
     toggle.type = "button"; toggle.className = "lay-btn primary" + (editing ? " on" : "");
-    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize My Links</span>";
+    toggle.innerHTML = editing ? "Done" : ICON.star + '<span>Customize<span class="lbl-long"> My Quick Links</span></span>';
     toggle.setAttribute("aria-pressed", editing ? "true" : "false");
     toggle.onclick = function(){
       editing = !editing;
@@ -1536,13 +1536,13 @@
     renderExtraGrids();
     buildChips();
   }
-  // My Links box - lives outside LINKS so it doesn't double-count
+  // My Quick Links box - lives outside LINKS so it doesn't double-count
 
-  // Chips. Rebuilt with the sections so the My Links chip comes and goes with it.
+  // Chips. Rebuilt with the sections so the My Quick Links chip comes and goes with it.
   const chipsEl = document.getElementById("chips");
   let activeCat = "all";
   function buildChips(){
-    const list = [{id:"all",label:"All"}, {id:"quicklinks",label:"My Links"}];
+    const list = [{id:"all",label:"All"}, {id:"quicklinks",label:"My Quick Links"}];
     customCats.forEach(c=>{ if(!c.hidden) list.push({id:c.id, label:c.label}); });
     CATS.forEach(c=>list.push(c));
     list.push({id:"prospective",label:"For Prospectives"}, {id:"mock",label:"Registration Preview"});

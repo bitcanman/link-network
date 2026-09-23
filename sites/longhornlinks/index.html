@@ -179,7 +179,7 @@
   @media (max-width:640px){ .hero-head{gap:0;} .votechip{margin-top:16px;} }
 
 
-  /* ---------- Customize Quick Links (no login, localStorage) ---------- */
+  /* ---------- Customize My Quick Links (no login, localStorage) ---------- */
   .lay-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 0;}
   .lay-btn{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
     min-height:38px;padding:9px 13px;border-radius:8px;border:1.5px solid var(--line);
@@ -369,8 +369,7 @@
 <main class="wrap">
   <div class="section quick" id="quick-links" data-cat="quicklinks">
     <div class="section-head">
-      <span class="eyebrow">Every week</span>
-      <h2>Quick Links</h2>
+      <h2>My Quick Links</h2>
     </div>
     <p class="admit-note" id="quick-empty" hidden></p>
     <div class="lay-bar" id="layBar"></div>
@@ -442,7 +441,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v1.6.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v1.7.
     </p>
   </div>
 </footer>
@@ -564,7 +563,7 @@
     {cat:"essentials", name:"International Students (Texas Global)", desc:"Check-in, visas, and extra requirements for international Longhorns.", url:"https://global.utexas.edu/isss"},
   ];
 
-  // Rendered into the Quick Links box at the top. Kept out of LINKS so the
+  // Rendered into the My Quick Links box at the top. Kept out of LINKS so the
   // footer count and the category sections are not double-counted.
   const QUICKLINKS = [
     {cat:"quicklinks", name:"Canvas", desc:"Your courses, assignments, and grades.", url:"https://utexas.instructure.com/", login:true},
@@ -587,7 +586,7 @@
     {id:"essentials",   label:"UT Essentials"},
   ];
 
-  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.quicklinks = "Quick Links";
+  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.quicklinks = "My Quick Links";
 
   const lockSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   const arrowSVG = '<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
@@ -605,7 +604,7 @@
   }
 
   // Build category sections
-  /* ---------- Customize Quick Links: reorder, add, remove. No login, no cookies. ---------- */
+  /* ---------- Customize My Quick Links: reorder, add, remove. No login, no cookies. ---------- */
   const QUICK_KEY = "ll_quick_general_v1";
   /* Identity is the tile, not the destination. Four Global Studies tiles share one
      URL, and starring one of them should not flip the other three. */
@@ -715,7 +714,7 @@
       const alt = QUICK_BY_URL[l.url];
       const on = inBox[id] === 1 || (alt ? inBox[alt] === 1 : false);
       return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
-        + toolBtn("fav", id, on ? "Remove " + l.name + " from Quick Links" : "Add " + l.name + " to Quick Links",
+        + toolBtn("fav", id, on ? "Remove " + l.name + " from My Quick Links" : "Add " + l.name + " to My Quick Links",
                   ICON.star + '<span>' + (on ? "Added" : "Add") + '</span>', false, on, true)
         + '</div></div>';
     }).join("");
@@ -731,14 +730,14 @@
       return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
         + toolBtn("earlier", k, "Move " + l.name + " earlier", PAIR.earlier, i === 0)
         + toolBtn("later", k, "Move " + l.name + " later", PAIR.later, i === ids.length - 1)
-        + toolBtn("remove", k, "Remove " + l.name + " from Quick Links", ICON.x, false)
+        + toolBtn("remove", k, "Remove " + l.name + " from My Quick Links", ICON.x, false)
         + '</div></div>';
     }).join("");
     if(quickEmpty){
       quickEmpty.hidden = ids.length > 0;
       quickEmpty.textContent = editing
         ? "Star any link further down the page to add it here."
-        : "No quick links yet. Tap Customize Quick Links to add the ones you use.";
+        : "Nothing here yet. Tap Customize My Quick Links to pick the ones you use.";
     }
   }
 
@@ -810,7 +809,7 @@
     layBar.innerHTML = "";
     const toggle = document.createElement("button");
     toggle.type = "button"; toggle.className = "lay-btn primary" + (editing ? " on" : "");
-    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize Quick Links</span>";
+    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize My Quick Links</span>";
     toggle.setAttribute("aria-pressed", editing ? "true" : "false");
     toggle.onclick = function(){
       editing = !editing;
