@@ -272,26 +272,9 @@
   /* ---------- Band (alternating section) ---------- */
   .band{background:var(--band);border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:14px;padding:44px 0 8px;}
 
-  /* ---------- Registration mockup ---------- */
-  .mock-wrap{position:relative;border:1px solid var(--line);border-radius:13px;overflow:hidden;background:var(--panel);}
-  .mock-top{display:flex;align-items:center;justify-content:space-between;padding:15px 20px;background:var(--dark);color:#F4EBE1;}
-  .mock-top h3{margin:0;font-family:"Archivo",sans-serif;font-weight:600;font-size:17px;}
-  .mock-top .term{font-family:"Spline Sans Mono",monospace;font-size:12px;color:#CBB49C;letter-spacing:.04em;}
-  table.mock{width:100%;border-collapse:collapse;font-size:13.5px;}
-  table.mock th{text-align:left;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500;padding:11px 20px;border-bottom:1px solid var(--line);background:var(--bg);}
-  table.mock td{padding:13px 20px;border-bottom:1px solid var(--line);}
-  table.mock tr:last-child td{border-bottom:none;}
-  .uniq{font-family:"Spline Sans Mono",monospace;color:var(--brand-deep);font-weight:500;}
-  .stat-pill{font-family:"Spline Sans Mono",monospace;font-size:10.5px;padding:3px 9px;border-radius:5px;text-transform:uppercase;letter-spacing:.03em;}
-  .stat-pill.open{background:#E2EFE2;color:var(--open);}
-  .stat-pill.wait{background:#F7EBD2;color:var(--wait);}
-  .stat-pill.closed{background:#F2DFDF;color:var(--closed);}
-  .mock-veil{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:linear-gradient(180deg,rgba(235,231,221,.55),rgba(235,231,221,.95));backdrop-filter:blur(2px);text-align:center;padding:26px;}
-  .mock-veil .lock{width:34px;height:34px;color:var(--brand);}
-  .mock-veil p{margin:0;max-width:44ch;font-size:14px;}
+  /* ---------- Primary button ---------- */
   .btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;border:none;cursor:pointer;transition:background .12s;}
   .btn:hover{background:var(--brand-deep);}
-  .mock-note{font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:var(--muted);margin-top:6px;}
 
   /* ---------- Stats ---------- */
   .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin:14px 0;}
@@ -348,9 +331,6 @@
     .stats{grid-template-columns:1fr 1fr;gap:8px;}
     .stat-card .big{font-size:20px;}
     .stat-card .lbl{font-size:10.5px;}
-    .mock-veil p{font-size:13px;}
-    table.mock{font-size:12px;}
-    table.mock th, table.mock td{padding:9px 12px;}
     .count,.search kbd{display:none;}
     .foot-grid{grid-template-columns:1fr 1fr;gap:26px;}
     .foot-brand{grid-column:1 / -1;}
@@ -444,34 +424,9 @@
   <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
 </main>
 
-<!-- Band: registration + prospectives -->
+<!-- Band: prospectives -->
 <section class="band">
   <div class="wrap">
-    <div class="section" id="cat-mock">
-      <div class="section-head">
-        <span class="eyebrow">Preview</span>
-        <h2>What registration looks like</h2>
-      </div>
-      <div class="mock-wrap" aria-label="Mockup of the class registration screen; the real system requires login">
-        <div class="mock-top"><h3>Class Registration</h3><span class="term">SPRING 2026 · MBA</span></div>
-        <table class="mock" aria-hidden="true">
-          <thead><tr><th>Unique</th><th>Course</th><th>Instructor</th><th>Status</th></tr></thead>
-          <tbody>
-            <tr><td class="uniq">04125</td><td>Financial Management - MGT 393</td><td>Staff</td><td><span class="stat-pill open">Open</span></td></tr>
-            <tr><td class="uniq">04210</td><td>Strategic Marketing - MKT 382</td><td>Staff</td><td><span class="stat-pill wait">Waitlist</span></td></tr>
-            <tr><td class="uniq">04388</td><td>Data Analytics for Leaders - MIS 381</td><td>Staff</td><td><span class="stat-pill closed">Closed</span></td></tr>
-            <tr><td class="uniq">04501</td><td>Global Connections - MAN 386</td><td>Staff</td><td><span class="stat-pill open">Open</span></td></tr>
-          </tbody>
-        </table>
-        <div class="mock-veil">
-          <svg class="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-          <p><strong>This is a preview, not the real thing.</strong> Live registration is personalized and lives behind UT EID + DUO login. This page sends you straight to the sign-in.</p>
-          <a class="btn" href="https://utdirect.utexas.edu/registration/" target="_blank" rel="noopener">Go to Registration (sign-in required) &rarr;</a>
-          <span class="mock-note">Numbers and courses above are illustrative only.</span>
-        </div>
-      </div>
-    </div>
-
     <div class="section" id="cat-prospective" style="margin-bottom:8px;">
       <div class="section-head">
         <span class="eyebrow">For prospectives</span>
@@ -512,7 +467,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.5.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.6.
     </p>
   </div>
 </footer>
@@ -1545,7 +1500,7 @@
     const list = [{id:"all",label:"All"}, {id:"quicklinks",label:"My Quick Links"}];
     customCats.forEach(c=>{ if(!c.hidden) list.push({id:c.id, label:c.label}); });
     CATS.forEach(c=>list.push(c));
-    list.push({id:"prospective",label:"For Prospectives"}, {id:"mock",label:"Registration Preview"});
+    list.push({id:"prospective",label:"For Prospectives"});
     if(!list.some(c=>c.id===activeCat)) activeCat = "all";
     chipsEl.innerHTML = "";
     list.forEach(c=>{
@@ -1642,7 +1597,6 @@
     document.querySelectorAll(".section").forEach(sec=>{
       const cat = sec.dataset.cat || sec.id.replace("cat-","");
       const catMatch = (activeCat==="all") || (activeCat===cat) ||
-                       (activeCat==="mock" && sec.id==="cat-mock") ||
                        (activeCat==="prospective" && sec.id==="cat-prospective");
       /* A section the student hid stays hidden while browsing, but a search still
          reaches into it and edit mode shows it dimmed so it can be brought back. */
