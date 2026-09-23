@@ -205,7 +205,6 @@
     .lay-actions .lay-btn{flex:1 1 0;min-width:0;justify-content:center;padding:10px 6px;
       font-size:11px;letter-spacing:.04em;}
     .lay-actions .lay-btn.primary svg{display:none;}   /* the label needs the width more */
-    .lbl-long{display:none;}                           /* "Customize" carries it on a phone */
   }
 
   /* Custom sections carry their own controls in edit mode. Editorial ones do not. */
@@ -1251,7 +1250,7 @@
       quickEmpty.hidden = ids.length > 0;
       quickEmpty.textContent = editing
         ? "Star any link further down the page, or use Add a link to make your own."
-        : "Nothing here yet. Tap Customize My Quick Links to pick the ones you use.";
+        : "Nothing here yet. Tap Customize to pick the ones you use.";
     }
   }
 
@@ -1323,7 +1322,7 @@
     layBar.innerHTML = "";
     const toggle = document.createElement("button");
     toggle.type = "button"; toggle.className = "lay-btn primary" + (editing ? " on" : "");
-    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize My Quick Links</span>";
+    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize</span>";
     toggle.setAttribute("aria-pressed", editing ? "true" : "false");
     toggle.onclick = function(){
       editing = !editing;
