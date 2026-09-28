@@ -65,26 +65,18 @@
   :focus-visible{outline:3px solid var(--focus);outline-offset:2px;}
   a{color:inherit;}
 
-  /* ---------- Utility bar (tier 1) ---------- */
-  .utility{background:var(--dark);color:#E9DACA;}
-  .utility-inner{display:flex;align-items:center;justify-content:flex-end;gap:18px;height:38px;font-family:"Press Start 2P",monospace;font-size:8px;letter-spacing:0;text-transform:uppercase;}
-  .utility a,.utility button{color:#E9DACA;text-decoration:none;background:none;border:none;font:inherit;cursor:pointer;padding:0;}
-  .utility a:hover,.utility button:hover{color:#fff;}
-  .utility .pill{margin-right:auto;display:inline-flex;align-items:center;gap:7px;color:#A9917A;}
-  .utility .pill .dot{width:7px;height:7px;border-radius:50%;background:#E08A3C;}
-
-  .utility .backlink{margin-right:auto;display:inline-flex;align-items:center;gap:8px;color:#E9DACA;text-decoration:none;line-height:1.4;}
-  .utility .backlink:hover{color:#fff;}
-  .utility .backlink .arw{color:#BF5700;font-weight:700;}
-  .utility .disc{color:#C2AD8F;font-size:9.5px;letter-spacing:.04em;}
+  /* ---------- Header disclaimer (moved off the removed utility bar) ---------- */
+  .cta-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto;}
+  .disc-inline{font-family:"Spline Sans Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+  @media (max-width:390px){ .disc-inline{font-size:8.5px;letter-spacing:.03em;} }
 
   /* ---------- Main header (tier 2) ---------- */
   header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bottom:3px solid var(--brand);}
   .main-inner{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px;}
-  .wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;}
+  .wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;line-height:1;}
   .wordmark .mark{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;background:var(--brand);color:#fff;border-radius:8px;font-size:19px;}
   .wordmark .wm-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1;color:var(--ink);white-space:nowrap;}
-  .wordmark .wm-sub{font-family:"Spline Sans Mono",monospace;font-size:9px;white-space:nowrap;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+  .wordmark .wm-sub{font-family:"Spline Sans Mono",monospace;font-size:9px;line-height:1;white-space:nowrap;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
   nav.sections{display:flex;gap:2px;flex-wrap:nowrap;}
   nav.sections a{font-size:12.5px;font-weight:600;color:var(--ink);text-decoration:none;padding:8px 9px;border-radius:7px;white-space:nowrap;}
   nav.sections a:hover{background:var(--brand-tint);color:var(--brand-deep);}
@@ -116,7 +108,7 @@
      every common phone. Drop "Try our", shrink, and let the row wrap as a backstop. */
   @media (max-width:1060px){ .rr-try .rr-pre{display:none;} .rr-try{font-size:13px;} }
   @media (max-width:520px){
-    .main-inner{flex-wrap:wrap;height:auto;min-height:62px;padding:9px 0;gap:6px;}
+    .main-inner{flex-wrap:wrap;height:auto;min-height:62px;padding:9px 22px;gap:6px;}
     .rr-try{font-size:12.5px;}
   }
   .btn-head{font-size:12.5px;padding:9px 13px;white-space:nowrap;flex:0 0 auto;}
@@ -334,7 +326,6 @@
     .count,.search kbd{display:none;}
     .foot-grid{grid-template-columns:1fr 1fr;gap:26px;}
     .foot-brand{grid-column:1 / -1;}
-    .utility-inner{gap:14px;}
     .controls{position:static;padding:12px 0;}
     .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
     .chips::-webkit-scrollbar{display:none;}
@@ -344,14 +335,6 @@
 </style>
 </head>
 <body>
-
-<!-- Tier 1: utility bar -->
-<div class="utility">
-  <div class="wrap utility-inner">
-    <a class="backlink" href="https://linkcowboy.com"><span class="arw">&larr;</span> Back to LinkCowboy</a>
-    <span class="disc">Unofficial · Student-built</span>
-  </div>
-</div>
 
 <!-- Tier 2: main header -->
 <header class="main">
@@ -370,7 +353,10 @@
       <a href="#cat-careers">Careers</a>
       <a href="#cat-newssports">News & Sports</a>
     </nav>
-    <a class="rr-try" href="mailto:jn32456@my.utexas.edu"><span class="rr-pre">Get in touch </span>Contact Us <span class="arw" aria-hidden="true">&rarr;</span></a>
+    <div class="cta-wrap">
+      <a class="rr-try" href="mailto:jn32456@my.utexas.edu"><span class="rr-pre">Get in touch </span>Contact Us <span class="arw" aria-hidden="true">&rarr;</span></a>
+      <span class="disc-inline">Unofficial &middot; Student-built</span>
+    </div>
   </div>
 </header>
 
@@ -466,7 +452,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.7.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.8.
     </p>
   </div>
 </footer>
