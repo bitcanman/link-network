@@ -60,19 +60,22 @@
   }
 
   /* ---------- Pink mode: a lighthearted alternate palette, local to this device ---------- */
+  /* Only the passive canvas shifts: background, band, borders, footer, and the
+     quiet decorative text (host, arrow, placeholder). Brand, ink, muted, and
+     focus stay put on purpose, so buttons, badges, and the hero heading read
+     exactly like they do outside pink mode. */
   body.pink{
-    --brand:#F0158C;--brand-deep:#C10E6E;--brand-tint:#FFD6EC;
-    --ink:#4A1638;--bg:#FFE6F2;--band:#FFCCE6;--line:#FF9FD4;--muted:#A2547E;
-    --dark:#6E1550;--dark-line:#8F1F68;--focus:#E01E85;
-    --tint-line:#FF8FCB;--foot-ink:#FFDCEF;--foot-muted:#E39BC2;--foot-dim:#F2B8DC;
-    --host-ink:#D27CAD;--arrow-ink:#FAC3E4;--placeholder-ink:#E5A8CC;
+    --bg:#FBF1F6;--band:#F6E1EC;--line:#EEC5DB;
+    --dark:#3B222E;--dark-line:#573345;
+    --tint-line:#E3A9C4;--foot-ink:#F0D4E0;--foot-muted:#A9808F;--foot-dim:#CBA0B2;
+    --host-ink:#B0839A;--arrow-ink:#E7C6D6;--placeholder-ink:#CDA6B7;
   }
-  .pink-toggle{width:30px;height:30px;border-radius:8px;border:1.5px solid #FF9FD4;background:#FFD6EC;
+  .pink-toggle{width:30px;height:30px;border-radius:8px;border:1.5px solid #EFB9D3;background:#FBE1EC;
     display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 auto;
     color:#fff;transition:background .15s ease,border-color .15s ease,transform .12s ease;}
   .pink-toggle:hover{transform:scale(1.08);}
   .pink-toggle .pt-check{width:15px;height:15px;opacity:0;transition:opacity .12s ease;}
-  .pink-toggle[aria-pressed="true"]{background:#F0158C;border-color:#F0158C;}
+  .pink-toggle[aria-pressed="true"]{background:#D96E9C;border-color:#D96E9C;}
   .pink-toggle[aria-pressed="true"] .pt-check{opacity:1;}
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -439,7 +442,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.3.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.4.
     </p>
   </div>
 </footer>
@@ -1639,7 +1642,7 @@
     if(pbtn){
       var pmeta = document.querySelector('meta[name="theme-color"]');
       var PDEF = pmeta ? pmeta.getAttribute("content") : "#BF5700";
-      var PPINK = "#F0158C";
+      var PPINK = "#D96E9C";
       var sync = function(){
         var on = document.body.classList.contains("pink");
         pbtn.setAttribute("aria-pressed", on ? "true" : "false");
