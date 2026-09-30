@@ -55,7 +55,25 @@
     --dark-line:#3D3025;
     --focus:#1457D6;
     --open:#3F7A3F;--wait:#9A6B12;--closed:#9A3636;
+    --tint-line:#E8C9A8;--foot-ink:#E9DACA;--foot-muted:#8E7E6A;--foot-dim:#B49B84;
+    --host-ink:#AC9F8F;--arrow-ink:#C9BCAC;--placeholder-ink:#A69C90;
   }
+
+  /* ---------- Pink mode: a lighthearted alternate palette, local to this device ---------- */
+  body.pink{
+    --brand:#D6336C;--brand-deep:#AD2158;--brand-tint:#FCE1EC;
+    --ink:#3B1B2B;--bg:#FFF4F8;--band:#FCE3EE;--line:#F4C4DC;--muted:#8C5B72;
+    --dark:#4A1530;--dark-line:#6B2145;--focus:#C2255C;
+    --tint-line:#F0A8C9;--foot-ink:#F6D6E6;--foot-muted:#B97C99;--foot-dim:#D9A9C2;
+    --host-ink:#B87A99;--arrow-ink:#E3B8CE;--placeholder-ink:#C79AB3;
+  }
+  .pink-toggle{width:30px;height:30px;border-radius:8px;border:1.5px solid #F3B7D2;background:#FDE7F1;
+    display:inline-flex;align-items:center;justify-content:center;cursor:pointer;padding:0;flex:0 0 auto;
+    color:#fff;transition:background .15s ease,border-color .15s ease,transform .12s ease;}
+  .pink-toggle:hover{transform:scale(1.08);}
+  .pink-toggle .pt-check{width:15px;height:15px;opacity:0;transition:opacity .12s ease;}
+  .pink-toggle[aria-pressed="true"]{background:#E0447A;border-color:#E0447A;}
+  .pink-toggle[aria-pressed="true"] .pt-check{opacity:1;}
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;}
@@ -83,7 +101,7 @@
 
   /* ---------- Audience tabs ---------- */
   .aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
-  .aud-tabs{display:flex;gap:8px;padding:10px 0;}
+  .aud-tabs{display:flex;align-items:center;gap:8px;padding:10px 0;}
   .aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
   .aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
   .aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
@@ -91,7 +109,7 @@
   /* header text link - deliberately not a .btn; two solid buttons up there was too loud */
   .rr-try{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
     font-size:14px;font-weight:600;color:var(--brand-deep);text-decoration:none;
-    border-bottom:1.5px solid #E8C9A8;padding-bottom:2px;transition:color .12s,border-color .12s;}
+    border-bottom:1.5px solid var(--tint-line);padding-bottom:2px;transition:color .12s,border-color .12s;}
   .rr-try:hover{color:var(--brand);border-bottom-color:var(--brand);}
   .rr-try .arw{transition:transform .12s;}
   .rr-try:hover .arw{transform:translateX(2px);}
@@ -119,7 +137,7 @@
   .search-row{display:flex;gap:12px;align-items:center;}
   .search{flex:1;position:relative;}
   .search input{width:100%;font-family:inherit;font-size:16px;padding:11px 16px 11px 44px;border:1.5px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);}
-  .search input::placeholder{color:#A69C90;}
+  .search input::placeholder{color:var(--placeholder-ink);}
   .search input:focus{border-color:var(--brand);}
   .search svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted);}
   .search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-family:"Spline Sans Mono",monospace;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:5px;padding:2px 7px;background:var(--bg);}
@@ -146,8 +164,8 @@
   .card .ttl{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
   .card .name{font-weight:700;font-size:15.5px;line-height:1.22;}
   .card .desc{font-size:13px;color:var(--muted);line-height:1.45;}
-  .card .host{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:#AC9F8F;margin-top:3px;}
-  .arrow{flex:0 0 auto;color:#C9BCAC;transition:color .12s,transform .12s;}
+  .card .host{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.03em;text-transform:uppercase;color:var(--host-ink);margin-top:3px;}
+  .arrow{flex:0 0 auto;color:var(--arrow-ink);transition:color .12s,transform .12s;}
   .card:hover .arrow{color:var(--brand);transform:translate(2px,-2px);}
   .badge{flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;font-family:"Spline Sans Mono",monospace;font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;padding:4px 8px;border-radius:5px;font-weight:500;}
   .badge.login{background:var(--brand);color:#fff;}
@@ -155,7 +173,7 @@
   .badge svg{width:10px;height:10px;}
   .empty{display:none;text-align:center;color:var(--muted);padding:50px 0;font-size:15px;}
 
-  .section.admit,.section.quick{background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:16px;padding:24px 22px 22px;margin-top:14px;}
+  .section.admit,.section.quick{background:var(--brand-tint);border:1.5px solid var(--tint-line);border-radius:16px;padding:24px 22px 22px;margin-top:14px;}
   .section.admit .section-head h2,.section.quick .section-head h2{color:var(--brand-deep);}
   .section.admit .admit-note,.section.quick .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
 
@@ -218,7 +236,7 @@
   /* ---------- My Quick Links (the student's own, local to this device) ---------- */
   .badge.mine{background:var(--brand-tint);color:var(--brand-deep);}
   .my-tip{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:-4px 0 14px;
-    background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:10px;padding:10px 12px;
+    background:var(--brand-tint);border:1.5px solid var(--tint-line);border-radius:10px;padding:10px 12px;
     font-size:13.5px;color:var(--brand-deep);}
   .my-linkish{font:inherit;color:var(--brand-deep);background:none;border:none;padding:0;
     cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-weight:700;}
@@ -260,16 +278,16 @@
   .stat-card .lbl{font-size:11.5px;color:var(--muted);margin-top:5px;line-height:1.3;}
 
   /* ---------- Footer ---------- */
-  footer{background:var(--dark);color:#E9DACA;margin-top:36px;padding:50px 0 40px;}
+  footer{background:var(--dark);color:var(--foot-ink);margin-top:36px;padding:50px 0 40px;}
   .foot-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:32px;}
   .foot-brand .fb-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:22px;color:#fff;}
-  .foot-brand p{color:#B49B84;font-size:13px;max-width:34ch;margin:10px 0 16px;line-height:1.5;}
+  .foot-brand p{color:var(--foot-dim);font-size:13px;max-width:34ch;margin:10px 0 16px;line-height:1.5;}
   .foot-brand .btn{font-size:13px;}
-  footer h5{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8E7E6A;margin:0 0 12px;}
+  footer h5{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--foot-muted);margin:0 0 12px;}
   footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;}
-  footer ul a{color:#E9DACA;text-decoration:none;font-size:13.5px;}
+  footer ul a{color:var(--foot-ink);text-decoration:none;font-size:13.5px;}
   footer ul a:hover{color:#fff;}
-  .legal{margin-top:34px;border-top:1px solid var(--dark-line);padding-top:20px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:#8E7E6A;line-height:1.7;}
+  .legal{margin-top:34px;border-top:1px solid var(--dark-line);padding-top:20px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;color:var(--foot-muted);line-height:1.7;}
 
   /* ---------- Modal form ---------- */
   .modal{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(19,32,30,.55);}
@@ -319,6 +337,7 @@
 </style>
 </head>
 <body>
+<script>try{if(localStorage.getItem("ll_pink_general_v1")==="1")document.body.classList.add("pink");}catch(e){}</script>
 
 <!-- Tier 2: main header -->
 <header class="main">
@@ -346,6 +365,9 @@
 <div class="aud-wrap"><div class="wrap"><div class="aud-tabs">
   <a class="aud-tab active" href="/" aria-current="page">General</a>
   <a class="aud-tab" href="/mba.html">MBA</a>
+  <button type="button" class="pink-toggle" id="pinkToggle" aria-pressed="false" aria-label="Pink mode" title="Pink mode" style="margin-left:auto">
+    <svg class="pt-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>
+  </button>
 </div></div></div>
 
 <section class="hero" id="top">
@@ -417,7 +439,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.1.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.2.
     </p>
   </div>
 </footer>
@@ -1609,6 +1631,36 @@
   document.querySelectorAll("[data-open-form]").forEach(el=>el.addEventListener("click", e=>{e.preventDefault();openForm();}));
   document.getElementById("cancel-form").addEventListener("click", closeForm);
   modal.addEventListener("click", e=>{ if(e.target===modal) closeForm(); });
+
+  /* ---------- Pink mode toggle wiring ---------- */
+  (function(){
+    var PKEY = "ll_pink_general_v1";
+    var pbtn = document.getElementById("pinkToggle");
+    if(pbtn){
+      var pmeta = document.querySelector('meta[name="theme-color"]');
+      var PDEF = pmeta ? pmeta.getAttribute("content") : "#BF5700";
+      var PPINK = "#D6336C";
+      var sync = function(){
+        var on = document.body.classList.contains("pink");
+        pbtn.setAttribute("aria-pressed", on ? "true" : "false");
+        if(pmeta) pmeta.setAttribute("content", on ? PPINK : PDEF);
+      };
+      sync();
+      pbtn.addEventListener("click", function(){
+        var on = document.body.classList.toggle("pink");
+        pbtn.setAttribute("aria-pressed", on ? "true" : "false");
+        if(pmeta) pmeta.setAttribute("content", on ? PPINK : PDEF);
+        try{ localStorage.setItem(PKEY, on ? "1" : "0"); }catch(e){}
+        if(ANALYTICS_ENDPOINT){
+          try{
+            navigator.sendBeacon(ANALYTICS_ENDPOINT, new Blob(
+              ["type="+encodeURIComponent(on ? "pink_mode_on" : "pink_mode_off")],
+              {type:"application/x-www-form-urlencoded"}));
+          }catch(e){}
+        }
+      });
+    }
+  })();
 
   document.getElementById("submit-form").addEventListener("click", async ()=>{
     const title = document.getElementById("f-title").value.trim();
