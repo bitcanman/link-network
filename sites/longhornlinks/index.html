@@ -83,7 +83,16 @@
 
   /* ---------- Audience tabs ---------- */
   .aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
-  .aud-tabs{display:flex;gap:8px;padding:10px 0;}
+  .aud-tabs{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap;}
+  .reg-link{display:inline-flex;align-items:center;gap:6px;font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:9px 4px;white-space:nowrap;}
+  .reg-link:hover{color:var(--brand-deep);}
+  .reg-link .dot{width:6px;height:6px;border-radius:50%;background:var(--brand);flex:0 0 auto;}
+  /* Sits dead center in the bar once there's room; on a narrow phone it just
+     falls in line after the pills rather than fighting them for the middle. */
+  @media (min-width:640px){
+    .aud-tabs{position:relative;}
+    .reg-link{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);}
+  }
   .aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
   .aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
   .aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
@@ -346,6 +355,7 @@
 <div class="aud-wrap"><div class="wrap"><div class="aud-tabs">
   <a class="aud-tab active" href="/" aria-current="page">General</a>
   <a class="aud-tab" href="/mba.html">MBA</a>
+  <a class="reg-link" href="/registration"><span class="dot" aria-hidden="true"></span>Registration</a>
 </div></div></div>
 
 <section class="hero" id="top">
@@ -417,7 +427,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.7.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v2.8.
     </p>
   </div>
 </footer>
