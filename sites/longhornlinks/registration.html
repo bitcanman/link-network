@@ -44,10 +44,11 @@
   --muted:#6B6157;--faint:#A0937E;--focus:#1457D6;
 }
 *{box-sizing:border-box}
+html{overflow-y:scroll;scrollbar-gutter:stable;}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Public Sans",system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px}
-.w{max-width:760px;margin:0 auto;padding:0 24px}
+.w{max-width:960px;margin:0 auto;padding:0 24px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
 .lbl{font-family:"Spline Sans Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-deep)}
 
@@ -76,14 +77,19 @@ header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bott
 }
 
 .aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
-.aud-tabs{display:flex;gap:8px;padding:10px 0;}
+.aud-tabs{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap;}
 .aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
 .aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
 .aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
+@media (max-width:640px){
+  .aud-tab{padding:8px 14px;font-size:11.5px;}
+}
 
 /* ---------- Page content (unique to this page) ---------- */
 .title{padding:36px 0 0}
 .title h1{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(32px,7.5vw,50px);line-height:.98;letter-spacing:-.035em;margin:0}
+.title h1 .brk{display:none;}
+@media (max-width:640px){ .title h1 .brk{display:block;} }
 .title .dek{font-size:18px;color:var(--muted);margin:16px 0 0;max-width:36ch;line-height:1.45}
 
 .cd{padding:26px 0 26px;border-bottom:1px solid var(--hair)}
@@ -149,7 +155,7 @@ dd.next{color:var(--brand-deep)}
 <div class="w">
 
   <header class="title">
-    <h1>Spring 2027<br>Registration</h1>
+    <h1>Spring 2027 <span class="brk"></span>Registration</h1>
     <p class="dek">Everything the Registrar sent you, plus the parts they left out.</p>
   </header>
 
