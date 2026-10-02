@@ -50,7 +50,7 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px}
 .w{max-width:960px;margin:0 auto;padding:0 24px}
 .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
-.lbl{font-family:"Spline Sans Mono",monospace;font-size:11.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--brand-deep)}
+.lbl{font-family:"Spline Sans Mono",monospace;font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--brand-deep)}
 
 /* ---------- Standardized header (matches the rest of the site) ---------- */
 .cta-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto;}
@@ -77,22 +77,14 @@ header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bott
 }
 
 .navE{background:var(--panel);border-bottom:1px solid var(--line)}
-.navE .row{display:flex;align-items:center;gap:8px;padding:10px 0}
-.navE a{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.08em;
+.navE .row{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap}
+.navE .row > a{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;
   text-transform:uppercase;text-decoration:none;color:var(--muted);
-  border:1.5px solid var(--line);border-radius:7px;padding:9px 16px;
-  background:var(--panel);transition:.12s}
-.navE a:hover{border-color:var(--brand);color:var(--brand-deep)}
-.navE a.on{background:var(--brand);border-color:var(--brand);color:#fff}
-.navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px}
-.navE a.on .dot{display:inline-block;width:6px;height:6px;border-radius:50%;
-  background:#fff;margin-right:7px;vertical-align:1px}
-
-@media(max-width:620px){
-  .navE .row{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  .navE .row::-webkit-scrollbar{display:none}
-  .navE a{white-space:nowrap}
-}
+  border:1.5px solid var(--line);border-radius:8px;padding:9px 18px;
+  background:transparent;transition:.12s}
+.navE .row > a:hover{border-color:var(--brand);color:var(--brand-deep)}
+.navE .row > a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+.navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto;}
 
 /* ---------- Page content (unique to this page) ---------- */
 .title{padding:62px 0 44px;border-bottom:1px solid var(--line);}
@@ -133,7 +125,7 @@ dt.next{color:var(--brand)}
 dd.next{color:var(--brand-deep)}
 
 .end{padding:30px 0 56px}
-.end p{font-size:15px;color:var(--muted);line-height:1.6;margin:0;max-width:46ch}
+.end p{font-size:15.5px;color:var(--muted);line-height:1.6;margin:0;max-width:72ch}
 .foot{border-top:1px solid var(--hair);padding:18px 0 32px}
 .foot p{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0;line-height:1.9}
 .foot a{color:var(--muted);text-decoration:none}
@@ -159,7 +151,7 @@ dd.next{color:var(--brand-deep)}
   <a href="/">General</a>
   <a href="/mba.html">MBA</a>
   <span class="sp"></span>
-  <a class="on" href="/registration" aria-current="page"><span class="dot"></span>Registration</a>
+  <a class="on" href="/registration" aria-current="page">Registration</a>
 </div></div>
 
 <div class="w">

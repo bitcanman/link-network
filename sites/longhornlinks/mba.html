@@ -83,31 +83,21 @@
 
   /* ---------- Audience tabs ---------- */
   .navE{background:var(--panel);border-bottom:1px solid var(--line)}
-  .navE .row{display:flex;align-items:center;gap:8px;padding:10px 0}
-  .navE a{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.08em;
+  .navE .row{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap}
+  .navE .row > a{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;
     text-transform:uppercase;text-decoration:none;color:var(--muted);
-    border:1.5px solid var(--line);border-radius:7px;padding:9px 16px;
-    background:var(--panel);transition:.12s}
-  .navE a:hover{border-color:var(--brand);color:var(--brand-deep)}
-  .navE a.on{background:var(--brand);border-color:var(--brand);color:#fff}
-  .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px}
-  .navE a.on .dot{display:inline-block;width:6px;height:6px;border-radius:50%;
-    background:#fff;margin-right:7px;vertical-align:1px}
+    border:1.5px solid var(--line);border-radius:8px;padding:9px 18px;
+    background:transparent;transition:.12s}
+  .navE .row > a:hover{border-color:var(--brand);color:var(--brand-deep)}
+  .navE .row > a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+  .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto;}
   /* Links/Calendar shares the audience row so it never costs a second band of height. */
-  .view-tabs{margin-left:10px;display:flex;flex:0 0 auto;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel);}
+  .view-tabs{margin-left:auto;display:flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel);}
   .view-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 16px;}
   .view-tab + .view-tab{border-left:1.5px solid var(--line);}
   .view-tab:hover{color:var(--brand-deep);}
   .view-tab.active{background:var(--brand-tint);color:var(--brand-deep);font-weight:600;}
   @media (max-width:520px){ .view-tabs{margin-left:0;} .view-tab{padding:8px 13px;font-size:11.5px;} }
-
-  @media(max-width:620px){
-    .navE .row{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-    .navE .row::-webkit-scrollbar{display:none}
-    .navE a{white-space:nowrap}
-  }
-
-  /* sub-navigation under the audience tabs (Links / Calendar) */
 
   /* header text link - deliberately not a .btn; two solid buttons up there was too loud */
   .rr-try{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
@@ -373,7 +363,7 @@
 
 <div class="navE"><div class="wrap row">
   <a href="/">General</a>
-  <a class="on" href="/mba.html" aria-current="page"><span class="dot"></span>MBA</a>
+  <a class="on" href="/mba.html" aria-current="page">MBA</a>
   <span class="sp"></span>
   <a href="/registration">Registration</a>
   <div class="view-tabs" role="tablist" aria-label="MBA view">
@@ -465,7 +455,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.6.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.7.
     </p>
   </div>
 </footer>
