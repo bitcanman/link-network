@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<!--
+  Longhorn Links · longhornlinks.com/registration
+  A standalone registration-season page: countdown, do-this-first checklist,
+  and every deadline, pulled out of the main directory so it can be shared
+  on its own. Edit the OPEN/CLOSE dates and the DATES array near the bottom
+  of the <script> block each term; nothing else here needs to change.
+
+  Unofficial · not affiliated with or endorsed by UT Austin.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content="Spring 2027 registration at UT Austin. Your RIS, the course schedule, resolving holds, and every deadline, in one place." />
+<meta name="author" content="Longhorn Links" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://longhornlinks.com/registration" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png" />
+<meta name="theme-color" content="#BF5700" />
+<title>Spring 2027 Registration · Longhorn Links</title>
+<meta property="og:title" content="Spring 2027 Registration - Longhorn Links" />
+<meta property="og:description" content="Registration opens Nov 2. Everything you need, one page." />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://longhornlinks.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:url" content="https://longhornlinks.com/registration" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:image" content="https://longhornlinks.com/og-image.png" />
+<meta name="twitter:title" content="Spring 2027 Registration - Longhorn Links" />
+<meta name="twitter:description" content="Registration opens Nov 2. Everything you need, one page." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&family=Libre+Franklin:wght@400;500;600;700;800;900&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --brand:#BF5700;--brand-deep:#8F4200;
+  --ink:#221B14;--bg:#F6F1E8;--panel:#FFFFFF;--line:#E4D9C9;--hair:#EFE6D8;
+  --muted:#6B6157;--faint:#A0937E;--focus:#1457D6;
+  --serif:"Source Serif 4",Georgia,serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Libre Franklin",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.w{max-width:620px;margin:0 auto;padding:0 24px}
+.lbl{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+
+/* ---------- Standardized header (matches the rest of the site) ---------- */
+.cta-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto;}
+.disc-inline{font-family:"Spline Sans Mono",monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap;}
+@media (max-width:390px){ .disc-inline{font-size:8.5px;letter-spacing:.03em;} }
+
+header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bottom:3px solid var(--brand);}
+.main-inner{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px;max-width:1180px;margin:0 auto;padding:0 22px;}
+.wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;line-height:1;}
+.wordmark .mark{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;background:var(--brand);color:#fff;border-radius:8px;font-size:19px;}
+.wordmark .wm-name{font-family:"Archivo",sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1;color:var(--ink);white-space:nowrap;}
+.wordmark .wm-sub{font-family:"Spline Sans Mono",monospace;font-size:9px;line-height:1;white-space:nowrap;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+
+.rr-try{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
+  font-size:14px;font-weight:600;color:var(--brand-deep);text-decoration:none;
+  border-bottom:1.5px solid #E8C9A8;padding-bottom:2px;transition:color .12s,border-color .12s;}
+.rr-try:hover{color:var(--brand);border-bottom-color:var(--brand);}
+.rr-try .arw{transition:transform .12s;}
+.rr-try:hover .arw{transform:translateX(2px);}
+@media (max-width:1060px){ .rr-try .rr-pre{display:none;} .rr-try{font-size:13px;} }
+@media (max-width:520px){
+  .main-inner{flex-wrap:wrap;height:auto;min-height:62px;padding:9px 22px;gap:6px;}
+  .rr-try{font-size:12.5px;}
+}
+
+.aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
+.aud-tabs{display:flex;gap:8px;padding:10px 0;max-width:1180px;margin:0 auto;padding-left:22px;padding-right:22px;}
+.aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
+.aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
+.aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
+
+/* ---------- Page content (unique to this page) ---------- */
+.title{padding:36px 0 0}
+.title h1{font-weight:900;font-size:clamp(32px,7.5vw,50px);line-height:.98;letter-spacing:-.035em;margin:0}
+.title .dek{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin:16px 0 0;max-width:36ch;line-height:1.45}
+
+.cd{padding:26px 0 26px;border-bottom:1px solid var(--hair)}
+.cd .line{display:flex;align-items:baseline;gap:10px;margin:10px 0 0}
+.cd .num{font-weight:900;font-size:clamp(38px,8.5vw,54px);line-height:1;letter-spacing:-.035em;color:var(--brand);font-variant-numeric:tabular-nums}
+.cd .unit{font-weight:800;font-size:clamp(16px,3.2vw,20px);color:var(--ink)}
+.cd .fine{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--muted);margin:12px 0 0}
+.cd .fine b{color:var(--brand-deep)}
+
+section.grp{padding:26px 0 0}
+.grp h2{font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:10px}
+.grp h2 i{font-family:"Spline Sans Mono",monospace;font-style:normal;font-size:10px;color:var(--brand);letter-spacing:.1em}
+.grp .note{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--muted);margin:5px 0 0;line-height:1.4}
+ul{list-style:none;margin:12px 0 0;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+li+li{border-top:1px solid var(--hair)}
+li a{display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none}
+li a:hover{background:var(--bg)}
+li a:hover .nm{color:var(--brand-deep)}
+li a:hover .arw{color:var(--brand);transform:translate(2px,-2px)}
+.nm{font-weight:700;font-size:15.5px;flex:1;line-height:1.3}
+.nm small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:1px;line-height:1.35}
+.eid{font-family:"Spline Sans Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--brand);padding:3px 7px;border-radius:3px;white-space:nowrap;align-self:center}
+.arw{color:var(--line);font-size:17px;transition:transform .12s,color .12s;align-self:center}
+
+.dl{padding:30px 0 10px}
+dl{margin:14px 0 0;display:grid;grid-template-columns:96px 1fr}
+dt{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.06em;color:var(--brand-deep);padding:13px 0;border-top:1px solid var(--hair)}
+dd{margin:0;padding:13px 0;border-top:1px solid var(--hair);font-size:15px;font-weight:600}
+dd small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.4}
+dt.past,dd.past{opacity:.4}
+dt.next{color:var(--brand)}
+dd.next{color:var(--brand-deep)}
+
+.end{padding:30px 0 56px}
+.end p{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);line-height:1.6;margin:0;max-width:46ch}
+.foot{border-top:1px solid var(--hair);padding:18px 0 32px}
+.foot p{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0;line-height:1.9}
+.foot a{color:var(--muted);text-decoration:none}
+@media(max-width:520px){dl{grid-template-columns:1fr}dt{padding-bottom:0}dd{padding-top:3px;border-top:none}}
+</style>
+</head>
+<body>
+
+<header class="main">
+  <div class="main-inner">
+    <a class="wordmark" href="https://longhornlinks.com/">
+      <span class="mark" aria-hidden="true">&#9733;</span>
+      <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">UT Austin</span></span>
+    </a>
+    <div class="cta-wrap">
+      <a class="rr-try" href="mailto:jn32456@my.utexas.edu"><span class="rr-pre">Get in touch </span>Contact Us <span class="arw" aria-hidden="true">&rarr;</span></a>
+      <span class="disc-inline">Unofficial &middot; Student-built</span>
+    </div>
+  </div>
+</header>
+
+<div class="aud-wrap"><div class="aud-tabs">
+  <a class="aud-tab" href="/">General</a>
+  <a class="aud-tab" href="/mba.html">MBA</a>
+  <a class="aud-tab active" href="/registration" aria-current="page">Registration</a>
+</div></div>
+
+<div class="w">
+
+  <header class="title">
+    <h1>Spring 2027<br>Registration</h1>
+    <p class="dek">Everything the Registrar sent you, plus the parts they left out.</p>
+  </header>
+
+  <section class="cd">
+    <div class="lbl">Registration opens</div>
+    <div class="line"><span class="num" id="num">—</span><span class="unit" id="unit">days</span></div>
+    <p class="fine" id="fine"></p>
+  </section>
+
+  <section class="grp">
+    <h2><i>01</i> Do this first</h2>
+    <p class="note">A hold stops you from registering at all. Find out now, not at 8am on your access day.</p>
+    <ul>
+      <li><a href="https://utdirect.utexas.edu/registrar/ris.WBX" target="_blank" rel="noopener"><span class="nm">Your Registration Information Sheet (RIS)<small>Your access times and any holds on your record.</small></span><span class="eid">UT EID</span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/resolving-holds/" target="_blank" rel="noopener"><span class="nm">Resolving holds<small>What each hold means and which office clears it.</small></span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/registration-times/" target="_blank" rel="noopener"><span class="nm">How registration times work<small>Why yours is when it is, and why the earliest one matters.</small></span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/#advisors" target="_blank" rel="noopener"><span class="nm">Contact your academic advisor<small>Most holds are advising holds. Book early, they fill up.</small></span><span class="arw">&#8599;</span></a></li>
+    </ul>
+  </section>
+
+  <section class="grp">
+    <h2><i>02</i> Build your schedule</h2>
+    <p class="note">Write down unique numbers, not course names. Pick two backups for every class.</p>
+    <ul>
+      <li><a href="https://registrar.utexas.edu/schedules/272" target="_blank" rel="noopener"><span class="nm">Spring 2027 Course Schedule<small>Every class, its time, location, and unique number.</small></span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://registrar.utexas.edu/schedules/272/registration" target="_blank" rel="noopener"><span class="nm">Registration instructions<small>The Registrar's own walkthrough for spring.</small></span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa" target="_blank" rel="noopener"><span class="nm">UT Registration Plus<small>Grade distributions and prof ratings inside the course schedule. Student-built, free.</small></span><span class="arw">&#8599;</span></a></li>
+    </ul>
+  </section>
+
+  <section class="grp">
+    <h2><i>03</i> Dates and money</h2>
+    <ul>
+      <li><a href="https://registrar.utexas.edu/schedules/272/whentoregister" target="_blank" rel="noopener"><span class="nm">When to register and pay<small>Your window, and the payment deadline that cancels it.</small></span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://registrar.utexas.edu/calendars/26-27" target="_blank" rel="noopener"><span class="nm">Academic calendar 2026-27<small>Add, drop, Q-drop, and payment dates.</small></span><span class="arw">&#8599;</span></a></li>
+      <li><a href="https://utexas.app.box.com/s/v85y8vydyh3xpl45y8zj83qyfmvehi6l" target="_blank" rel="noopener"><span class="nm">Academic calendar (PDF)<small>The printable one.</small></span><span class="arw">&#8599;</span></a></li>
+    </ul>
+  </section>
+
+  <section class="dl">
+    <h2 style="font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:10px"><i style="font-family:'Spline Sans Mono',monospace;font-style:normal;font-size:10px;color:var(--brand);letter-spacing:.1em">04</i> Deadlines</h2>
+    <dl id="dl"></dl>
+  </section>
+
+  <section class="end">
+    <p>Unofficial and student-built. Dates come from the UT Registrar and can change, so confirm against the academic calendar and keep reading your university email. This is a bookmark page, not a source of announcements.</p>
+  </section>
+
+</div>
+
+<div class="foot"><div class="w">
+  <p>Longhorn Links &middot; <a href="https://longhornlinks.com">longhornlinks.com</a><br>&copy; 2026 &middot; not affiliated with UT Austin</p>
+</div></div>
+
+<script>
+(function(){
+  /* ===== edit each term ===== */
+  const OPEN="2026-11-02", CLOSE="2026-11-13";
+  const DATES=[
+    {d:"2026-11-02", t:"Registration opens",              s:"First period runs through Nov 13."},
+    {d:"2026-11-13", t:"First registration period ends",  s:"Next window is Dec 14-18."},
+    {d:"2026-11-17", t:"Spring tuition bills go out",     s:"Sent electronically."},
+    {d:"2026-11-18", t:"Last day to Q-drop (fall)",       s:"Also the last day to change a fall class to pass/fail."},
+    {d:"2026-12-14", t:"Registration reopens",            s:"Dec 14-18, continuing and readmitted students."},
+    {d:"2027-01-05", t:"Tuition payment deadline, 5pm",   s:"Pay, use aid, or confirm attendance or your registration is cancelled."},
+    {d:"2027-01-11", t:"First class day",                 s:""},
+    {d:"2027-01-19", t:"Last day to add a class",         s:"6th class day."},
+    {d:"2027-01-27", t:"Last day to drop without permission", s:"12th class day. Add bill due."}
+  ];
+  /* ========================== */
+  const $=id=>document.getElementById(id);
+  const D=s=>new Date(s+"T00:00:00");
+  const today=new Date(); today.setHours(0,0,0,0);
+  const days=(a,b)=>Math.round((a-b)/864e5);
+  const fmt=s=>D(s).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+
+  function tick(){
+    const dOpen=days(D(OPEN),today), dClose=days(D(CLOSE),today);
+    if(dOpen>0){
+      $("num").textContent=dOpen; $("unit").textContent=dOpen===1?"day":"days";
+      $("fine").innerHTML=`<b>November 2</b> &middot; your access time inside that window is on your RIS`;
+    } else if(dClose>=0){
+      $("num").textContent="Open"; $("num").style.fontSize="clamp(30px,6.5vw,42px)"; $("unit").textContent="now";
+      $("fine").innerHTML=`First period closes <b>${fmt(CLOSE)}</b>`;
+    } else {
+      const n=DATES.find(x=>days(D(x.d),today)>=0);
+      $("num").textContent=n?days(D(n.d),today):"—"; $("unit").textContent="days";
+      $("fine").innerHTML=n?`until <b>${n.t.toLowerCase()}</b>`:"";
+    }
+  }
+  const ni=DATES.findIndex(x=>days(D(x.d),today)>=0);
+  $("dl").innerHTML=DATES.map((x,i)=>{
+    const c=days(D(x.d),today)<0?" past":(i===ni?" next":"");
+    return `<dt class="${c.trim()}">${fmt(x.d)}</dt><dd class="${c.trim()}">${x.t}${x.s?`<small>${x.s}</small>`:""}</dd>`;
+  }).join("");
+  tick();
+})();
+</script>
+</body>
+</html>
