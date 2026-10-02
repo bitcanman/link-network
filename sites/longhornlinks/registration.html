@@ -76,17 +76,26 @@ header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bott
   .rr-try{font-size:12.5px;}
 }
 
-.aud-wrap{background:var(--panel);border-bottom:1px solid var(--line);}
-.aud-tabs{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap;}
-.aud-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 18px;border-radius:8px;border:1.5px solid var(--line);background:transparent;}
-.aud-tab:hover{color:var(--brand-deep);border-color:var(--brand);}
-.aud-tab.active{background:var(--brand);color:#fff;border-color:var(--brand);font-weight:600;}
-@media (max-width:640px){
-  .aud-tab{padding:8px 14px;font-size:11.5px;}
+.navE{background:var(--panel);border-bottom:1px solid var(--line)}
+.navE .row{display:flex;align-items:center;gap:8px;padding:10px 0}
+.navE a{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;text-decoration:none;color:var(--muted);
+  border:1.5px solid var(--line);border-radius:7px;padding:9px 16px;
+  background:var(--panel);transition:.12s}
+.navE a:hover{border-color:var(--brand);color:var(--brand-deep)}
+.navE a.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px}
+.navE a.on .dot{display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:#fff;margin-right:7px;vertical-align:1px}
+
+@media(max-width:620px){
+  .navE .row{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .navE .row::-webkit-scrollbar{display:none}
+  .navE a{white-space:nowrap}
 }
 
 /* ---------- Page content (unique to this page) ---------- */
-.title{padding:36px 0 0}
+.title{padding:62px 0 44px;border-bottom:1px solid var(--line);}
 .title h1{font-family:"Archivo",sans-serif;font-weight:900;font-size:clamp(32px,7.5vw,50px);line-height:.98;letter-spacing:-.035em;margin:0}
 .title h1 .brk{display:none;}
 @media (max-width:640px){ .title h1 .brk{display:block;} }
@@ -146,17 +155,18 @@ dd.next{color:var(--brand-deep)}
   </div>
 </header>
 
-<div class="aud-wrap"><div class="wrap"><div class="aud-tabs">
-  <a class="aud-tab" href="/">General</a>
-  <a class="aud-tab" href="/mba.html">MBA</a>
-  <a class="aud-tab active" href="/registration" aria-current="page">Registration</a>
-</div></div></div>
+<div class="navE"><div class="wrap row">
+  <a href="/">General</a>
+  <a href="/mba.html">MBA</a>
+  <span class="sp"></span>
+  <a class="on" href="/registration" aria-current="page"><span class="dot"></span>Registration</a>
+</div></div>
 
 <div class="w">
 
   <header class="title">
     <h1>Spring 2027 <span class="brk"></span>Registration</h1>
-    <p class="dek">Everything the Registrar sent you.</p>
+    <p class="dek">Everything the Registrar sent you + everything they left out.</p>
   </header>
 
   <section class="cd">
