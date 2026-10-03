@@ -91,6 +91,12 @@
   .navE .row > a:hover{border-color:var(--brand);color:var(--brand-deep)}
   .navE .row > a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
   .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto;}
+  /* General/MBA/Registration barely fit on one line between ~330-414px, leaving
+     almost no margin right before flex-wrap kicks in. Scale the pills down a step
+     before that cliff so there's always breathing room. */
+  @media (max-width:480px){
+    .navE .row > a{padding:8px 12px;font-size:11px;}
+  }
 
   /* header text link - deliberately not a .btn; two solid buttons up there was too loud */
   .rr-try{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
@@ -114,6 +120,7 @@
   .hero h1 .u{color:var(--brand);}
   .hero .bookmark-me{color:var(--ink);font-weight:700;}
   .hero p.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);max-width:58ch;margin:0;}
+  .hero .value-claim{font-weight:700;font-size:clamp(19px,2.6vw,23px);color:var(--ink);margin:0 0 10px;line-height:1.3;}
   .hero .btn-hero-ghost{background:transparent;color:var(--brand-deep);border:2px solid var(--brand);}
   .hero .btn-hero-ghost:hover{background:var(--brand-tint);}
   .hero .btn-hero{margin-top:26px;font-size:16.5px;font-weight:700;padding:16px 28px;border-radius:12px;}
@@ -134,6 +141,16 @@
   .chip{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;padding:6px 11px;border-radius:7px;border:1.5px solid var(--line);background:var(--panel);color:var(--muted);cursor:pointer;text-transform:uppercase;transition:all .12s ease;}
   .chip:hover{border-color:var(--brand);color:var(--brand-deep);}
   .chip.active{background:var(--brand);color:#fff;border-color:var(--brand);}
+
+  /* Quick-fill suggestions under the search box. Same .chip look as the
+     category row, but visible by default and hidden once the box has text. */
+  .search-suggest{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px;}
+  .search-suggest.is-hidden{display:none;}
+  @media (max-width:640px){
+    .search-suggest{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+    .search-suggest::-webkit-scrollbar{display:none;}
+    .search-suggest .chip{white-space:nowrap;flex:0 0 auto;}
+  }
 
   .newtab-note{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.02em;color:var(--muted);margin-top:10px;display:flex;align-items:center;gap:6px;}
   .newtab-note svg{width:13px;height:13px;color:var(--brand);flex:0 0 auto;}
@@ -300,6 +317,7 @@
     .hero h1{font-size:clamp(28px,8vw,40px);}
     .hero .bookmark-me{color:var(--ink);font-weight:700;}
   .hero p.lede{font-size:15px;}
+    .hero .value-claim{font-size:18px;}
     .hero .btn-hero{width:100%;justify-content:center;font-size:15px;padding:14px 18px;}
     .section-head h2{font-size:19px;}
     .section.admit,.section.quick{padding:16px 13px 14px;}
@@ -357,6 +375,7 @@
     <div class="hero-head">
       <h1>The UT Austin <span class="brk"></span><span class="u">link directory.</span></h1>
     </div>
+    <p class="value-claim">38 UT websites, one page.</p>
     <p class="lede">Registration, Canvas, housing, orientation, immunization requirements, clubs, financial aid. All the stuff scattered across a dozen sites, gathered into one place. <strong class="bookmark-me">Bookmark Me!</strong></p>
   </div>
 </section>
@@ -370,6 +389,12 @@
         <kbd>/</kbd>
       </div>
       <span class="count" id="count"></span>
+    </div>
+    <div class="search-suggest" id="searchSuggest" role="group" aria-label="Search suggestions">
+      <button type="button" class="chip">Registration time</button>
+      <button type="button" class="chip">My bill</button>
+      <button type="button" class="chip">Clear a hold</button>
+      <button type="button" class="chip">Housing</button>
     </div>
     <div class="chips" id="chips" role="tablist" aria-label="Filter by category"></div>
       <p class="newtab-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg> Links open in a new tab - this page stays open behind them, so you won't lose your place.</p>
@@ -420,7 +445,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.1.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.2.
     </p>
   </div>
 </footer>
@@ -1463,7 +1488,7 @@
       b.textContent=c.label; b.dataset.cat=c.id; b.setAttribute("role","tab");
       b.onclick=()=>{
         activeCat=c.id;
-        document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
+        document.querySelectorAll("#chips .chip").forEach(x=>x.classList.remove("active"));
         b.classList.add("active");
         if(c.id!=="all"){ const t=document.getElementById(c.id==="quicklinks"?"quick-links":"cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
         applyFilter();
@@ -1541,6 +1566,7 @@
   const q = document.getElementById("q");
   const countEl = document.getElementById("count");
   const emptyEl = document.getElementById("empty");
+  const searchSuggestEl = document.getElementById("searchSuggest");
   const total = () => LINKS.length + myLinks.length;
 
   function applyFilter(){
@@ -1577,8 +1603,9 @@
     document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");
   }
   q.addEventListener("input", ()=>{ activeCat="all";
-    document.querySelectorAll(".chip").forEach((x,i)=>x.classList.toggle("active",i===0));
+    document.querySelectorAll("#chips .chip").forEach((x,i)=>x.classList.toggle("active",i===0));
     applyFilter();
+    searchSuggestEl.classList.toggle("is-hidden", q.value.trim()!=="");
   });
   document.addEventListener("keydown", e=>{
     const anyModal = document.getElementById("modal").classList.contains("open") || myModal.classList.contains("open");
@@ -1586,10 +1613,30 @@
     if(e.key==="Escape"){
       if(myModal.classList.contains("open")) closeMy();
       else if(document.getElementById("modal").classList.contains("open")) closeForm();
-      else { q.value=""; applyFilter(); q.blur(); }
+      else { q.value=""; applyFilter(); searchSuggestEl.classList.remove("is-hidden"); q.blur(); }
     }
   });
   applyFilter();
+
+  /* ---------- Search suggestions: tap to fill, run, and jump to results ---------- */
+  searchSuggestEl.querySelectorAll(".chip").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const term = btn.textContent;
+      q.value = term;
+      activeCat = "all";
+      document.querySelectorAll("#chips .chip").forEach((x,i)=>x.classList.toggle("active",i===0));
+      applyFilter();
+      searchSuggestEl.classList.add("is-hidden");
+      const sections = document.getElementById("sections");
+      if(sections) sections.scrollIntoView({behavior:"smooth", block:"start"});
+      if(ANALYTICS_ENDPOINT){
+        try{
+          const body = new Blob(["type=search_chip&label="+encodeURIComponent(term)], {type:"application/x-www-form-urlencoded"});
+          navigator.sendBeacon(ANALYTICS_ENDPOINT, body);
+        }catch(err){/* fail silently */}
+      }
+    });
+  });
 
   /* ---------- Click tracking (privacy-respecting: no cookies, no PII) ---------- */
   document.addEventListener("click", e=>{
