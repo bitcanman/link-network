@@ -145,8 +145,9 @@
   .section-head .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);}
   .section-head h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:5px 0 0;}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;}
-  .card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 17px 14px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}
+  .card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 40px 14px 17px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}
   .card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
+  .card-link{display:contents;text-decoration:none;color:inherit;}
   .card .ttl{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;}
   .card .name{font-weight:700;font-size:15.5px;line-height:1.22;}
   .card .desc{font-size:13px;color:var(--muted);line-height:1.45;}
@@ -159,9 +160,21 @@
   .badge svg{width:10px;height:10px;}
   .empty{display:none;text-align:center;color:var(--muted);padding:50px 0;font-size:15px;}
 
+  /* Star sits in the padding reserved on every card, so it never overlaps the badge/arrow. */
+  .save{position:absolute;top:8px;right:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+    background:transparent;border:0;border-radius:7px;font-size:18px;line-height:1;color:#b9ab98;cursor:pointer;}
+  .save:hover{background:var(--brand-tint);color:var(--brand-deep);}
+  .save[aria-pressed="true"]{color:var(--brand);}
+  .card-del{position:absolute;bottom:8px;right:9px;font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.04em;
+    text-transform:uppercase;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:6px;
+    padding:3px 7px;cursor:pointer;}
+  .card-del:hover{border-color:var(--brand);color:var(--brand-deep);}
+
   .section.admit,.section.quick{background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:16px;padding:24px 22px 22px;margin-top:14px;}
   .section.admit .section-head h2,.section.quick .section-head h2{color:var(--brand-deep);}
   .section.admit .admit-note,.section.quick .admit-note{font-size:13px;color:var(--brand-deep);margin:-6px 0 4px;}
+  .section.quick .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;}
+  .fav-sub{margin:4px 0 0;font-size:13px;color:var(--brand-deep);}
 
   /* ---------- Voter registration button (sits beside the hero headline) ---------- */
   /* Same text-link treatment as the header's Restaurant Roundup link. */
@@ -174,83 +187,17 @@
   @media (max-width:640px){ .hero-head{gap:0;} }
 
 
-  /* ---------- Customize My Quick Links (no login, localStorage) ---------- */
-  .lay-bar{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:14px 0 0;}
+  /* ---------- Favorites: Add a link button, shared modal styling ---------- */
   .lay-btn{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.03em;text-transform:uppercase;
     min-height:38px;padding:9px 13px;border-radius:8px;border:1.5px solid var(--line);
     background:var(--panel);color:var(--muted);cursor:pointer;transition:all .12s ease;}
   .lay-btn:hover{border-color:var(--brand);color:var(--brand-deep);}
-  .lay-btn.primary{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;letter-spacing:.06em;
-    min-height:42px;padding:10px 17px;background:var(--brand);border-color:var(--brand);color:#fff;}
-  .lay-btn.primary:hover{background:var(--brand-deep);border-color:var(--brand-deep);color:#fff;}
-  .lay-btn.primary svg{width:15px;height:15px;}
-  .lay-btn.on{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .lay-btn.on:hover{background:var(--ink);border-color:var(--ink);color:#fff;}
-  .lay-note{font-size:13px;color:var(--brand-deep);flex:1 1 160px;min-width:0;}
-  #quick-empty[hidden]{display:none;}
-
-  /* The two standing actions are a pair: same metrics, solid and outlined. */
-  .lay-actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap;}
-  .lay-btn.primary,.lay-btn.outline{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
-    letter-spacing:.06em;min-height:42px;padding:10px 17px;border-radius:8px;border-width:1.5px;border-style:solid;}
-  .lay-btn.outline{background:var(--panel);border-color:var(--line);color:var(--ink);}
+  .lay-btn.outline{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;
+    letter-spacing:.06em;min-height:42px;padding:10px 17px;border-radius:8px;border-width:1.5px;border-style:solid;
+    background:var(--panel);border-color:var(--line);color:var(--ink);}
   .lay-btn.outline:hover{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-deep);}
-  @media (max-width:480px){
-    .lay-actions{flex:1 1 100%;flex-wrap:nowrap;align-items:stretch;}
-    .lay-actions .lay-btn{flex:1 1 0;min-width:0;justify-content:center;padding:10px 6px;
-      font-size:11px;letter-spacing:.04em;}
-    .lay-actions .lay-btn.primary svg{display:none;}   /* the label needs the width more */
-  }
-
-  /* Custom sections carry their own controls in edit mode. Editorial ones do not. */
-  .sh-text{min-width:0;}
-  .sec-tools{display:none;gap:6px;margin-left:auto;flex:0 0 auto;flex-wrap:wrap;justify-content:flex-end;}
-  .sec-tools.rowy{align-items:center;}
-  body.editing #sections .section.custom .section-head{display:flex;align-items:flex-start;gap:12px;}
-  body.editing #sections .section.custom .sec-tools{display:flex;}
-  .sec-tools .qk-btn{min-height:44px;}
-  .sec-rename{font-family:inherit;font-size:15px;padding:9px 11px;border:1.5px solid var(--brand);
-    border-radius:9px;background:var(--panel);color:var(--ink);min-width:0;flex:1 1 180px;}
-  .section.user-hidden{opacity:.5;}
-  .sec-empty{font-size:13px;color:var(--muted);margin:0;}
-  @media (max-width:640px){
-    body.editing #sections .section.custom .section-head{flex-wrap:wrap;}
-    .sec-tools{margin-left:0;}
-  }
-
-  /* ---------- My Quick Links (the student's own, local to this device) ---------- */
-  .badge.mine{background:var(--brand-tint);color:var(--brand-deep);}
-  .my-tip{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:-4px 0 14px;
-    background:var(--brand-tint);border:1.5px solid #E8C9A8;border-radius:10px;padding:10px 12px;
-    font-size:13.5px;color:var(--brand-deep);}
-  .my-linkish{font:inherit;color:var(--brand-deep);background:none;border:none;padding:0;
-    cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-weight:700;}
-  .my-linkish:hover{color:var(--brand);}
-  .my-tipx{margin-left:auto;background:none;border:none;color:var(--brand-deep);font-size:19px;
-    line-height:1;cursor:pointer;padding:0 2px;}
-  .my-confirm{font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.05em;
-    text-transform:uppercase;color:var(--muted);align-self:center;margin-right:auto;}
-  .qk-btn.danger{border-color:var(--brand);color:#fff;background:var(--brand);}
-  .qk-btn.danger:hover:not([disabled]){background:var(--brand-deep);border-color:var(--brand-deep);color:#fff;}
+  #quick-empty[hidden]{display:none;}
   .modal-note{font-size:12.5px;color:var(--muted);margin:0 0 14px;line-height:1.5;}
-
-  /* In edit mode each card grows its own tool row underneath, so nothing overlaps the card. */
-  .cardwrap{display:flex;flex-direction:column;gap:8px;min-width:0;}
-  .cardwrap > .card{flex:1;}
-  .qk-tools{display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap;}
-  .qk-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:7px;
-    padding:0 12px;border:1.5px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);
-    cursor:pointer;transition:all .12s ease;}
-  .qk-btn.wide{font-family:"Spline Sans Mono",monospace;font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;}
-  .qk-btn:hover:not([disabled]){border-color:var(--brand);color:var(--brand-deep);}
-  .qk-btn[disabled]{opacity:.3;cursor:default;}
-  .qk-btn[aria-pressed="true"]{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-deep);}
-  .qk-btn svg{width:17px;height:17px;flex:0 0 auto;}
-  /* The grid runs left to right until it collapses to one column, so the arrows
-     point the way the tile actually moves. */
-  .ic-stack{display:none;}
-  .ic-row,.ic-stack{align-items:center;}
-  @media (max-width:606px){ .ic-row{display:none;} .ic-stack{display:inline-flex;} }
 
   /* ---------- Primary button ---------- */
   .btn{display:inline-flex;align-items:center;gap:8px;background:var(--brand);color:#fff;text-decoration:none;font-weight:600;font-size:14px;padding:11px 18px;border-radius:9px;border:none;cursor:pointer;transition:background .12s;}
@@ -303,7 +250,8 @@
     .hero .btn-hero{width:100%;justify-content:center;font-size:15px;padding:14px 18px;}
     .section-head h2{font-size:19px;}
     .section.admit,.section.quick{padding:16px 13px 14px;}
-    .card{padding:13px 14px 12px;}
+    .card{padding:13px 36px 12px 14px;}
+    .save{top:6px;right:6px;}
     .card .name{font-size:14.5px;}
     .card .desc{font-size:12.5px;}
     .stats{grid-template-columns:1fr 1fr;gap:8px;}
@@ -378,14 +326,13 @@
 </div>
 
 <main class="wrap">
-  <div class="section quick" id="quick-links" data-cat="quicklinks">
+  <div class="section quick" id="quick-links">
     <div class="section-head">
-      <h2>My Quick Links</h2>
+      <div><h2>Favorites</h2><p class="fav-sub">Your everyday shortcuts, saved on this device.</p></div>
+      <button type="button" class="lay-btn outline" id="addMyLink">+ Add a link</button>
     </div>
-    <div id="my-tips"></div>
-    <p class="admit-note" id="quick-empty" hidden></p>
-    <div class="lay-bar" id="layBar"></div>
     <div class="grid" id="grid-quicklinks"></div>
+    <p class="admit-note" id="quick-empty" hidden>Tap &#9734; on any resource to keep it here. No account needed.</p>
   </div>
 
   <div id="sections"></div>
@@ -421,7 +368,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.2.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v4.0.
     </p>
   </div>
 </footer>
@@ -465,22 +412,18 @@
 <div class="modal" id="mymodal" role="dialog" aria-modal="true" aria-labelledby="mymodal-title">
   <div class="modal-box">
     <h3 id="mymodal-title">Add a link</h3>
-    <p class="sub">For the niche things this page does not list. It lands in My Quick Links at the top.</p>
+    <p class="sub">For the niche things this page does not list. Saved to your Favorites.</p>
     <div class="field"><label for="m-name">Name</label><input id="m-name" type="text" maxlength="80" placeholder="e.g. My section's study group doc" /></div>
     <div class="field"><label for="m-url">URL</label><input id="m-url" type="text" placeholder="paste a link, or type a domain" /></div>
     <div class="field"><label for="m-note">Note (optional)</label><input id="m-note" type="text" maxlength="120" placeholder="one line to remind you what it is" /></div>
-    <div class="field"><label for="m-cat">Section</label><select id="m-cat"></select></div>
-    <div class="field" id="m-newcat-wrap" hidden><label for="m-newcat">New section name</label><input id="m-newcat" type="text" maxlength="40" placeholder="e.g. Section 4 stuff" /></div>
     <p class="form-msg" id="m-msg"></p>
-    <p class="modal-note">Saved on this device only. Use Back up my links or Copy my layout link to move them to another device.</p>
+    <p class="modal-note">Saved on this device only.</p>
     <div class="modal-actions">
       <button class="btn-ghost" type="button" id="m-cancel">Cancel</button>
       <button class="btn" type="button" id="m-save">Save link</button>
     </div>
   </div>
 </div>
-
-<input type="file" id="restoreFile" accept="application/json,.json" hidden aria-hidden="true" tabindex="-1" />
 
 <script>
   /* ============================================================
@@ -593,44 +536,41 @@
     {id:"essentials",   label:"UT Essentials"},
   ];
 
-  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.quicklinks = "My Quick Links";
+  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.quicklinks = "Everyday Links";
 
   const lockSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   const arrowSVG = '<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
   const esc = s => String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;");
   const host = u => { try { return new URL(u).hostname.replace(/^www\./,""); } catch(e){ return ""; } };
 
-  function cardHTML(l){
+  function favId(l){ return l.cat + "|" + l.name; }
+
+  function cardHTML(l, opts){
+    opts = opts || {};
+    const fid = opts.favId || favId(l);
+    const isSaved = favState.saved.indexOf(fid) >= 0;
     let badge = "";
     if(l.login) badge = '<span class="badge login">'+lockSVG+' UT EID</span>';
     else if(l.ext) badge = '<span class="badge ext">External</span>';
-    return '<a class="card" href="'+l.url+'" target="_blank" rel="noopener" title="Opens in a new tab \u2014 this page stays open behind it" data-cat="'+l.cat+'" data-name="'+esc(l.name)+'" data-text="'+esc((l.name+' '+l.desc+' '+(CAT_LABEL[l.cat]||l.cat)+' '+host(l.url)).toLowerCase())+'">'
-      + '<div class="ttl"><span class="name">'+l.name+'</span>'+(badge||arrowSVG)+'</div>'
-      + '<div class="desc">'+l.desc+'</div>'
-      + '<div class="host">'+host(l.url)+'</div></a>';
+    const star = '<button type="button" class="save" data-fav="'+esc(fid)+'" aria-pressed="'+(isSaved?"true":"false")+'" aria-label="'+(isSaved?"Remove ":"Save ")+esc(l.name)+(isSaved?" from Favorites":" to Favorites")+'">'+(isSaved?"★":"☆")+'</button>';
+    const del = opts.custom ? '<button type="button" class="card-del" data-del="'+esc(fid)+'" aria-label="Delete '+esc(l.name)+'">Delete</button>' : "";
+    return '<div class="card" data-cat="'+l.cat+'" data-name="'+esc(l.name)+'" data-fav-id="'+esc(fid)+'" data-text="'+esc((l.name+' '+l.desc+' '+(CAT_LABEL[l.cat]||l.cat)+' '+host(l.url)).toLowerCase())+'">'
+      + '<a class="card-link" href="'+l.url+'" target="_blank" rel="noopener" title="Opens in a new tab — this page stays open behind it">'
+        + '<div class="ttl"><span class="name">'+l.name+'</span>'+(badge||arrowSVG)+'</div>'
+        + '<div class="desc">'+l.desc+'</div>'
+        + '<div class="host">'+host(l.url)+'</div>'
+      + '</a>'
+      + star + del
+      + '</div>';
   }
 
-  // Build category sections
-  /* ---------- Personal links and custom sections. No login, no account, this device. ---------- */
-  const MY_KEY = "ll_mylinks_general_v1", CAT_KEY = "ll_customcats_general_v1", IOSTIP_KEY = "ll_iostip_general_v1";
-  const MY_MAX = 50, CAT_MAX = 10, MY_NAME_MAX = 80, MY_NOTE_MAX = 120, CAT_NAME_MAX = 40;
-  const HOME_CAT = "quicklinks";   // My Quick Links, the box at the top, and the fallback bucket
-
-  /* esc() above is enough for the attributes it is used on, but personal text is
-     the one thing on this page we did not write, so it gets the full set. */
-  const escAll = s => String(s == null ? "" : s)
-    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;").replace(/'/g,"&#39;");
-
-  let myLinks = [], customCats = [];
-  let myEditId = null;        // link being edited in the modal
-  let myDeleteId = null;      // link waiting on its inline delete confirm
-  let catDeleteId = null;     // section waiting on its inline delete choice
-  let catRenameId = null;     // section being renamed inline
-  let mySuggest = null;       // the link just added, offered to the suggestion form
-
-  const PENCIL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
-  const TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>';
+  /* ---------- Favorites: a star on every card, plus your own shortcuts. No login, this device only. ---------- */
+  const FAV_KEY = "ll_fav_general_v1";
+  const MY_KEY = "ll_mylinks_general_v1";    // legacy key, read once to migrate
+  const QUICK_KEY = "ll_quick_general_v1";   // legacy key, read once to migrate
+  const MY_MAX = 50, MY_NAME_MAX = 80, MY_NOTE_MAX = 120;
+  const STORAGE_ERR = "Your browser is blocking local storage, so this cannot be saved on this device.";
+  let favState = {saved:[], custom:[]};
 
   function newId(p){ return p + Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
 
@@ -644,90 +584,11 @@
     let u;
     try{ u = new URL(s); }catch(e){ return null; }
     if(u.protocol !== "http:" && u.protocol !== "https:") return null;
-    if(!u.hostname || u.hostname.indexOf(".") < 0) return null;
     return u.href;
   }
-  const tidy = s => String(s == null ? "" : s).trim().replace(/\s+/g," ");
-  function myValidate(name, url, note){
-    const n = tidy(name), t = tidy(note);
-    if(!n) return {err:"Give the link a name."};
-    if(n.length > MY_NAME_MAX) return {err:"Names are capped at " + MY_NAME_MAX + " characters."};
-    if(t.length > MY_NOTE_MAX) return {err:"Notes are capped at " + MY_NOTE_MAX + " characters."};
-    const u = myURL(url);
-    if(!u) return {err:"That is not a web address we can open. Use an http or https link."};
-    return {name:n, url:u, note:t};
-  }
-  function catValidate(label){
-    const l = tidy(label);
-    if(!l) return {err:"Give the section a name."};
-    if(l.length > CAT_NAME_MAX) return {err:"Section names are capped at " + CAT_NAME_MAX + " characters."};
-    return {label:l};
-  }
-
-  /* ---------- section catalog ---------- */
-  const BUILTIN_IDS = {}; CATS.forEach(function(c){ BUILTIN_IDS[c.id] = 1; });
-  const isCustom = id => customCats.some(function(c){ return c.id === id; });
-  const catExists = id => id === HOME_CAT || BUILTIN_IDS[id] === 1 || isCustom(id);
-  function catLabel(id){
-    if(id === HOME_CAT) return "My Quick Links";
-    const b = CATS.filter(function(c){ return c.id === id; })[0];
-    if(b) return b.label;
-    const c = customCats.filter(function(x){ return x.id === id; })[0];
-    return c ? c.label : id;
-  }
-  /* Every section a link can be filed under, in the order they appear on the page. */
-  function sectionCatalog(){
-    return [{id:HOME_CAT, label:"My Quick Links"}]
-      .concat(customCats.map(function(c){ return {id:c.id, label:c.label, custom:true, hidden:!!c.hidden}; }))
-      .concat(CATS.map(function(c){ return {id:c.id, label:c.label}; }));
-  }
-  const myLinksFor = id => myLinks.filter(function(m){ return m.cat === id; });
-
-  /* ---------- storage ---------- */
-  /* A malformed entry is dropped on its own; everything else still renders. */
-  function catClean(list){
-    const out = [], seen = {};
-    if(Object.prototype.toString.call(list) !== "[object Array]") return out;
-    list.forEach(function(raw){
-      if(!raw || typeof raw !== "object" || out.length >= CAT_MAX) return;
-      const v = catValidate(raw.label);
-      const key = v.err ? null : v.label.toLowerCase();
-      if(v.err || seen[key]) return;
-      const id = typeof raw.id === "string" && /^cs-[a-z0-9]+$/.test(raw.id) ? raw.id : newId("cs-");
-      seen[key] = 1;
-      out.push({id:id, label:v.label, created: typeof raw.created === "string" ? raw.created : todayStamp(), hidden: raw.hidden === true});
-    });
-    return out;
-  }
-  function myClean(list){
-    const out = [], seen = {};
-    if(Object.prototype.toString.call(list) !== "[object Array]") return out;
-    list.forEach(function(raw){
-      if(!raw || typeof raw !== "object" || out.length >= MY_MAX) return;
-      const v = myValidate(raw.name, raw.url, raw.note);
-      if(v.err || seen[v.url]) return;
-      seen[v.url] = 1;
-      /* A section that no longer exists falls back to My Quick Links so the link survives. */
-      const cat = typeof raw.cat === "string" && catExists(raw.cat) ? raw.cat : HOME_CAT;
-      const m = {id: typeof raw.id === "string" && raw.id ? raw.id : newId("m"),
-                 name:v.name, url:v.url, note:v.note, cat:cat,
-                 created: typeof raw.created === "string" ? raw.created : todayStamp()};
-      m.__mine = true;
-      out.push(m);
-    });
-    return out;
-  }
-  function todayStamp(){ return new Date().toISOString().slice(0,10); }
-  function plainLinks(){ return myLinks.map(function(m){ return {id:m.id, name:m.name, url:m.url, note:m.note, cat:m.cat, created:m.created}; }); }
-  function plainCats(){ return customCats.map(function(c){ return {id:c.id, label:c.label, created:c.created, hidden:c.hidden}; }); }
-
-  function readJSON(key){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
-  function loadPersonal(){ customCats = catClean(readJSON(CAT_KEY)); myLinks = myClean(readJSON(MY_KEY)); }
-  function saveLinks(){ try{ localStorage.setItem(MY_KEY, JSON.stringify(plainLinks())); return true; }catch(e){ return false; } }
-  function saveCats(){ try{ localStorage.setItem(CAT_KEY, JSON.stringify(plainCats())); return true; }catch(e){ return false; } }
 
   /* Hostname only. Never the full URL, never the note, never the name. */
-  function trackMy(type, url){
+  function trackFav(type, url){
     if(!ANALYTICS_ENDPOINT) return;
     try{
       let body = "type=" + encodeURIComponent(type);
@@ -736,725 +597,177 @@
     }catch(e){}
   }
 
-  /* ---------- merging (shared links and restored files are untrusted) ---------- */
-  function catMerge(rows){
-    if(Object.prototype.toString.call(rows) !== "[object Array]") return 0;
-    const have = {}; customCats.forEach(function(c){ have[c.label.toLowerCase()] = c.id; });
-    const map = {}; let added = 0;
-    rows.forEach(function(r){
-      if(!r || typeof r !== "object") return;
-      const v = catValidate(r.label);
-      if(v.err) return;
-      const key = v.label.toLowerCase();
-      if(have[key]){ if(typeof r.id === "string") map[r.id] = have[key]; return; }
-      if(customCats.length >= CAT_MAX) return;
-      const id = newId("cs-");
-      customCats.push({id:id, label:v.label, created:todayStamp(), hidden:r.hidden === true});
-      have[key] = id; if(typeof r.id === "string") map[r.id] = id;
-      added++;
-    });
-    return {added:added, map:map};
-  }
-  function myMerge(rows, catMap){
-    if(Object.prototype.toString.call(rows) !== "[object Array]") return 0;
-    const have = {}; myLinks.forEach(function(m){ have[m.url] = 1; });
-    let added = 0;
-    rows.forEach(function(r){
-      if(myLinks.length >= MY_MAX) return;
-      /* Accepts both the compact share form [name, url, note, cat] and the backup object. */
-      const a = Object.prototype.toString.call(r) === "[object Array]" ? {name:r[0], url:r[1], note:r[2], cat:r[3]} : r;
-      if(!a || typeof a !== "object") return;
-      const v = myValidate(a.name, a.url, a.note);
-      if(v.err || have[v.url]) return;
-      let cat = typeof a.cat === "string" ? a.cat : HOME_CAT;
-      if(catMap && catMap[cat]) cat = catMap[cat];
-      if(!catExists(cat)) cat = HOME_CAT;
-      have[v.url] = 1; added++;
-      const m = {id:newId("m"), name:v.name, url:v.url, note:v.note, cat:cat, created:todayStamp()};
-      m.__mine = true;
-      myLinks.push(m);
-    });
-    return added;
-  }
+  const REAL_BY_FAVID = {};
+  QUICKLINKS.concat(LINKS).forEach(function(l){ const k = favId(l); if(!REAL_BY_FAVID[k]) REAL_BY_FAVID[k] = l; });
 
-  /* ---------- rendering ---------- */
-  function myCardHTML(m){
-    const h = host(m.url);
-    const text = (m.name + " " + (m.note || "") + " yours mine " + catLabel(m.cat) + " " + h).toLowerCase();
-    return '<a class="card" href="' + escAll(m.url) + '" target="_blank" rel="noopener noreferrer"'
-      + ' title="Opens in a new tab" data-cat="' + escAll(m.cat) + '" data-mine="1" data-id="' + escAll(m.id) + '"'
-      + ' data-name="' + escAll(m.name) + '" data-text="' + escAll(text) + '">'
-      + '<div class="ttl"><span class="name">' + escAll(m.name) + '</span><span class="badge mine">Yours</span></div>'
-      + '<div class="desc">' + (m.note ? escAll(m.note) : "Added by you.") + '</div>'
-      + '<div class="host">' + escAll(h) + '</div></a>';
-  }
-  const anyCard = l => l.__mine ? myCardHTML(l) : cardHTML(l);
-  function myToolBtn(act, id, label, icon, text, danger){
-    return '<button type="button" class="qk-btn wide' + (danger ? " danger" : "") + '" data-myact="' + act + '"'
-      + ' data-id="' + escAll(id) + '" aria-label="' + escAll(label) + '" title="' + escAll(label) + '">'
-      + icon + '<span>' + text + '</span></button>';
-  }
-  /* Edit and delete for a personal card, wherever it happens to live. */
-  function myToolsHTML(m){
-    return myDeleteId === m.id
-      ? '<span class="my-confirm">Delete this?</span>'
-        + myToolBtn("del-yes", m.id, "Confirm deleting " + m.name, TRASH, "Delete", true)
-        + myToolBtn("del-no", m.id, "Keep " + m.name, "", "Keep", false)
-      : myToolBtn("edit", m.id, "Edit " + m.name, PENCIL, "Edit", false)
-        + myToolBtn("del", m.id, "Delete " + m.name, TRASH, "Delete", false);
-  }
+  function readJSON(key){ try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : null; }catch(e){ return null; } }
+  function persistFav(){ try{ localStorage.setItem(FAV_KEY, JSON.stringify(favState)); return true; }catch(e){ return false; } }
 
-  function catToolBtn(act, id, label, inner, disabled){
-    return '<button type="button" class="qk-btn' + (/^(ren|del)-/.test(act) ? " wide" : "") + '" data-catact="' + act + '"'
-      + ' data-id="' + escAll(id) + '"' + (disabled ? " disabled" : "")
-      + ' aria-label="' + escAll(label) + '" title="' + escAll(label) + '">' + inner + '</button>';
-  }
-  /* Custom sections only. The editorial sections stay in the order we chose. */
-  function catToolsHTML(c, idx, count, n){
-    if(catRenameId === c.id){
-      return '<div class="sec-tools rowy"><input class="sec-rename" id="sec-rename-input" maxlength="' + CAT_NAME_MAX + '"'
-        + ' value="' + escAll(c.label) + '" aria-label="Section name" />'
-        + catToolBtn("ren-save", c.id, "Save the new name", "<span>Save</span>")
-        + catToolBtn("ren-no", c.id, "Cancel renaming", "<span>Cancel</span>") + '</div>';
+  /* First visit: start from the curated QUICKLINKS defaults. A returning student who
+     had customized the old Quick Links box keeps their personal links and any defaults
+     they had not removed, so this upgrade does not wipe out what they already set up. */
+  function initFav(){
+    const fresh = readJSON(FAV_KEY);
+    if(fresh && Array.isArray(fresh.saved) && Array.isArray(fresh.custom)){ favState = fresh; return; }
+    const saved = QUICKLINKS.map(favId);
+    const custom = [];
+    const oldMy = readJSON(MY_KEY);
+    if(Array.isArray(oldMy)){
+      oldMy.forEach(function(m){
+        if(!m || typeof m.url !== "string") return;
+        const url = myURL(m.url);
+        if(!url) return;
+        const nid = "custom-" + newId("");
+        custom.push({id:nid, title:String(m.name || "Untitled").slice(0, MY_NAME_MAX), url:url, desc:String(m.note || "").slice(0, MY_NOTE_MAX), ext:true});
+        saved.push(nid);
+      });
     }
-    if(catDeleteId === c.id){
-      const msg = n ? 'Delete "' + escAll(c.label) + '"? It holds ' + n + ' link' + (n === 1 ? "" : "s") + '.'
-                    : 'Delete "' + escAll(c.label) + '"?';
-      return '<div class="sec-tools rowy"><span class="my-confirm">' + msg + '</span>'
-        + (n ? catToolBtn("del-move", c.id, "Delete the section and move its links to My Quick Links", "<span>Move links to My Quick Links</span>") : "")
-        + catToolBtn("del-all", c.id, n ? "Delete the section and its links" : "Delete the section", "<span>" + (n ? "Delete links too" : "Delete") + "</span>")
-        + catToolBtn("del-no", c.id, "Keep the section", "<span>Cancel</span>") + '</div>';
+    const oldQuick = readJSON(QUICK_KEY);
+    if(oldQuick && typeof oldQuick === "object"){
+      const hidden = Array.isArray(oldQuick.hidden) ? oldQuick.hidden : [];
+      const order = Array.isArray(oldQuick.order) ? oldQuick.order : [];
+      favState.saved = saved.filter(function(k){ return hidden.indexOf(k) < 0; });
+      order.forEach(function(k){
+        if(typeof k !== "string" || k.indexOf("mine|") === 0) return;
+        if(favState.saved.indexOf(k) < 0 && REAL_BY_FAVID[k]) favState.saved.push(k);
+      });
+    } else {
+      favState.saved = saved;
     }
-    return '<div class="sec-tools">'
-      + catToolBtn("earlier", c.id, "Move " + c.label + " earlier", PAIR.earlier, idx === 0)
-      + catToolBtn("later", c.id, "Move " + c.label + " later", PAIR.later, idx === count - 1)
-      + catToolBtn("vis", c.id, (c.hidden ? "Show " : "Hide ") + c.label, c.hidden ? ICON.eyeoff : ICON.eye)
-      + catToolBtn("ren", c.id, "Rename " + c.label, PENCIL)
-      + catToolBtn("del", c.id, "Delete " + c.label, TRASH)
-      + '</div>';
+    favState.custom = custom;
+    persistFav();
   }
 
-  /* Offered once after a save: the link may be useful to everyone, not just them. */
-  function suggestTipHTML(){
-    if(!mySuggest) return "";
-    return '<p class="my-tip">Think others need this? '
-      + '<button type="button" class="my-linkish" data-myact="suggest">Suggest it for everyone</button>'
-      + '<button type="button" class="my-tipx" data-myact="tip-close" aria-label="Dismiss">&times;</button></p>';
+  function customById(id){ return favState.custom.filter(function(c){ return c.id === id; })[0]; }
+
+  function renderFavorites(){
+    const items = favState.saved.map(function(id){
+      if(id.indexOf("custom-") === 0){
+        const c = customById(id);
+        return c ? {link:{cat:"custom", name:c.title, desc:c.desc, url:c.url, ext:true}, favId:id, custom:true} : null;
+      }
+      const l = REAL_BY_FAVID[id];
+      return l ? {link:l, favId:id, custom:false} : null;
+    }).filter(Boolean);
+    document.getElementById("grid-quicklinks").innerHTML = items.map(function(it){ return cardHTML(it.link, {favId:it.favId, custom:it.custom}); }).join("");
+    document.getElementById("quick-empty").hidden = items.length > 0;
   }
 
-  /* ---------- the iOS tip ---------- */
-  function iosTipHTML(){
-    if(!(myLinks.length || customCats.length)) return "";
-    let dismissed = false;
-    try{ dismissed = localStorage.getItem(IOSTIP_KEY) === "1"; }catch(e){ dismissed = true; }
-    if(dismissed) return "";
-    const ua = navigator.userAgent || "";
-    const iPhone = /iP(hone|od|ad)/.test(ua);
-    const iPadOS = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
-    const otherBrowser = /(CriOS|FxiOS|EdgiOS|OPiOS)/.test(ua);
-    if(!((iPhone || iPadOS) && !otherBrowser)) return "";
-    return '<p class="my-tip" id="ios-tip">Add this page to your home screen so your links stick around.'
-      + '<button type="button" class="my-tipx" data-myact="ios-close" aria-label="Dismiss">&times;</button></p>';
+  function syncStars(){
+    document.querySelectorAll(".card").forEach(function(card){
+      const fid = card.dataset.favId;
+      const btn = card.querySelector(".save");
+      if(!fid || !btn) return;
+      const on = favState.saved.indexOf(fid) >= 0;
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.textContent = on ? "★" : "☆";
+    });
   }
 
-  /* ---------- add and edit modal ---------- */
+  function toggleFav(id){
+    const wasOn = favState.saved.indexOf(id) >= 0;
+    if(wasOn) favState.saved = favState.saved.filter(function(k){ return k !== id; });
+    else favState.saved.push(id);
+    persistFav();
+    trackFav(wasOn ? "fav_remove" : "fav_add");
+    renderFavorites();
+    syncStars();
+    if(activeCat === "saved") applyFilter();
+  }
+
+  function deleteCustom(id){
+    const c = customById(id);
+    favState.custom = favState.custom.filter(function(x){ return x.id !== id; });
+    favState.saved = favState.saved.filter(function(k){ return k !== id; });
+    persistFav();
+    trackFav("fav_delete", c && c.url);
+    renderFavorites();
+  }
+
   const myModal = document.getElementById("mymodal");
   const myMsg = document.getElementById("m-msg");
-  const myName = document.getElementById("m-name");
-  const myUrlIn = document.getElementById("m-url");
-  const myNote = document.getElementById("m-note");
-  const myCat = document.getElementById("m-cat");
-  const myNewCatWrap = document.getElementById("m-newcat-wrap");
-  const myNewCat = document.getElementById("m-newcat");
-  const NEWCAT = "__new__";
-
   function myShowMsg(text, ok){ myMsg.className = "form-msg " + (ok ? "ok" : "err"); myMsg.textContent = text; }
-  function fillCatSelect(selected){
-    myCat.innerHTML = "";
-    sectionCatalog().forEach(function(c){
-      const o = document.createElement("option");
-      o.value = c.id; o.textContent = c.label;       // textContent, so a section name cannot inject
-      myCat.appendChild(o);
-    });
-    const o = document.createElement("option");
-    o.value = NEWCAT; o.textContent = "Create new section";
-    myCat.appendChild(o);
-    myCat.value = selected && catExists(selected) ? selected : HOME_CAT;
-    syncNewCat();
-  }
-  function syncNewCat(){
-    const on = myCat.value === NEWCAT;
-    myNewCatWrap.hidden = !on;
-    if(on) myNewCat.focus();
-  }
-  myCat.addEventListener("change", syncNewCat);
-
-  function openMy(id){
-    myEditId = id || null;
-    const m = id ? myLinks.filter(function(x){ return x.id === id; })[0] : null;
-    document.getElementById("mymodal-title").textContent = m ? "Edit your link" : "Add a link";
-    document.getElementById("m-save").textContent = m ? "Save changes" : "Save link";
-    myName.value = m ? m.name : "";
-    myUrlIn.value = m ? m.url : "";
-    myNote.value = m ? m.note : "";
-    myNewCat.value = "";
-    fillCatSelect(m ? m.cat : HOME_CAT);
+  function openMy(){
+    document.getElementById("m-name").value = "";
+    document.getElementById("m-url").value = "";
+    document.getElementById("m-note").value = "";
     myMsg.className = "form-msg"; myMsg.textContent = "";
     myModal.classList.add("open");
-    if(!m && myLinks.length >= MY_MAX) myShowMsg("You are at the " + MY_MAX + " link cap. Delete one to make room.", false);
-    myName.focus();
+    document.getElementById("m-name").focus();
   }
-  function closeMy(){ myModal.classList.remove("open"); myEditId = null; }
-
-  /* Returns the section id to file under, or null after showing a message. */
-  function resolveChosenCat(){
-    if(myCat.value !== NEWCAT) return catExists(myCat.value) ? myCat.value : HOME_CAT;
-    const v = catValidate(myNewCat.value);
-    if(v.err){ myShowMsg(v.err, false); return null; }
-    const dupe = customCats.filter(function(c){ return c.label.toLowerCase() === v.label.toLowerCase(); })[0];
-    if(dupe) return dupe.id;
-    if(customCats.length >= CAT_MAX){ myShowMsg("You are at the " + CAT_MAX + " section cap. Delete one to make room.", false); return null; }
-    const id = newId("cs-");
-    customCats.push({id:id, label:v.label, created:todayStamp(), hidden:false});
-    if(!saveCats()){ customCats.pop(); myShowMsg(STORAGE_ERR, false); return null; }
-    trackMy("customcat_create");
-    return id;
-  }
-  const STORAGE_ERR = "Your browser is blocking local storage, so this cannot be saved on this device.";
-
+  function closeMy(){ myModal.classList.remove("open"); }
   function saveMy(){
-    const v = myValidate(myName.value, myUrlIn.value, myNote.value);
-    if(v.err){ myShowMsg(v.err, false); return; }
-    const before = customCats.length;
-    const cat = resolveChosenCat();
-    if(cat === null) return;
-    const madeCat = customCats.length > before;
-    if(myEditId){
-      const m = myLinks.filter(function(x){ return x.id === myEditId; })[0];
-      if(!m){ closeMy(); return; }
-      if(myLinks.some(function(x){ return x.id !== myEditId && x.url === v.url; })){ myShowMsg("That link is already in your list.", false); return; }
-      const keep = {name:m.name, url:m.url, note:m.note, cat:m.cat};
-      m.name = v.name; m.url = v.url; m.note = v.note; m.cat = cat;
-      if(!saveLinks()){ m.name = keep.name; m.url = keep.url; m.note = keep.note; m.cat = keep.cat; myShowMsg(STORAGE_ERR, false); return; }
-      trackMy("mylink_edit", v.url);
-    } else {
-      if(myLinks.length >= MY_MAX){ myShowMsg("You are at the " + MY_MAX + " link cap. Delete one to make room.", false); return; }
-      if(myLinks.some(function(x){ return x.url === v.url; })){ myShowMsg("That link is already in your list.", false); return; }
-      const m = {id:newId("m"), name:v.name, url:v.url, note:v.note, cat:cat, created:todayStamp()};
-      m.__mine = true;
-      myLinks.push(m);
-      if(!saveLinks()){ myLinks.pop(); myShowMsg(STORAGE_ERR, false); return; }
-      trackMy("mylink_add", v.url);
-      mySuggest = {name:v.name, url:v.url};
-    }
-    if(madeCat) saveCats();
+    const name = document.getElementById("m-name").value.trim();
+    const urlRaw = document.getElementById("m-url").value.trim();
+    const note = document.getElementById("m-note").value.trim();
+    if(!name || !urlRaw){ myShowMsg("Add a name and a URL.", false); return; }
+    const url = myURL(urlRaw);
+    if(!url){ myShowMsg("That does not look like a valid link.", false); return; }
+    if(favState.custom.length >= MY_MAX){ myShowMsg("You are at the " + MY_MAX + " link cap. Delete one to make room.", false); return; }
+    const dupe = favState.custom.some(function(c){ return c.url === url; })
+      || favState.saved.some(function(id){ const l = REAL_BY_FAVID[id]; return l && l.url === url; });
+    if(dupe){ myShowMsg("That link is already in your Favorites.", false); return; }
+    const id = "custom-" + newId("");
+    favState.custom.push({id:id, title:name.slice(0, MY_NAME_MAX), url:url, desc:note.slice(0, MY_NOTE_MAX), ext:true});
+    favState.saved.push(id);
+    if(!persistFav()){ favState.custom.pop(); favState.saved.pop(); myShowMsg(STORAGE_ERR, false); return; }
+    trackFav("fav_custom_add", url);
+    renderFavorites();
     closeMy();
-    refreshLayout();
-  }
-  function deleteMy(id){
-    const m = myLinks.filter(function(x){ return x.id === id; })[0];
-    const keep = myLinks.slice();
-    myLinks = myLinks.filter(function(x){ return x.id !== id; });
-    myDeleteId = null;
-    if(!saveLinks()) myLinks = keep;
-    else if(m) trackMy("mylink_delete", m.url);
-    refreshLayout();
   }
 
-  /* ---------- custom section actions ---------- */
-  function moveCat(id, dir){
-    const i = customCats.map(function(c){ return c.id; }).indexOf(id);
-    const j = i + (dir === "earlier" ? -1 : 1);
-    if(i < 0 || j < 0 || j >= customCats.length) return;
-    const t = customCats[i]; customCats[i] = customCats[j]; customCats[j] = t;
-    saveCats(); refreshLayout();
-  }
-  function toggleCat(id){
-    const c = customCats.filter(function(x){ return x.id === id; })[0];
-    if(!c) return;
-    c.hidden = !c.hidden; saveCats(); refreshLayout();
-  }
-  function renameCat(id, label){
-    const c = customCats.filter(function(x){ return x.id === id; })[0];
-    if(!c) return;
-    const v = catValidate(label);
-    if(v.err) return;
-    if(customCats.some(function(x){ return x.id !== id && x.label.toLowerCase() === v.label.toLowerCase(); })) return;
-    const keep = c.label; c.label = v.label;
-    if(!saveCats()) c.label = keep;
-    catRenameId = null; refreshLayout();
-  }
-  function deleteCat(id, moveLinks){
-    const keepCats = customCats.slice(), keepLinks = myLinks.slice();
-    if(moveLinks) myLinks.forEach(function(m){ if(m.cat === id) m.cat = HOME_CAT; });
-    else myLinks = myLinks.filter(function(m){ return m.cat !== id; });
-    customCats = customCats.filter(function(c){ return c.id !== id; });
-    catDeleteId = null;
-    if(!saveCats() || !saveLinks()){ customCats = keepCats; myLinks = keepLinks; }
-    else trackMy("customcat_delete");
-    refreshLayout();
-  }
-
-  /* ---------- backup and restore ---------- */
-  function backupPayload(){
-    return {v:1, site:"longhornlinks-general", exported:todayStamp(),
-            layout:{order:quick.order, hidden:quick.hidden}, cats:plainCats(), links:plainLinks()};
-  }
-  function exportBackup(){
-    try{
-      const blob = new Blob([JSON.stringify(backupPayload(), null, 2)], {type:"application/json"});
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "longhorn-links-backup.json";
-      document.body.appendChild(a); a.click(); document.body.removeChild(a);
-      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
-      trackMy("backup_export");
-    }catch(e){}
-  }
-  function importBackup(text, done){
-    let o = null;
-    try{ o = JSON.parse(text); }catch(e){ done("That file is not readable backup JSON."); return; }
-    if(!o || typeof o !== "object"){ done("That file is not readable backup JSON."); return; }
-    const cm = catMerge(o.cats);
-    const added = myMerge(o.links, cm.map);
-    if(o.layout && Object.prototype.toString.call(o.layout.order) === "[object Array]"){
-      const merged = sanitizeQuick({order:o.layout.order, hidden:o.layout.hidden});
-      if(merged) { quick = merged; saveQuick(); }
-    }
-    const okCats = saveCats(), okLinks = saveLinks();
-    if(!okCats || !okLinks){ done(STORAGE_ERR); loadPersonal(); refreshLayout(); return; }
-    trackMy("backup_import");
-    refreshLayout();
-    done(null, added, cm.added);
-  }
-
-  /* ---------- modal wiring ---------- */
+  document.getElementById("addMyLink").addEventListener("click", openMy);
   myModal.addEventListener("click", function(e){ if(e.target === myModal) closeMy(); });
   document.getElementById("m-cancel").addEventListener("click", closeMy);
   document.getElementById("m-save").addEventListener("click", saveMy);
-  [myName, myUrlIn, myNote, myNewCat].forEach(function(el){
-    el.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); saveMy(); } });
+  ["m-name","m-url","m-note"].forEach(function(id){
+    document.getElementById(id).addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); saveMy(); } });
   });
 
   document.addEventListener("click", function(e){
-    const t = e.target.closest ? e.target.closest("[data-myact],[data-catact]") : null;
-    if(!t) return;
-    e.preventDefault(); e.stopPropagation();
-    if(t.disabled) return;
-    const id = t.dataset.id;
-    if(t.dataset.myact){
-      const act = t.dataset.myact;
-      if(act === "edit"){ myDeleteId = null; openMy(id); return; }
-      if(act === "del"){ myDeleteId = id; catDeleteId = null; refreshLayout(); return; }
-      if(act === "del-no"){ myDeleteId = null; refreshLayout(); return; }
-      if(act === "del-yes"){ deleteMy(id); return; }
-      if(act === "tip-close"){ mySuggest = null; refreshLayout(); return; }
-      if(act === "ios-close"){ try{ localStorage.setItem(IOSTIP_KEY, "1"); }catch(err){} refreshLayout(); return; }
-      if(act === "suggest"){
-        const s = mySuggest;
-        if(s){
-          document.getElementById("f-title").value = s.name;
-          document.getElementById("f-url").value = s.url;
-          trackMy("mylink_share_click", s.url);
-        }
-        openForm();
-      }
-      return;
-    }
-    const act = t.dataset.catact;
-    if(act === "earlier" || act === "later"){ moveCat(id, act); return; }
-    if(act === "vis"){ toggleCat(id); return; }
-    if(act === "ren"){ catRenameId = id; catDeleteId = null; refreshLayout();
-      const inp = document.getElementById("sec-rename-input"); if(inp){ inp.focus(); inp.select(); } return; }
-    if(act === "ren-no"){ catRenameId = null; refreshLayout(); return; }
-    if(act === "ren-save"){
-      const inp = document.getElementById("sec-rename-input");
-      renameCat(id, inp ? inp.value : ""); return;
-    }
-    if(act === "del"){ catDeleteId = id; myDeleteId = null; refreshLayout(); return; }
-    if(act === "del-no"){ catDeleteId = null; refreshLayout(); return; }
-    if(act === "del-move"){ deleteCat(id, true); return; }
-    if(act === "del-all"){ deleteCat(id, false); return; }
+    const starBtn = e.target.closest ? e.target.closest("button.save") : null;
+    if(starBtn){ e.preventDefault(); e.stopPropagation(); toggleFav(starBtn.dataset.fav); return; }
+    const delBtn = e.target.closest ? e.target.closest("button.card-del") : null;
+    if(delBtn){ e.preventDefault(); e.stopPropagation(); deleteCustom(delBtn.dataset.del); return; }
   }, true);
 
-  document.addEventListener("keydown", function(e){
-    if(e.key !== "Enter") return;
-    const inp = e.target;
-    if(inp && inp.id === "sec-rename-input"){ e.preventDefault(); renameCat(catRenameId, inp.value); }
-  });
-
-  loadPersonal();
-
-  /* ---------- Customize My Quick Links: reorder, add, remove. No login, no cookies. ---------- */
-  const QUICK_KEY = "ll_quick_general_v1";
-  /* Identity is the tile, not the destination. Four Global Studies tiles share one
-     URL, and starring one of them should not flip the other three. */
-  function idOf(l){ return l.__mine ? "mine|" + l.id : l.cat + "|" + l.name; }
-  const DEFAULT_QUICK = QUICKLINKS.map(idOf);
-  let LINK_BY_ID = {};
-  /* Rebuilt whenever the personal list changes, so a link the student added can be
-     starred into the box like any other tile. */
-  function rebuildLinkIndex(){
-    LINK_BY_ID = {};
-    QUICKLINKS.concat(LINKS).forEach(function(l){ const k = idOf(l); if(!LINK_BY_ID[k]) LINK_BY_ID[k] = l; });
-    myLinks.forEach(function(m){ LINK_BY_ID["mine|" + m.id] = m; });
-  }
-  rebuildLinkIndex();
-  /* The box's own shortcut for a destination, so the directory's "Canvas (LMS)"
-     tile knows the box already has Canvas and does not offer a second copy. */
-  const QUICK_BY_URL = {}; QUICKLINKS.forEach(function(l){ QUICK_BY_URL[l.url] = idOf(l); });
-
-  let quick = {order:[], hidden:[]};
-  let editing = false;
-
-  const ICON = {
-    up:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>',
-    down:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>',
-    left:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>',
-    right:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>',
-    x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
-    star:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6.1L12 16.8 6.6 19.7l1.2-6.1L3.3 9.4l6.1-.8z"/></svg>'
-  };
-  /* Left/right matches the grid on a wide screen, up/down matches the single
-     column on a phone. CSS shows whichever pair is true at that width. */
-  const PAIR = {
-    earlier:'<span class="ic-row">' + ICON.left + '</span><span class="ic-stack">' + ICON.up + '</span>',
-    later:'<span class="ic-row">' + ICON.right + '</span><span class="ic-stack">' + ICON.down + '</span>'
-  };
-
-  /* Resilience: only tiles that still exist survive a load, so a link we retire
-     later just drops out instead of rendering a dead card. */
-  function knownIDs(arr){
-    const out = [], seen = {};
-    if(Object.prototype.toString.call(arr) !== "[object Array]") return out;
-    arr.forEach(function(k){
-      if(typeof k === "string" && LINK_BY_ID[k] && !seen[k]){ seen[k] = 1; out.push(k); }
-    });
-    return out;
-  }
-  function sanitizeQuick(o){
-    if(!o || typeof o !== "object") return null;
-    return {order:knownIDs(o.order), hidden:knownIDs(o.hidden)};
-  }
-  /* The saved order drives the box. Any default the user has not removed and has
-     never reordered lands at the end, so a quick link added to the site later
-     still shows up for people who already customized. */
-  function resolveQuick(){
-    const out = [], seen = {};
-    quick.order.forEach(function(k){
-      if(seen[k] || quick.hidden.indexOf(k) >= 0) return;
-      seen[k] = 1; out.push(k);
-    });
-    DEFAULT_QUICK.forEach(function(k){
-      if(seen[k] || quick.hidden.indexOf(k) >= 0) return;
-      seen[k] = 1; out.push(k);
-    });
-    /* A personal link filed under My Quick Links lives in the box and nowhere else,
-       so it is always present rather than opt-in like the built-in tiles. */
-    myLinks.forEach(function(m){
-      if(m.cat !== HOME_CAT) return;
-      const k = "mine|" + m.id;
-      if(seen[k]) return;
-      seen[k] = 1; out.push(k);
-    });
-    return out;
-  }
-
-  function loadQuick(){
-    try{
-      const raw = localStorage.getItem(QUICK_KEY);
-      if(!raw) return null;
-      return sanitizeQuick(JSON.parse(raw));
-    }catch(e){ return null; }
-  }
-  function saveQuick(){ try{ localStorage.setItem(QUICK_KEY, JSON.stringify(quick)); }catch(e){} }
-  function clearStoredQuick(){ try{ localStorage.removeItem(QUICK_KEY); }catch(e){} }
-
-  function encodeQuick(){
-    try{
-      const json = JSON.stringify({o:quick.order, h:quick.hidden,
-        c:customCats.map(function(c){ return [c.id, c.label]; }),
-        m:myLinks.map(function(m){ return [m.name, m.url, m.note||"", m.cat]; })});
-      return btoa(unescape(encodeURIComponent(json))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-    }catch(e){ return ""; }
-  }
-  function decodeQuick(str){
-    try{
-      let b = String(str).replace(/-/g,"+").replace(/_/g,"/");
-      while(b.length % 4) b += "=";
-      const o = JSON.parse(decodeURIComponent(escape(atob(b))));
-      const cats = Object.prototype.toString.call(o.c) === "[object Array]"
-        ? o.c.map(function(r){ return {id:r && r[0], label:r && r[1]}; }) : [];
-      return {quick:sanitizeQuick({order:o.o, hidden:o.h}), mine:o.m, cats:cats};
-    }catch(e){ return null; }
-  }
-
-  function trackQuick(type, extra){
-    if(!ANALYTICS_ENDPOINT) return;
-    try{
-      let body = "type=" + encodeURIComponent(type);
-      if(extra){ Object.keys(extra).forEach(function(k){ body += "&" + k + "=" + encodeURIComponent(extra[k]); }); }
-      navigator.sendBeacon(ANALYTICS_ENDPOINT, new Blob([body], {type:"application/x-www-form-urlencoded"}));
-    }catch(e){}
-  }
-
-  function toolBtn(act, id, label, inner, disabled, pressed, wide){
-    return '<button type="button" class="qk-btn' + (wide ? " wide" : "") + '" data-qact="' + act + '" data-id="' + esc(id) + '"'
-      + (disabled ? " disabled" : "")
-      + (pressed === undefined ? "" : ' aria-pressed="' + (pressed ? "true" : "false") + '"')
-      + ' aria-label="' + esc(label) + '" title="' + esc(label) + '">' + inner + '</button>';
-  }
-
-  /* Every card in the directory gets its own star. State is per tile. */
-  function gridHTML(items){
-    if(!editing) return items.map(anyCard).join("");
-    const inBox = {}; resolveQuick().forEach(function(k){ inBox[k] = 1; });
-    return items.map(function(l){
-      if(l.__mine) return '<div class="cardwrap">' + myCardHTML(l) + '<div class="qk-tools">' + myToolsHTML(l) + '</div></div>';
-      const id = idOf(l);
-      const alt = QUICK_BY_URL[l.url];
-      const on = inBox[id] === 1 || (alt ? inBox[alt] === 1 : false);
-      return '<div class="cardwrap">' + cardHTML(l) + '<div class="qk-tools">'
-        + toolBtn("fav", id, on ? "Remove " + l.name + " from My Quick Links" : "Add " + l.name + " to My Quick Links",
-                  ICON.star + '<span>' + (on ? "Added" : "Add") + '</span>', false, on, true)
-        + '</div></div>';
-    }).join("");
-  }
-
-  const quickGrid = document.getElementById("grid-quicklinks");
-  const quickEmpty = document.getElementById("quick-empty");
-  function renderQuick(){
-    const ids = resolveQuick();
-    quickGrid.innerHTML = ids.map(function(k, i){
-      const l = LINK_BY_ID[k];
-      if(!l) return "";
-      if(!editing) return anyCard(l);
-      /* A personal link filed here has no other home, so it gets edit and delete
-         rather than the remove-from-box cross. */
-      const homeMine = l.__mine && l.cat === HOME_CAT;
-      return '<div class="cardwrap">' + anyCard(l) + '<div class="qk-tools">'
-        + toolBtn("earlier", k, "Move " + l.name + " earlier", PAIR.earlier, i === 0)
-        + toolBtn("later", k, "Move " + l.name + " later", PAIR.later, i === ids.length - 1)
-        + (homeMine ? myToolsHTML(l) : toolBtn("remove", k, "Remove " + l.name + " from My Quick Links", ICON.x, false))
-        + '</div></div>';
-    }).join("");
-    const tips = document.getElementById("my-tips");
-    if(tips) tips.innerHTML = iosTipHTML() + suggestTipHTML();
-    if(quickEmpty){
-      quickEmpty.hidden = ids.length > 0;
-      quickEmpty.textContent = editing
-        ? "Star any link further down the page, or use Add a link to make your own."
-        : "Nothing here yet. Tap Customize to pick the ones you use.";
-    }
-  }
-
-  function refreshLayout(){ rebuildLinkIndex(); renderQuick(); renderSections(); applyFilter(); }
-
-  function moveQuick(id, dir){
-    const list = resolveQuick();
-    const i = list.indexOf(id), j = i + (dir === "earlier" ? -1 : 1);
-    if(i < 0 || j < 0 || j >= list.length) return;
-    list[i] = list[j]; list[j] = id;
-    quick.order = list;
-    saveQuick(); trackQuick("quick_move", {link:id, direction:dir}); refreshLayout();
-  }
-  function removeQuick(id){
-    quick.order = resolveQuick().filter(function(k){ return k !== id; });
-    if(quick.hidden.indexOf(id) < 0) quick.hidden.push(id);
-    saveQuick(); trackQuick("quick_remove", {link:id}); refreshLayout();
-  }
-  function addQuick(id){
-    if(!LINK_BY_ID[id]) return;
-    const list = resolveQuick();
-    if(list.indexOf(id) >= 0) return;
-    list.push(id);
-    quick.order = list;
-    const h = quick.hidden.indexOf(id); if(h >= 0) quick.hidden.splice(h, 1);
-    saveQuick(); trackQuick("quick_add", {link:id}); refreshLayout();
-  }
-
-  document.addEventListener("click", function(e){
-    const btn = e.target.closest ? e.target.closest("[data-qact]") : null;
-    if(!btn) return;
-    e.preventDefault(); e.stopPropagation();
-    if(btn.disabled) return;
-    const id = btn.dataset.id, act = btn.dataset.qact;
-    if(act === "remove"){ removeQuick(id); return; }
-    if(act === "fav"){
-      const list = resolveQuick();
-      if(list.indexOf(id) >= 0){ removeQuick(id); return; }
-      const l = LINK_BY_ID[id], alt = l && QUICK_BY_URL[l.url];
-      if(alt && list.indexOf(alt) >= 0) removeQuick(alt);
-      else addQuick(id);
-      return;
-    }
-    moveQuick(id, act);
-  }, true);
-
-  function copyShareLink(btn){
-    const code = encodeQuick();
-    if(!code) return;
-    const url = location.origin + location.pathname + "?layout=" + code;
-    const original = btn.textContent;
-    const done = function(){ btn.textContent = "Copied"; setTimeout(function(){ btn.textContent = original; }, 1600); };
-    const fallback = function(){
-      try{
-        const ta = document.createElement("textarea");
-        ta.value = url; ta.setAttribute("readonly",""); ta.style.cssText = "position:absolute;left:-9999px";
-        document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta); done();
-      }catch(e){ btn.textContent = "Copy failed"; setTimeout(function(){ btn.textContent = original; }, 1600); }
-    };
-    try{
-      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(url).then(done, fallback); }
-      else fallback();
-    }catch(e){ fallback(); }
-    trackQuick("quick_share");
-  }
-
-  const layBar = document.getElementById("layBar");
-  function renderBar(){
-    layBar.innerHTML = "";
-    const toggle = document.createElement("button");
-    toggle.type = "button"; toggle.className = "lay-btn primary" + (editing ? " on" : "");
-    toggle.innerHTML = editing ? "Done" : ICON.star + "<span>Customize</span>";
-    toggle.setAttribute("aria-pressed", editing ? "true" : "false");
-    toggle.onclick = function(){
-      editing = !editing;
-      myDeleteId = null; catDeleteId = null; catRenameId = null;
-      document.body.classList.toggle("editing", editing);
-      renderBar(); refreshLayout();
-    };
-
-    const addMine = document.createElement("button");
-    addMine.type = "button"; addMine.className = "lay-btn outline";
-    addMine.textContent = "Add a link";
-    addMine.onclick = function(){ openMy(null); };
-
-    const pair = document.createElement("div");
-    pair.className = "lay-actions";
-    pair.appendChild(toggle); pair.appendChild(addMine);
-    layBar.appendChild(pair);
-
-    if(editing){
-      const reset = document.createElement("button");
-      reset.type = "button"; reset.className = "lay-btn"; reset.textContent = "Reset to default";
-      reset.onclick = function(){
-        clearStoredQuick(); quick = {order:[], hidden:[]};
-        trackQuick("quick_reset"); renderBar(); refreshLayout();
-      };
-      layBar.appendChild(reset);
-
-      const share = document.createElement("button");
-      share.type = "button"; share.className = "lay-btn"; share.textContent = "Copy my layout link";
-      share.onclick = function(){ copyShareLink(share); };
-      layBar.appendChild(share);
-
-      const backup = document.createElement("button");
-      backup.type = "button"; backup.className = "lay-btn"; backup.textContent = "Back up my links";
-      backup.onclick = exportBackup;
-      layBar.appendChild(backup);
-
-      const restore = document.createElement("button");
-      restore.type = "button"; restore.className = "lay-btn"; restore.textContent = "Restore from file";
-      restore.onclick = function(){ restoreInput.value = ""; restoreInput.click(); };
-      layBar.appendChild(restore);
-
-      const note = document.createElement("span");
-      note.className = "lay-note"; note.id = "layNote";
-      note.textContent = "Saved on this device.";
-      layBar.appendChild(note);
-    }
-  }
-
-  /* Restore reads a file the student chose, which is untrusted like any import. */
-  const restoreInput = document.getElementById("restoreFile");
-  restoreInput.addEventListener("change", function(){
-    const f = restoreInput.files && restoreInput.files[0];
-    if(!f) return;
-    const say = function(text){ const n = document.getElementById("layNote"); if(n) n.textContent = text; };
-    const reader = new FileReader();
-    reader.onerror = function(){ say("That file could not be read."); };
-    reader.onload = function(){
-      importBackup(String(reader.result || ""), function(err, links, cats){
-        if(err){ say(err); return; }
-        say(links || cats
-          ? "Restored " + links + " link" + (links === 1 ? "" : "s")
-            + (cats ? " and " + cats + " section" + (cats === 1 ? "" : "s") : "") + "."
-          : "Nothing new in that file, everything in it was already here.");
-      });
-    };
-    reader.readAsText(f);
-  });
-
-  (function initQuick(){
-    let shared = null;
-    try{
-      const params = new URLSearchParams(location.search);
-      const raw = params.get("layout");
-      if(raw){
-        shared = decodeQuick(raw);
-        try{
-          params.delete("layout");
-          const qs = params.toString();
-          history.replaceState(null, "", location.pathname + (qs ? "?" + qs : "") + location.hash);
-        }catch(e){}
-      }
-    }catch(e){}
-    if(shared && shared.quick){ quick = shared.quick; saveQuick(); }
-    else { const stored = loadQuick(); if(stored) quick = stored; }
-    if(shared){
-      const cm = catMerge(shared.cats);
-      const added = myMerge(shared.mine, cm.map);
-      if(cm.added) saveCats();
-      if(added) saveLinks();
-    }
-    rebuildLinkIndex();
-  })();
-  renderBar();
-  renderQuick();
+  initFav();
+  renderFavorites();
 
   const sectionsEl = document.getElementById("sections");
   function renderExtraGrids(){
     const p = document.getElementById("grid-prospective");
-    if(p) p.innerHTML = gridHTML(LINKS.filter(l=>l.cat==="prospective"));
+    if(p) p.innerHTML = LINKS.filter(function(l){ return l.cat === "prospective"; }).map(function(l){ return cardHTML(l); }).join("");
   }
   function renderSections(){
     sectionsEl.innerHTML = "";
-    /* The student's own sections sit above the editorial ones and are the only
-       sections that reorder and hide, since the rest are a curated running order. */
-    customCats.forEach(function(c, i){
-      const items = myLinksFor(c.id);
+    if(QUICKLINKS.length){
       const sec = document.createElement("div");
-      sec.className = "section custom" + (c.hidden ? " user-hidden" : "");
-      sec.dataset.cat = c.id; sec.id = "cat-" + c.id;
-      if(c.hidden) sec.dataset.userhidden = "1";
-      sec.innerHTML = '<div class="section-head"><div class="sh-text"><span class="eyebrow">Yours</span>'
-        + '<h2>' + escAll(c.label) + '</h2></div>'
-        + catToolsHTML(c, i, customCats.length, items.length) + '</div>'
-        + '<div class="grid">' + gridHTML(items) + '</div>'
-        + (items.length ? "" : '<p class="sec-empty">Nothing in here yet. Use Add a link and pick this section.</p>');
+      sec.className = "section"; sec.dataset.cat = "quicklinks"; sec.id = "cat-quicklinks";
+      sec.innerHTML = '<div class="section-head"><span class="eyebrow">Everyday</span><h2>' + CAT_LABEL.quicklinks + '</h2></div>'
+        + '<div class="grid">' + QUICKLINKS.map(function(l){ return cardHTML(l); }).join("") + '</div>';
       sectionsEl.appendChild(sec);
-    });
+    }
     CATS.forEach((c,i)=>{
-      const items = LINKS.filter(l=>l.cat===c.id).concat(myLinksFor(c.id));
+      const items = LINKS.filter(l=>l.cat===c.id);
       if(!items.length) return;
       const sec = document.createElement("div");
       sec.className="section"; sec.dataset.cat=c.id; sec.id="cat-"+c.id;
       sec.innerHTML = '<div class="section-head"><span class="eyebrow">'+String(i+1).padStart(2,"0")+' / '+CATS.length+'</span>'
         + '<h2>'+c.label+'</h2></div>'
-        + '<div class="grid">'+gridHTML(items)+'</div>';
+        + '<div class="grid">'+items.map(function(l){ return cardHTML(l); }).join("")+'</div>';
       sectionsEl.appendChild(sec);
     });
     renderExtraGrids();
     buildChips();
+    syncStars();
   }
 
-  // Chips. Rebuilt with the sections so custom ones come and go with them.
+  // Chips. Rebuilt with the sections so the Favorites chip comes and goes with it.
   const chipsEl = document.getElementById("chips");
   let activeCat = "all";
   function buildChips(){
-    const list = [{id:"all",label:"All"}, {id:"quicklinks",label:"My Quick Links"}];
-    customCats.forEach(c=>{ if(!c.hidden) list.push({id:c.id, label:c.label}); });
+    const list = [{id:"all",label:"All"}, {id:"saved",label:"★ Favorites"}, {id:"quicklinks",label:CAT_LABEL.quicklinks}];
     CATS.forEach(c=>list.push(c));
     if(!list.some(c=>c.id===activeCat)) activeCat = "all";
     chipsEl.innerHTML = "";
@@ -1466,7 +779,8 @@
         activeCat=c.id;
         document.querySelectorAll(".chip").forEach(x=>x.classList.remove("active"));
         b.classList.add("active");
-        if(c.id!=="all"){ const t=document.getElementById(c.id==="quicklinks"?"quick-links":"cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+        if(c.id==="saved"){ const t=document.getElementById("quick-links"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+        else if(c.id!=="all"){ const t=document.getElementById("cat-"+c.id); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
         applyFilter();
       };
       chipsEl.appendChild(b);
@@ -1542,7 +856,7 @@
   const q = document.getElementById("q");
   const countEl = document.getElementById("count");
   const emptyEl = document.getElementById("empty");
-  const total = () => LINKS.length + myLinks.length;
+  const total = () => LINKS.length + QUICKLINKS.length + favState.custom.length;
 
   function applyFilter(){
     const term = q.value.trim().toLowerCase();
@@ -1551,11 +865,7 @@
     let shown = 0;
     document.querySelectorAll(".section").forEach(sec=>{
       const cat = sec.dataset.cat || sec.id.replace("cat-","");
-      const catMatch = (activeCat==="all") || (activeCat===cat) ||
-                       (activeCat==="quicklinks" && sec.id==="quick-links");
-      /* A section the student hid stays hidden while browsing, but a search still
-         reaches into it and edit mode shows it dimmed so it can be brought back. */
-      const suppressed = sec.dataset.userhidden === "1" && !editing && !term;
+      const catMatch = (activeCat==="all") || (activeCat===cat) || (activeCat==="saved");
       let secVisible = 0;
       sec.querySelectorAll(".card").forEach(card=>{
         var hits = 0;
@@ -1563,14 +873,13 @@
           var words = cardWords(card);
           for(var ti=0; ti<terms.length; ti++){ if(termHits(terms[ti], card.dataset.text, words)) hits++; }
         }
-        const ok = !suppressed && catMatch && (!term || terms.length===0 || hits>=need);
+        let ok = catMatch && (!term || terms.length===0 || hits>=need);
+        if(activeCat==="saved" && favState.saved.indexOf(card.dataset.favId)<0) ok=false;
         card.style.display = ok ? "" : "none";
-        const wrap = card.parentElement;
-        if(wrap && wrap.classList.contains("cardwrap")) wrap.style.display = ok ? "" : "none";
         if(ok){secVisible++; shown++;}
       });
       const hasCards = sec.querySelectorAll(".card").length>0;
-      if(!hasCards){ sec.style.display = (!suppressed && catMatch && !term) ? "" : "none"; }
+      if(!hasCards){ sec.style.display = (catMatch && !term) ? "" : "none"; }
       else { sec.style.display = (catMatch && secVisible>0) ? "" : "none"; }
     });
     countEl.textContent = (term||activeCat!=="all") ? (shown+" shown") : (total()+" links");
