@@ -85,6 +85,8 @@ header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bott
 .navE .row > a:hover{border-color:var(--brand);color:var(--brand-deep)}
 .navE .row > a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
 .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto;}
+.navE .row > a .mob{display:none}
+@media (max-width:480px){ .navE .row > a .full{display:none} .navE .row > a .mob{display:inline} }
 
 /* ---------- Page content (unique to this page) ---------- */
 .title{padding:62px 0 44px;border-bottom:1px solid var(--line);}
@@ -150,7 +152,7 @@ dd.next{color:var(--brand-deep)}
 <div class="navE"><div class="wrap row">
   <a href="/">General</a>
   <a href="/mba.html">MBA</a>
-  <a href="/mechanical-engineering">Mechanical Engineering</a>
+  <a href="/mechanical-engineering"><span class="full">Mechanical Engineering</span><span class="mob">MechE</span></a>
   <span class="sp"></span>
   <a class="on" href="/registration" aria-current="page">Registration</a>
 </div></div>

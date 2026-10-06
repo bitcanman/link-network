@@ -91,6 +91,8 @@
   .navE .row > a:hover{border-color:var(--brand);color:var(--brand-deep)}
   .navE .row > a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
   .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto;}
+  .navE .row > a .mob{display:none}
+  @media (max-width:480px){ .navE .row > a .full{display:none} .navE .row > a .mob{display:inline} }
 
   /* header text link - deliberately not a .btn; two solid buttons up there was too loud */
   .rr-try{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
@@ -296,7 +298,7 @@
 <div class="navE"><div class="wrap row">
   <a class="on" href="/" aria-current="page">General</a>
   <a href="/mba.html">MBA</a>
-  <a href="/mechanical-engineering">Mechanical Engineering</a>
+  <a href="/mechanical-engineering"><span class="full">Mechanical Engineering</span><span class="mob">MechE</span></a>
   <span class="sp"></span>
   <a href="/registration">Registration</a>
 </div></div>

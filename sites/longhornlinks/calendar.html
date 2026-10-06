@@ -86,6 +86,8 @@
   .navE .row > a:hover{border-color:var(--brand);color:var(--brand-deep)}
   .navE .row > a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
   .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto;}
+  .navE .row > a .mob{display:none}
+  @media (max-width:480px){ .navE .row > a .full{display:none} .navE .row > a .mob{display:inline} }
   /* Links/Calendar shares the audience row so it never costs a second band of height. */
   .view-tabs{margin-left:auto;display:flex;border:1.5px solid var(--line);border-radius:9px;overflow:hidden;background:var(--panel);}
   .view-tab{font-family:"Spline Sans Mono",monospace;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:var(--muted);padding:9px 16px;}
@@ -389,7 +391,7 @@
 <div class="navE"><div class="wrap row">
   <a href="/">General</a>
   <a class="on" href="/mba.html" aria-current="page">MBA</a>
-  <a href="/mechanical-engineering">Mechanical Engineering</a>
+  <a href="/mechanical-engineering"><span class="full">Mechanical Engineering</span><span class="mob">MechE</span></a>
   <span class="sp"></span>
   <a href="/registration">Registration</a>
   <div class="view-tabs" role="tablist" aria-label="MBA view">

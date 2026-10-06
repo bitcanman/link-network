@@ -74,7 +74,8 @@ header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bott
 .navE .row>a:hover{border-color:var(--brand);color:var(--brand-deep)}
 .navE .row>a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
 .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto}
-@media (max-width:480px){ .navE .row>a{padding:8px 12px;font-size:11px} }
+.navE .row > a .mob{display:none}
+@media (max-width:480px){ .navE .row>a{padding:8px 12px;font-size:11px} .navE .row > a .full{display:none} .navE .row > a .mob{display:inline} }
 
 .hero{padding-block:22px;display:flex;gap:36px;align-items:center;justify-content:space-between}
 .eyebrow{color:var(--deep);font-size:12px;text-transform:uppercase;letter-spacing:.1em}
@@ -177,7 +178,7 @@ dialog .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
 <div class="navE"><div class="wrap row">
   <a href="/">General</a>
   <a href="/mba.html">MBA</a>
-  <a class="on" href="/mechanical-engineering" aria-current="page">Mechanical Engineering</a>
+  <a class="on" href="/mechanical-engineering" aria-current="page"><span class="full">Mechanical Engineering</span><span class="mob">MechE</span></a>
   <span class="sp"></span>
   <a href="/registration">Registration</a>
 </div></div>
