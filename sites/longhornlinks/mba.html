@@ -407,6 +407,10 @@
   </div>
 
   <div id="sections"></div>
+  <section class="section" id="cat-general-fallback" data-cat="general-fallback" style="display:none;">
+    <div class="section-head"><span class="eyebrow">Also on the main UT Austin page</span><h2>General campus resources</h2></div>
+    <div class="grid" id="grid-fallback"></div>
+  </section>
   <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
 </main>
 
@@ -453,7 +457,7 @@
       </ul></div>
     </div>
     <p class="legal">
-      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.8.
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v3.9.
     </p>
   </div>
 </footer>
@@ -1514,6 +1518,21 @@
   }
   renderSections();
 
+  /* Small, curated set of genuinely campus-wide links, kept out of the main
+     MBA directory so it never pads the regular count or categories. Shown
+     only when a search term matches one, so a student searching something
+     like "disability" learns LHL has it instead of finding nothing. Capped
+     at 4 matches and excluded from the "N shown" count in applyFilter. */
+  const GENERAL_FALLBACK = [
+    {cat:"essentials", name:"Disability & Access (D&A)", desc:"Academic accommodations, testing support, and accessibility services.", url:"https://disability.utexas.edu/"},
+    {cat:"essentials", name:"University Health Services", desc:"Doctor visits, pharmacy, and urgent care on campus.", url:"https://www.healthyhorns.utexas.edu/"},
+    {cat:"essentials", name:"Counseling & Mental Health (CMHC)", desc:"Free counseling, crisis line, and wellness programs.", url:"https://cmhc.utexas.edu/"},
+    {cat:"essentials", name:"UT Police & Campus Safety", desc:"UTPD, emergency info, and safety escorts.", url:"https://police.utexas.edu/"},
+    {cat:"essentials", name:"Student Emergency Services (SOS)", desc:"Emergency financial help, absence notices, and crisis support.", url:"https://deanofstudents.utexas.edu/sos/"},
+    {cat:"essentials", name:"UT EID Self-Service", desc:"Look up or reset your EID and password.", url:"https://www.utexas.edu/eid"},
+  ].filter(function(f){ return !LINKS.some(function(l){ return l.url===f.url; }); });
+  document.getElementById("grid-fallback").innerHTML = GENERAL_FALLBACK.map(cardHTML).join("");
+
   /* ---------- Smart search: synonyms, stemming, typo tolerance, graceful fallback ---------- */
   const STOPW = {"my":1,"the":1,"a":1,"an":1,"for":1,"to":1,"me":1,"i":1,"of":1,"in":1,"on":1,"do":1,"how":1,"where":1,"is":1,"ut":1,"find":1,"get":1,"school":1,"college":1,"university":1,"campus":1,"texas":1,"austin":1,"utexas":1,"longhorn":1,"longhorns":1,"student":1,"students":1,"mccombs":1,"link":1,"links":1,"page":1,"website":1,"site":1,"info":1,"information":1};
   const SYN = {
@@ -1588,7 +1607,7 @@
     const term = q.value.trim().toLowerCase();
     const terms = term.split(/\s+/).map(function(t){return t.replace(/[^a-z0-9]/g,"");}).filter(function(t){ return t && !STOPW[t]; });
     const need = terms.length<=2 ? terms.length : terms.length-1;   // allow one miss on long queries
-    let shown = 0;
+    let shown = 0, fbTotal = 0;
     document.querySelectorAll(".section").forEach(sec=>{
       const cat = sec.dataset.cat || sec.id.replace("cat-","");
       const catMatch = (activeCat==="all") || (activeCat===cat) ||
@@ -1596,25 +1615,29 @@
       /* A section the student hid stays hidden while browsing, but a search still
          reaches into it and edit mode shows it dimmed so it can be brought back. */
       const suppressed = sec.dataset.userhidden === "1" && !editing && !term;
-      let secVisible = 0;
+      const isFallback = cat === "general-fallback";
+      let secVisible = 0, fbShown = 0;
       sec.querySelectorAll(".card").forEach(card=>{
         var hits = 0;
         if(term && terms.length){
           var words = cardWords(card);
           for(var ti=0; ti<terms.length; ti++){ if(termHits(terms[ti], card.dataset.text, words)) hits++; }
         }
-        const ok = !suppressed && catMatch && (!term || terms.length===0 || hits>=need);
+        let ok = !suppressed && catMatch && (isFallback
+          ? (!!term && terms.length>0 && hits>=need)
+          : (!term || terms.length===0 || hits>=need));
+        if(ok && isFallback){ if(fbShown>=4) ok=false; else fbShown++; }
         card.style.display = ok ? "" : "none";
         const wrap = card.parentElement;
         if(wrap && wrap.classList.contains("cardwrap")) wrap.style.display = ok ? "" : "none";
-        if(ok){secVisible++; shown++;}
+        if(ok){ secVisible++; if(isFallback) fbTotal++; else shown++; }
       });
       const hasCards = sec.querySelectorAll(".card").length>0;
       if(!hasCards){ sec.style.display = (!suppressed && catMatch && !term) ? "" : "none"; }
       else { sec.style.display = (catMatch && secVisible>0) ? "" : "none"; }
     });
     countEl.textContent = (term||activeCat!=="all") ? (shown+" shown") : (total()+" links");
-    emptyEl.style.display = (shown===0) ? "block" : "none";
+    emptyEl.style.display = (shown===0 && fbTotal===0) ? "block" : "none";
     document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");
   }
   q.addEventListener("input", ()=>{ activeCat="all";

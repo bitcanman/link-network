@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A student-built UT Austin mechanical engineering directory: societies, training, academic resources, research and careers.">
+<meta name="author" content="Longhorn Links">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://longhornlinks.com/mechanical-engineering">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png">
+<meta name="theme-color" content="#BF5700">
+<title>Mechanical Engineering · Longhorn Links</title>
+<meta property="og:title" content="Mechanical Engineering - Longhorn Links">
+<meta property="og:description" content="A student-built UT Austin mechanical engineering directory: societies, training, academic resources, research and careers.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://longhornlinks.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://longhornlinks.com/mechanical-engineering">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://longhornlinks.com/og-image.png">
+<meta name="twitter:title" content="Mechanical Engineering - Longhorn Links">
+<meta name="twitter:description" content="A student-built UT Austin mechanical engineering directory.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--brand:#BF5700;--deep:#8F4200;--tint:#F7E4D2;--ink:#221B14;--bg:#F6F1E8;--line:#E4D9C9;--muted:#6B6157;
+--brand-deep:#8F4200;--brand-tint:#F7E4D2;--panel:#FFFFFF;--focus:#1457D6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;overflow-y:scroll;scrollbar-gutter:stable}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 'Public Sans',system-ui,sans-serif}
+a{color:inherit}
+button,input{font:inherit}
+button,a,input{touch-action:manipulation}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+.wrap{max-width:1180px;margin:auto;padding:0 22px}
+.mono,.eyebrow,.tag{font-family:'Spline Sans Mono',monospace}
+
+/* ---------- Standardized header (matches the rest of the site) ---------- */
+.cta-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:0 0 auto}
+.disc-inline{font-family:'Spline Sans Mono',monospace;font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+@media (max-width:390px){ .disc-inline{font-size:8.5px;letter-spacing:.03em} }
+
+header.main{position:sticky;top:0;z-index:30;background:var(--panel);border-bottom:3px solid var(--brand)}
+.main-inner{display:flex;align-items:center;justify-content:space-between;height:62px;gap:12px}
+.wordmark{display:flex;align-items:center;gap:12px;text-decoration:none;line-height:1}
+.wordmark .mark{width:30px;height:30px;flex:0 0 auto;display:grid;place-items:center;background:var(--brand);color:#fff;border-radius:8px;font-size:19px}
+.wordmark .wm-name{font-family:'Archivo',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.01em;line-height:1;color:var(--ink);white-space:nowrap}
+.wordmark .wm-sub{font-family:'Spline Sans Mono',monospace;font-size:9px;line-height:1;white-space:nowrap;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.rr-try{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;white-space:nowrap;
+  font-size:14px;font-weight:600;color:var(--brand-deep);text-decoration:none;
+  border-bottom:1.5px solid #E8C9A8;padding-bottom:2px;transition:color .12s,border-color .12s}
+.rr-try:hover{color:var(--brand);border-bottom-color:var(--brand)}
+.rr-try .arw{transition:transform .12s}
+.rr-try:hover .arw{transform:translateX(2px)}
+@media (max-width:1060px){ .rr-try .rr-pre{display:none} .rr-try{font-size:13px} }
+@media (max-width:520px){
+  .main-inner{flex-wrap:wrap;height:auto;min-height:62px;padding:9px 22px;gap:6px}
+  .rr-try{font-size:12.5px}
+}
+
+.navE{background:var(--panel);border-bottom:1px solid var(--line)}
+.navE .row{display:flex;align-items:center;gap:8px;padding:10px 0;flex-wrap:wrap}
+.navE .row>a{font-family:'Spline Sans Mono',monospace;font-size:12.5px;letter-spacing:.06em;
+  text-transform:uppercase;text-decoration:none;color:var(--muted);
+  border:1.5px solid var(--line);border-radius:8px;padding:9px 18px;
+  background:transparent;transition:.12s}
+.navE .row>a:hover{border-color:var(--brand);color:var(--brand-deep)}
+.navE .row>a.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+.navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto}
+@media (max-width:480px){ .navE .row>a{padding:8px 12px;font-size:11px} }
+
+.hero{padding-block:22px;display:flex;gap:36px;align-items:center;justify-content:space-between}
+.eyebrow{color:var(--deep);font-size:12px;text-transform:uppercase;letter-spacing:.1em}
+h1,h2,h3{font-family:Archivo,system-ui,sans-serif}
+h1{font-size:36px;line-height:1.1;letter-spacing:-.035em;margin:11px 0 12px}
+h1 span{color:var(--brand)}
+.hero p{max-width:660px;margin:0;color:var(--muted);font-size:16px}
+.dept{flex:0 0 230px;border-left:2px solid var(--line);padding-left:24px;color:var(--muted);font-size:14px}
+.dept strong{display:block;color:var(--ink);margin:5px 0}
+.controls{background:var(--bg);padding:12px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.searchline{display:flex;gap:14px;align-items:center}
+.search{position:relative;flex:1}
+.search input{width:100%;padding:13px 46px;border:1.5px solid var(--line);background:#fff;border-radius:10px;color:var(--ink)}
+.search svg{position:absolute;left:16px;top:16px;width:20px;height:20px;color:var(--muted)}
+kbd{position:absolute;right:15px;top:14px;border:1px solid var(--line);border-radius:4px;padding:0 6px;color:var(--muted)}
+.count{font-size:13px;color:var(--muted)}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.chip,.plain{border:1px solid var(--line);background:#fff;border-radius:7px;padding:8px 12px;color:var(--muted);font-size:14px;cursor:pointer}
+.chip{padding:6px 10px}
+.chip.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.chip:hover,.plain:hover{border-color:var(--brand);color:var(--deep)}
+.chip.active:hover{color:#fff}
+main.wrap{padding-top:22px}
+.section{margin:0 0 26px;scroll-margin-top:20px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:14px}
+.section-head h2{font-size:21px;margin:0 0 3px;letter-spacing:-.025em}
+.section-head p{margin:0;color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-top:12px}
+.card{position:relative;border:1px solid var(--line);border-radius:10px;background:#fff;display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+.card:hover{border-color:var(--brand);transform:translateY(-2px)}
+.resource{display:flex;flex-direction:column;flex:1;padding:12px 13px 8px;text-decoration:none;min-height:116px}
+.card h3{font:700 15px/1.3 'Public Sans',sans-serif;margin:0 25px 6px 0}
+.desc{font-size:14px;line-height:1.4;color:var(--muted);margin:0 0 8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tag{display:inline-block;align-self:flex-start;font-size:12px;color:var(--deep);background:var(--tint);padding:2px 6px;border-radius:4px;margin-top:auto}
+.card-bottom{display:flex;justify-content:space-between;align-items:center;padding:0 13px 10px;font-size:12px;color:var(--muted);gap:8px}
+.card-bottom span:last-child{display:none}
+.card-bottom a{text-decoration:none}
+.save{position:absolute;right:6px;top:6px;background:transparent;border:0;font-size:21px;color:#9c9082;cursor:pointer;width:29px;height:29px}
+.save[aria-pressed=true]{color:var(--brand)}
+.quick{padding:0;background:transparent;border:0}
+.empty-note{margin:14px 0 0;padding:11px 14px;border:1px solid #e8c9a8;border-radius:10px;background:var(--tint);font-size:14px;color:var(--deep)}
+.tiw-guide{background:#fff;border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-top:12px}
+.tiw-guide h3{font-size:17px;margin:0 0 12px}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.step{display:flex;gap:11px;align-items:flex-start}
+.num{flex:0 0 25px;display:grid;place-items:center;border-radius:5px;background:var(--tint);color:var(--deep);font-size:13px;font-weight:700}
+.step a{font-size:14px;font-weight:600;text-decoration:none}
+.step a:hover{text-decoration:underline;color:var(--brand)}
+.step small{display:block;font-size:13px;color:var(--muted);margin-top:2px}
+.tiw-location{display:inline-block;margin-top:20px;font-size:14px;font-weight:600;color:var(--deep);text-underline-offset:3px}
+.end{display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:26px 0;gap:20px}
+.end h2{font-size:20px;margin:0 0 4px}
+.end p{margin:0;font-size:14px;color:var(--muted)}
+.end a{color:var(--deep);font-weight:600;font-size:14px}
+footer{background:var(--ink);color:#e5d9cc;padding:28px 0;font-size:13px}
+footer .foot{display:flex;justify-content:space-between;gap:25px}
+footer p{margin:8px 0 0;max-width:760px;color:#cbbba9}
+dialog{border:1px solid var(--line);border-radius:14px;padding:25px;width:min(460px,calc(100% - 32px));color:var(--ink)}
+dialog::backdrop{background:#221b1480}
+dialog h2{margin-top:0;font-size:23px}
+dialog label{display:block;margin:13px 0 5px;font-size:14px}
+dialog input{width:100%;padding:11px;border:1px solid var(--line);border-radius:7px}
+dialog .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
+.solid{background:var(--brand);color:#fff;border-color:var(--brand)}
+#none{text-align:center;padding:45px 0;color:var(--muted)}
+[hidden]{display:none!important}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:12px 18px;border-radius:9px;z-index:20;font-size:14px;width:max-content;max-width:90vw}
+.skip{position:absolute;left:-1000px}
+.skip:focus{left:10px;top:10px;background:#fff;padding:10px;z-index:30}
+@media(max-width:1000px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:900px){.dept{display:none}}
+@media(max-width:760px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.steps{grid-template-columns:1fr;gap:14px}}
+@media(max-width:620px){
+.searchline{display:block}
+.count{display:block;margin-top:8px}
+.chips{gap:6px}
+.chip{font-size:13px}
+.section-head{align-items:flex-start}
+.end,footer .foot{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:480px){.grid{grid-template-columns:1fr}h1{font-size:32px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to resources</a>
+
+<header class="main">
+  <div class="wrap main-inner">
+    <a class="wordmark" href="https://longhornlinks.com/">
+      <span class="mark" aria-hidden="true">★</span>
+      <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">UT Austin</span></span>
+    </a>
+    <div class="cta-wrap">
+      <a class="rr-try" href="mailto:jn32456@my.utexas.edu"><span class="rr-pre">Get in touch </span>Contact Us <span class="arw" aria-hidden="true">&rarr;</span></a>
+      <span class="disc-inline">Unofficial &middot; Student-built</span>
+    </div>
+  </div>
+</header>
+
+<div class="navE"><div class="wrap row">
+  <a href="/">General</a>
+  <a href="/mba.html">MBA</a>
+  <a class="on" href="/mechanical-engineering" aria-current="page">Mechanical Engineering</a>
+  <span class="sp"></span>
+  <a href="/registration">Registration</a>
+</div></div>
+
+<div class="wrap hero">
+<div>
+<div class="eyebrow">Cockrell School of Engineering</div>
+<h1>Your <span>MechE</span> starting point.</h1>
+<p>Find your society. Get trained. Explore mechanical engineering resources, all in one place.</p>
+</div>
+<aside class="dept">
+<span class="eyebrow">Built for students</span>
+<strong>Walker Department of<br>Mechanical Engineering</strong>
+Unofficial · Student-built<br>No login to browse or save.
+</aside>
+</div>
+
+<div class="controls">
+<div class="wrap">
+<div class="searchline">
+<div class="search">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
+<input id="search" type="search" aria-label="Search mechanical engineering resources" placeholder="Search societies, laser cutting, research…">
+<kbd aria-hidden="true">/</kbd>
+</div>
+<span id="count" class="count mono" aria-live="polite">34 resources</span>
+</div>
+<div id="chips" class="chips" aria-label="Filter resources"></div>
+</div>
+</div>
+
+<main id="main" class="wrap">
+<section id="quick" class="section quick">
+<div class="section-head">
+<div><h2>Favorites</h2><p>Your everyday shortcuts, saved on this device.</p></div>
+<button id="add" class="plain">＋ Add a link</button>
+</div>
+<div id="quickgrid" class="grid"></div>
+<p id="quickempty" class="empty-note">Tap ☆ on any resource to keep it here. No account needed.</p>
+</section>
+
+<div id="directory"></div>
+
+<div id="fallback"></div>
+
+<div id="none" hidden>
+<h2>No matching links.</h2>
+<p>Try “shop”, “clubs”, “classes” or “internship”.</p>
+<button class="plain" id="reset">Clear search &amp; filters</button>
+</div>
+
+<template id="tiw-template">
+<div class="tiw-guide">
+<h3>Get started in three steps</h3>
+<div class="steps">
+<div class="step">
+<span class="num">1</span>
+<div><a href="https://utexas.instructure.com/enroll/MT8GYT" target="_blank" rel="noopener noreferrer">Enroll in the TIW Canvas course</a><small>UT login required.</small></div>
+</div>
+<div class="step">
+<span class="num">2</span>
+<div><a href="https://utexas.instructure.com/courses/1377490/modules#module_1710750" target="_blank" rel="noopener noreferrer">Complete Culture &amp; Community</a><small>Start with the introductory module.</small></div>
+</div>
+<div class="step">
+<span class="num">3</span>
+<div><a href="https://utexas.instructure.com/courses/1377490" target="_blank" rel="noopener noreferrer">Take equipment training</a><small>Follow the online and in-person steps for your tool.</small></div>
+</div>
+</div>
+<a class="tiw-location" target="_blank" rel="noopener noreferrer" href="https://inventionworks.engr.utexas.edu/">Location &amp; hours</a>
+</div>
+</template>
+
+<div class="end">
+<div><h2>Your major. Your links.</h2><p>Know a training, student group or resource we missed?</p></div>
+<a href="mailto:jn32456@my.utexas.edu?subject=Mechanical%20Engineering%20link%20suggestion">Suggest a MechE resource</a>
+</div>
+</main>
+
+<footer>
+<div class="wrap foot">
+<div>
+<strong>★ Longhorn Links · Mechanical Engineering</strong>
+<p>Unofficial and not affiliated with or endorsed by The University of Texas at Austin. Confirm requirements, training access, recruitment and deadlines with the linked organization. Prototype v1.0.</p>
+</div>
+<div>Resource links reviewed<br>October 6, 2026<br><a href="https://longhornlinks.com/">All UT resources</a></div>
+</div>
+</footer>
+
+<dialog id="adddialog">
+<form id="addform">
+<h2>Add your own shortcut</h2>
+<p>Saved in Favorites on this device.</p>
+<label for="title">Link name</label>
+<input id="title" required maxlength="80" placeholder="My project team">
+<label for="url">Website URL</label>
+<input id="url" type="url" required placeholder="https://…">
+<label for="note">Note (optional)</label>
+<input id="note" maxlength="160" placeholder="One line to remind you what it is">
+<div class="actions">
+<button type="button" id="cancel" class="plain">Cancel</button>
+<button class="plain solid" type="submit">Save link</button>
+</div>
+</form>
+</dialog>
+<div hidden id="toast" role="status"></div>
+
+<script>
+const CATS=[
+['societies','Societies & student organizations','Meet your people. Find the current membership and event information.'],
+['adjacent','MechE-adjacent clubs','Explore teams beyond the ME department: vehicles, rockets, robotics, neurotech and business.'],
+['inventionworks','Texas Inventionworks','UT’s maker space in EER. Start here to enroll and complete the introductory training.'],
+['training','Equipment training','Choose your tool, check its requirements and complete the equipment-specific training.'],
+['registration','Academic Resources','Advising, course planning, registration and help with your classes.'],
+['careers','Careers & experience','Internships, recruiting, research and your next step.']
+];
+
+// Each row: ID, category, title, description, URL, tag, search keywords.
+const LINKS=[
+['longhorn-racing','adjacent','Longhorn Racing','Design, build and race Formula SAE and solar vehicles with a multidisciplinary student team.','https://www.longhornracing.org/','Vehicle design','clubs formula sae electric solar cars automotive manufacturing cad project team'],
+['baja','adjacent','Longhorn Baja Racing','Design, fabricate, test and race an off-road vehicle for Baja SAE.','https://longhornbajaracing.com/','Off-road racing','clubs baja sae off road cars vehicle cad manufacturing'],
+['guadaloop','adjacent','Texas Guadaloop','Work on prototype hyperloop transportation with engineering, business and media teams.','https://www.guadaloop.com/','Transportation','clubs hyperloop levitation propulsion transport cad research'],
+['trel','adjacent','Texas Rocket Engineering Lab (TREL)','Develop and test rockets in a student-led, interdisciplinary engineering lab.','https://texasrocketlab.ae.utexas.edu/','Rocket engineering','clubs trel rocket propulsion aerospace avionics structures research project'],
+['lra','adjacent','Longhorn Rocketry Association (LRA)','Design, build and launch student rockets for collegiate rocketry competitions.','https://sites.utexas.edu/longhornrocketry/','Rocketry','clubs lra rockets aerospace structures propulsion competition'],
+['texas-flight','adjacent','Texas Flight','UT’s AIAA Design Build Fly team builds and tests radio-controlled aircraft. Find the team in Aerospace’s student organization directory.','https://ae.utexas.edu/academics/student-community/','Aircraft design','clubs texas flight dbf design build fly airplane aircraft aerospace cad aerodynamics'],
+['tar','adjacent','Texas Aerial Robotics (TAR)','Design, build and program autonomous drones, combining hardware, controls and software.','https://texasaerialrobotics.wixsite.com/website','Autonomous drones','clubs tar aerial robotics drone uav controls autonomous computer vision'],
+['eib','adjacent','Texas Engineers in Business','Explore business and technical careers while building leadership, project management and business skills.','https://texaseib.org/','Engineering & business','clubs eib engineers business entrepreneurship management leadership networking'],
+['humanoids','adjacent','Texas Humanoids','Build humanoid robots through mechanical design, electronics, software and controls.','https://longhornhumanoids.com/','Humanoid robotics','clubs humanoids longhorn humanoids robots robotics mechatronics cad actuators controls'],
+['neurotech','adjacent','Longhorn Neurotech','Explore neural engineering and brain–computer interfaces through projects, competitions and guest speakers.','https://lhneurotech.net/','Neuroengineering','clubs neurotech neural neuroscience brain computer interface bci eeg emg prosthetics hardware'],
+['advisor','registration','Mechanical Engineering advising','Find appointment booking, drop-in advising and departmental academic support.','https://me.utexas.edu/academics/undergraduate/undergraduate-advising/','Start here','classes degree plan registration help appointment holds'],
+['schedule','registration','UT course schedules','Check course times, unique numbers and availability in the current semester schedule.','https://registrar.utexas.edu/schedules','Official UT','registration classes sections prerequisites'],
+['degree','registration','ME undergraduate program','Start with the department’s undergraduate program information and academic resources.','https://me.utexas.edu/academics/undergraduate/','Degree planning','degree plan flowchart curriculum electives catalog'],
+['canvas','registration','Canvas','Open your course sites, assignments and course announcements.','https://utexas.instructure.com/','UT login','homework grades classes coursework'],
+['tutoring','registration','Tutoring & academic support','ME advising lists departmental tutoring and other campus academic support options.','https://me.utexas.edu/academics/undergraduate/undergraduate-advising/','Academic help','tutor study homework office hours'],
+['contact','registration','Contact the ME undergraduate office','Find the departmental office contact details for questions you cannot resolve online.','https://me.utexas.edu/connect/contact-us/','Department contact','advising email phone support'],
+['asme','societies','UT ASME','Connect with other MEs through social events, professional development and the chapter’s community.','https://www.utasme.org/','ME society','clubs society friends networking upperclassmen'],
+['wme','societies','Women in Mechanical Engineering','Community, service and networking; find the Discord and event calendar on the group’s site.','https://texaswme.weebly.com/','ME society','clubs women mentorship friends'],
+['pts','societies','Pi Tau Sigma','ME honor society. Find the chapter in Cockrell’s organization directory and ask about membership.','https://cockrell.utexas.edu/student-life/student-organizations/','Honor society','clubs honors pts'],
+['uab','societies','ME Undergraduate Advisory Board','Student voices on curriculum and the ME experience. Learn about current board projects.','https://me.utexas.edu/connect/student-community/','Student leadership','peer advising registration feedback upperclassmen'],
+['engineeringorgs','societies','All engineering organizations','Explore SWE, NSBE, SHPE, SASE, SEC, honor societies and other engineering groups.','https://cockrell.utexas.edu/student-life/student-organizations/','Engineering directory','clubs societies community membership'],
+['nobe','societies','Business & Engineering · NOBE','Explore the Texas chapter of the National Organization for Business and Engineering.','https://www.nobetexas.org/','Cross-disciplinary','business entrepreneurship clubs'],
+['asmeevents','societies','ASME events & community','Use the chapter’s event and calendar links to find ways to get involved.','https://www.utasme.org/','Events','calendar workshops friends networking'],
+['tiwstart','inventionworks','Culture & Community module','Complete the introductory Texas Inventionworks module on Canvas.','https://utexas.instructure.com/courses/1377490/modules#module_1710750','UT login','introduction community safety'],
+['laser','training','Laser cutting training','TIW lasers require training before use. Find the laser area and equipment information.','https://inventionworks.engr.utexas.edu/about/resources/areas','Training required','laser cutter certification acrylic wood'],
+['machine','training','Machine shop training','Learn about manual mills and lathes, and the online, in-person and project training steps.','https://inventionworks.engr.utexas.edu/about/resources/areas','Training required','machining cnc lathe metal milling certification'],
+['printing','training','3D printing equipment','Compare TIW printers, listed costs and training requirements before choosing a machine.','https://inventionworks.engr.utexas.edu/about/resources/equipment','Equipment guide','additive manufacturing bambu fdm sla prototyping'],
+['solder','training','Soldering & electronics equipment','Find the soldering stations, electronics equipment and listed training requirements.','https://inventionworks.engr.utexas.edu/about/resources/equipment','Equipment guide','circuits wiring solder electronics'],
+['tiwcanvas','inventionworks','Enroll in the TIW Canvas course','Start the Texas Inventionworks enrollment pathway.','https://utexas.instructure.com/enroll/MT8GYT','UT login','enroll canvas access'],
+['tiw','inventionworks','Equipment training on Canvas','Open the Texas Inventionworks course to find equipment training modules.','https://utexas.instructure.com/courses/1377490','UT login','equipment training course machines'],
+['ecac','careers','Engineering Career Assistance Center','Get help with resumes, interviews, recruiting and career planning.','https://cockrell.utexas.edu/student-life/career-services/','Engineering careers','jobs internships resume interview career fair ecac'],
+['coop','careers','Co-ops & internships','Explore Cockrell’s co-op and internship program information.','https://cockrell.utexas.edu/student-life/career-services/co-ops-and-internships/','Work experience','jobs internships coop industry'],
+['research','careers','ME research labs & groups','Find mechanical engineering labs and groups to explore research interests.','https://me.utexas.edu/research/research-labs-and-groups/','Research directory','undergraduate research faculty lab robotics energy materials'],
+['integrated','careers','Integrated BSME / MSE program','Learn about the combined degree pathway, application process and academic planning.','https://me.utexas.edu/academics/integrated-bsme-and-msme-program/','Graduate pathway','masters five year grad school research']
+].map(([id,cat,title,desc,url,tag,keywords])=>({id,cat,title,desc,url,tag,keywords}));
+
+/* Small, curated set of genuinely campus-wide links, kept out of CATS so
+   they never render in the normal directory or inflate its counts. Shown
+   only when a search term matches one and no equivalent already exists in
+   LINKS, so a student searching something like "disability" learns LHL has
+   it instead of finding nothing. Capped at 4 matches in fallbackMatches(). */
+const GENERAL_FALLBACK=[
+['disability','Disability & Access (D&A)','Academic accommodations, testing support, and accessibility services.','https://disability.utexas.edu/'],
+['health','University Health Services','Doctor visits, pharmacy, and urgent care on campus.','https://www.healthyhorns.utexas.edu/'],
+['cmhc','Counseling & Mental Health (CMHC)','Free counseling, crisis line, and wellness programs.','https://cmhc.utexas.edu/'],
+['utpd','UT Police & Campus Safety','UTPD, emergency info, and safety escorts.','https://police.utexas.edu/'],
+['sos','Student Emergency Services (SOS)','Emergency financial help, absence notices, and crisis support.','https://deanofstudents.utexas.edu/sos/'],
+['eid','UT EID Self-Service','Look up or reset your EID and password.','https://www.utexas.edu/eid'],
+['parking','Parking & Transportation','Permits, garages, and campus shuttles.','https://parking.utexas.edu/'],
+['map','Campus Map','Find buildings, classrooms, and everything on the 40 Acres.','https://maps.utexas.edu/']
+].map(([id,title,desc,url])=>({id:'general-'+id,cat:'general',title,desc,url,tag:'UT Austin',keywords:'general campus ut austin essentials'}))
+ .filter(f=>!LINKS.some(l=>l.url===f.url));
+
+const KEY='lhl-me-v1';
+let storageOK=true;
+let state={saved:[],custom:[],checks:[]};
+try{
+  const s=JSON.parse(localStorage.getItem(KEY));
+  if(s&&Array.isArray(s.saved)&&Array.isArray(s.custom)&&Array.isArray(s.checks))state=s;
+}catch(e){storageOK=false}
+
+let filter='all',query='';
+const $=id=>document.getElementById(id);
+let toastTimer;
+
+function notify(s){
+  $('toast').textContent=s;
+  $('toast').hidden=false;
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>$('toast').hidden=true,3500);
+}
+
+function persist(){
+  try{localStorage.setItem(KEY,JSON.stringify(state))}
+  catch(e){
+    storageOK=false;
+    notify('Browser storage is unavailable. Changes last for this visit only.');
+  }
+}
+
+function safeUrl(s){
+  try{
+    const u=new URL(s);
+    return ['https:','http:'].includes(u.protocol)?u.href:null;
+  }catch(e){return null}
+}
+
+function allLinks(){
+  return LINKS.concat(state.custom.filter(x=>x&&safeUrl(x.url)&&typeof x.title==='string'));
+}
+
+function matches(x){
+  const text=[x.title,x.desc,x.tag,x.keywords].join(' ').toLowerCase();
+  const stop=new Set(['how','do','i','can','to','a','the','where','is','my','find','me']);
+  const aliases={
+    clubs:'club',societies:'society',courses:'classes',
+    internships:'internship',register:'registration',
+    workshops:'training',certifications:'certification',favorites:''
+  };
+  return query.replace(/[^a-z0-9\s]/g,' ')
+    .split(/\s+/)
+    .filter(w=>w&&!stop.has(w))
+    .map(w=>aliases[w]??w)
+    .every(w=>text.includes(w))
+    &&(filter==='all'||filter==='saved'&&state.saved.includes(x.id)||filter===x.cat);
+}
+
+function fallbackMatches(){
+  if(!query)return[];
+  return GENERAL_FALLBACK.filter(x=>{
+    const text=[x.title,x.desc,x.tag,x.keywords].join(' ').toLowerCase();
+    const stop=new Set(['how','do','i','can','to','a','the','where','is','my','find','me']);
+    return query.replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w&&!stop.has(w)).every(w=>text.includes(w));
+  }).slice(0,4);
+}
+
+function card(x){
+  const el=document.createElement('article');
+  el.className='card';
+
+  const a=document.createElement('a');
+  a.className='resource';
+  a.href=safeUrl(x.url);
+  a.target='_blank';
+  a.rel='noopener noreferrer';
+
+  const h=document.createElement('h3');
+  h.textContent=x.title;
+  const d=document.createElement('p');
+  d.className='desc';
+  d.textContent=x.desc||'Your personal shortcut.';
+  const t=document.createElement('span');
+  t.className='tag';
+  t.textContent=x.tag||'My link';
+  a.append(h,d,t);
+  el.append(a);
+
+  const b=document.createElement('button');
+  b.className='save';
+  const saved=state.saved.includes(x.id);
+  b.textContent=saved?'★':'☆';
+  b.setAttribute('aria-pressed',saved);
+  b.setAttribute('aria-label',(saved?'Unsave ':'Save ')+x.title);
+  b.onclick=()=>{
+    state.saved=saved?state.saved.filter(id=>id!==x.id):state.saved.concat(x.id);
+    persist();
+    render();
+    notify(saved?'Removed from Favorites':'Saved to Favorites');
+  };
+  el.append(b);
+
+  const bottom=document.createElement('div');
+  bottom.className='card-bottom';
+  const host=document.createElement('span');
+  host.textContent=new URL(x.url).hostname.replace(/^www\./,'');
+  bottom.append(host);
+
+  if(x.cat==='custom'){
+    const remove=document.createElement('button');
+    remove.className='plain';
+    remove.style.padding='2px 7px';
+    remove.textContent='Delete';
+    remove.onclick=()=>{
+      state.custom=state.custom.filter(v=>v.id!==x.id);
+      state.saved=state.saved.filter(id=>id!==x.id);
+      persist();
+      render();
+    };
+    bottom.append(remove);
+  }else{
+    const ext=document.createElement('span');
+    ext.textContent='New tab';
+    bottom.append(ext);
+  }
+
+  el.append(bottom);
+  return el;
+}
+
+function render(){
+  const links=allLinks();
+  $('directory').replaceChildren();
+  let total=0;
+
+  for(const [id,title,desc]of CATS.concat([
+    ['custom','My added links','Personal shortcuts you have added to this page.']
+  ])){
+    const items=links.filter(x=>x.cat===id&&matches(x));
+    if(!items.length)continue;
+    total+=items.length;
+
+    const sec=document.createElement('section');
+    sec.id=id;
+    sec.className='section';
+
+    const head=document.createElement('div');
+    head.className='section-head';
+    const block=document.createElement('div');
+    const h=document.createElement('h2');
+    h.textContent=title;
+    const p=document.createElement('p');
+    p.textContent=desc;
+    block.append(h,p);
+
+    const n=document.createElement('span');
+    n.className='count mono';
+    n.textContent=items.length+' links';
+    head.append(block,n);
+
+    const grid=document.createElement('div');
+    grid.className='grid';
+    items.forEach(x=>grid.append(card(x)));
+    sec.append(head);
+
+    if(id==='inventionworks'){
+      sec.append($('tiw-template').content.cloneNode(true));
+      n.hidden=true;
+    }else{
+      sec.append(grid);
+    }
+    $('directory').append(sec);
+  }
+
+  const fb=fallbackMatches();
+  if(fb.length){
+    const sec=document.createElement('section');
+    sec.className='section';
+    const head=document.createElement('div');
+    head.className='section-head';
+    const block=document.createElement('div');
+    const h=document.createElement('h2');
+    h.textContent='General campus resources';
+    const p=document.createElement('p');
+    p.textContent='Also on the main UT Austin page.';
+    block.append(h,p);
+    head.append(block);
+    const grid=document.createElement('div');
+    grid.className='grid';
+    fb.forEach(x=>grid.append(card(x)));
+    sec.append(head,grid);
+    $('fallback').replaceChildren(sec);
+  }else{
+    $('fallback').replaceChildren();
+  }
+
+  const saved=links.filter(x=>state.saved.includes(x.id)&&matches(x));
+  $('quickgrid').replaceChildren(...saved.map(card));
+  $('quickempty').hidden=saved.length>0;
+  $('quick').hidden=filter!=='all'&&filter!=='saved'||query!==''&&saved.length===0;
+  $('quickempty').textContent=filter==='saved'
+    ?'No saved links yet. Choose All links, then tap ☆ on a resource.'
+    :'Tap ☆ on any resource to keep it here. No account needed.';
+  $('none').hidden=total>0||saved.length>0||filter==='saved'||fb.length>0;
+  $('count').textContent=(filter==='saved'?saved.length:total)+' resources';
+
+  document.querySelectorAll('.chip').forEach(x=>{
+    x.classList.toggle('active',x.dataset.cat===filter);
+    x.setAttribute('aria-pressed',x.dataset.cat===filter);
+  });
+}
+
+for(const [id,label]of [
+  ['all','All links'],['societies','Societies'],
+  ['adjacent','Adjacent clubs'],['inventionworks','Inventionworks'],
+  ['training','Training'],['registration','Academic Resources'],
+  ['careers','Careers & research'],['saved','★ Favorites']
+]){
+  const b=document.createElement('button');
+  b.className='chip';
+  b.dataset.cat=id;
+  b.textContent=label;
+  b.onclick=()=>{filter=id;render()};
+  $('chips').append(b);
+}
+
+$('search').oninput=e=>{
+  query=e.target.value.trim().toLowerCase();
+  render();
+};
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&!['INPUT','TEXTAREA'].includes(document.activeElement.tagName)&&!$('adddialog').open){
+    e.preventDefault();
+    $('search').focus();
+  }
+});
+
+function resetSearch(){
+  filter='all';
+  query='';
+  $('search').value='';
+  render();
+}
+
+$('reset').onclick=resetSearch;
+
+$('add').onclick=()=>$('adddialog').showModal();
+$('cancel').onclick=()=>{
+  $('adddialog').close();
+  $('addform').reset();
+};
+
+$('addform').onsubmit=e=>{
+  e.preventDefault();
+  const url=safeUrl($('url').value);
+  if(!url){
+    $('url').setCustomValidity('Use a valid http or https website address.');
+    $('url').reportValidity();
+    return;
+  }
+  const x={
+    id:'custom-'+Date.now(),
+    cat:'custom',
+    title:$('title').value.trim(),
+    url,
+    desc:$('note').value.trim(),
+    tag:'My link',
+    keywords:''
+  };
+  if(!x.title)return;
+  state.custom.push(x);
+  state.saved.push(x.id);
+  persist();
+  resetSearch();
+  $('adddialog').close();
+  $('addform').reset();
+  notify('Your shortcut is saved');
+};
+
+$('url').oninput=()=>$('url').setCustomValidity('');
+render();
+if(!storageOK)notify('Saved links are unavailable in this browser.');
+</script>
+</body>
+</html>
