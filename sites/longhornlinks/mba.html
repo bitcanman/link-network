@@ -583,7 +583,7 @@
     {id:"newssports",   label:"UT News & Sports"},
   ];
 
-  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.prospective = "For Prospectives"; CAT_LABEL.quicklinks = "Everyday Links";
+  const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); CAT_LABEL.prospective = "For Prospectives";
 
   const lockSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
   const arrowSVG = '<svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg>';
@@ -788,13 +788,6 @@
   }
   function renderSections(){
     sectionsEl.innerHTML = "";
-    if(QUICKLINKS.length){
-      const sec = document.createElement("div");
-      sec.className = "section"; sec.dataset.cat = "quicklinks"; sec.id = "cat-quicklinks";
-      sec.innerHTML = '<div class="section-head"><span class="eyebrow">Everyday</span><h2>' + CAT_LABEL.quicklinks + '</h2></div>'
-        + '<div class="grid">' + QUICKLINKS.map(function(l){ return cardHTML(l); }).join("") + '</div>';
-      sectionsEl.appendChild(sec);
-    }
     CATS.forEach((c,i)=>{
       const items = LINKS.filter(l=>l.cat===c.id);
       if(!items.length) return;
@@ -814,7 +807,7 @@
   const chipsEl = document.getElementById("chips");
   let activeCat = "all";
   function buildChips(){
-    const list = [{id:"all",label:"All"}, {id:"saved",label:"★ Favorites"}, {id:"quicklinks",label:CAT_LABEL.quicklinks}];
+    const list = [{id:"all",label:"All"}, {id:"saved",label:"★ Favorites"}];
     CATS.forEach(c=>list.push(c));
     list.push({id:"prospective",label:"For Prospectives"});
     if(!list.some(c=>c.id===activeCat)) activeCat = "all";
@@ -919,7 +912,7 @@
   const q = document.getElementById("q");
   const countEl = document.getElementById("count");
   const emptyEl = document.getElementById("empty");
-  const total = () => LINKS.length + QUICKLINKS.length + favState.custom.length;
+  const total = () => LINKS.length + favState.custom.length;
 
   function applyFilter(){
     const term = q.value.trim().toLowerCase();
