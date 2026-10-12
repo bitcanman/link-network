@@ -1,298 +1,67 @@
-<!DOCTYPE html>
- <html lang="en">
- <head>
- <meta charset="UTF-8">
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Registration - Longhorn Links</title>
- <meta name="description" content="Spring 2027 registration at UT Austin. All six access periods, your RIS, clearing holds, waitlists, and every payment deadline in one page.">
- <meta property="og:title" content="Spring 2027 Registration - Longhorn Links">
- <meta property="og:description" content="Period 1 opens Nov 2. Your exact time is on your RIS. Everything you need, one page.">
- <meta name="theme-color" content="#221E19">
- <link rel="preconnect" href="https://fonts.googleapis.com">
- <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@400;500;600;700;800;900&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
- <style>
- :root{--bg:#F6F0E4;--panel:#FDFBF6;--ink:#221E19;--muted:#6B6255;--faint:#A0937E;--hair:#E4DAC7;--line:#D8CDB8;
- --brand:#A24D12;--brand-deep:#7C3A0D;--tint:#F3E2D2;--dark:#2C2721;--warn:#9A3412;--serif:"Source Serif 4",Georgia,serif;}
- *{box-sizing:border-box}
- body{margin:0;background:var(--bg);color:var(--ink);font-family:"Libre Franklin",system-ui,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
- a{color:inherit}
- :focus-visible{outline:2px solid var(--brand);outline-offset:3px}
- .w{max-width:640px;margin:0 auto;padding:0 24px}
- .lbl{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Registration, sorted. — Longhorn Links</title>
+<style>
+:root{--paper:#faf7ee;--ink:#2c211b;--orange:#b64c00;--line:#ded8cc;--muted:#756c63}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;background-image:linear-gradient(#e9e3d94d 1px,transparent 1px),linear-gradient(90deg,#e9e3d94d 1px,transparent 1px);background-size:44px 44px}a{color:inherit;text-decoration:none}button,input{font:inherit}a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid var(--orange);outline-offset:5px}header{background:#faf7eef2;border-bottom:1px solid var(--line)}.nav{max-width:1140px;margin:auto;padding:24px 30px;display:flex;align-items:center;justify-content:space-between;gap:25px}.brand{font-size:20px;font-weight:800;letter-spacing:-1px}.brand b{color:var(--orange)}nav{display:flex;gap:25px;align-items:center;font-size:14px;font-weight:700}nav a{padding:10px 0;color:var(--muted)}nav .active{color:var(--orange);border-bottom:2px solid}.wrap{max-width:1080px;margin:auto;padding:54px 30px 30px}.eyebrow{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:1.7px;font-weight:800;text-transform:uppercase}.dot{width:7px;height:7px;border-radius:50%;background:var(--orange)}.hero{display:grid;grid-template-columns:1fr 330px;gap:50px;align-items:end;margin-bottom:42px}h1{font-size:clamp(48px,6vw,78px);letter-spacing:-4px;line-height:.98;margin:20px 0}h1 span{color:var(--orange)}.intro{max-width:470px;color:var(--muted);line-height:1.6;font-size:16px}.time{background:var(--ink);color:var(--paper);padding:27px;border-radius:19px;transform:rotate(1deg);box-shadow:7px 7px 0 #dfd5c4}.time small{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:#c8bcaf}.time h2{font-size:29px;letter-spacing:-1px;margin:14px 0}.time p{font-size:13px;line-height:1.6;color:#ddd2c5}.time a{display:flex;justify-content:space-between;background:var(--paper);color:var(--ink);padding:13px;border-radius:8px;font-size:13px;font-weight:700}.section-head{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:16px}.section-head h2{font-size:20px;letter-spacing:-.6px;margin:0}.section-head span{font-size:12px;color:var(--muted)}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{position:relative;background:var(--paper);border:1.5px solid var(--ink);border-radius:14px;padding:21px 24px;display:flex;gap:18px;align-items:center;min-height:112px;transition:transform .18s,box-shadow .18s}.card:hover{transform:translateY(-3px);box-shadow:5px 5px 0 #e4d8c8}.card.primary{background:var(--orange);color:white;border-color:var(--orange);grid-column:1/-1}.number{font-size:12px;font-weight:700;border:1px solid #cabda9;border-radius:50%;width:32px;height:32px;display:grid;place-items:center;flex-shrink:0}.primary .number{border-color:#ffffff70}.card h3{font-size:20px;letter-spacing:-.6px;margin:0 0 7px}.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}.primary p{color:#ffdfc5}.arrow{font-size:25px;margin-left:auto}.origin{display:block;font-size:9px;text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px;opacity:.65}.lower{display:grid;grid-template-columns:1.1fr 1fr;gap:35px;margin-top:43px}.checklist{border:1px solid var(--line);background:#faf7eef0;border-radius:15px;padding:24px}.checklist h2{font-size:19px;margin:0;letter-spacing:-.5px}.progress{height:4px;background:#e5ded3;border-radius:5px;margin:18px 0}.progress div{height:100%;background:var(--orange);transition:width .2s;border-radius:5px}.check{display:flex;align-items:center;gap:12px;padding:12px 0;font-size:14px;cursor:pointer}.check input{accent-color:var(--orange);width:18px;height:18px;margin:0;flex-shrink:0}.check:has(input:checked) span{text-decoration:line-through;color:var(--muted)}.check-footer{font-size:11px;color:var(--muted);margin-top:16px;display:flex;justify-content:space-between}.reset{background:none;border:0;color:var(--muted);font-size:11px;text-decoration:underline;cursor:pointer;padding:0}.help h2{font-size:19px;margin:4px 0 17px;letter-spacing:-.5px}details{border-bottom:1px solid var(--line);padding:16px 0}summary{font-weight:700;font-size:14px;cursor:pointer;line-height:1.5}details p{font-size:13px;line-height:1.65;color:var(--muted)}details a{color:var(--orange);text-decoration:underline}footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);margin-top:45px;padding-top:22px;font-size:11px;color:var(--muted);line-height:1.6}footer b{color:var(--ink)}@media(max-width:700px){.nav{padding:20px}.brand{font-size:18px}nav{gap:16px;font-size:12px}nav .desktop{display:none}.wrap{padding:35px 20px 25px}.hero{grid-template-columns:1fr;gap:24px;margin-bottom:35px}h1{letter-spacing:-2.8px}.time{transform:none}.cards{grid-template-columns:1fr}.card{min-height:108px;padding:20px}.lower{grid-template-columns:1fr;gap:28px;margin-top:30px}.section-head span{font-size:10px}footer{flex-direction:column;gap:8px}}@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.progress div{transition:none}}
 
-/* header */
- .utility{background:var(--dark);color:#CFC4B2}
- .utility-inner{display:flex;align-items:center;justify-content:space-between;height:32px;font-family:"Spline Sans Mono",monospace;font-size:10.5px;letter-spacing:.05em;text-transform:uppercase}
- .utility a{color:#CFC4B2;text-decoration:none}
- .utility .pill{display:inline-flex;align-items:center;gap:6px;color:#A0937E}
- .utility .pill .dot{width:6px;height:6px;border-radius:50%;background:#C97B3F}
- header.main{background:var(--dark);border-bottom:3px solid var(--brand)}
- .main-inner{display:flex;align-items:center;height:58px}
- .wordmark{display:flex;align-items:center;gap:10px;text-decoration:none}
- .wordmark .mark{width:28px;height:28px;flex:0 0 auto}
- .wm-name{font-weight:800;font-size:16.5px;line-height:1;color:#fff;white-space:nowrap}
- .wm-sub{font-family:"Spline Sans Mono",monospace;font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:#A0937E}
- .navE{background:var(--panel);border-bottom:1px solid var(--line)}
- .navE .row{display:flex;align-items:center;gap:8px;padding:10px 0;overflow-x:auto;scrollbar-width:none}
- .navE .row::-webkit-scrollbar{display:none}
- .navE a{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;color:var(--muted);border:1.5px solid var(--line);border-radius:7px;padding:9px 16px;background:var(--panel);white-space:nowrap;transition:.12s}
- .navE a:hover{border-color:var(--brand);color:var(--brand-deep)}
- .navE a.on{background:var(--brand);border-color:var(--brand);color:#fff}
- .navE .sp{width:1px;height:22px;background:var(--line);margin:0 6px;flex:0 0 auto}
- .navE a.on .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#fff;margin-right:7px;vertical-align:1px}
+/* Registration dashboard */
+.wrap{max-width:1180px;padding-top:44px}.hero{grid-template-columns:1fr 390px;align-items:center;margin-bottom:28px}h1{font-size:clamp(54px,6vw,83px)}.time{background:var(--orange);transform:none;color:#fff;box-shadow:6px 6px 0 #e3d3bd;border-radius:16px}.time small{color:#ffe4cf}.time p{color:#ffe4cf;margin-bottom:18px}.time h2{margin:15px 0 8px}.digits{display:flex;align-items:baseline;gap:10px;margin:14px 0 10px}.digits strong{font-size:72px;letter-spacing:-4px;line-height:1}.digits span{font-size:17px;font-weight:700}.count-note{font-size:11px!important}.jump{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 33px}.jump a{border:1px solid var(--line);background:var(--paper);border-radius:30px;padding:10px 16px;font-size:12px;font-weight:700}.jump a:hover{border-color:var(--orange);color:var(--orange)}section{scroll-margin-top:25px}.dashboard{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:start}.pane{background:#faf7eef5;border:1px solid var(--line);border-radius:17px;padding:25px}.rail-title{font-size:10px;text-transform:uppercase;letter-spacing:1.3px;color:var(--orange);font-weight:800;margin:0 0 18px}.roadmap{position:relative;margin:25px 0 0}.roadmap:before{content:'';position:absolute;left:17px;top:12px;bottom:40px;width:1px;background:#d4c8b9}.step{position:relative;display:grid;grid-template-columns:36px 1fr;gap:17px;padding-bottom:25px}.step:last-child{padding-bottom:0}.step-index{width:36px;height:36px;display:grid;place-items:center;background:var(--paper);border:1px solid #b9a994;border-radius:50%;font-size:12px;font-weight:800;z-index:1}.step:first-child .step-index{background:var(--orange);color:white;border-color:var(--orange)}.phase{font-size:10px;letter-spacing:1px;font-weight:800;text-transform:uppercase;color:var(--orange);display:block;margin:1px 0 7px}.step h3{font-size:19px;letter-spacing:-.5px;margin:0 0 8px}.step p{font-size:13px;color:var(--muted);line-height:1.55;margin:0 0 10px}.step-links{display:flex;flex-wrap:wrap;gap:7px}.step-links a{background:#eee7dc;border-radius:6px;padding:8px 10px;font-size:11px;font-weight:700}.step-links a:hover{background:#e4d6c5}.sidebar{display:grid;gap:18px}.sidebar .checklist{padding:23px}.sidebar .checklist h2{font-size:18px}.sidebar .check{font-size:12px;line-height:1.5}.note{font-size:12px;line-height:1.6;color:var(--muted)}.notice{background:#f0e6d8;border:1px solid #ddcdb8;border-radius:13px;padding:22px}.notice h3{font-size:18px;margin:0 0 10px;letter-spacing:-.5px}.notice a{display:inline-block;margin-top:8px;color:var(--orange);font-size:12px;font-weight:800}.compact-section{margin-top:34px}.cards{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.card,.card.primary{grid-column:auto;min-height:106px;padding:18px;gap:12px;box-shadow:none}.card .number{display:none}.card h3{font-size:16px;line-height:1.2}.card p{font-size:12px}.card .arrow{font-size:20px}.card .origin{font-size:8px;letter-spacing:1px}.dates-box{margin-top:34px;padding:25px;border:1px solid var(--ink);border-radius:16px;background:var(--paper)}.segmented{display:flex;background:#eee7dc;border-radius:8px;padding:3px;gap:3px}.segmented button{border:0;background:transparent;font-size:11px;padding:8px 12px;border-radius:5px;cursor:pointer;font-weight:700;color:var(--muted)}.segmented button[aria-pressed=true]{background:var(--ink);color:white}.date-row{display:grid;grid-template-columns:105px 1fr 20px;gap:20px;align-items:center;padding:17px 0;border-bottom:1px solid var(--line)}.date-row:last-child{border-bottom:0}.date-label{font-size:13px;font-weight:800;color:var(--orange)}.date-row b{display:block;font-size:13px;margin-bottom:4px}.date-row small{font-size:11px;color:var(--muted);line-height:1.5;display:block}.date-row:hover b{color:var(--orange)}.dates-footer{font-size:10px;color:var(--muted);margin-top:14px;line-height:1.6}.dates-footer a{text-decoration:underline}.lower{grid-template-columns:1fr 1fr}.help-panel{padding:25px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}.help-panel h2{margin:0 0 12px;font-size:20px;letter-spacing:-.6px}.help-panel p{font-size:13px;line-height:1.65;color:var(--muted)}.help-panel>a{font-size:12px;color:var(--orange);font-weight:800}.small-link{color:var(--orange);font-size:12px;font-weight:700}.section-head h2{font-size:22px}.section-head{align-items:center}footer{margin-top:30px}@media(max-width:850px){.hero{grid-template-columns:1fr 310px;gap:25px}.dashboard{grid-template-columns:1fr 290px;gap:16px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:700px){.hero,.dashboard{grid-template-columns:1fr}.hero{gap:22px}.wrap{padding-top:30px}.digits strong{font-size:60px}.time{box-shadow:4px 4px 0 #e3d3bd}.sidebar{grid-template-columns:1fr}.cards{grid-template-columns:1fr 1fr}.card{padding:16px;min-height:130px;align-items:start}.card h3{font-size:15px}.card .arrow{font-size:15px}.card p{font-size:11px}.card .origin{line-height:1.5}.lower{grid-template-columns:1fr;gap:18px}.dates-box{padding:20px}.dates-box .section-head{align-items:start;flex-direction:column}.date-row{grid-template-columns:75px 1fr 12px;gap:12px}.section-head h2{font-size:20px}.pane{padding:22px}.jump{gap:6px}.jump a{padding:9px 12px}.section-head>span{font-size:10px}}
+.personal-time{background:var(--ink);color:var(--paper);border-color:var(--ink)}.personal-time .rail-title{color:#c8bcaf;font-size:9px}.personal-time h3{font-size:28px;letter-spacing:-1px;line-height:1.1}.personal-time .note{color:#ddd2c5}.personal-time a{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--paper);color:var(--ink);padding:13px;border-radius:8px;font-size:12px;margin-top:18px}
 
-/* hero */
- .title{padding:34px 0 0}
- .title h1{font-weight:900;font-size:clamp(31px,7.2vw,48px);line-height:.98;letter-spacing:-.035em;margin:0}
- .title .dek{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin:14px 0 0;max-width:40ch;line-height:1.45}
+.hero{grid-template-columns:1.03fr 1fr;gap:30px;min-height:370px;margin-bottom:34px}.underlined{position:relative;display:inline-block;color:var(--ink)}.underlined:after{content:'';position:absolute;left:0;bottom:-9px;width:100%;height:10px;background:var(--orange);border-radius:50% 35% 50% 25%;transform:rotate(-2deg);z-index:-1}h1{position:relative;z-index:0;font-size:clamp(48px,5.7vw,77px);letter-spacing:-3.7px}.intro{margin-top:30px}.site-art{height:365px;position:relative;margin-top:5px}.browser-window{width:330px;position:absolute;background:#fffdf8;border:1.5px solid var(--ink);border-radius:10px;overflow:hidden;box-shadow:7px 10px 0 #2c211b0c}.browser-bar{background:#eee8dd;border-bottom:1px solid #d2c7b8;padding:10px 11px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:9px;color:#72685d;font-weight:700}.traffic{font-size:9px;letter-spacing:1px;color:#a49381;white-space:nowrap}.browser-body{padding:18px 21px 21px}.ut-wordmark{font-size:8px;font-weight:800;letter-spacing:1px;color:var(--orange);padding-bottom:10px;border-bottom:2px solid var(--orange)}.browser-body h3{font-family:Georgia,serif;font-size:22px;line-height:1.1;letter-spacing:-.4px;margin:14px 0 9px}.mini-nav{font-size:8px;color:#897e70;margin-bottom:12px}.mock-line{height:4px;background:#ddd7cd;border-radius:3px;margin:7px 0;width:76%}.mock-line.wide{width:98%}.mock-line.short{width:53%}.mini-link{font-size:9px;color:var(--orange);border-bottom:1px solid #e6ded2;padding:8px 0;font-weight:700}.back{top:0;left:12px;transform:rotate(-8deg)}.middle{top:62px;right:0;transform:rotate(6deg)}.front{top:138px;left:40px;transform:rotate(-3deg);width:310px}.front .browser-bar{background:var(--ink);color:#eadfce}.front .traffic{color:#e1c9af}.front .browser-body{padding:16px 21px}.mini-tag{font-size:9px;font-weight:800;background:#f1e0cd;border-radius:4px;padding:8px;margin-top:12px;color:var(--orange)}.art-caption{position:absolute;bottom:-8px;right:0;font-size:11px;font-weight:700;transform:rotate(-3deg);color:var(--orange)}.caption-arrow{font-size:25px;margin-right:7px}.art-spark{position:absolute;right:-6px;top:-2px;color:var(--orange);font-size:50px;transform:rotate(12deg)}.wrap>.time{display:grid;grid-template-columns:170px 1fr 245px;align-items:center;gap:0 20px;padding:22px 26px;box-shadow:none;border-radius:13px;margin-bottom:25px}.wrap>.time small{grid-column:2;grid-row:1}.wrap>.time .digits{grid-column:1;grid-row:1/4;margin:0;gap:8px}.wrap>.time .digits strong{font-size:56px;letter-spacing:-2px}.wrap>.time .digits span{font-size:12px;max-width:55px}.wrap>.time h2{grid-column:2;grid-row:2;font-size:22px;margin:7px 0 6px;letter-spacing:-.7px}.wrap>.time .count-note{grid-column:2;grid-row:3;margin:0;font-size:10px!important}.wrap>.time>a{grid-column:3;grid-row:1/4}.jump{margin-bottom:28px}@media(max-width:1050px){.browser-window{width:290px}.front{width:270px;left:20px}.site-art{height:365px}.hero{gap:15px}.wrap>.time{grid-template-columns:145px 1fr 210px;gap:0 15px}}@media(max-width:700px){.hero{grid-template-columns:1fr;gap:20px;min-height:0}.hero h1{font-size:clamp(48px,10vw,69px);letter-spacing:-2.6px}.site-art{width:min(100%,440px);margin:5px auto 13px;height:355px}.browser-window{width:78%}.back{left:4px}.middle{right:2px}.front{width:74%;left:7%;top:138px}.browser-body h3{font-size:20px}.art-spark{right:0;font-size:40px}.art-caption{font-size:10px;bottom:-6px}.wrap>.time{grid-template-columns:100px 1fr;padding:20px;gap:0 15px}.wrap>.time .digits strong{font-size:47px}.wrap>.time .digits{flex-direction:column;gap:3px}.wrap>.time .digits span{max-width:none}.wrap>.time h2{font-size:18px}.wrap>.time>a{grid-column:1/-1;grid-row:4;margin-top:16px}.wrap>.time .count-note{line-height:1.5}.underlined:after{height:7px;bottom:-6px}}
 
-/* countdown */
- .cd{padding:24px 0 24px;border-bottom:1px solid var(--hair)}
- .cd .line{display:flex;align-items:baseline;gap:10px;margin:8px 0 0}
- .cd .num{font-weight:900;font-size:clamp(38px,8.5vw,54px);line-height:1;letter-spacing:-.035em;color:var(--brand);font-variant-numeric:tabular-nums}
- .cd .unit{font-weight:800;font-size:clamp(16px,3.2vw,20px);color:var(--ink)}
- .cd .fine{font-family:"Spline Sans Mono",monospace;font-size:11.5px;letter-spacing:.04em;color:var(--muted);margin:11px 0 0;line-height:1.6}
- .cd .fine b{color:var(--brand-deep)}
+.screenshot-header{max-width:1450px;margin:22px auto 0;border:1px solid #eee3d3;border-radius:17px;box-shadow:0 4px 12px #5b3b1910;padding:16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:30px;background:#fcf9f3}.screenshot-brand{display:flex;gap:13px;align-items:center;font-size:26px;font-weight:900;letter-spacing:-.6px;white-space:nowrap}.screenshot-brand svg{color:var(--orange);width:56px;height:37px}.screenshot-header nav{gap:12px;font-size:14px}.screenshot-header nav a{background:#f0ece4;border-radius:30px;padding:11px 20px;color:var(--ink);font-weight:500}.screenshot-header nav .selected{background:var(--orange);color:white;font-weight:700}.header-search{justify-self:end;border:1px solid #e8dfd2;border-radius:30px;display:flex;gap:12px;align-items:center;padding:9px 13px;color:#857c72;max-width:280px}.header-search svg{width:19px;height:19px;flex-shrink:0}.header-search input{border:0;outline:none;background:none;width:100%;font-size:12px;min-width:0}.screenshot-wrap{max-width:1480px;padding:84px 25px 30px}.reference-hero{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,.74fr) minmax(0,1fr);gap:20px;align-items:center;padding-bottom:78px}.reference-copy h1{font-size:clamp(54px,6.6vw,101px);line-height:.96;letter-spacing:-5px;font-weight:900;margin:12px 0 49px}.reference-copy h1>span{color:var(--orange);position:relative;display:inline-block}.reference-copy h1 svg{position:absolute;bottom:-17px;left:0;width:100%;height:22px;overflow:visible}.reference-copy h2{font-size:clamp(20px,2.25vw,34px);letter-spacing:-1.2px;line-height:1.18;margin:0 0 20px;font-weight:800}.reference-copy>p{font-size:20px;line-height:1.55;color:var(--muted);margin:0;max-width:590px}.comparison{display:flex;align-items:center;gap:38px;margin-top:54px}.comparison strong{display:block;font-size:67px;font-weight:900;line-height:1;color:#cbbfae;letter-spacing:-3px}.comparison span{font-size:18px;color:#a29786;line-height:1.3;display:block}.comparison>div:last-child strong,.comparison>div:last-child span{color:var(--orange)}.comparison .comparison-arrow{font-size:46px;line-height:1;color:#9a8975}.paper-collage{height:530px;position:relative;align-self:center}.paper-window{position:absolute;width:160px;height:112px;background:#fbf8f0;border:1.5px solid #8a8174;border-radius:9px;padding:0 13px 10px;box-shadow:0 10px 14px #3e2c1814}.paper-chrome{display:flex;gap:4px;height:23px;align-items:center;margin:0 -12px 9px;padding-left:10px;background:#eee8dd;border-radius:8px 8px 0 0}.paper-chrome i{height:6px;width:6px;border-radius:50%;background:#ed6b5b}.paper-chrome i:nth-child(2){background:#efc451}.paper-chrome i:nth-child(3){background:#7caf62}.paper-window strong{display:block;font-size:13px;line-height:1.2;margin-bottom:9px;white-space:nowrap}.paper-line{height:6px;border-radius:6px;background:#e1dbd2;margin:6px 0;width:94%}.paper-line.medium{width:80%}.paper-line.short{width:60%}.window-0{top:17px;left:0;transform:rotate(-8deg)}.window-1{top:54px;right:0;transform:rotate(8deg)}.window-2{top:142px;left:0;transform:rotate(7deg)}.window-3{top:164px;right:0;transform:rotate(-9deg);width:139px}.window-4{top:257px;left:12px;transform:rotate(-7deg)}.window-5{top:257px;right:-3px;transform:rotate(7deg);width:139px}.window-6{top:345px;left:105px;transform:rotate(3deg);width:156px}.scribble{position:absolute;bottom:-4px;left:64px;transform:rotate(-8deg);color:#9a8b75}.scribble>span{position:absolute;top:-60px;left:-12px;font-size:65px;transform:rotate(-25deg);font-family:Georgia,serif;font-weight:400}.scribble p{font-family:'Comic Sans MS','Segoe Print',cursive;font-style:italic;font-size:18px;line-height:1.3;margin:0}.launch-card{position:relative;border:1px solid #fff;border-radius:20px;background:#fcf9f2;padding:36px 25px 20px;box-shadow:0 16px 45px #6d491d1c;align-self:center}.launch-badge{position:absolute;top:-33px;right:13px;background:var(--orange);color:white;border-radius:30px;box-shadow:0 3px 6px #80340720;display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:13px;white-space:nowrap}.launch-badge svg{width:17px;height:17px}.launch-badge>span:last-child{font-size:25px;line-height:16px}.launch-brand{font-size:17px;font-weight:800;color:var(--orange);margin:0 0 10px}.launch-card h2{font-size:42px;letter-spacing:-1.6px;line-height:1.1;margin:0 0 23px;font-weight:900}.launch-row{display:flex;align-items:center;gap:19px;padding:20px 6px;border-top:1px solid #e6dfd4}.launch-row svg{width:22px;height:22px;flex-shrink:0}.launch-row b{font-size:16px;letter-spacing:-.4px;flex:1}.launch-row>span{font-size:13px;color:#82786b}.launch-row em{font-style:normal;font-size:24px;color:#82786b}.launch-row:hover{color:var(--orange);background:#f5ecde}.launch-foot{display:flex;align-items:center;gap:12px;font-size:12px;color:#81786d;line-height:1.5;margin:22px 5px 0}.shield{font-size:16px;font-weight:700;background:#3f7950;color:white;clip-path:polygon(50% 0,95% 20%,95% 65%,50% 100%,5% 65%,5% 20%);padding:4px 6px}.count-context{font-size:10px;color:#9a8b78;margin:8px 5px 0}.difference{display:grid;grid-template-columns:1.45fr 1fr 1fr 1fr;gap:20px;border-top:1px solid #dc7d3e;padding:40px 0 42px}.difference-heading small{font-size:12px;font-weight:700;letter-spacing:.7px;color:var(--orange)}.difference-heading h2{font-size:48px;line-height:1.05;letter-spacing:-1.8px;margin:20px 0 0;font-weight:900}.difference-heading h2 span{color:var(--orange)}.difference-card{background:#fcf9f25e;border:1px solid #ebdecd;border-radius:10px;padding:18px 30px 28px}.difference-icon{display:grid;place-items:center;width:66px;height:66px;background:#f9e6c8;color:var(--orange);border-radius:50%;margin-bottom:12px}.difference-icon svg{height:30px;width:30px}.difference-card h3{font-size:21px;letter-spacing:-.7px;margin:0 0 6px;font-weight:800}.difference-card p{font-size:18px;line-height:1.3;color:var(--muted);margin:0}.dashboard{grid-template-columns:minmax(0,1fr) 360px;max-width:1200px;margin:auto}.screenshot-wrap>.jump,.compact-section,.dates-box,.lower,footer{max-width:1200px;margin-left:auto;margin-right:auto}#search-status{font-size:11px;color:var(--orange);margin:8px 0 0}a[hidden]{display:none!important}@media(max-width:1250px){.screenshot-header{margin:18px 20px 0;gap:15px}.screenshot-brand{font-size:21px}.screenshot-header nav{gap:7px}.screenshot-header nav a{padding:10px 14px}.header-search{max-width:210px}.reference-hero{gap:15px;grid-template-columns:1.3fr .7fr 1fr}.reference-copy>p{font-size:16px}.comparison{gap:23px}.comparison span{font-size:14px}.paper-window{width:140px}.window-3,.window-5{width:125px}.window-6{left:62px;width:145px}.paper-window strong{font-size:11px}.launch-card{padding:30px 20px 18px}.launch-card h2{font-size:34px}.launch-row{gap:12px}.launch-row b{font-size:13px}.launch-badge{font-size:11px;right:5px}.difference-heading h2{font-size:37px}.difference-card{padding:18px 22px}.difference-card p{font-size:15px}.difference-card h3{font-size:18px}.reference-copy h1{letter-spacing:-3px}.reference-copy h2{letter-spacing:-.7px}}@media(max-width:960px){.screenshot-header{grid-template-columns:1fr auto}.header-search{display:none}.reference-hero{grid-template-columns:1fr 1fr}.reference-copy{grid-column:1/-1}.reference-copy h1{font-size:80px}.reference-copy>p{max-width:600px}.comparison{margin-top:26px;margin-bottom:25px}.paper-collage{width:300px;max-width:100%;justify-self:center}.paper-window{width:160px}.window-6{left:90px}.launch-card{margin-top:10px}.reference-copy h2{font-size:28px}.reference-hero{padding-bottom:45px}.screenshot-wrap{padding-top:45px}.difference{grid-template-columns:repeat(3,1fr)}.difference-heading{grid-column:1/-1}.difference-heading h2 br{display:none}.difference-heading h2{margin-top:12px}.dashboard{grid-template-columns:1fr 300px}}@media(max-width:700px){.screenshot-header{display:flex;flex-direction:column;gap:16px;padding:18px 12px;margin:12px}.screenshot-brand{font-size:23px}.screenshot-header nav{gap:6px;width:100%;justify-content:center}.screenshot-header nav a{font-size:12px;padding:9px 13px}.screenshot-wrap{padding:32px 20px 25px}.reference-hero{grid-template-columns:1fr;gap:26px}.reference-copy{grid-column:auto}.reference-copy h1{font-size:clamp(46px,10.7vw,72px);letter-spacing:-2.5px;margin:10px 0 36px}.reference-copy h2{font-size:22px;letter-spacing:-.6px}.reference-copy>p{font-size:15px}.comparison{gap:30px;margin-top:30px;margin-bottom:0}.comparison strong{font-size:54px}.comparison span{font-size:13px}.paper-collage{height:490px;width:290px;max-width:100%;margin:0 auto}.scribble{bottom:0}.window-0{top:0}.window-1{top:38px}.window-2{top:125px}.window-3{top:145px}.window-4,.window-5{top:240px}.window-6{top:325px}.launch-card{width:100%;max-width:440px;justify-self:center;margin-top:12px;padding:32px 24px 20px}.launch-card h2{font-size:40px}.launch-row b{font-size:15px}.launch-row{padding:18px 4px}.launch-badge{font-size:12px;right:8px;top:-24px}.difference{grid-template-columns:1fr;gap:12px;padding:28px 0}.difference-heading h2{font-size:36px;margin-bottom:10px}.difference-card{padding:20px;display:grid;grid-template-columns:55px 1fr;gap:0 16px}.difference-icon{grid-row:1/3;width:54px;height:54px;margin:0}.difference-card h3{font-size:19px}.difference-card p{font-size:14px}.dashboard{grid-template-columns:1fr}.screenshot-wrap>.jump{margin-bottom:24px}}
 
-/* the "which period am I" answer */
- .clear{background:var(--tint);border:1px solid #E3C9AE;border-radius:10px;padding:15px 17px;margin:22px 0 0}
- .clear b{display:block;font-size:15px;margin-bottom:4px}
- .clear p{margin:0;font-size:14.5px;color:#6A4A2C;line-height:1.5}
- .clear a{color:var(--brand-deep);font-weight:600}
+.calendar-section{max-width:1200px;margin:36px auto 0;padding:26px;background:var(--paper);border:1px solid var(--line);border-radius:16px}.calendar-section .rail-title{margin-bottom:8px}.calendar-layout{display:grid;grid-template-columns:1.3fr 1fr;gap:35px;margin-top:24px}.calendar-toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.calendar-toolbar h3{font-size:20px;letter-spacing:-.5px;margin:0}.calendar-toolbar button{border:1px solid var(--line);border-radius:50%;background:transparent;width:34px;height:34px;font-size:23px;cursor:pointer;color:var(--ink)}.calendar-toolbar button:disabled{opacity:.25;cursor:default}.weekdays,.month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}.weekdays{font-size:10px;text-align:center;color:var(--muted);margin-bottom:10px}.calendar-day{border:1px solid transparent;min-height:48px;background:transparent;border-radius:8px;position:relative;color:var(--ink);font-size:13px;cursor:pointer}.calendar-day:hover{border-color:var(--orange)}.calendar-day.period{background:#f4dfc6;color:#9a4206;font-weight:700}.calendar-day.event:after{content:'';width:4px;height:4px;background:var(--orange);position:absolute;bottom:7px;left:calc(50% - 2px);border-radius:50%}.calendar-day[aria-pressed=true]{background:var(--orange);color:white}.calendar-day[aria-pressed=true]:after{background:white}.calendar-day.today{border:1px solid var(--ink)}.calendar-legend{display:flex;flex-wrap:wrap;gap:16px;font-size:10px;color:var(--muted);margin-top:18px}.calendar-legend span{display:flex;align-items:center;gap:6px}.calendar-legend i{height:10px;width:10px;background:#f4dfc6;border-radius:3px}.calendar-legend span:nth-child(2) i{height:5px;width:5px;background:var(--orange);border-radius:50%}.calendar-events{border-left:1px solid var(--line);padding-left:28px}.calendar-event{display:block;padding:15px 0;border-bottom:1px solid var(--line)}.calendar-event small{font-size:10px;letter-spacing:.5px;color:var(--orange);font-weight:800}.calendar-event h4{font-size:16px;letter-spacing:-.4px;margin:7px 0}.calendar-event p,.calendar-note{font-size:12px;color:var(--muted);line-height:1.6;margin:0}.calendar-note{margin-top:20px}.calendar-note a{color:var(--orange);text-decoration:underline}.calendar-clear{font-size:11px;border:0;background:none;color:var(--orange);text-decoration:underline;margin-top:18px;cursor:pointer;padding:0}@media(max-width:700px){.calendar-section{padding:20px}.calendar-section .section-head{align-items:start;flex-direction:column}.calendar-layout{grid-template-columns:1fr;gap:22px}.calendar-events{border-left:0;border-top:1px solid var(--line);padding-left:0;padding-top:20px}.calendar-day{min-height:40px}.calendar-legend{gap:12px}}
+.reference-hero{padding-bottom:45px;align-items:center}.launch-row{padding:14px 5px}.launch-row b small{display:block;font-size:10px;font-weight:400;color:var(--muted);margin-top:4px;letter-spacing:0}.launch-foot{font-size:10px}.calendar-section{margin-top:0;border-top:1px solid #dc7d3e}.screenshot-wrap{padding-top:64px}.paper-collage{align-self:center}@media(max-width:700px){.screenshot-wrap{padding-top:30px}.reference-hero{padding-bottom:30px}.launch-row{padding:14px 4px}}
+.registration-timeline{margin-top:0;border-color:var(--line);padding:28px}.registration-timeline #date-list{position:relative}.registration-timeline #date-list:before{content:'';position:absolute;left:112px;top:24px;bottom:24px;width:1px;background:#decdb8}.registration-timeline .date-row{position:relative;grid-template-columns:90px 1fr 20px;gap:40px;padding:23px 0}.registration-timeline .date-row:before{content:'';position:absolute;left:107px;top:30px;width:11px;height:11px;background:var(--paper);border:2px solid var(--orange);border-radius:50%;box-sizing:border-box}.registration-timeline .date-row b{font-size:16px}.registration-timeline .date-row small{font-size:12px}.registration-timeline .date-label{font-size:14px}@media(max-width:700px){.registration-timeline{padding:20px}.registration-timeline #date-list:before{left:80px}.registration-timeline .date-row{grid-template-columns:65px 1fr 12px;gap:28px}.registration-timeline .date-row:before{left:75px}.registration-timeline .date-label{font-size:12px}.registration-timeline .date-row b{font-size:14px}}
 
-/* groups */
- section.grp{padding:26px 0 0}
- .grp h2{font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:10px}
- .grp h2 i{font-family:"Spline Sans Mono",monospace;font-style:normal;font-size:10px;color:var(--brand);letter-spacing:.1em}
- .grp .note{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--muted);margin:5px 0 0;line-height:1.4}
- ul{list-style:none;margin:12px 0 0;padding:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
- li+li{border-top:1px solid var(--hair)}
- li a{display:flex;align-items:center;gap:12px;padding:12px 16px;text-decoration:none}
- li a:hover{background:#F9F3E7}
- li a:hover .nm{color:var(--brand-deep)}
- li a:hover .arw{color:var(--brand);transform:translate(2px,-2px)}
- .nm{font-weight:700;font-size:15.5px;flex:1;line-height:1.3}
- .nm small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:1px;line-height:1.35}
- .eid{font-family:"Spline Sans Mono",monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--brand);padding:3px 7px;border-radius:3px;white-space:nowrap}
- .arw{color:var(--line);font-size:17px;transition:transform .12s,color .12s}
+.collage-inner{display:contents}
+@media(max-width:700px){
+.reference-hero{display:grid;grid-template-columns:minmax(0,1fr) 125px;gap:18px 8px;align-items:center}
+.reference-copy{display:contents}
+.reference-copy h1{grid-column:1;grid-row:1;font-size:clamp(28px,7.7vw,53px);line-height:1.02;letter-spacing:-1.7px;margin:0 0 12px;align-self:center}
+.reference-copy h1 svg{height:13px;bottom:-10px}
+.paper-collage{grid-column:2;grid-row:1;width:125px;height:220px;margin:0;position:relative;justify-self:end;align-self:center}
+.collage-inner{display:block;position:absolute;left:0;top:0;width:290px;height:490px;transform:scale(.43);transform-origin:top left}
+.reference-copy h2{grid-column:1/-1;grid-row:2;margin:0;font-size:22px}
+.reference-copy>p{grid-column:1/-1;grid-row:3;margin:0;font-size:15px}
+.comparison{grid-column:1/-1;grid-row:4;margin:10px 0 16px;gap:30px}
+.launch-card{grid-column:1/-1;grid-row:5;margin-top:17px}
+.reference-hero{padding-bottom:30px}
+}
+@media(max-width:370px){.reference-hero{grid-template-columns:minmax(0,1fr) 100px}.paper-collage{width:100px;height:180px}.collage-inner{transform:scale(.345)}.reference-copy h1{font-size:7.6vw;letter-spacing:-1.3px}}
+@media(max-width:700px){.paper-collage{transform:translateX(-18px)}}
+@media(max-width:700px){.comparison{justify-content:center;gap:24px;margin:5px 0 14px}.comparison strong{font-size:42px;letter-spacing:-2px}.comparison span{font-size:11px;line-height:1.35}.comparison .comparison-arrow{font-size:30px}.launch-badge{left:50%;right:auto;transform:translateX(-50%);font-size:11px;padding:12px 15px;max-width:calc(100% - 16px)}}
+.bevo-mark{width:65px;height:48px;object-fit:contain;flex-shrink:0}@media(max-width:700px){.bevo-mark{width:60px;height:44px}}
+.lhl-star{width:34px;height:34px;flex:0 0 auto;display:grid;place-items:center;background:#BF5700;color:#fff;border-radius:8px;font-size:22px;letter-spacing:0;line-height:1}
 
-/* access periods */
- .periods{margin:12px 0 0;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel)}
- .pd{display:grid;grid-template-columns:116px 1fr;gap:0}
- .pd+.pd{border-top:1px solid var(--hair)}
- .pd .when{padding:13px 14px;border-right:1px solid var(--hair);background:#FBF6EC}
- .pd .when b{display:block;font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.1em;color:var(--brand);text-transform:uppercase}
- .pd .when span{display:block;font-weight:700;font-size:14px;margin-top:3px;line-height:1.25}
- .pd .what{padding:13px 15px;font-size:14.5px;line-height:1.45}
- .pd .what small{display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
- .pd .what .fee{color:var(--warn);font-weight:700}
- .pd.now .when{background:var(--tint)}
- .pd.now .when b::after{content:" · NOW";color:var(--brand-deep)}
- .pd.past{opacity:.42}
+/* Center the illustration in its desktop column; mobile focuses on the links. */
+@media(min-width:961px){.paper-collage{width:280px;height:465px;justify-self:center;align-self:center;margin:0;transform:none}.collage-inner{display:block;position:absolute;inset:0;width:280px;height:465px}.window-0{left:5px;top:8px}.window-1{right:0;top:48px}.window-2{left:5px;top:134px}.window-3{right:2px;top:154px}.window-4{left:12px;top:247px}.window-5{right:0;top:251px}.window-6{left:68px;top:344px}}
+@media(min-width:961px) and (max-width:1250px){.paper-collage{width:230px}.collage-inner{width:230px}.window-6{left:46px}}
+@media(max-width:700px){.paper-collage{display:none}.reference-hero{grid-template-columns:minmax(0,1fr);gap:20px}.reference-copy h1{grid-column:1/-1;grid-row:1;font-size:clamp(42px,10.7vw,72px);letter-spacing:-2.5px;margin:5px 0 18px}.reference-copy h2{grid-row:2}.reference-copy>p{grid-row:3}.comparison{grid-row:4}.launch-card{grid-row:5}}
 
-/* deadlines */
- .dl{padding:28px 0 10px}
- dl{margin:12px 0 0;display:grid;grid-template-columns:92px 1fr}
- dt{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.06em;color:var(--brand-deep);padding:12px 0;border-top:1px solid var(--hair)}
- dd{margin:0;padding:12px 0;border-top:1px solid var(--hair);font-size:15px;font-weight:600}
- dd small{display:block;font-weight:400;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.4}
- dt.past,dd.past{opacity:.4}
- dt.next:not(.reg){color:var(--brand)}
- dd.next:not(.reg){color:var(--brand-deep)}
- dd .crit{color:var(--warn);font-weight:700}
- /* registration windows: the rows you act on */
- dt.reg,dd.reg{background:var(--tint);border-top-color:#E6CDAF}
- dt.reg{color:var(--brand);font-weight:500;padding-left:11px;border-radius:7px 0 0 7px;margin-left:-11px;box-shadow:inset 3px 0 0 var(--brand)}
- dd.reg{color:var(--brand-deep);font-size:15.5px;font-weight:800;padding-right:11px;border-radius:0 7px 7px 0;margin-right:-11px}
- dd.reg small{color:#6A4A2C}
- dd .tag{display:inline-block;font-family:"Spline Sans Mono",monospace;font-size:9px;letter-spacing:.09em;text-transform:uppercase;font-weight:500;color:#fff;background:var(--brand);border-radius:3px;padding:3px 7px;margin-left:9px;vertical-align:2px}
- dt.reg.past,dd.reg.past{opacity:.38}
-
-.end{padding:26px 0 52px}
- .end p{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--muted);line-height:1.6;margin:0;max-width:48ch}
- .foot{border-top:1px solid var(--hair);padding:18px 0 32px}
- .foot p{font-family:"Spline Sans Mono",monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:0;line-height:1.9}
- .foot a{color:var(--muted);text-decoration:none}
- @media(max-width:520px){
-   dl{grid-template-columns:1fr}dt{padding-bottom:0}dd{padding-top:3px;border-top:none}
-   dt.reg{border-radius:7px 7px 0 0;margin-right:-11px;padding-right:11px}dd.reg{border-radius:0 0 7px 7px;margin-left:-11px;padding-left:11px;padding-bottom:11px}
-   .pd{grid-template-columns:1fr}.pd .when{border-right:none;border-bottom:1px solid var(--hair)}
- }
- </style>
- </head>
- <body>
-
-<div class="utility"><div class="w utility-inner">
- <span class="pill"><span class="dot"></span>Unofficial &middot; Student-built</span>
- <a href="https://longhornlinks.com">All UT links</a>
- </div></div>
- <header class="main"><div class="w main-inner">
- <a class="wordmark" href="https://longhornlinks.com">
- <svg class="mark" viewBox="0 0 40 40" aria-hidden="true"><path d="M20 5c-8.3 0-15 6.7-15 15 0 5.1 2.6 9.7 6.5 12.4l2.3-3.3C11 27.1 9 23.8 9 20c0-6.1 4.9-11 11-11s11 4.9 11 11c0 3.8-2 7.1-4.8 9.1l2.3 3.3C32.4 29.7 35 25.1 35 20c0-8.3-6.7-15-15-15z" fill="#C97B3F"/><rect x="17.5" y="24" width="5" height="11" rx="2.5" fill="#F6F0E4"/></svg>
- <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">UT Austin</span></span>
- </a>
- </div></header>
- <div class="navE"><div class="w row">
- <a href="https://longhornlinks.com/">General</a>
- <a href="https://longhornlinks.com/mba.html">MBA</a>
- <span class="sp"></span>
- <a class="on" href="#"><span class="dot"></span>Registration</a>
- </div></div>
-
-<div class="w">
-
-  <header class="title">
- <h1>Spring 2027<br>Registration</h1>
- <p class="dek">Everything the Registrar sent you, plus the parts they left out.</p>
- </header>
-
-  <section class="cd">
- <div class="lbl">Period 1 opens</div>
- <div class="line"><span class="num" id="num">—</span><span class="unit" id="unit">days</span></div>
- <p class="fine" id="fine"></p>
- </section>
-
-  <div class="clear">
- <b>November 2 is not your registration time.</b>
- <p>Nov 2 to 13 is the whole Period 1 window. Your personal access time sits somewhere inside it, based on your classification and hours completed. <a href="https://utdirect.utexas.edu/registrar/ris.WBX" target="_blank" rel="noopener">Check your RIS for the exact time &rarr;</a></p>
- </div>
-
-  <section class="grp">
- <h2><i>01</i> Do this first</h2>
- <p class="note">You cannot register with a hold on your record. Find out now, not at 8am on your access day.</p>
- <ul>
- <li><a href="https://utdirect.utexas.edu/registrar/ris.WBX" target="_blank" rel="noopener"><span class="nm">Your Registration Information Sheet (RIS)<small>Your exact access times and any holds. The one link nobody can ever find.</small></span><span class="eid">UT EID</span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/clearing-bars/" target="_blank" rel="noopener"><span class="nm">Clearing holds and bars<small>What each hold means and which office clears it.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/registration-times/" target="_blank" rel="noopener"><span class="nm">How access times are assigned<small>Why yours is when it is, and how many register before you.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/#advisors" target="_blank" rel="noopener"><span class="nm">Contact your academic advisor<small>Most holds are advising holds. Book early, they fill up.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://utdirect.utexas.edu/apps/student/emergency_contact/" target="_blank" rel="noopener"><span class="nm">Update emergency contact<small>A missing one can block you. Takes thirty seconds.</small></span><span class="eid">UT EID</span><span class="arw">&#8599;</span></a></li>
- </ul>
- </section>
-
-  <section class="grp">
- <h2><i>02</i> The six access periods</h2>
- <p class="note">Undergraduate dates. Graduate payment deadlines differ, see the Registrar's table.</p>
- <div class="periods" id="periods"></div>
- </section>
-
-
-  <section class="grp">
- <h2><i>03</i> Build your schedule</h2>
- <p class="note">Write down unique numbers, not course names. Pick two backups for every class.</p>
- <ul>
- <li><a href="https://registrar.utexas.edu/schedules/272" target="_blank" rel="noopener"><span class="nm">Spring 2027 Course Schedule<small>Every class, its time, location, and unique number.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://utdirect.utexas.edu/registration/chooseSemester.WBX" target="_blank" rel="noopener"><span class="nm">Register for classes<small>The live registration system.</small></span><span class="eid">UT EID</span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/add-drop-a-course/#waitlist" target="_blank" rel="noopener"><span class="nm">Waitlists<small>What to do when the class you need is full.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/add-drop-a-course/" target="_blank" rel="noopener"><span class="nm">Add, drop, and swap<small>Changing your schedule after you register.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://registrar.utexas.edu/schedules/272/regrulesbydept" target="_blank" rel="noopener"><span class="nm">Registration rules by department<small>Some departments restrict their own courses. Check before you plan.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://utdirect.utexas.edu/apps/student/coursedocs/nlogon/" target="_blank" rel="noopener"><span class="nm">Past syllabi and CVs<small>See what a class actually covers before you commit.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa" target="_blank" rel="noopener"><span class="nm">UT Registration Plus<small>Grade distributions and prof ratings inside the course schedule. Student-built, free.</small></span><span class="arw">&#8599;</span></a></li>
- </ul>
- </section>
-
-  <section class="grp">
- <h2><i>04</i> Pay, or lose your classes</h2>
- <p class="note">Registering is not the finish line. Miss the payment deadline and you are dropped from everything.</p>
- <ul>
- <li><a href="https://utdirect.utexas.edu/apps/studentfinancials/mytuitionbill/" target="_blank" rel="noopener"><span class="nm">My Tuition Bill<small>Pay, or confirm attendance if your bill is zero. Verify your classes are secure.</small></span><span class="eid">UT EID</span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://registrar.utexas.edu/schedules/272/payment" target="_blank" rel="noopener"><span class="nm">How to pay<small>Payment methods, plans, and procedures.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://registrar.utexas.edu/schedules/272/tuition" target="_blank" rel="noopener"><span class="nm">Tuition and fees<small>What Spring 2027 actually costs.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/late-registration/" target="_blank" rel="noopener"><span class="nm">Late registration<small>$25 from Jan 11, $50 from Jan 20. Avoid this.</small></span><span class="arw">&#8599;</span></a></li>
- <li><a href="https://registrar.utexas.edu/calendars/26-27" target="_blank" rel="noopener"><span class="nm">Academic calendar 2026-27<small>Add, drop, Q-drop, and payment dates.</small></span><span class="arw">&#8599;</span></a></li>
- </ul>
- </section>
-
-
-  <section class="dl">
- <h2 style="font-weight:800;font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;margin:0;display:flex;align-items:center;gap:10px"><i style="font-family:'Spline Sans Mono',monospace;font-style:normal;font-size:10px;color:var(--brand);letter-spacing:.1em">05</i> Every deadline</h2>
- <dl id="dl"></dl>
- </section>
-
-  <section class="end">
- <p>Unofficial and student-built. Dates come from the UT Registrar and can change, so confirm against the official calendar and keep reading your university email. This is a bookmark page, not a source of announcements. Do not use software to grab classes; UT will block you from registering.</p>
- </section>
-
-</div>
-
-<div class="foot"><div class="w">
- <p>Longhorn Links &middot; <a href="https://longhornlinks.com">longhornlinks.com</a><br>&copy; 2026 &middot; not affiliated with UT Austin</p>
- </div></div>
-
+.registration-timeline .period-row{background:#f7ead8;border:1px solid #eddbc2;border-radius:10px;margin:10px 0;padding-top:19px;padding-bottom:19px;transition:background .15s,border-color .15s}.registration-timeline .period-row:before{background:var(--orange);top:26px}.registration-timeline .period-row .date-label{padding-left:10px}.registration-timeline .period-row b{color:var(--orange)}.registration-timeline .period-row:hover{background:#f1dfc5;border-color:#c78043}.period-cta{display:inline-block;font-size:10px;font-weight:700;color:var(--orange);border-bottom:1px solid #d9a371;padding-bottom:2px;margin-top:9px}.registration-timeline .period-row:hover .period-cta{border-color:var(--orange)}.registration-timeline{scroll-margin-top:24px}.launch-row{padding-top:12px;padding-bottom:12px}@media(prefers-reduced-motion:reduce){.registration-timeline .period-row{transition:none}}@media(max-width:700px){.registration-timeline .period-row .date-label{padding-left:5px}.launch-row{padding-top:14px;padding-bottom:14px}}
+@media(min-width:961px){.paper-collage{transform:translateX(-16px)}}
+</style>
+</head>
+<body>
+<header class="screenshot-header"><a class="screenshot-brand" href="https://longhornlinks.com"><span class="lhl-star" aria-hidden="true">&#9733;</span>Longhorn Links</a><nav aria-label="Main navigation"><a href="https://longhornlinks.com">Today</a><a href="https://longhornlinks.com">General</a><a href="https://longhornlinks.com/mba">MBA</a><a class="selected" href="#resources" aria-current="page">Registration</a></nav><label class="header-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 21l-6-6M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg><input id="resource-search" type="search" placeholder="Search resources…" aria-label="Search registration resources"></label></header>
+<main class="wrap screenshot-wrap"><section class="reference-hero" aria-labelledby="hero-title"><div class="reference-copy"><h1 id="hero-title">Registration,<br><span>simplified.<svg viewBox="0 0 550 22" preserveAspectRatio="none" aria-hidden="true"><path d="M6 15Q150 1 542 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1><h2>Official UT resources, one click away.</h2><p>Skip the search. Longhorn Links brings together the most important registration resources in one place, so you can spend less time digging and more time planning.</p><div class="comparison"><div><strong>7+</strong><span>different pages<br>to find registration info</span></div><span class="comparison-arrow">⟶</span><div><strong>1</strong><span><b>starting point</b><br>with Longhorn Links.</span></div></div></div><div class="paper-collage" role="img" aria-label="Seven scattered browser pages: Registrar, course catalog, academic calendar, RIS, department page, waitlists, and deadline email"><div class="collage-inner"><div class="paper-window window-0"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>Registrar</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div><div class="paper-window window-1"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>Course catalog.pdf</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div><div class="paper-window window-2"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>Academic calendar</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div><div class="paper-window window-3"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>RIS</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div><div class="paper-window window-4"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>Department page</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div><div class="paper-window window-5"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>Waitlists</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div><div class="paper-window window-6"><div class="paper-chrome"><i></i><i></i><i></i></div><strong>Re: deadlines?</strong><div class="paper-line"></div><div class="paper-line medium"></div><div class="paper-line short"></div></div></div></div><aside class="launch-card" id="resources"><a class="launch-badge" href="#timeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v4m14-4v4M3 10h18M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/></svg><span>Registration opens in <b id="days">21</b> <span id="count-label">days</span></span><span aria-hidden="true">›</span></a><p class="launch-brand">Longhorn Links</p><h2>Spring 2027<br>Registration</h2><div class="launch-list"><a class="launch-row" href="https://registrar.utexas.edu/schedules/272/whentoregister" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 3v4m14-4v4M3 10h18M5 5h14a2 2 0 0 1 2 2v13H3V7a2 2 0 0 1 2-2Z"/></svg><b>Registration dates</b><span>View</span><em aria-hidden="true">›</em></a><a class="launch-row" href="#timeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 4h13M8 12h13M8 20h13M3 4h.01M3 12h.01M3 20h.01"/></svg><b>Registration Periods</b><span>View</span><em aria-hidden="true">↓</em></a><a class="launch-row" href="https://utdirect.utexas.edu/registrar/ris.WBX" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v5l4 2M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0Z"/></svg><b>Access times &amp; holds / RIS</b><span>View</span><em aria-hidden="true">›</em></a><a class="launch-row" href="#timeline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7l-5-5Zm0 0v6h5"/></svg><b>Add / drop deadlines</b><span>View</span><em aria-hidden="true">›</em></a><a class="launch-row" href="https://registrar.utexas.edu/schedules/272" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v17M12 4C8 1 3 3 2 4v16c4-2 7-2 10 1 3-3 6-3 10-1V4c-3-2-7-3-10 0Z"/></svg><b>Course schedule</b><span>Open</span><em aria-hidden="true">›</em></a><a class="launch-row" href="https://registrar.utexas.edu/staff/waitlists" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm8-7a3 3 0 1 1 0 6M1 21v-3c0-6 14-6 14 0v3H1Zm17-7c4 0 5 3 5 6h-5"/></svg><b>Waitlists</b><span>View</span><em aria-hidden="true">›</em></a><a class="launch-row" href="https://utdirect.utexas.edu/registration/chooseSemester.WBX" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 12 5 5L20 5"/></svg><b>Register for classes</b><span>Open</span><em aria-hidden="true">›</em></a><a class="launch-row" href="https://onestop.utexas.edu/managing-costs/paying-your-tuition/payment-deadlines/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v14H3V5Zm0 5h18"/></svg><b>Tuition & attendance</b><span>View</span><em aria-hidden="true">›</em></a><a class="launch-row" href="https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v18M3 12h18"/></svg><b>Registration Plus<small>Student-built Chrome extension</small></b><span>Get</span><em aria-hidden="true">›</em></a><a class="launch-row" href="https://registrar.utexas.edu/schedules/272/payment" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H5v20h14V7l-5-5Zm0 0v6h5M8 12h8M8 16h8"/></svg><b>Payment procedures</b><span>View</span><em aria-hidden="true">›</em></a></div><p class="launch-foot"><span class="shield" aria-hidden="true">✓</span> UT resources + student-built tools. No login needed here.</p><p class="count-context" id="count-note">Your personal access time is on RIS.</p><p id="search-status" aria-live="polite"></p></aside></section>
+<section class="dates-box registration-timeline" id="timeline" aria-labelledby="deadlines-title"><div class="section-head"><h2 id="deadlines-title">Spring 2027 registration timeline.</h2><div class="segmented" role="group" aria-label="Student level"><button type="button" data-level="undergrad" aria-pressed="true">Undergraduate</button><button type="button" data-level="grad" aria-pressed="false">Graduate / Law</button></div></div><div id="date-list"></div><p class="dates-footer">All dates are Central Time. Your personal access times are on <a href="https://utdirect.utexas.edu/registrar/ris.WBX" target="_blank" rel="noopener">RIS</a>. Payment deadlines depend on when you register; check the <a href="https://registrar.utexas.edu/schedules/272/whentoregister" target="_blank" rel="noopener">official access-period schedule</a>.</p></section>
+<footer><span><b>Longhorn Links.</b> Less searching. More doing.</span><span>Independent student resource · Not affiliated with UT Austin.<br>Use UT's official pages for current dates and requirements.</span></footer>
+</main>
 <script>
- (function(){
-   /* ===== edit each term. Source: registrar.utexas.edu/schedules/272/whentoregister ===== */
-   const OPEN="2026-11-02", CLOSE="2026-11-13";
-   const PERIODS=[
-     {n:1, s:"2026-11-02", e:"2026-11-13", label:"Nov 2 to 13",
-      what:"Registration for continuing and readmitted students.", sub:"Tuition notices emailed Nov 17. Pay or confirm by 5pm Jan 5."},
-     {n:2, s:"2026-12-14", e:"2026-12-18", label:"Dec 14 to 18",
-      what:"Registration for continuing and readmitted students.", sub:"No tuition notices sent. Pay or confirm by 5pm Jan 5."},
-     {n:3, s:"2027-01-07", e:"2027-01-10", label:"Jan 7 to 10",
-      what:"Registration for new students, and anyone who has not registered yet.", sub:"Add/drop for those registered and paid. Pay by 5pm Jan 27."},
-     {n:4, s:"2027-01-11", e:"2027-01-14", label:"Jan 11 to 14",
-      what:"<span class='fee'>$25 late fee</span> for anyone not yet registered.", sub:"Add/drop for those registered and paid. Pay by 5pm Jan 27."},
-     {n:5, s:"2027-01-15", e:"2027-01-19", label:"Jan 15 to 19",
-      what:"<span class='fee'>$25 late fee</span> for all students.", sub:"Add/drop for those registered and paid. Pay by 5pm Jan 27."},
-     {n:6, s:"2027-01-20", e:"2027-01-27", label:"Jan 20 to 27",
-      what:"<span class='fee'>$50 late fee</span>, and your college has to approve it.", sub:"Adds need department permission. Not all departments allow it."}
-   ];
-   const DATES=[
-     {d:"2026-11-02", k:"reg",  t:"Period 1 opens",                    s:"Continuing and readmitted students. Your exact time inside this window is on your RIS."},
-     {d:"2026-11-13", k:"",     t:"Period 1 closes",                   s:"Next chance is December 14."},
-     {d:"2026-11-17", k:"",     t:"Tuition notices emailed",           s:"The only period that sends one."},
-     {d:"2026-11-18", k:"",     t:"Last day to Q-drop (fall)",         s:"Also the last day to switch a fall class to pass/fail."},
-     {d:"2026-12-14", k:"reg",  t:"Period 2 opens",                    s:"Through December 18. Continuing and readmitted students."},
-     {d:"2026-12-18", k:"",     t:"Period 2 closes",                   s:""},
-     {d:"2027-01-05", k:"crit", t:"Payment deadline, 5pm",             s:"CRIT Undergrads who registered in Period 1 or 2. Miss it and you are dropped from all classes."},
-     {d:"2027-01-07", k:"reg",  t:"Period 3 opens",                    s:"Through January 10. New students, plus anyone still not registered."},
-     {d:"2027-01-11", k:"reg",  t:"Period 4 opens, classes begin",     s:"Through January 14. $25 late fee from here."},
-     {d:"2027-01-14", k:"crit", t:"Payment deadline, 5pm",             s:"CRIT Graduate, professional, and law students."},
-     {d:"2027-01-15", k:"reg",  t:"Period 5 opens",                    s:"Through January 19. Still $25, and departments get involved."},
-     {d:"2027-01-19", k:"",     t:"Last day to add a class",           s:"6th class day, undergraduates."},
-     {d:"2027-01-20", k:"reg",  t:"Period 6 opens",                    s:"Through January 27. $50 late fee, and your college has to approve it."},
-     {d:"2027-01-27", k:"crit", t:"Final payment deadline, 5pm",       s:"CRIT 12th class day. Also the last day to drop without permission."}
-   ];
-   /* ===================================================================================== */
-   const $=id=>document.getElementById(id);
-   const D=s=>new Date(s+"T00:00:00");
-   const today=new Date(); today.setHours(0,0,0,0);
-   const days=(a,b)=>Math.round((a-b)/864e5);
-   const fmt=s=>D(s).toLocaleDateString("en-US",{month:"short",day:"numeric"});
+const registrationConfig={start:'2026-11-02',end:'2026-11-13',calendar:'https://registrar.utexas.edu/calendars/26-27',periods:'https://registrar.utexas.edu/schedules/272/whentoregister',waitlists:'https://registrar.utexas.edu/staff/waitlists'};
+function dayCT(date){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit'}).format(date)}
+function countdown(now=new Date()){const today=dayCT(now),diff=Math.ceil((Date.parse(registrationConfig.start+'T00:00:00Z')-Date.parse(today+'T00:00:00Z'))/86400000);if(!document.getElementById('days'))return;document.getElementById('days').textContent=diff>0?diff:'0';document.getElementById('count-label').textContent=diff===1?'day':'days';if(diff<=0){const label=document.querySelector('.launch-badge>span');label.textContent=today<=registrationConfig.end?'Initial registration is underway':'Initial registration period ended'}document.getElementById('count-note').textContent='Opening date: November 2. Your personal time is on RIS.'}
+countdown();setInterval(countdown,60000);
+const search=document.getElementById('resource-search');search.addEventListener('input',()=>{const q=search.value.trim().toLowerCase();const links=[...document.querySelectorAll('.launch-row')];links.forEach(a=>a.hidden=q!==''&&!a.textContent.toLowerCase().includes(q));document.getElementById('search-status').textContent=q?links.filter(a=>!a.hidden).length+' matching resources':''});
 
-  // countdown
-   (function(){
-     const dOpen=days(D(OPEN),today), dClose=days(D(CLOSE),today);
-     if(dOpen>0){
-       $("num").textContent=dOpen; $("unit").textContent=dOpen===1?"day":"days";
-       $("fine").innerHTML=`<b>Monday, November 2</b> &middot; runs through November 13`;
-     } else if(dClose>=0){
-       $("num").textContent="Open"; $("num").style.fontSize="clamp(30px,6.5vw,42px)"; $("unit").textContent="now";
-       $("fine").innerHTML=`Period 1 closes <b>${fmt(CLOSE)}</b>`;
-     } else {
-       const p=PERIODS.find(x=>days(D(x.e),today)>=0);
-       if(p){ $("num").textContent=Math.max(0,days(D(p.s),today)); $("unit").textContent="days";
-              $("fine").innerHTML=`until <b>Period ${p.n}</b>, ${p.label}`; }
-       else { $("num").textContent="Closed"; $("num").style.fontSize="clamp(28px,6vw,38px)"; $("unit").textContent=""; $("fine").textContent=""; }
-     }
-   })();
-
-  // periods
-   $("periods").innerHTML=PERIODS.map(p=>{
-     const started=days(today,D(p.s))>=0, ended=days(today,D(p.e))>0;
-     const cls=ended?" past":(started?" now":"");
-     return `<div class="pd${cls}"><div class="when"><b>Period ${p.n}</b><span>${p.label}</span></div>
- <div class="what">${p.what}<small>${p.sub}</small></div></div>`;
-   }).join("");
-
-  // deadlines
-   const ni=DATES.findIndex(x=>days(D(x.d),today)>=0);
-   $("dl").innerHTML=DATES.map((x,i)=>{
-     const c=[x.k, days(D(x.d),today)<0?"past":(i===ni?"next":"")].filter(Boolean).join(" ");
-     const s=x.s.startsWith("CRIT")?`<span class="crit">${x.s.slice(5)}</span>`:x.s;
-     const tag=x.k==="reg"?`<span class="tag">Register</span>`:"";
-     return `<dt class="${c}">${fmt(x.d)}</dt><dd class="${c}">${x.t}${tag}${x.s?`<small>${s}</small>`:""}</dd>`;
-   }).join("");
- })();
- </script>
- </body>
- </html>
+const dates=[{"date": "Nov 2–13", "title": "Registration Period 1", "note": "Continuing and readmitted students. Undergraduates begin Nov 3; check RIS for your exact time.", "url": "https://registrar.utexas.edu/schedules/272/whentoregister/p1", "period": 1}, {"date": "Nov 17", "title": "Tuition bills distributed", "note": "Review your tuition bill after registering.", "link": "calendar"}, {"date": "Dec 14–18", "title": "Registration Period 2", "note": "Continuing and readmitted students. Tuition notices are not emailed.", "url": "https://registrar.utexas.edu/schedules/272/whentoregister/p2", "period": 2}, {"date": "Jan 5", "gradDate": "Jan 14", "title": "Tuition / attendance deadline · 5 p.m.", "note": "Undergraduates registered in Periods 1 or 2.", "gradNote": "Graduate / professional / law students registered in Periods 1–3.", "link": "periods"}, {"date": "Jan 7–10", "title": "Registration Period 3", "note": "New, continuing, and readmitted students; registration and add/drop. Check RIS.", "url": "https://registrar.utexas.edu/schedules/272/whentoregister/p3", "period": 3}, {"date": "Jan 11", "title": "First day of classes", "note": "Spring 2027 begins.", "link": "calendar"}, {"date": "Jan 11–14", "title": "Registration Period 4", "note": "Add/drop for registered and paid students; $25 late registration for students not yet registered.", "url": "https://registrar.utexas.edu/schedules/272/whentoregister/p4", "period": 4}, {"date": "Jan 14", "title": "Waitlists close", "note": "Fourth class day; department-enabled waitlists only.", "link": "waitlists"}, {"date": "Jan 19", "gradDate": "Jan 14", "title": "Last day to add online without approval", "gradTitle": "Last day to add · Graduate / Law", "note": "Undergraduates; later adds require permission.", "gradNote": "Contact your department for changes after this date.", "link": "calendar"}, {"date": "Jan 15–19", "title": "Registration Period 5", "note": "Undergraduate online registration and add/drop; $25 late registration.", "gradNote": "Graduate students: contact the course department for changes. $25 late registration.", "url": "https://registrar.utexas.edu/schedules/272/whentoregister/p5", "period": 5}, {"date": "Jan 20–27", "title": "Registration Period 6", "note": "$50 late registration; late adds require approval. Online drops / grading changes for undergraduates.", "gradNote": "$50 late registration; graduate changes go through course departments.", "url": "https://registrar.utexas.edu/schedules/272/whentoregister/p6", "period": 6}, {"date": "Jan 27", "title": "Last day to drop without permission", "gradTitle": "Schedule changes · Graduate / Law", "note": "Undergraduate online drop deadline.", "gradNote": "Department assistance required; check your program.", "link": "periods"}, {"date": "Jan 27", "title": "Later-registration / added-class payment", "note": "Applicable tuition due at 5 p.m.; check your bill and payment procedures for added-class charges.", "url": "https://registrar.utexas.edu/schedules/272/payment"}];
+function renderDates(level){document.getElementById('date-list').replaceChildren(...dates.slice().sort((a,b)=>{const score=d=>{const label=level==='grad'&&d.gradDate?d.gradDate:d.date;return {Nov:11,Dec:12,Jan:13}[label.slice(0,3)]*100+Number(label.match(/\d+/)[0])};return score(a)-score(b)}).map(d=>{const a=document.createElement('a');a.className='date-row'+(d.period?' period-row':'');a.href=d.url||registrationConfig[d.link];a.target='_blank';a.rel='noopener';const date=document.createElement('span');date.className='date-label';date.textContent=level==='grad'&&d.gradDate?d.gradDate:d.date;const body=document.createElement('span');const title=document.createElement('b');title.textContent=level==='grad'&&d.gradTitle?d.gradTitle:d.title;const note=document.createElement('small');note.textContent=level==='grad'&&d.gradNote?d.gradNote:d.note;body.append(title,note);if(d.period){const cta=document.createElement('span');cta.className='period-cta';cta.textContent='View period details ↗';body.append(cta)}const arrow=document.createElement('span');arrow.textContent='↗';arrow.setAttribute('aria-hidden','true');a.append(date,body,arrow);return a}));document.querySelectorAll('[data-level]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.level===level)))}
+document.querySelectorAll('[data-level]').forEach(b=>b.addEventListener('click',()=>renderDates(b.dataset.level)));renderDates('undergrad');
+</script>
+</body></html>
