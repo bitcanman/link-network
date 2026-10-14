@@ -378,7 +378,7 @@
 
 <!-- Tier 2: main header -->
 <header class="screenshot-header"><a class="screenshot-brand" href="https://longhornlinks.com"><span class="lhl-star" aria-hidden="true">&#9733;&#xfe0e;</span>Longhorn Links</a><nav aria-label="Main navigation"><a href="index.html">General</a><a class="selected" href="mba.html" aria-current="page">MBA</a><a href="mechanical-engineering.html">ME</a><a href="registration.html">Registration</a></nav></header>
-<section class="general-hero wrap" id="top" aria-labelledby="general-title"><h1 id="general-title">Your MBA Resources,<br><span>one click away.<svg viewBox="0 0 550 22" preserveAspectRatio="none" aria-hidden="true"><path d="M6 15Q150 1 542 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1><p class="general-intro">Official UT links when you need them.</p><div class="general-comparison" aria-label="16 MBA links, one Longhorn Links starting point"><div><strong>16</strong><span>MBA links<br>all in one place</span></div><span class="comparison-arrow" aria-hidden="true">⟶︎</span><div><strong>1</strong><span><b>starting point</b><br>with Longhorn Links.</span></div></div></section>
+<section class="general-hero wrap" id="top" aria-labelledby="general-title"><h1 id="general-title">Your MBA Resources,<br><span>one click away.<svg viewBox="0 0 550 22" preserveAspectRatio="none" aria-hidden="true"><path d="M6 15Q150 1 542 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1><p class="general-intro">Official UT links when you need them.</p><div class="general-comparison" aria-label="64 MBA links, one Longhorn Links starting point"><div><strong>64</strong><span>MBA links<br>all in one place</span></div><span class="comparison-arrow" aria-hidden="true">⟶︎</span><div><strong>1</strong><span><b>starting point</b><br>with Longhorn Links.</span></div></div></section>
 <div class="controls"><div class="wrap"><label class="resource-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><input id="q" type="search" placeholder="What are you looking for?" aria-label="Search resource links" autocomplete="off"><kbd>/</kbd></label><div class="chips" id="chips" role="tablist" aria-label="Filter by category"></div></div></div>
 <main class="wrap">
   <div class="section quick" id="quick-links">
@@ -405,10 +405,17 @@
     <div class="field"><label for="f-url">Destination URL</label><input id="f-url" type="url" placeholder="https://&hellip;" /></div>
     <div class="field"><label for="f-section">Which section</label>
       <select id="f-section">
-        <option value="Academics & Classes">Academics &amp; Classes</option>
-        <option value="Registration & Records">Registration &amp; Records</option>
-        <option value="Tuition & Financial Aid">Tuition &amp; Financial Aid</option>
-        <option value="McCombs Life">McCombs Life</option>
+        <option value="Academics">Academics</option>
+        <option value="Registration">Registration</option>
+        <option value="Money">Money</option>
+        <option value="Clubs">Clubs</option>
+        <option value="Global">Global</option>
+        <option value="Entrepreneurship">Entrepreneurship</option>
+        <option value="Careers">Careers</option>
+        <option value="Transportation">Transportation</option>
+        <option value="Essentials">Essentials</option>
+        <option value="News &amp; Sports">News &amp; Sports</option>
+        <option value="Thinking about applying?">Thinking about applying?</option>
         <option value="Not sure">Not sure</option>
       </select>
     </div>
@@ -457,22 +464,70 @@
 
   // ---- Link data. Edit/extend freely. login:true = behind UT EID. ext:true = external. ----
   const LINKS = [
-    {cat:"academics", name:"Course Schedule", desc:"Browse sections, meeting times, locations, and unique numbers.", url:"https://registrar.utexas.edu/schedules"},
-    {cat:"academics", name:"Course Catalog", desc:"Explore course descriptions, prerequisites, and degree information.", url:"https://catalog.utexas.edu/"},
-    {cat:"academics", name:"My Grades", desc:"Open your official grade report in UT Direct.", url:"https://utdirect.utexas.edu/apps/student/gradereport/student/", login:true},
-    {cat:"academics", name:"MBA Curriculum & Concentrations", desc:"Review the Full-Time MBA curriculum and ways to shape your coursework.", url:"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/curriculum/"},
-    {cat:"academics", name:"Canvas", desc:"Open your courses, assignments, and grades.", url:"https://canvas.utexas.edu/", login:true},
-    {cat:"academics", name:"My Schedule", desc:"See your classes and student account tools in MyUT.", url:"https://my.utexas.edu/", login:true},
-    {cat:"registration", name:"Registration time & holds", desc:"Check your personal access window and outstanding holds on your RIS.", url:"https://utdirect.utexas.edu/registrar/ris.WBX", login:true},
-    {cat:"registration", name:"Register for classes", desc:"Go to UT’s registration system when your access window opens.", url:"https://utdirect.utexas.edu/registration/chooseSemester.WBX", login:true},
-    {cat:"registration", name:"Academic Calendar", desc:"Check registration periods, tuition dates, breaks, and deadlines.", url:"https://registrar.utexas.edu/calendars"},
-    {cat:"registration", name:"Registration guidance", desc:"Find steps for preparing, registering, and getting help.", url:"https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/"},
-    {cat:"tuition", name:"My Tuition Bill", desc:"Review your bill, payment status, and attendance confirmation.", url:"https://onestop.utexas.edu/managing-costs/paying-your-tuition/tuition-bills/"},
-    {cat:"tuition", name:"Tuition payment deadlines", desc:"See when payment, aid, or attendance confirmation is due.", url:"https://onestop.utexas.edu/managing-costs/paying-your-tuition/payment-deadlines/"},
-    {cat:"mccombs", name:"MBA student organizations", desc:"Explore Full-Time MBA clubs by interest and community.", url:"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/student-experience/student-organizations/"},
-    {cat:"mccombs", name:"McCombs student experience", desc:"Find student life, experiential learning, and community resources.", url:"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/student-experience/"},
-    {cat:"mccombs", name:"Career resources", desc:"Explore MBA career support, employer connections, and outcomes.", url:"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/career/"},
-    {cat:"mccombs", name:"Recruit McCombs", desc:"Sign in to McCombs’ recruiting platform for students and alumni.", url:"https://mccombs-utexas.12twenty.com/Login", login:true},
+    {"cat":"academics","name":"Canvas (LMS)","desc":"Your courses, assignments, and grades.","url":"https://utexas.instructure.com/","login":true},
+    {"cat":"academics","name":"My Schedule + Student Portal","desc":"Your class schedule and student portal tools.","url":"https://my.utexas.edu/","login":true},
+    {"cat":"academics","name":"MBA Course Descriptions","desc":"What each MBA course covers, in one PDF.","url":"https://utexas.app.box.com/s/b6iyc008v2332km9jd6vb4r78y4ik2ms"},
+    {"cat":"academics","name":"Course Schedule (Registrar)","desc":"Every class, its time, location, and unique number by semester.","url":"https://registrar.utexas.edu/schedules"},
+    {"cat":"academics","name":"Experiential Learning & McCombs+","desc":"Action-based co-curricular programs, micro-consulting, and global immersions.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/experiential-learning/"},
+    {"cat":"academics","name":"Room Reservations","desc":"Book study rooms and event space across campus.","url":"https://reservations.utexas.edu/","login":true},
+    {"cat":"academics","name":"Full-Time MBA - Home","desc":"The program’s main hub at McCombs.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/"},
+    {"cat":"academics","name":"Curriculum & Concentrations","desc":"Core sequence, electives, and 20+ concentrations.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/curriculum/"},
+    {"cat":"academics","name":"Course Catalog & Descriptions","desc":"Official UT course descriptions and prerequisites.","url":"https://catalog.utexas.edu/"},
+    {"cat":"academics","name":"Academic Calendar","desc":"Add/drop, tuition due dates, breaks, and deadlines.","url":"https://registrar.utexas.edu/calendars"},
+    {"cat":"academics","name":"My Grades","desc":"Your official grade report, separate from Canvas.","url":"https://utdirect.utexas.edu/apps/student/gradereport/student/","login":true},
+    {"cat":"academics","name":"Room Reservations SSB","desc":"Reserve meeting rooms, common spaces, and AV equipment in the Student Services Building.","url":"https://universityunions.utexas.edu/visit/SSB/reservations"},
+    {"cat":"registration","name":"Register for Classes","desc":"The live add/drop registration system.","url":"https://utdirect.utexas.edu/registration/","login":true},
+    {"cat":"registration","name":"How to Register (One Stop)","desc":"Steps for registration, waitlists, and bars.","url":"https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/"},
+    {"cat":"registration","name":"MyUT Student Portal","desc":"Your dashboard for records, billing, and more.","url":"https://my.utexas.edu/","login":true},
+    {"cat":"registration","name":"Texas One Stop","desc":"Registrar, records, financial aid, and billing help.","url":"https://onestop.utexas.edu/"},
+    {"cat":"money","name":"Tuition & “What I Owe”","desc":"View your bill, pay tuition, and confirm attendance.","url":"https://utdirect.utexas.edu/acct/rec/wio/wio_home.WBX","login":true},
+    {"cat":"money","name":"My Tuition Bill","desc":"Your itemized bill, installment plan, and payment history.","url":"https://utdirect.utexas.edu/apps/studentfinancials/mytuitionbill/","login":true},
+    {"cat":"money","name":"Direct Deposit (Refunds)","desc":"Set up direct deposit for refunds and student-job pay.","url":"https://utdirect.utexas.edu/acct/rec/weft/webEFT_info.WBX","login":true},
+    {"cat":"money","name":"Student Tax Forms (1098-T)","desc":"Find your tuition statement and loan-interest form.","url":"https://afm.utexas.edu/student-accounts-receivable/resources/student-tax-form-information"},
+    {"cat":"money","name":"Paying Your Tuition","desc":"Payment options, plans, and due dates.","url":"https://onestop.utexas.edu/managing-costs/paying-your-tuition/"},
+    {"cat":"money","name":"Financial Aid","desc":"Check aid status, loans, and disbursement information.","url":"https://onestop.utexas.edu/managing-costs/financial-aid/"},
+    {"cat":"money","name":"MBA Cost & Scholarships","desc":"Program tuition, fees, and merit aid details.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/admissions/"},
+    {"cat":"clubs","name":"All Student Orgs (40+)","desc":"Browse the Full-Time MBA student organization directory.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/student-experience/student-organizations/"},
+    {"cat":"clubs","name":"HornsLink - All UT Orgs","desc":"Search the university-wide student organization directory.","url":"https://utexas.campuslabs.com/engage/","login":true},
+    {"cat":"clubs","name":"MBA Insider - Advice from Students","desc":"What current students wish they knew before day one.","url":"https://blogs.mccombs.utexas.edu/mba-insider/"},
+    {"cat":"clubs","name":"Student Life Overview","desc":"Cohorts, study teams, and community at Rowling Hall.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/student-experience/"},
+    {"cat":"clubs","name":"2026 McCombs Events","desc":"Dates, locations, and details for McCombs events.","url":"https://airtable.com/appNjW33RJ0huCWPO/shrz9X43avJxrGdXF/tblxdPC8vyJL69lL3","ext":true},
+    {"cat":"global","name":"Global Studies - Overview","desc":"Explore international options for Full-Time MBA students.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/global-studies/"},
+    {"cat":"global","name":"McCombs Global Connections","desc":"A 3-credit course and 8–10 day study tour; bid with elective points.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/global-studies/"},
+    {"cat":"global","name":"Short-Term Exchange (STEP)","desc":"Find 5–14 day programs at partner schools abroad.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/global-studies/"},
+    {"cat":"global","name":"Semester Exchange & Double Degree","desc":"Study a semester or pursue a dual degree with a global partner.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/academics/global-studies/"},
+    {"cat":"entrepreneurship","name":"Brumley Institute (Texas Venture Labs)","desc":"UT’s graduate entrepreneurship hub and TVL Accelerator.","url":"https://www.mccombs.utexas.edu/centers-initiatives/jon-brumley-texas-venture-labs/"},
+    {"cat":"entrepreneurship","name":"TVL Investment Competition (TVLIC)","desc":"Pitch your venture to investors and judges.","url":"https://blogs.mccombs.utexas.edu/texasventurelabs/"},
+    {"cat":"entrepreneurship","name":"Brumley Startup Fellows","desc":"Summer fellowship to build a startup with mentorship and resources.","url":"https://www.mccombs.utexas.edu/centers-initiatives/jon-brumley-texas-venture-labs/"},
+    {"cat":"entrepreneurship","name":"Brumley Institute Office Hours","desc":"Book startup and venture advice with the Brumley Institute team.","url":"https://sites.utexas.edu/bigeofficehours/"},
+    {"cat":"entrepreneurship","name":"SEAL Accelerator","desc":"UT’s selective 9-week summer accelerator, ending in Decision Day.","url":"https://sites.utexas.edu/seal-program/"},
+    {"cat":"entrepreneurship","name":"Global Sustainability Leadership Institute","desc":"Research, courses, and ventures focused on sustainability.","url":"https://www.mccombs.utexas.edu/centers-initiatives/global-sustainability-leadership-institute/"},
+    {"cat":"entrepreneurship","name":"Kendra Scott Women’s Entrepreneurial Leadership Institute","desc":"Programs, mentorship, and funding for women entrepreneurs at UT.","url":"https://kswelinstitute.utexas.edu/"},
+    {"cat":"entrepreneurship","name":"Kelleher Center for Entrepreneurship (Linktree)","desc":"Programs, events, and community links from the Kelleher Center.","url":"https://linktr.ee/UT_Kelleher_Ent"},
+    {"cat":"careers","name":"MBA Career Management","desc":"Career coaching, recruiting, and employer connections.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/"},
+    {"cat":"careers","name":"Recruit McCombs (12twenty)","desc":"MBA job board, on-campus recruiting, and employer events.","url":"https://mccombs-utexas.12twenty.com/login?ReturnUrl=%2Fdashboard%2F","login":true},
+    {"cat":"transportation","name":"Campus Map","desc":"Find buildings, classrooms, and destinations across the 40 Acres.","url":"https://maps.utexas.edu/"},
+    {"cat":"transportation","name":"UT Shuttle & Bus Routes","desc":"Campus shuttles and CapMetro routes, including West Campus.","url":"https://parking.utexas.edu/transportation/shuttles"},
+    {"cat":"transportation","name":"Parking & Transportation","desc":"Parking permits, garages, and campus transit.","url":"https://parking.utexas.edu/"},
+    {"cat":"transportation","name":"UT Night Rides","desc":"Free late-night safe rides home for students.","url":"https://parking.utexas.edu/transportation/ut-night-rides"},
+    {"cat":"essentials","name":"Contact UT (All Departments)","desc":"Phone numbers and offices for UT departments.","url":"https://www.utexas.edu/contact-us"},
+    {"cat":"essentials","name":"UT AI Tools","desc":"University-approved AI tools and student guidance.","url":"https://tech.utexas.edu/services-tools/ai"},
+    {"cat":"essentials","name":"UT EID Self-Service","desc":"Look up or reset your EID and password.","url":"https://www.utexas.edu/eid"},
+    {"cat":"essentials","name":"DUO / Multi-Factor Setup","desc":"Set up the extra sign-in step for UT services.","url":"https://mfa.login.utexas.edu/","login":true},
+    {"cat":"essentials","name":"Title IX","desc":"Report or get support for sexual misconduct, discrimination, or harassment.","url":"https://titleix.utexas.edu/"},
+    {"cat":"essentials","name":"Student Emergency Services (SOS)","desc":"Emergency financial help, absence notices, and crisis support.","url":"https://deanofstudents.utexas.edu/sos/"},
+    {"cat":"essentials","name":"UT Email (Office 365)","desc":"Open your official university email.","url":"https://office365.austin.utexas.edu/","login":true},
+    {"cat":"essentials","name":"UT Zoom","desc":"Sign in for class sessions and virtual events.","url":"https://utexas.zoom.us/","login":true},
+    {"cat":"essentials","name":"UT Print (My Print Center)","desc":"Send print jobs, check your balance, and release jobs on campus.","url":"https://print.lib.utexas.edu/myprintcenter/","login":true},
+    {"cat":"essentials","name":"Free Legal Help (LSS)","desc":"Free attorney consultations for enrolled students.","url":"https://deanofstudents.utexas.edu/lss/"},
+    {"cat":"essentials","name":"Off-Campus Living","desc":"Apartment search and lease resources near Rowling Hall.","url":"https://deanofstudents.utexas.edu/offcampus/"},
+    {"cat":"essentials","name":"UT Austin - Main Site","desc":"The university’s main website.","url":"https://www.utexas.edu/"},
+    {"cat":"essentials","name":"Graduate Application Portal","desc":"Access the McCombs MBA student resources portal.","url":"https://force.mccombs.utexas.edu/MBA/s/login/?ec=302&startURL=%2FMBA%2Fs%2Fft-mba-admit-community%2Fstudent-resources%2Fdeposited-student-information","login":true},
+    {"cat":"prospective","name":"Compare MBA Programs","desc":"Compare Full-Time, Evening, Executive, and Weekend MBA programs.","url":"https://www.mccombs.utexas.edu/graduate/mba/explore-mba-programs/"},
+    {"cat":"prospective","name":"How to Apply","desc":"Review deadlines, application components, and next steps.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/admissions/application-process/"},
+    {"cat":"prospective","name":"Class Profile & Stats","desc":"Explore test scores, work experience, and class demographics.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/admissions/class-profile/"},
+    {"cat":"prospective","name":"Connect with Admissions","desc":"Find info sessions, one-on-one conversations, and student ambassadors.","url":"https://www.mccombs.utexas.edu/graduate/mba/full-time-mba/admissions/connect-with-us/"},
+    {"cat":"prospective","name":"Rankings (U.S. News)","desc":"See McCombs among U.S. business schools.","url":"https://www.usnews.com/best-graduate-schools/top-business-schools/university-of-texas-austin-01255","ext":true}
   ];
 
   // Rendered into the My Quick Links box at the top. Kept out of LINKS so the
@@ -483,10 +538,16 @@
   ];
 
   const CATS = [
-    {id:"academics", label:"Academics & Classes"},
-    {id:"registration", label:"Registration & Records"},
-    {id:"tuition", label:"Tuition & Financial Aid"},
-    {id:"mccombs", label:"McCombs Life"},
+    {id:"academics", label:"Academics"},
+    {id:"registration", label:"Registration"},
+    {id:"money", label:"Money"},
+    {id:"clubs", label:"Clubs"},
+    {id:"global", label:"Global"},
+    {id:"entrepreneurship", label:"Entrepreneurship"},
+    {id:"careers", label:"Careers"},
+    {id:"transportation", label:"Transportation"},
+    {id:"essentials", label:"Essentials"},
+    {id:"prospective", label:"Thinking about applying?"},
   ];
 
   const CAT_LABEL = {}; CATS.forEach(function(c){ CAT_LABEL[c.id] = c.label; }); 
