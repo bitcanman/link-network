@@ -366,9 +366,12 @@
 .resource-window,.quick .resource-window,.resource-window .card-link,.quick .resource-window .card-link{min-height:0!important}
 .window-chrome,.quick .window-chrome{height:22px!important;padding-left:13px!important;gap:10px!important}
 .window-content,.quick .window-content{padding:12px 14px 10px!important}
-.resource-window .name,.quick .resource-window .name{font-size:17px!important;line-height:1.25!important}
-.resource-window .desc,.quick .resource-window .desc{font-size:12px!important;line-height:1.45!important;margin-top:6px!important;margin-bottom:0!important}
+.resource-window .name,.quick .resource-window .name{font-size:17px!important;line-height:1.25!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
+.resource-window .desc,.quick .resource-window .desc{font-size:12px!important;line-height:1.45!important;margin-top:6px!important;margin-bottom:0!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
 .window-bottom{margin-top:8px!important;min-height:0!important}
+.grid{align-items:stretch!important}
+.resource-window,.quick .resource-window{height:168px!important;min-height:0!important;max-height:168px!important}
+.resource-window .card-link,.quick .resource-window .card-link{height:168px!important;min-height:0!important;max-height:168px!important}
 </style>
 </head>
 <body>
