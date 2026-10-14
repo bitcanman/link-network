@@ -146,7 +146,7 @@
   .section-head{margin-bottom:16px;}
   .section-head .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);}
   .section-head h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:5px 0 0;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;align-items:start;}
   .card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 40px 14px 17px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}
   .card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
   .card-link{display:contents;text-decoration:none;color:inherit;}
@@ -363,6 +363,12 @@
 @media(max-width:560px){.grid{grid-template-columns:1fr!important}}
 .ttl,.ttl .name{min-width:0}
 @media(max-width:700px){.resource-window,.card,.card-link{min-height:0!important}.card-link{padding:0!important}.card{padding-top:0!important;padding-bottom:0!important}.window-content{padding:12px 14px!important;flex:none!important}.window-bottom{margin-top:6px!important;min-height:0!important;border-top:0!important;padding:0!important}.desc{margin-top:4px!important;margin-bottom:0!important}.ttl{margin-bottom:0!important;padding-right:24px!important}.name{font-size:15px!important;line-height:1.25!important;letter-spacing:-.2px!important}.grid{gap:8px!important}}
+.resource-window,.quick .resource-window,.resource-window .card-link,.quick .resource-window .card-link{min-height:0!important}
+.window-chrome,.quick .window-chrome{height:22px!important;padding-left:13px!important;gap:10px!important}
+.window-content,.quick .window-content{padding:12px 14px 10px!important}
+.resource-window .name,.quick .resource-window .name{font-size:17px!important;line-height:1.25!important}
+.resource-window .desc,.quick .resource-window .desc{font-size:12px!important;line-height:1.45!important;margin-top:6px!important;margin-bottom:0!important}
+.window-bottom{margin-top:8px!important;min-height:0!important}
 </style>
 </head>
 <body>
