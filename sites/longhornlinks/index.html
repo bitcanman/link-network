@@ -365,8 +365,8 @@
 <body>
 
 <!-- Tier 2: main header -->
-<header class="screenshot-header"><a class="screenshot-brand" href="https://longhornlinks.com"><span class="lhl-star" aria-hidden="true">&#9733;</span>Longhorn Links</a><nav aria-label="Main navigation"><a href="longhorn-links-today.html">Today</a><a class="selected" href="longhorn-links-general.html" aria-current="page">General</a><a href="longhorn-links-mba.html">MBA</a><a href="mechanical-engineering.html">Mechanical Engineering</a></nav></header>
-<section class="general-hero wrap" id="top" aria-labelledby="general-title"><h1 id="general-title">Your UT Resources,<br><span>One Click Away.<svg viewBox="0 0 550 22" preserveAspectRatio="none" aria-hidden="true"><path d="M6 15Q150 1 542 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1><p class="general-intro">Official UT links when you need them.</p><div class="general-comparison" aria-label="65 resource pages, one Longhorn Links starting point"><div><strong>65</strong><span>different pages<br>to find UT info</span></div><span class="comparison-arrow" aria-hidden="true">⟶</span><div><strong>1</strong><span><b>starting point</b><br>with Longhorn Links.</span></div></div></section>
+<header class="screenshot-header"><a class="screenshot-brand" href="https://longhornlinks.com"><span class="lhl-star" aria-hidden="true">&#9733;&#xfe0e;</span>Longhorn Links</a><nav aria-label="Main navigation"><a class="selected" href="index.html" aria-current="page">General</a><a href="mba.html">MBA</a><a href="mechanical-engineering.html">ME</a><a href="registration.html">Registration</a></nav></header>
+<section class="general-hero wrap" id="top" aria-labelledby="general-title"><h1 id="general-title">Your UT Resources,<br><span>One Click Away.<svg viewBox="0 0 550 22" preserveAspectRatio="none" aria-hidden="true"><path d="M6 15Q150 1 542 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1><p class="general-intro">Official UT links when you need them.</p><div class="general-comparison" aria-label="65 resource pages, one Longhorn Links starting point"><div><strong>65</strong><span>different pages<br>to find UT info</span></div><span class="comparison-arrow" aria-hidden="true">⟶︎</span><div><strong>1</strong><span><b>starting point</b><br>with Longhorn Links.</span></div></div></section>
 <div class="controls"><div class="wrap"><label class="resource-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><input id="q" type="search" placeholder="What are you looking for?" aria-label="Search resource links" autocomplete="off"><kbd>/</kbd></label><div class="chips" id="chips" role="tablist" aria-label="Filter by category"></div></div></div>
 <main class="wrap">
   <div class="section quick" id="quick-links">
@@ -382,7 +382,7 @@
   <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
 </main>
 
-<footer id="suggest"><div class="wrap general-footer"><div><strong>Longhorn Links</strong><p>Less searching. More doing.</p></div><button class="footer-suggest" type="button" data-open-form>Suggest a resource ↗</button><span>Independent, student-built.<br>Not affiliated with UT Austin.</span></div></footer>
+<footer id="suggest"><div class="wrap general-footer"><div><strong>Longhorn Links</strong><p>Less searching. More doing.</p></div><button class="footer-suggest" type="button" data-open-form>Suggest a resource ↗︎</button><span>Independent, student-built.<br>Not affiliated with UT Austin.</span></div></footer>
 
 <!-- Suggest-a-link modal -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -562,13 +562,13 @@
     let badge = '';
     if(l.login) badge = '<span class="badge login">'+lockSVG+' UT EID</span>';
     else if(l.ext) badge = '<span class="badge ext">External</span>';
-    const star = '<button type="button" class="save" data-fav="'+esc(fid)+'" aria-pressed="'+(isSaved?'true':'false')+'" aria-label="'+(isSaved?'Remove ':'Save ')+esc(l.name)+(isSaved?' from Favorites':' to Favorites')+'">'+(isSaved?'★':'☆')+'</button>';
+    const star = '<button type="button" class="save" data-fav="'+esc(fid)+'" aria-pressed="'+(isSaved?'true':'false')+'" aria-label="'+(isSaved?'Remove ':'Save ')+esc(l.name)+(isSaved?' from Favorites':' to Favorites')+'">'+(isSaved?'★︎':'☆︎')+'</button>';
     const del = opts.custom ? '<button type="button" class="card-del" data-del="'+esc(fid)+'" aria-label="Delete '+esc(l.name)+'">Delete</button>' : '';
     return '<div class="card resource-window" data-cat="'+l.cat+'" data-name="'+esc(l.name)+'" data-fav-id="'+esc(fid)+'" data-text="'+esc((l.name+' '+l.desc+' '+(CAT_LABEL[l.cat]||l.cat)+' '+host(l.url)).toLowerCase())+'">'
       + '<a class="card-link" href="'+esc(l.url)+'" target="_blank" rel="noopener" title="Opens in a new tab">'
         + '<div class="window-content"><div class="ttl"><span class="name">'+esc(l.name)+'</span></div>'
         + '<div class="desc">'+esc(l.desc)+'</div>'
-        + '<div class="window-bottom">'+badge+'<span class="window-open">Open <span aria-hidden="true">↗</span></span></div></div>'
+        + '<div class="window-bottom">'+badge+'<span class="window-open">Open <span aria-hidden="true">↗︎</span></span></div></div>'
       + '</a>'+star+del+'</div>';
   }
 
@@ -674,7 +674,7 @@
       if(!fid || !btn) return;
       const on = favState.saved.indexOf(fid) >= 0;
       btn.setAttribute("aria-pressed", on ? "true" : "false");
-      btn.textContent = on ? "★" : "☆";
+      btn.textContent = on ? "★︎" : "☆︎";
     });
   }
 
@@ -773,7 +773,7 @@
   const chipsEl = document.getElementById("chips");
   let activeCat = "all";
   function buildChips(){
-    const list = [{id:"all",label:"All"}, {id:"saved",label:"★ Favorites"}];
+    const list = [{id:"all",label:"All"}, {id:"saved",label:"★︎ Favorites"}];
     CATS.forEach(c=>list.push(c));
     if(!list.some(c=>c.id===activeCat)) activeCat = "all";
     chipsEl.innerHTML = "";
