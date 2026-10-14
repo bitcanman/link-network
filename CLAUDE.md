@@ -49,5 +49,7 @@ doesn't match the repo and silently diverges from git.
   Deliberately *not* UT burnt orange `#BF5700`, for trademark distance.
 - Every site carries an "Unofficial · not affiliated" disclaimer. Do not
   remove it or soften it.
-- No cookies, no PII, no third-party analytics scripts. Click counts go to a
-  Google Apps Script endpoint via `navigator.sendBeacon` and are anonymous.
+- No PII. Google Analytics (gtag.js, measurement ID `G-7PRE2VF4KG`) is
+  installed site-wide as the first thing in `<head>` on every page — keep it
+  there on any new page. Click counts separately go to a Google Apps Script
+  endpoint via `navigator.sendBeacon` and are anonymous.
