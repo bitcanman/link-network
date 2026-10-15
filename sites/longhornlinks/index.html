@@ -27,14 +27,14 @@
 <meta name="keywords" content="UT Austin, University of Texas, Longhorn, links, student resources, registration, Canvas, McCombs, campus" />
 <meta name="author" content="Longhorn Links" />
 <meta name="robots" content="index, follow" />
-
-
-
-
-
-
+<link rel="canonical" href="https://longhornlinks.com/" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+<link rel="apple-touch-icon-precomposed" href="/apple-touch-icon-precomposed.png" />
 <meta name="theme-color" content="#BF5700" />
-<title>General design preview — Longhorn Links</title>
+<title>Longhorn Links</title>
 <meta property="og:title" content="Longhorn Links" />
 <meta property="og:description" content="Every UT Austin link in one place: registration, Canvas, housing, orientation, immunization requirements, clubs, financial aid. Unofficial, student-built." />
 <meta property="og:type" content="website" />
@@ -155,7 +155,7 @@
   .section-head{margin-bottom:16px;}
   .section-head .eyebrow{font-family:"Spline Sans Mono",monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--brand);}
   .section-head h2{font-family:"Archivo",sans-serif;font-weight:700;font-size:24px;letter-spacing:-.01em;margin:5px 0 0;}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;align-items:start;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:13px;margin-top:14px;}
   .card{position:relative;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:16px 40px 14px 17px;transition:transform .12s ease,box-shadow .12s ease,border-color .12s ease;}
   .card:hover{transform:translateY(-3px);border-color:var(--brand);box-shadow:0 10px 22px -15px rgba(12,40,38,.5);}
   .card-link{display:contents;text-decoration:none;color:inherit;}
@@ -277,118 +277,65 @@
     .section{scroll-margin-top:84px;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
-
-/* General page in the registration page's visual language. */
-:root{--brand:#BF5700;--brand-deep:#944300;--brand-tint:#f5e7d6;--ink:#2c211b;--muted:#776e64;--bg:#faf7ee;--panel:#fcf9f3;--line:#e7dece;--focus:#BF5700}body{background:#faf7ee;background-image:linear-gradient(#e9e3d94d 1px,transparent 1px),linear-gradient(90deg,#e9e3d94d 1px,transparent 1px);background-size:44px 44px;color:var(--ink);font-family:Arial,Helvetica,sans-serif}.wrap{max-width:1240px}.screenshot-header{grid-template-columns:1fr auto;max-width:1450px;margin:22px auto 0;border:1px solid #eee3d3;border-radius:17px;box-shadow:0 4px 12px #5b3b1910;padding:16px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;background:#fcf9f3}.screenshot-brand{display:flex;gap:13px;align-items:center;font-size:26px;font-weight:900;letter-spacing:-.6px;white-space:nowrap;text-decoration:none}.lhl-star{width:34px;height:34px;flex:0 0 auto;display:grid;place-items:center;background:#BF5700;color:#fff;border-radius:8px;font-size:22px;letter-spacing:0;line-height:1}.screenshot-header nav{display:flex;gap:12px;align-items:center;justify-self:end;font-size:14px}.screenshot-header nav a{background:#f0ece4;border-radius:30px;padding:11px 20px;color:var(--ink);font-weight:500;text-decoration:none}.screenshot-header nav .selected{background:var(--brand);color:white;font-weight:700}.header-search{justify-self:end;border:1px solid #e8dfd2;border-radius:30px;display:flex;gap:12px;align-items:center;padding:10px 13px;color:#857c72;max-width:280px}.header-search svg{width:19px;height:19px;flex-shrink:0}.header-search input{border:0;outline:none;background:none;width:100%;font-size:12px;min-width:0;font-family:inherit}.general-hero{display:grid;grid-template-columns:1fr 300px;gap:60px;align-items:center;padding-top:48px;padding-bottom:38px}.overline{font-size:10px;letter-spacing:1.5px;color:var(--brand);font-weight:700;margin:0 0 16px}.general-hero h1{font-family:Arial,Helvetica,sans-serif;font-size:64px;font-weight:900;letter-spacing:-3px;line-height:1.02;margin:0 0 24px}.general-hero h1>span{color:var(--brand);position:relative;display:inline-block}.general-hero h1 svg{position:absolute;bottom:-10px;left:0;width:100%;height:16px;overflow:visible}.general-intro{font-size:16px;line-height:1.6;color:var(--muted);margin:0}.reg-callout{background:var(--brand);color:white;border-radius:16px;padding:25px;text-decoration:none;box-shadow:5px 5px 0 #ead8c0}.callout-top{font-size:9px;letter-spacing:1.2px;font-weight:700;color:#ffe0c5}.reg-callout strong{display:block;font-size:29px;line-height:1.06;letter-spacing:-1px;margin-top:14px}.reg-callout p{font-size:12px;line-height:1.6;color:#ffe0c5;margin:14px 0 18px}.callout-bottom{font-size:12px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid #ffffff40;padding-top:13px;font-weight:700}.callout-bottom b{font-size:20px}.controls{position:static;background:transparent;border:0;box-shadow:none;padding:0 0 22px}.directory-label{display:flex;align-items:center;justify-content:space-between;font-size:12px;font-weight:700;margin-bottom:16px}.directory-label .count{font-size:11px;font-weight:400;color:var(--muted)}.chips,.controls:focus-within .chips{display:flex;gap:7px;flex-wrap:wrap;margin:0}.chip{border:1px solid #e1d6c5;border-radius:30px;background:#faf7ee;padding:9px 13px;font-family:inherit;font-size:11px;font-weight:600}.chip.active{background:var(--ink);border-color:var(--ink);color:#fff}.chip:hover{background:#f1e3d0;color:var(--brand)}.section.quick{background:#f5e9d9;border:1px solid #e5d3bb;border-radius:15px;padding:22px;margin:0 0 30px}.section-head{align-items:center;margin-bottom:15px}.section-head h2{font-family:Arial,Helvetica,sans-serif;letter-spacing:-.6px;font-size:23px;color:var(--ink);font-weight:800}.fav-sub{font-size:12px;color:var(--muted)}.lay-btn{font-family:inherit;font-size:11px;background:var(--paper);border:1px solid #d9c2a5;border-radius:7px;padding:9px 12px;color:var(--brand)}.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.quick .grid{grid-template-columns:repeat(4,minmax(0,1fr))}.card{border:1px solid #e4d8c7;background:#fcf9f3;border-radius:11px;box-shadow:none;min-height:95px;position:relative}.card:hover{border-color:#c68044;box-shadow:0 5px 12px #633d1110;transform:translateY(-2px)}.card-link{padding:19px 18px 17px}.card .name{font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.3;font-weight:700;letter-spacing:-.3px;padding-right:20px}.card .desc{font-size:12px;line-height:1.5;color:var(--muted);margin-top:9px}.card .host{font-family:inherit;font-size:9px;color:#9a8b78;letter-spacing:0;margin-top:12px}.card .save{top:10px;right:10px;width:26px;height:26px;font-size:17px;color:#b49e80;background:transparent}.card .save[aria-pressed=true]{color:var(--brand)}.quick .card{min-height:108px}.quick .card-link{padding:16px}.quick .card .name{font-size:14px}.quick .card .desc{font-size:11px}.badge{font-size:8px;border-radius:5px;white-space:nowrap}.card .arrow{display:none}.ttl{padding-right:15px}.section{margin:0 0 30px}.section-head .big{color:var(--brand);font-family:inherit}.section-head h2 a{color:inherit}footer{background:transparent;border-top:1px solid var(--line);color:var(--muted);margin-top:25px;padding:25px 0}.general-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;font-size:11px;line-height:1.5}.general-footer strong{font-size:15px;color:var(--ink)}.general-footer p{margin:5px 0 0}.footer-suggest{border:0;background:none;color:var(--brand);font-size:12px;font-weight:700;cursor:pointer}.empty{color:var(--muted);font-size:13px}.modal-box,.my-modal-box{background:var(--panel);color:var(--ink)}@media(max-width:1250px){.screenshot-header{margin:18px 20px 0;gap:15px}.screenshot-brand{font-size:21px}.screenshot-header nav{gap:7px}.screenshot-header nav a{padding:10px 14px}.header-search{max-width:210px}}@media(max-width:960px){.screenshot-header{grid-template-columns:1fr auto}.header-search{grid-column:1/-1;max-width:none;width:100%;justify-self:stretch}.quick .grid{grid-template-columns:repeat(3,minmax(0,1fr))}.general-hero{gap:30px;grid-template-columns:1fr 270px}}@media(max-width:700px){.screenshot-header{display:flex;flex-direction:column;gap:14px;padding:18px 14px;margin:12px}.screenshot-brand{font-size:23px}.screenshot-header nav{gap:6px;width:100%;justify-content:center}.screenshot-header nav a{font-size:12px;padding:9px 13px}.header-search{display:flex;max-width:none;width:100%;padding:12px}.header-search input{font-size:14px}.general-hero{grid-template-columns:1fr;padding-top:30px;padding-bottom:26px;gap:24px}.general-hero h1{font-size:48px;letter-spacing:-2.5px}.general-intro{font-size:14px}.reg-callout{padding:18px;box-shadow:none}.reg-callout strong{font-size:23px;margin-top:10px}.reg-callout strong br{display:none}.reg-callout p{margin:10px 0 12px}.callout-bottom{padding-top:10px}.chips{flex-wrap:nowrap;overflow-x:auto;padding-bottom:5px}.chip{flex-shrink:0}.grid,.quick .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.section.quick{padding:16px;border-radius:12px}.section-head h2{font-size:21px}.card-link{padding:16px 13px}.card .name{font-size:13px}.card .desc{font-size:11px}.card .host{font-size:8px}.card .badge{display:none}.quick .card-link{padding:15px 12px}.general-footer{align-items:start;flex-wrap:wrap}.general-footer>span{width:100%}.overline{font-size:9px}}
-
-/* Little resource windows, borrowed from the registration illustration. */
-.general-hero h1{font-size:55px;line-height:1.08;letter-spacing:-2.6px}.general-hero{padding-top:44px;padding-bottom:24px}.grid{gap:23px 22px;padding:7px 3px 5px}.resource-window{border:1.4px solid #958978;border-radius:9px;background:#fcf9f1;min-height:118px;box-shadow:3px 5px 0 #e7dccb;overflow:visible;transform:rotate(-.65deg);transition:transform .18s,box-shadow .18s,border-color .18s}.resource-window:nth-child(3n+2){transform:rotate(.7deg)}.resource-window:nth-child(3n){transform:rotate(-.25deg)}.resource-window:hover,.resource-window:focus-within{transform:translateY(-3px) rotate(0);border-color:#9d4f15;box-shadow:4px 7px 0 #ead6bb;z-index:1}.resource-window .card-link{padding:0;display:flex;flex-direction:column;min-height:118px;border-radius:8px;overflow:hidden}.window-chrome{height:22px;display:flex;align-items:center;gap:10px;padding:0 43px 0 13px;background:#ece6dc;border-bottom:1px solid #d8cec0}.resource-window:nth-child(3n+2) .window-chrome{background:#efe1ce}.resource-window:nth-child(3n) .window-chrome{background:#e7e9dc}.window-dots{display:flex;gap:4px;flex-shrink:0}.window-dots i{width:6px;height:6px;border-radius:50%;background:#df7765}.window-dots i:nth-child(2){background:#d9b762}.window-dots i:nth-child(3){background:#88a576}.window-address{font-size:9px;color:#938674;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:0}.window-content{padding:12px 14px 10px;display:flex;flex-direction:column;flex:1}.resource-window .ttl{padding:0;display:block}.resource-window .name{display:block;font-size:18px;line-height:1.25;letter-spacing:-.5px;font-weight:800;padding:0;color:var(--ink)}.resource-window .desc{font-size:12px;line-height:1.55;color:#7c7164;margin-top:7px;margin-bottom:0}.window-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;min-height:0}.window-open{font-size:10px;color:var(--brand);font-weight:700;display:inline-flex;align-items:center;gap:8px;margin-left:auto}.window-open>span{font-size:17px;line-height:1}.resource-window .badge{font-size:8px;background:transparent;padding:0;border:0;color:#8d7e6b;font-weight:400}.resource-window .badge svg{width:10px;height:10px}.resource-window .save{top:3px;right:7px;font-size:16px;width:26px;height:26px;border:0;border-radius:4px;background:transparent;color:#a18b6c;z-index:2}.resource-window .save:hover{background:#ffffff70}.resource-window .save[aria-pressed=true]{color:var(--brand)}.quick .grid{gap:18px;padding:6px 3px}.section.quick{background:#f5eadb;border:1px solid #e0cdb4;padding:24px 23px 27px;border-radius:13px}.quick .resource-window{min-height:95px}.quick .resource-window .card-link{min-height:95px;padding:0}.quick .window-content{padding:15px}.quick .resource-window .name{font-size:16px;line-height:1.25}.quick .resource-window .desc{font-size:11px;margin-bottom:13px}.quick .window-address{font-size:8px}.quick .window-chrome{height:30px;padding-left:11px;gap:7px}.section-head h2{font-size:24px;font-weight:800}.section{margin-bottom:37px}.section-head{margin-bottom:18px}.resource-window .card-del{position:static;display:block;align-self:end;border:0;background:transparent;padding:0 14px 8px;font-size:9px;color:var(--muted)}.fav-sub{font-size:11px}.chips{margin-bottom:1px}.controls{padding-bottom:24px}@media(max-width:960px){.general-hero{grid-template-columns:1fr 230px;gap:28px}.general-hero h1{font-size:44px;letter-spacing:-2px}.grid{gap:18px}.window-content{padding:17px}.resource-window .name{font-size:16px}}@media(max-width:700px){.general-hero{grid-template-columns:1fr;gap:25px;padding-bottom:22px}.general-hero h1{font-size:clamp(28px,7.8vw,43px);letter-spacing:-1.4px;line-height:1.13}.general-hero h1 svg{height:12px;bottom:-9px}.general-intro{margin-top:3px}.grid,.quick .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 14px;padding:6px 2px}.resource-window,.resource-window .card-link{min-height:180px}.window-chrome{height:28px;padding:0 28px 0 9px;gap:6px}.window-dots{gap:3px}.window-dots i{height:4px;width:4px}.window-address{font-size:7px}.window-content{padding:14px 12px}.resource-window .name{font-size:14px;line-height:1.3;letter-spacing:-.25px}.resource-window .desc{font-size:10px;line-height:1.5;margin-top:8px;margin-bottom:13px}.window-open{font-size:9px;gap:5px}.window-open>span{font-size:14px}.resource-window .badge{display:none}.resource-window .save{width:21px;height:21px;top:3px;right:4px;font-size:14px}.section.quick{padding:19px 16px 22px}.quick .resource-window .card-link{min-height:155px}.quick .resource-window .name{font-size:13px}.quick .window-content{padding:13px 11px}.quick .resource-window .desc{font-size:10px}.quick .window-chrome{height:27px;padding-left:8px;padding-right:26px;gap:5px}.quick .window-address{font-size:7px}.section-head h2{font-size:22px}.resource-window{box-shadow:2px 4px 0 #e7dccb}.section-head{align-items:flex-start}.fav-sub{font-size:10px;line-height:1.5}}
-@media(prefers-reduced-motion:reduce){.resource-window{transition:none}.resource-window:hover,.resource-window:focus-within{transform:none}}
-
-.resource-search{display:flex;align-items:center;gap:14px;background:#fcf9f1;border:1.4px solid #a49580;border-radius:9px;padding:16px 19px;box-shadow:3px 4px 0 #e7dccb;margin:0 3px 25px}.resource-search svg{height:22px;width:22px;color:var(--brand);flex-shrink:0}.resource-search input{background:none;border:0;outline:none;min-width:0;width:100%;color:var(--ink);font-size:15px;font-family:inherit}.resource-search kbd{font-size:10px;border:1px solid #ded2c1;padding:4px 7px;border-radius:4px;color:#9a8c79}.resource-search:focus-within{border-color:var(--brand);box-shadow:3px 4px 0 #ead6bb}.resource-search input:focus-visible{outline:0}@media(max-width:700px){.resource-search{padding:14px 12px;margin:0 2px 22px;gap:10px}.resource-search input{font-size:13px}.resource-search kbd{display:none}.header-search{display:none}}
-
-.resource-search{max-width:650px;width:100%;margin:0 0 24px;border-radius:30px;border:1px solid #d8c9b5;box-shadow:0 3px 0 #e9dfd0;padding:16px 21px;background:#fcfaf5;gap:12px}.resource-search:focus-within{box-shadow:0 3px 0 #efd8b8;border-color:var(--brand)}.resource-search svg{width:20px;height:20px}.resource-search input{font-size:14px}.resource-search input::placeholder{color:#9c8e7b}.quick .grid{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:700px){.resource-search{width:100%;max-width:420px;margin:0 0 22px;padding:14px 17px;border-radius:28px}.resource-search input{font-size:13px}.quick .grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-/* Match Registration's centered navigation and tagline hierarchy. Keep card chrome quiet so titles and descriptions lead. */
-.screenshot-header{grid-template-columns:1fr auto 1fr}.screenshot-header nav{justify-self:center}
-.general-intro{font-size:clamp(20px,2.25vw,34px);letter-spacing:-1.2px;line-height:1.18;color:var(--ink);font-weight:800;margin:0}
-.window-chrome{height:29px;background:#f5f1e9;border-bottom-color:#e9e1d5;padding-left:14px}
-.window-address{font-size:8px;color:#a39787}
-.resource-window .desc{font-size:14px;line-height:1.55;color:#6e6255;margin-top:11px;margin-bottom:18px}
-.quick .resource-window .desc{font-size:12.5px;line-height:1.5}
-@media(max-width:960px){.screenshot-header{grid-template-columns:1fr auto}.screenshot-header nav{justify-self:end}}
-@media(max-width:700px){.general-intro{font-size:22px;letter-spacing:-.6px;line-height:1.18}.resource-window .desc{font-size:11.5px;line-height:1.5;margin-top:8px;margin-bottom:13px}.quick .resource-window .desc{font-size:11.5px}.window-chrome{height:26px;padding-left:9px}}
-.resource-window>.card-link{flex:1 1 auto;min-height:0}.resource-window .window-content{flex:1 1 auto;min-height:0}.resource-window .window-bottom{justify-content:flex-end;margin-top:auto}.resource-window .window-bottom .badge{margin-right:auto}.resource-window .card-del{position:absolute;left:10px;bottom:7px;margin:0}.resource-window:has(.card-del) .window-bottom .badge{visibility:hidden}
-
-/* Clean resource card direction, selected from the comparison. */
-.resource-window{border:1.5px solid rgba(191,87,0,.38);border-radius:13px;background:#fcfaf5;box-shadow:0 3px 0 #e9dfd0;transform:none;min-height:220px}
-.resource-window:nth-child(3n+2),.resource-window:nth-child(3n){transform:none}
-.resource-window:hover,.resource-window:focus-within{transform:translateY(-2px);border-color:#c68044;box-shadow:0 6px 12px #633d1110;}
-.resource-window .card-link{flex:1 1 auto;min-height:0;height:100%;}
-.resource-window .window-content{padding:22px 20px 18px;}
-.resource-window .ttl{padding-right:26px;}
-.resource-window .name{font-size:22px;line-height:1.24;letter-spacing:-.5px;}
-.resource-window .desc{font-size:16px;line-height:1.5;color:#74695d;margin-top:10px;margin-bottom:18px;}
-.resource-window .window-bottom{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:auto;min-height:35px;border-top:1px solid #eee5d9;padding-top:12px;}
-.resource-window .window-address{margin-right:auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:10px;letter-spacing:.025em;color:#a09483;}
-.resource-window .window-open{margin-left:0;font-size:14px;}
-.resource-window .save{top:10px;right:11px;width:25px;height:25px;font-size:18px;}
-.resource-window .ttl .badge{display:inline-flex;align-self:flex-start;margin-top:7px;}
-.quick .resource-window .name{font-size:20px;}
-.quick .resource-window .desc{font-size:14px;line-height:1.45;}
-@media(max-width:960px){.resource-window .window-content{padding:20px 17px 16px}.resource-window .name{font-size:19px}.quick .resource-window .name{font-size:17px}}
-@media(max-width:700px){.resource-window,.resource-window .card-link{min-height:205px}.resource-window .window-content{padding:20px 15px 15px}.resource-window .name{font-size:18px;line-height:1.25}.resource-window .desc,.quick .resource-window .desc{font-size:13px;line-height:1.45;margin-top:9px;margin-bottom:14px}.resource-window .window-bottom{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:5px 8px;padding-top:9px;min-height:42px}.resource-window .window-address{grid-column:1/-1;font-size:9px}.resource-window .window-open{grid-column:2;justify-self:end;font-size:13px}.resource-window .save{top:8px;right:9px}.quick .resource-window .name{font-size:16px}}
-
-/* Shared centered Longhorn Links navigation */
-.screenshot-header{grid-template-columns:minmax(0,1fr) auto minmax(0,1fr)!important}
-.screenshot-header nav{grid-column:2;grid-row:1;justify-self:center!important}
-@media(max-width:960px){.screenshot-header{grid-template-columns:1fr!important;justify-items:center;gap:12px}.screenshot-brand{justify-self:center}.screenshot-header nav{grid-column:1;grid-row:auto;justify-self:center!important}}
-@media(max-width:700px){.screenshot-header{margin:12px 12px 0;padding:13px 10px}.screenshot-header nav{justify-content:center;gap:6px;flex-wrap:wrap}.screenshot-header nav a{padding:9px 10px!important;font-size:12px}}
-
-
-/* Keep the shared navigation centered at every width. */
-@media(max-width:960px){.screenshot-header{grid-template-columns:1fr!important;justify-items:center;gap:12px}.screenshot-brand{grid-column:1}.screenshot-header nav{grid-column:1;grid-row:auto;justify-self:center!important}}
-@media(max-width:700px){.screenshot-header{display:flex;flex-direction:column;gap:14px;padding:18px 14px;margin:12px}.screenshot-header nav{width:100%;justify-content:center;flex-wrap:wrap}.screenshot-header nav a{font-size:12px;padding:9px 10px}}
-
-/* General page hero follows the registration page: headline, tagline, count, then links. */
-.general-hero{max-width:1180px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding:58px 24px 38px;margin:0 auto}
-.general-hero h1{font-family:Arial,Helvetica,sans-serif;font-size:clamp(54px,6.4vw,82px);font-weight:900;line-height:.98;letter-spacing:-4px;margin:0 0 28px}
-.general-hero h1>span{color:var(--brand);position:relative;display:inline-block}
-.general-hero h1 svg{position:absolute;bottom:-13px;left:0;width:100%;height:18px;overflow:visible}
-.general-intro{font-size:clamp(22px,2.7vw,34px);font-weight:800;letter-spacing:-1.1px;line-height:1.16;color:var(--ink);margin:0}
-.general-comparison{display:flex;align-items:center;justify-content:center;gap:54px;margin:29px auto 0}
-.general-comparison strong{display:block;font-size:82px;line-height:1;font-weight:900;letter-spacing:-3px;color:#cbbfae}
-.general-comparison>div:last-child strong,.general-comparison>div:last-child span{color:var(--brand)}
-.general-comparison span{display:block;font-size:18px;line-height:1.35;color:#a29786;text-align:left}
-.general-comparison span b{font-weight:800}
-.general-comparison .comparison-arrow{font-size:48px;line-height:1;color:#9a8975;text-align:center}
-.general-comparison>div:last-child span{color:var(--brand)}
-/* Clean resource cards: no faux browser chrome or domain labels. */
-.resource-window{border:2px solid var(--brand);border-radius:14px;background:#fcfaf5;box-shadow:none;transform:none;min-height:192px;overflow:visible;transition:transform .16s,box-shadow .16s,background .16s}
-.resource-window:nth-child(3n+2),.resource-window:nth-child(3n){transform:none}
-.resource-window:hover,.resource-window:focus-within{transform:translateY(-2px);border-color:var(--brand-deep);background:#fffdf9;box-shadow:0 5px 12px #633d1110;z-index:1}
-.resource-window .card-link{min-height:0;height:100%;padding:0;display:flex;flex-direction:column;text-decoration:none}
-.resource-window .window-content{padding:20px 20px 16px;display:flex;flex-direction:column;flex:1;min-height:0}
-.resource-window .ttl{padding:0 32px 0 0}
-.resource-window .name{font-size:20px;line-height:1.25;letter-spacing:-.45px;color:var(--ink);font-weight:800}
-.resource-window .desc{font-size:15px;line-height:1.5;color:var(--muted);margin:9px 0 14px}
-.resource-window .window-bottom{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:auto;min-height:23px;border:0;padding:0}
-.resource-window .window-address{display:none}
-.resource-window .window-open{margin-left:auto;font-size:14px;font-weight:700;color:var(--brand);gap:7px}
-.resource-window .window-open>span{font-size:18px}
-.resource-window .badge{font-size:11px;color:var(--muted);background:transparent;padding:0;border:0}
-.resource-window .save{top:13px;right:13px;width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:#9a8064;font-size:19px}
-.resource-window .save:hover{background:#f4eadc;color:var(--brand)}
-.general-hero+.controls{padding-top:0}
-@media(max-width:700px){.general-hero{padding:38px 18px 30px}.general-hero h1{font-size:clamp(42px,10.5vw,62px);letter-spacing:-2.6px;line-height:1;margin-bottom:23px}.general-hero h1 svg{height:13px;bottom:-9px}.general-intro{font-size:22px;letter-spacing:-.6px}.general-comparison{gap:22px;margin-top:24px}.general-comparison strong{font-size:56px;letter-spacing:-2px}.general-comparison span{font-size:14px;line-height:1.35}.general-comparison .comparison-arrow{font-size:32px}.resource-window{min-height:165px}.resource-window .window-content{padding:18px 15px 14px}.resource-window .name{font-size:17px}.resource-window .desc{font-size:13px;line-height:1.45;margin:8px 0 11px}.resource-window .window-open{font-size:13px}.resource-window .save{top:9px;right:9px;width:25px;height:25px}}
-
-/* Center the search and keep its filters close by. */
-.resource-search{max-width:590px;margin:0 auto 32px;padding:16px 21px}
-.resource-search input{font-size:17px}
-#chips{justify-content:center;gap:8px;margin:0}
-.controls{padding-bottom:12px}
-.section-head .eyebrow{display:none}
-@media(max-width:700px){.resource-search{margin:0 auto 24px;padding:14px 17px}.resource-search input{font-size:15px}#chips{justify-content:center;gap:6px}.controls{padding-bottom:10px}}
-@media(max-width:560px){.grid{grid-template-columns:1fr!important}}
-.ttl,.ttl .name{min-width:0}
-@media(max-width:700px){.resource-window,.card,.card-link{min-height:0!important}.card-link{padding:0!important}.card{padding-top:0!important;padding-bottom:0!important}.window-content{padding:12px 14px!important;flex:none!important}.window-bottom{margin-top:6px!important;min-height:0!important;border-top:0!important;padding:0!important}.desc{margin-top:4px!important;margin-bottom:0!important}.ttl{margin-bottom:0!important;padding-right:24px!important}.name{font-size:15px!important;line-height:1.25!important;letter-spacing:-.2px!important}.grid{gap:8px!important}}
-.resource-window,.quick .resource-window,.resource-window .card-link,.quick .resource-window .card-link{min-height:0!important}
-.window-chrome,.quick .window-chrome{height:22px!important;padding-left:13px!important;gap:10px!important}
-.window-content,.quick .window-content{padding:12px 14px 10px!important}
-.resource-window .name,.quick .resource-window .name{font-size:17px!important;line-height:1.25!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
-.resource-window .desc,.quick .resource-window .desc{font-size:12px!important;line-height:1.45!important;margin-top:6px!important;margin-bottom:0!important;display:-webkit-box!important;-webkit-line-clamp:2!important;-webkit-box-orient:vertical!important;overflow:hidden!important}
-.window-bottom{margin-top:8px!important;min-height:0!important}
-.grid{align-items:stretch!important}
-.resource-window,.quick .resource-window{height:168px!important;min-height:0!important;max-height:168px!important}
-.resource-window .card-link,.quick .resource-window .card-link{height:168px!important;min-height:0!important;max-height:168px!important}
 </style>
 </head>
 <body>
 
 <!-- Tier 2: main header -->
-<header class="screenshot-header"><a class="screenshot-brand" href="https://longhornlinks.com"><span class="lhl-star" aria-hidden="true">&#9733;&#xfe0e;</span>Longhorn Links</a><nav aria-label="Main navigation"><a class="selected" href="index.html" aria-current="page">General</a><a href="mba.html">MBA</a><a href="mechanical-engineering.html">ME</a><a href="registration.html">Registration</a></nav></header>
-<section class="general-hero wrap" id="top" aria-labelledby="general-title"><h1 id="general-title">Your UT Resources,<br><span>one click away.<svg viewBox="0 0 550 22" preserveAspectRatio="none" aria-hidden="true"><path d="M6 15Q150 1 542 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1><p class="general-intro">Official UT links when you need them.</p><div class="general-comparison" aria-label="65 resource pages, one Longhorn Links starting point"><div><strong>65</strong><span>different pages<br>to find UT info</span></div><span class="comparison-arrow" aria-hidden="true">⟶︎</span><div><strong>1</strong><span><b>starting point</b><br>with Longhorn Links.</span></div></div></section>
-<div class="controls"><div class="wrap"><label class="resource-search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10" cy="10" r="7"/><path d="m15 15 6 6"/></svg><input id="q" type="search" placeholder="What are you looking for?" aria-label="Search resource links" autocomplete="off"><kbd>/</kbd></label><div class="chips" id="chips" role="tablist" aria-label="Filter by category"></div></div></div>
+<header class="main">
+  <div class="wrap main-inner">
+    <a class="wordmark" href="#top">
+      <span class="mark" aria-hidden="true">&#9733;</span>
+      <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">UT Austin</span></span>
+    </a>
+    <nav class="sections" aria-label="Jump to section">
+      <a href="#cat-academics">Academics</a>
+      <a href="#cat-registration">Registration</a>
+      <a href="#cat-money">Money</a>
+      <a href="#cat-campuslife">Campus</a>
+      <a href="#cat-sports">Sports</a>
+      <a href="#cat-housing">Housing</a>
+      <a href="#cat-health">Health</a>
+    </nav>
+    <div class="cta-wrap">
+      <a class="rr-try" href="mailto:jn32456@my.utexas.edu"><span class="rr-pre">Don’t see a link? </span>Contact Us <span class="arw" aria-hidden="true">&rarr;</span></a>
+      <span class="disc-inline">Unofficial &middot; Student-built</span>
+    </div>
+  </div>
+</header>
+
+<div class="navE"><div class="wrap row">
+  <a class="on" href="/" aria-current="page">General</a>
+  <a href="/mba.html">MBA</a>
+  <a href="/mechanical-engineering"><span class="full">Mechanical Engineering</span><span class="mob">MechE</span></a>
+  <span class="sp"></span>
+  <a href="/registration">Registration</a>
+</div></div>
+
+<section class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-head">
+      <h1>The UT Austin <span class="brk"></span><span class="u">link directory.</span></h1>
+    </div>
+    <p class="lede">Registration, Canvas, housing, orientation, immunization requirements, clubs, financial aid. All the stuff scattered across a dozen sites, gathered into one place. <strong class="bookmark-me">Bookmark Me!</strong></p>
+  </div>
+</section>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="search-row">
+      <div class="search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="q" type="search" placeholder="Smart Search - try &ldquo;my classes&rdquo;, &ldquo;shots&rdquo;, &ldquo;longhorn sports&rdquo;&hellip;" aria-label="Smart Search" autocomplete="off" />
+        <kbd>/</kbd>
+      </div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips" role="tablist" aria-label="Filter by category"></div>
+      <p class="newtab-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg> Links open in a new tab - this page stays open behind them, so you won't lose your place.</p>
+  </div>
+</div>
+
 <main class="wrap">
   <div class="section quick" id="quick-links">
     <div class="section-head">
@@ -403,7 +350,39 @@
   <p class="empty" id="empty">Nothing matches that. Try another word, or <a href="#" data-open-form style="color:var(--brand-deep)">suggest the link you're missing</a>.</p>
 </main>
 
-<footer id="suggest"><div class="wrap general-footer"><div><strong>Longhorn Links</strong><p>Less searching. More doing.</p></div><button class="footer-suggest" type="button" data-open-form>Suggest a resource ↗︎</button><span>Independent, student-built.<br>Not affiliated with UT Austin.</span></div></footer>
+<footer id="suggest">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="fb-name">Longhorn Links</div>
+        <p>Longhorn Links is a University of Texas student-led link directory. Stop hunting across a dozen sites for the link you need.</p>
+        <button class="btn" type="button" data-open-form>&#10022; Request or Suggest a Link</button>
+      </div>
+      <div><h5>Academics</h5><ul>
+        <li><a href="#cat-academics">Course schedule</a></li>
+        <li><a href="#cat-academics">Canvas</a></li>
+        <li><a href="#cat-academics">Calendar</a></li>
+        <li><a href="#cat-academics">Tutoring</a></li>
+      </ul></div>
+      <div><h5>Campus life</h5><ul>
+        <li><a href="https://linkcowboy.com/today" target="_blank" rel="noopener">UT Restaurant Roundup</a></li>
+        <li><a href="#cat-campuslife">Clubs &amp; Greek life</a></li>
+        <li><a href="#cat-sports">Longhorn sports</a></li>
+        <li><a href="#cat-housing">Housing &amp; dining</a></li>
+        <li><a href="#cat-health">Health &amp; safety</a></li>
+      </ul></div>
+      <div><h5>Admin</h5><ul>
+        <li><a href="#cat-registration">Registration</a></li>
+        <li><a href="#cat-money">Tuition &amp; aid</a></li>
+        <li><a href="#cat-essentials">UT EID / DUO</a></li>
+        <li><a href="/mba.html">MBA version</a></li>
+      </ul></div>
+    </div>
+    <p class="legal">
+      Unofficial &amp; not affiliated with, endorsed by, or operated by The University of Texas at Austin or the McCombs School of Business. Links point to official or public sources owned by their respective organizations. Verify deadlines and requirements on the official page - this hub is a shortcut, not the source of record. Prototype v4.0.
+    </p>
+  </div>
+</footer>
 
 <!-- Suggest-a-link modal -->
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -463,8 +442,8 @@
      deployed (see setup steps). Leave blank and the form falls
      back to email; tracking simply stays off.
      ============================================================ */
-  const FORM_ENDPOINT = "";
-  const ANALYTICS_ENDPOINT = "";
+  const FORM_ENDPOINT = "https://script.google.com/macros/s/AKfycbyYGxdju1XchwNGAORmB3Fz4NSPXQYQrpo-eur2R3pbIGcRTuwdgvkqltSsMfd89WT2/exec";
+  const ANALYTICS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyYGxdju1XchwNGAORmB3Fz4NSPXQYQrpo-eur2R3pbIGcRTuwdgvkqltSsMfd89WT2/exec";
   const FALLBACK_EMAIL = "cobynorton@gmail.com";
 
   // ---- Link data. Edit/extend freely. login:true = behind UT EID. ext:true = external. ----
@@ -477,7 +456,7 @@
     {cat:"academics", name:"UT Libraries", desc:"Study rooms, research help, and the PCL.", url:"https://www.lib.utexas.edu/"},
     {cat:"academics", name:"Sanger Learning Center", desc:"Free tutoring, study skills, and academic coaching.", url:"https://ugs.utexas.edu/slc/"},
     {cat:"academics", name:"Room Reservations", desc:"Book study rooms and event space across campus.", url:"https://reservations.utexas.edu/", login:true},
-    {cat:"academics", name:"Room Reservations (SSB)", desc:"Reserve meeting rooms, shared spaces, and equipment.", url:"https://universityunions.utexas.edu/visit/SSB/reservations"},
+    {cat:"academics", name:"Union Meeting Room Reservations (SSB)", desc:"Reserve meeting rooms, common spaces, the patio, and AV equipment in the Student Services Building.", url:"https://universityunions.utexas.edu/visit/SSB/reservations"},
 
     {cat:"registration", name:"Register for Classes", desc:"The live add/drop registration system.", url:"https://utdirect.utexas.edu/registration/", login:true},
     {cat:"registration", name:"How to Register (One Stop)", desc:"Step-by-step on registering, waitlists, and bars.", url:"https://onestop.utexas.edu/registration-and-degree-planning/registering-for-classes/"},
@@ -495,7 +474,7 @@
     {cat:"campuslife", name:"Student Jobs (Workday)", desc:"On-campus student jobs - UT's official hiring portal.", url:"https://utaustin.wd1.myworkdayjobs.com/UTstudent", ext:true},
 
     {cat:"campuslife", name:"HornsLink - All 1,000+ Orgs", desc:"UT's official directory of every student organization.", url:"https://utexas.campuslabs.com/engage/", login:true},
-    {cat:"campuslife", name:"Find a Student Organization", desc:"How to explore orgs, org fairs, and getting involved.", url:"https://deanofstudents.utexas.edu/so/find-a-student-organization.php"},
+    {cat:"campuslife", name:"Find a Student Org (Dean of Students)", desc:"How to explore orgs, org fairs, and getting involved.", url:"https://deanofstudents.utexas.edu/so/find-a-student-organization.php"},
     {cat:"campuslife", name:"Sorority & Fraternity Life", desc:"All four Greek councils, recruitment, and how to join.", url:"https://deanofstudents.utexas.edu/sfl/"},
     {cat:"campuslife", name:"RecSports", desc:"Gregory Gym, fitness classes, club sports, and outdoor trips.", url:"https://www.utrecsports.org/"},
     {cat:"campuslife", name:"Campus Events + Entertainment", desc:"Student-run events, concerts, and free movies.", url:"https://universityunions.utexas.edu/"},
@@ -511,7 +490,7 @@
     {cat:"housing", name:"Dining Balance", desc:"Check your Dine In Dollars and meal plan balance.", url:"https://utdirect.utexas.edu/utapps/uhd/services/dining/", login:true},
     {cat:"housing", name:"Off-Campus Living", desc:"Apartment search, roommates, and leases near campus.", url:"https://housing.offcampus.utexas.edu/"},
     {cat:"housing", name:"Off-Campus Housing (Facebook)", desc:"Student-run group for subleases, roommates, and off-campus listings.", url:"https://www.facebook.com/groups/1522076437888048/", ext:true},
-    {cat:"housing", name:"Off-Campus Housing Group 2", desc:"A second student-run group for subleases, roommates, and off-campus listings.", url:"https://www.facebook.com/groups/1900774386723564/", ext:true},
+    {cat:"housing", name:"Off-Campus Housing (Facebook, 2)", desc:"A second student-run group for subleases, roommates, and off-campus listings.", url:"https://www.facebook.com/groups/1900774386723564/", ext:true},
     {cat:"transportation", name:"Campus Map", desc:"Find buildings, classrooms, and everything on the 40 Acres.", url:"https://maps.utexas.edu/"},
     {cat:"transportation", name:"UT Shuttle & Bus Routes", desc:"Campus shuttles and CapMetro routes, especially West Campus.", url:"https://parking.utexas.edu/transportation/shuttles"},
     {cat:"transportation", name:"Parking & Transportation", desc:"Permits, garages, and campus shuttles.", url:"https://parking.utexas.edu/"},
@@ -519,7 +498,7 @@
 
     {cat:"health", name:"Immunization Requirements", desc:"Required vaccines and medical clearance - needed BEFORE you can register.", url:"https://www.healthyhorns.utexas.edu/uhs/immunization-medical-clearance-requirements.html"},
     {cat:"health", name:"University Health Services", desc:"Doctor visits, pharmacy, and urgent care on campus.", url:"https://www.healthyhorns.utexas.edu/"},
-    {cat:"health", name:"Counseling & Mental Health", desc:"Free counseling, crisis line, and wellness programs.", url:"https://cmhc.utexas.edu/"},
+    {cat:"health", name:"Counseling & Mental Health (CMHC)", desc:"Free counseling, crisis line, and wellness programs.", url:"https://cmhc.utexas.edu/"},
     {cat:"health", name:"Free Legal Help (LSS)", desc:"Free attorney consultations - lease review, landlord disputes, tickets, and more.", url:"https://deanofstudents.utexas.edu/lss/"},
     {cat:"health", name:"Legal Resources & Expunction", desc:"Record expunction help and referrals via Texas Law's pro bono program.", url:"https://deanofstudents.utexas.edu/lss/resources.php"},
     {cat:"health", name:"Disability & Access (D&A)", desc:"Academic accommodations, testing support, and accessibility services.", url:"https://disability.utexas.edu/"},
@@ -527,7 +506,7 @@
     {cat:"health", name:"Student Emergency Services (SOS)", desc:"Emergency financial help, absence notices, and crisis support.", url:"https://deanofstudents.utexas.edu/sos/"},
     {cat:"health", name:"UT Police & Campus Safety", desc:"UTPD, emergency info, and safety escorts.", url:"https://police.utexas.edu/"},
 
-    {cat:"essentials", name:"Contact UT Departments", desc:"Phone numbers and offices for every UT department in one place.", url:"https://www.utexas.edu/contact-us"},
+    {cat:"essentials", name:"Contact UT (All Departments)", desc:"Phone numbers and offices for every UT department in one place.", url:"https://www.utexas.edu/contact-us"},
     {cat:"essentials", name:"UT EID Self-Service", desc:"Look up or reset your EID and password.", url:"https://www.utexas.edu/eid"},
     {cat:"essentials", name:"DUO / Multi-Factor Setup", desc:"Required to log into Canvas, MyUT, and more.", url:"https://mfa.login.utexas.edu/", login:true},
     {cat:"essentials", name:"UT AI Tools", desc:"University-approved AI tools and guidance for students.", url:"https://tech.utexas.edu/services-tools/ai"},
@@ -538,17 +517,17 @@
     {cat:"essentials", name:"UT Austin - Main Site", desc:"The university's front door.", url:"https://www.utexas.edu/"},
 
     {cat:"registration", name:"New Student Orientation", desc:"Register for your session - required before you can enroll.", url:"https://orientation.utexas.edu/"},
-    {cat:"registration", name:"Registration Plus", desc:"Grade distributions, professor ratings, and syllabi in your schedule.", url:"https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa", ext:true},
+    {cat:"registration", name:"Registration Plus (Chrome Extension)", desc:"Student-built extension - grade distributions, prof ratings, and syllabi right in the course schedule.", url:"https://chromewebstore.google.com/detail/ut-registration-plus/hboadpjkoaieogjimneceaahlppnipaa", ext:true},
     {cat:"housing", name:"Housing Application", desc:"Apply early - assignments are first-come, first-served.", url:"https://housing.utexas.edu/"},
     {cat:"essentials", name:"myIO (International Portal)", desc:"The international student portal - check-in, immigration docs, advising.", url:"https://global.utexas.edu/isss/advising-services/myio", login:true},
-    {cat:"essentials", name:"International Student Services", desc:"Check-in, visas, and extra requirements for international Longhorns.", url:"https://global.utexas.edu/isss"},
+    {cat:"essentials", name:"International Students (Texas Global)", desc:"Check-in, visas, and extra requirements for international Longhorns.", url:"https://global.utexas.edu/isss"},
   ];
 
   // Rendered into the My Quick Links box at the top. Kept out of LINKS so the
   // footer count and the category sections are not double-counted.
   const QUICKLINKS = [
     {cat:"quicklinks", name:"Canvas", desc:"Your courses, assignments, and grades.", url:"https://utexas.instructure.com/", login:true},
-    {cat:"quicklinks", name:"My Schedule", desc:"Your class schedule and student portal.", url:"https://my.utexas.edu/", login:true},
+    {cat:"quicklinks", name:"My Schedule + Student Portal", desc:"Class schedule, etc.", url:"https://my.utexas.edu/", login:true},
     {cat:"quicklinks", name:"My Grades", desc:"Your official grade report - separate from Canvas.", url:"https://utdirect.utexas.edu/apps/student/gradereport/student/", login:true},
     {cat:"quicklinks", name:"Tuition", desc:"View your bill, pay tuition, and confirm attendance.", url:"https://utdirect.utexas.edu/acct/rec/wio/wio_home.WBX", login:true},
     {cat:"quicklinks", name:"HornsLink - All 1,000+ Orgs", desc:"UT's official directory of every student organization.", url:"https://utexas.campuslabs.com/engage/"},
@@ -580,21 +559,23 @@
     opts = opts || {};
     const fid = opts.favId || favId(l);
     const isSaved = favState.saved.indexOf(fid) >= 0;
-    let badge = '';
+    let badge = "";
     if(l.login) badge = '<span class="badge login">'+lockSVG+' UT EID</span>';
     else if(l.ext) badge = '<span class="badge ext">External</span>';
-    const star = '<button type="button" class="save" data-fav="'+esc(fid)+'" aria-pressed="'+(isSaved?'true':'false')+'" aria-label="'+(isSaved?'Remove ':'Save ')+esc(l.name)+(isSaved?' from Favorites':' to Favorites')+'">'+(isSaved?'★︎':'☆︎')+'</button>';
-    const del = opts.custom ? '<button type="button" class="card-del" data-del="'+esc(fid)+'" aria-label="Delete '+esc(l.name)+'">Delete</button>' : '';
-    return '<div class="card resource-window" data-cat="'+l.cat+'" data-name="'+esc(l.name)+'" data-fav-id="'+esc(fid)+'" data-text="'+esc((l.name+' '+l.desc+' '+(CAT_LABEL[l.cat]||l.cat)+' '+host(l.url)).toLowerCase())+'">'
-      + '<a class="card-link" href="'+esc(l.url)+'" target="_blank" rel="noopener" title="Opens in a new tab">'
-        + '<div class="window-content"><div class="ttl"><span class="name">'+esc(l.name)+'</span></div>'
-        + '<div class="desc">'+esc(l.desc)+'</div>'
-        + '<div class="window-bottom">'+badge+'<span class="window-open">Open <span aria-hidden="true">↗︎</span></span></div></div>'
-      + '</a>'+star+del+'</div>';
+    const star = '<button type="button" class="save" data-fav="'+esc(fid)+'" aria-pressed="'+(isSaved?"true":"false")+'" aria-label="'+(isSaved?"Remove ":"Save ")+esc(l.name)+(isSaved?" from Favorites":" to Favorites")+'">'+(isSaved?"★":"☆")+'</button>';
+    const del = opts.custom ? '<button type="button" class="card-del" data-del="'+esc(fid)+'" aria-label="Delete '+esc(l.name)+'">Delete</button>' : "";
+    return '<div class="card" data-cat="'+l.cat+'" data-name="'+esc(l.name)+'" data-fav-id="'+esc(fid)+'" data-text="'+esc((l.name+' '+l.desc+' '+(CAT_LABEL[l.cat]||l.cat)+' '+host(l.url)).toLowerCase())+'">'
+      + '<a class="card-link" href="'+l.url+'" target="_blank" rel="noopener" title="Opens in a new tab — this page stays open behind it">'
+        + '<div class="ttl"><span class="name">'+l.name+'</span>'+(badge||arrowSVG)+'</div>'
+        + '<div class="desc">'+l.desc+'</div>'
+        + '<div class="host">'+host(l.url)+'</div>'
+      + '</a>'
+      + star + del
+      + '</div>';
   }
 
   /* ---------- Favorites: a star on every card, plus your own shortcuts. No login, this device only. ---------- */
-  const FAV_KEY = "lhl_general_design_preview_v1";
+  const FAV_KEY = "ll_fav_general_v1";
   const MY_KEY = "ll_mylinks_general_v1";    // legacy key, read once to migrate
   const QUICK_KEY = "ll_quick_general_v1";   // legacy key, read once to migrate
   const MY_MAX = 50, MY_NAME_MAX = 80, MY_NOTE_MAX = 120;
@@ -637,14 +618,8 @@
      they had not removed, so this upgrade does not wipe out what they already set up. */
   function initFav(){
     const fresh = readJSON(FAV_KEY);
-    if(fresh && Array.isArray(fresh.saved) && Array.isArray(fresh.custom)){
-      const formerDefaults=['Canvas','My Schedule + Student Portal','My Grades','Tuition','HornsLink - All 1,000+ Orgs','Room Reservations','Contact UT'].map(n=>'quicklinks|'+n);
-      const untouched=fresh.custom.length===0&&fresh.saved.length===formerDefaults.length&&formerDefaults.every(id=>fresh.saved.includes(id));
-      fresh.saved=fresh.saved.map(id=>id==='quicklinks|My Schedule + Student Portal'?'quicklinks|My Schedule':id);
-      if(untouched)fresh.saved=QUICKLINKS.filter(l=>l.name==='Canvas'||l.name==='My Schedule').map(favId);
-      favState=fresh;persistFav();return;
-    }
-    const saved = QUICKLINKS.filter(l=>l.name==='Canvas'||l.name==='My Schedule').map(favId);
+    if(fresh && Array.isArray(fresh.saved) && Array.isArray(fresh.custom)){ favState = fresh; return; }
+    const saved = QUICKLINKS.map(favId);
     const custom = [];
     const oldMy = readJSON(MY_KEY);
     if(Array.isArray(oldMy)){
@@ -695,7 +670,7 @@
       if(!fid || !btn) return;
       const on = favState.saved.indexOf(fid) >= 0;
       btn.setAttribute("aria-pressed", on ? "true" : "false");
-      btn.textContent = on ? "★︎" : "☆︎";
+      btn.textContent = on ? "★" : "☆";
     });
   }
 
@@ -781,7 +756,8 @@
       if(!items.length) return;
       const sec = document.createElement("div");
       sec.className="section"; sec.dataset.cat=c.id; sec.id="cat-"+c.id;
-      sec.innerHTML = '<div class="section-head"><h2>'+c.label+'</h2></div>'
+      sec.innerHTML = '<div class="section-head"><span class="eyebrow">'+String(i+1).padStart(2,"0")+' / '+CATS.length+'</span>'
+        + '<h2>'+c.label+'</h2></div>'
         + '<div class="grid">'+items.map(function(l){ return cardHTML(l); }).join("")+'</div>';
       sectionsEl.appendChild(sec);
     });
@@ -794,7 +770,7 @@
   const chipsEl = document.getElementById("chips");
   let activeCat = "all";
   function buildChips(){
-    const list = [{id:"all",label:"All"}, {id:"saved",label:"★︎ Favorites"}];
+    const list = [{id:"all",label:"All"}, {id:"saved",label:"★ Favorites"}];
     CATS.forEach(c=>list.push(c));
     if(!list.some(c=>c.id===activeCat)) activeCat = "all";
     chipsEl.innerHTML = "";
@@ -881,7 +857,9 @@
 
   // Search + filter
   const q = document.getElementById("q");
+  const countEl = document.getElementById("count");
   const emptyEl = document.getElementById("empty");
+  const total = () => LINKS.length + favState.custom.length;
 
   function applyFilter(){
     const term = q.value.trim().toLowerCase();
@@ -907,6 +885,7 @@
       if(!hasCards){ sec.style.display = (catMatch && !term) ? "" : "none"; }
       else { sec.style.display = (catMatch && secVisible>0) ? "" : "none"; }
     });
+    countEl.textContent = (term||activeCat!=="all") ? (shown+" shown") : (total()+" links");
     emptyEl.style.display = (shown===0) ? "block" : "none";
     document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");
   }
@@ -956,7 +935,7 @@
     if(document.getElementById("f-company").value){ formMsg.className="form-msg ok"; formMsg.textContent="Thanks!"; setTimeout(closeForm,1000); return; } // honeypot: bot caught
     if(!title || !url){ formMsg.className="form-msg err"; formMsg.textContent="Please add at least a title and a URL."; return; }
 
-    if(!FORM_ENDPOINT){ formMsg.className="form-msg ok"; formMsg.textContent="Preview: your suggestion has not been sent."; return;
+    if(!FORM_ENDPOINT){
       // Fallback: open a pre-filled email if no backend is wired yet
       const body = encodeURIComponent("Title: "+title+"\nURL: "+url+"\nSection: "+section+"\nBehind login: "+login+"\nFrom: "+email);
       window.location.href = "mailto:"+FALLBACK_EMAIL+"?subject="+encodeURIComponent("Longhorn Links - add a link")+"&body="+body;
@@ -972,9 +951,6 @@
       formMsg.className="form-msg err"; formMsg.textContent="Couldn't send just now - try again, or email "+FALLBACK_EMAIL+".";
     }
   });
-
 </script>
-
-
 </body>
 </html>
