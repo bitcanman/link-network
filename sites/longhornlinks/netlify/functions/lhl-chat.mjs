@@ -28,5 +28,5 @@ export default async function handler(req){
   if(!response.ok){console.error('Longhorn Links provider status',response.status);if(data.debug==='lhl2026temp')return json({_debugStatus:response.status,_debugModel:process.env.OPENAI_MODEL||'gpt-5.6-luna',_debugBody:await response.text()},200);return json({error:response.status===429?'The chat is at its usage limit. Please try again shortly.':response.status===401||response.status===403?'The server key or its API permissions need checking.':'The answer service could not complete this request. Please try again.'},response.status===429?429:502);}
   const body=await response.json();if(body.status==='incomplete')throw Error('Incomplete answer');const text=(body.output||[]).flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');
   return json({...validateAnswer(JSON.parse(text),eligible),audience});
- }catch(e){console.error('Longhorn Links answer failed',e.name);return json({error:'The answer could not be completed. Please try again.'},502);}
+ }catch(e){console.error('Longhorn Links answer failed',e.name);if(data.debug==='lhl2026temp')return json({_catchName:e.name,_catchMessage:String(e.message||e).slice(0,2000)},200);return json({error:'The answer could not be completed. Please try again.'},502);}
 }
