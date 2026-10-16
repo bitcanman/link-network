@@ -22,6 +22,13 @@
 # You can move them here under [[redirects]] / [[headers]] later if you like,
 # but do not define the same rule in both places.
 
+# Netlify Functions for the /ask/ chatbot (relative to this base directory).
+# The function declares its own clean URL (/api/lhl-chat) via `export const
+# config` inside lhl-chat.mjs, so no [[redirects]] entry is needed for it.
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
 # Deploy check: 2026-09-15 — the /panel commit (b167758) pushed to GitHub but
 # Netlify never built it; last published deploy was the previous commit. The
 # ignore rule above is not the cause (it exits non-zero for that commit, i.e.
