@@ -4,6 +4,10 @@
 /registration/ /registration.html 200
 /mechanical-engineering /mechanical-engineering.html 200
 /mechanical-engineering/ /mechanical-engineering.html 200
+/MSTC /mstc.html 200
+/MSTC/ /mstc.html 200
+/mstc /mstc.html 200
+/mstc/ /mstc.html 200
 /undergrad / 301
 /undergrad/ / 301
 /undergrad.html / 301
