@@ -55,7 +55,6 @@ export default async function handler(req){
   const response=await call(baseInput);
   if(!response.ok){console.error('Longhorn Links provider status',response.status);return json({error:response.status===429?'The chat is at its usage limit. Please try again shortly.':response.status===401||response.status===403?'The server key or its API permissions need checking.':'The answer service could not complete this request. Please try again.'},response.status===429?429:502);}
   let raw=JSON.parse(await textOf(response));
-  if(data.debug==='lhl2026phase1')return json({_phase1:raw},200);
   if(raw&&raw.needsWebSearch){
    try{
     const searchInput=[...baseInput,{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough. Use web_search (utexas.edu only) to find the specific official page for this question, then answer again in the same schema, citing any web result as [[w1]] with a matching webSources entry.'}];
