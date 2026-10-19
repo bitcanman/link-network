@@ -31,7 +31,9 @@ export default async function handler(req){
   };
   const results=[];
   for(const model of ['gpt-4.1-mini','gpt-4o']){results.push(await tryModel(model));}
-  return json({_models:models,_wsTests:results},200);
+  const combo=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(20000),body:JSON.stringify({model:'gpt-4o',store:false,max_output_tokens:800,tools:[{type:'web_search',filters:{allowed_domains:['utexas.edu']}}],instructions:'Answer only in the structured JSON schema given. Use web_search if useful.',input:[{role:'user',content:'What is the exact URL students use to log into the McCombs School of Business room reservation portal?'}],text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema:{type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'string'}}},required:['heading','paragraphs','followUps'],additionalProperties:false}}}})});
+  const comboBody=await combo.text();
+  return json({_models:models,_wsTests:results,_comboStatus:combo.status,_comboBody:comboBody.slice(0,3000)},200);
  }
  try{
   const response=await fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(24000),body:JSON.stringify({model:process.env.OPENAI_MODEL||'gpt-4o',store:false,max_output_tokens:3500,instructions:rules+'\nToday: '+new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date())+'\nEffective audience: '+audience,input:[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...history,{role:'user',content:question}],text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
