@@ -13,12 +13,14 @@ export function scrubQuestion(text){
  return out;
 }
 // Awaited on purpose: Netlify freezes the function once the handler returns, so a
-// detached fetch here would drop rows at random. 1.5s cap, and any failure is swallowed
-// so the sheet can never take the chat down with it.
+// detached fetch here would drop rows at random.
+// The cap is 6s because a measured round trip to Apps Script is 2.0-2.4s warm and
+// more when cold. An earlier 1.5s cap sat below that floor and silently dropped most
+// rows. Any failure is still swallowed so the sheet cannot take the chat down.
 async function logAsk(fields){
  if(!process.env.ASK_LOG_URL)return;
  try{
-  await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fields),signal:AbortSignal.timeout(1500)});
+  await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fields),signal:AbortSignal.timeout(6000)});
  }catch(e){console.error('Longhorn Links ask log failed',e.name);}
 }
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(undergrad\w*|freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}

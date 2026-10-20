@@ -12,7 +12,7 @@ export default async function handler(req){
  const note=typeof data.note==='string'?data.note.trim().slice(0,300):'';
  if(!process.env.ASK_LOG_URL)return json({ok:true,logged:false});
  try{
-  await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({type:'feedback',id,satisfied:rating==='up'?'yes':'no',note}),signal:AbortSignal.timeout(2500)});
+  await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({type:'feedback',id,satisfied:rating==='up'?'yes':'no',note}),signal:AbortSignal.timeout(9000)});
  }catch(e){console.error('Longhorn Links feedback log failed',e.name);return json({ok:true,logged:false});}
  return json({ok:true,logged:true});
 }
