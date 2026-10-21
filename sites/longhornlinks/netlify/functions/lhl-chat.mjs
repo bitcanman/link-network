@@ -104,11 +104,20 @@ export function validateAnswer(answer,eligible){
   return text;
  }).filter(p=>p!==null&&p.trim());
  if(!paragraphs.length)throw Error('No usable content after sanitizing.');
- // primaryId is a reliability backstop: models forget inline [[r123]] tokens more often than they skip a required field.
+ // primaryId is a reliability backstop: models forget inline [[r123]] tokens more often than they skip a
+ // required field. But a multi-turn conversation can leave a stale id in that field with no connection to
+ // what this specific answer actually says (observed live: primaryId pointed at a previous turn's resource,
+ // or once at an entirely unrelated one, while the text discussed something else) - only trust it when the
+ // resource's own name is actually mentioned somewhere in this answer, not just schema-valid.
  const primaryId=typeof answer.primaryId==='string'?answer.primaryId:'';
  if(primaryId&&!used.some(u=>u.id===primaryId)){
   const isWeb=primaryId[0]==='w';
-  if(isWeb?webMap.has(primaryId):map.has(primaryId))used.unshift({id:primaryId,isWeb});
+  const resource=isWeb?webMap.get(primaryId):map.get(primaryId);
+  if(resource){
+   const allText=(answer.heading+' '+paragraphs.join(' ')).toLowerCase();
+   const nameWords=resource.name.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>3);
+   if(nameWords.some(w=>allText.includes(w)))used.unshift({id:primaryId,isWeb});
+  }
  }
  const retrievedAt=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
  const sources=used.map(u=>{
