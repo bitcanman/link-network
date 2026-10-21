@@ -34,7 +34,11 @@ const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','m
 // "how to get my company funded" scored zero against every entry (no catalog text
 // literally contains "funded" or "company") and silently fell back to an arbitrary
 // slice of the catalog - a real bug, not a hypothetical one.
-const WORD_SYNONYMS={company:'startup',companies:'startup',business:'startup',businesses:'startup',venture:'startup',ventures:'startup',firm:'startup',firms:'startup'};
+// "reserve"/"reservation" and "book"/"booking" are the same ask for room-booking
+// questions but don't share a stem ("reserve" doesn't end in a stripped suffix),
+// so without this a phrasing like "reserve a room" scored differently than "book a
+// room" even though they mean the same thing to a student.
+const WORD_SYNONYMS={company:'startup',companies:'startup',business:'startup',businesses:'startup',venture:'startup',ventures:'startup',firm:'startup',firms:'startup',reserve:'book',reservation:'book'};
 function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&w.endsWith('es'))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
 function canon(w){const s=stem(w);return WORD_SYNONYMS[w]||WORD_SYNONYMS[s]||s;}
 function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
@@ -89,6 +93,13 @@ export function validateAnswer(answer,eligible){
  const paragraphs=answer.paragraphs.slice(0,8).map(p=>{
   if(typeof p!=='string')return null;
   let text=p.length>2200?p.slice(0,2200):p;
+  // Markdown links are never valid output (rule 14), but the model occasionally writes
+  // one anyway, and output can also get cut off mid-link by the token limit - leaving a
+  // dangling "[lib.utexas.edu](" fragment with no closing paren. Collapse both the
+  // complete and truncated forms down to their bracket text before the raw-URL strip
+  // below, instead of leaving broken syntax visible to the student.
+  text=text.replace(/\[([^\]\n]{0,120})\]\([^)\n]{0,300}$/,'$1');
+  text=text.replace(/\[([^\]\n]{0,120})\]\(https?:\/\/[^)\s\n]{0,300}\)/g,'$1');
   text=text.replace(/https?:\/\/\S*/g,'').replace(/<[^>]+>/g,'');
   // The frontend displays this as plain text with only [[r123]] converted to links -
   // it has no Markdown renderer, so any ** or # the model writes would otherwise show
