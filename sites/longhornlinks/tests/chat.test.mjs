@@ -1,6 +1,9 @@
 import test,{beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {deflateSync} from 'node:zlib';
+import {readFileSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import path from 'node:path';
 import handler,{explicitAudience,allows,eligibleCatalog,validateAnswer,relevantCatalog,singleUnambiguousMatch,resolveProgramEvents,_clearAnswerCacheForTests} from '../netlify/functions/lhl-chat.mjs';
 import {catalog} from '../netlify/lib/catalog.mjs';
 import {pages,effectivePage} from '../netlify/lib/pages.mjs';
@@ -9,6 +12,19 @@ import {extractPdfText,parseEventsFromPdfText,mergeEvents,fetchPdfEvents} from '
 const request=(data,extra={})=>new Request('https://longhornlinks.com/api/lhl-chat',{method:'POST',headers:{'Content-Type':'application/json',Origin:'https://longhornlinks.com',...extra},body:JSON.stringify(data)});
 const entry=name=>catalog.find(l=>l.name===name);
 beforeEach(()=>_clearAnswerCacheForTests());
+// Extracts the real esc()/liveSourceMarkup() functions straight out of the shipped
+// ask/index.html inline script (rather than a hand-copied reimplementation that
+// could silently drift from what's actually rendered), so a test on the rendered
+// link is testing production code, not a guess at what it does.
+function liveSourceMarkupFromRealPage(resource){
+ const html=readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'..','ask','index.html'),'utf8');
+ const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+ const esc='const '+script.match(/esc=s=>.*?\[c\]\)\);/)[0];
+ const stubs='const icon=()=>"";const favorites=[];';
+ const markup=script.match(/function liveSourceMarkup\(r\)\{[\s\S]*?`\}/)[0];
+ const fn=new Function(esc+stubs+markup+';return liveSourceMarkup;')();
+ return fn(resource);
+}
 test('general audience excludes MBA and graduate restricted entries',()=>{assert(!allows(entry('MBA Cost & Scholarships'),'everyone'));assert(!allows(entry('TVL Investment Competition (TVLIC)'),'everyone'));assert(allows(entry('TVL Investment Competition (TVLIC)'),'mba'));assert(allows(entry('Forty Acres Founders'),'everyone'));});
 test('undergraduate-restricted entries stay visible to both first-year and undergraduate',()=>{const e=entry('Freed Family Pitch Competition');assert(allows(e,'first-year'));assert(allows(e,'undergraduate'));assert(!allows(e,'graduate'));});
 test('explicit undergraduate wording overrides MBA context and on-campus excludes Facebook',()=>{assert.equal(explicitAudience('Undergraduate funding for a friend'),'undergraduate');assert.equal(explicitAudience('I am a freshman, what funding exists?'),'first-year');assert(eligibleCatalog('on-campus housing','everyone').every(l=>!/(off.campus|facebook)/i.test(l.name)));});
@@ -42,3 +58,4 @@ test('switching the selected program between requests does not reuse a stale cac
 test('MBA Entrepreneurship page context boosts that program\'s own catalog resources for a relevant question, without needing a separate eligibility bucket',()=>{assert.equal(pages.mbae.eligibilityAudience,'mba','mbae is a page/retrieval distinction, not a separate catalog eligibility tier');const eligible=eligibleCatalog('What funding is available?',pages.mbae.eligibilityAudience);const withoutBoost=relevantCatalog('What funding is available?',eligible);const withBoost=relevantCatalog('What funding is available?',eligible,{boostSources:pages.mbae.catalogSources});const rankWithout=withoutBoost.findIndex(l=>l.id==='r86'),rankWith=withBoost.findIndex(l=>l.id==='r86');assert(rankWithout>=0,'Kendra Scott Women\'s Entrepreneurial Leadership Institute (MBA-sourced funding support) is retrievable even without page context');assert(rankWith>=0&&rankWith<rankWithout,'with MBA Entrepreneurship as the effective program, that same MBA-sourced resource ranks higher, not just equally present');});
 test('an explicit undergraduate request overrides the MBA Entrepreneurship page context, per the page/audience default-vs-override rule',()=>{assert.equal(explicitAudience('Where can I find undergraduate housing?'),'undergraduate');const eligible=eligibleCatalog('Where can I find undergraduate housing?','undergraduate');assert(!eligible.some(l=>l.source==='MBA'&&!l.audience),'an unrestricted-audience MBA-only-by-convention resource should not be forced onto an explicit undergraduate request just because mbae was selected');});
 test('each program with its own event feed has a catalog-citable LHL hub resource whose URL exactly matches its pages.mjs calendarUrl, so the model can cite a real, working link instead of a raw event URL',()=>{for(const key of Object.keys(pages)){const page=pages[key];if(!page.eventsKey)continue;const hubEntry=catalog.find(l=>l.url===page.calendarUrl);assert(hubEntry,`no catalog entry points at ${page.calendarUrl} for the "${key}" program - the model would have nothing safe to cite`);assert(allows(hubEntry,page.eligibilityAudience),`the hub resource for "${key}" must actually be eligible for its own eligibilityAudience`);}});
+test('Events & Entertainment resolves to the verified specific page, not the University Unions homepage, and the API response and rendered link both preserve that exact destination',()=>{const SPECIFIC_URL='https://universityunions.utexas.edu/get-involved/events-entertainment';const HOMEPAGE_URL='https://universityunions.utexas.edu/';const catalogEntry=entry('Campus Events + Entertainment');assert.equal(catalogEntry.url,SPECIFIC_URL,'the catalog record itself must carry the specific verified page, not the department homepage');const answer=validateAnswer({heading:'Campus events',paragraphs:['Check out student-run events and free movies via [[r26]].'],followUps:[]},catalog);const source=answer.sources.find(s=>s.id==='r26');assert.equal(source.url,SPECIFIC_URL,'the API response must preserve the catalog URL exactly, not substitute or truncate it');const rendered=liveSourceMarkupFromRealPage(source);assert(rendered.includes('href="'+SPECIFIC_URL+'"'),'the rendered clickable link must point at the exact same specific destination as the API response');assert(!rendered.includes('href="'+HOMEPAGE_URL+'"'),'must not silently fall back to the homepage anywhere in rendering');const wronglyTitled={id:'r26',name:'Campus Events + Entertainment',url:HOMEPAGE_URL,login:false};const wrongRendered=liveSourceMarkupFromRealPage(wronglyTitled);assert(!wrongRendered.includes('href="'+SPECIFIC_URL+'"'),'sanity check: a correctly titled link pointing at the homepage must NOT satisfy this test');});
