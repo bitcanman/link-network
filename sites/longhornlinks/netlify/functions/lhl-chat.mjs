@@ -1,5 +1,6 @@
 import {catalog} from '../lib/catalog.mjs';
 import {rules} from '../lib/rules.mjs';
+import {sources} from '../lib/sources.mjs';
 export const config={path:'/api/lhl-chat',rateLimit:{windowLimit:60,windowSize:60,aggregateBy:['ip','domain'],action:'rate_limit'}};
 const audiences=new Set(['everyone','mba','mstc','engineering','first-year','undergraduate','graduate']);
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
@@ -26,6 +27,41 @@ async function logAsk(fields){
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bundergrad\w*\b/.test(v))return 'undergraduate';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}
 export function allows(l,a){const audience=(l.audience||'').toLowerCase();if(/undergrad/.test(audience)&&/\bgraduate\b/.test(audience))return true;if(/undergrad/.test(audience))return a==='first-year'||a==='undergraduate';if(/graduate/.test(audience))return ['graduate','mba','mstc'].includes(a);if(audience)return true;if(l.source==='MBA'||/\bmba\b/i.test(l.name))return a==='mba';if(l.source==='MSTC'||/\bmstc\b/i.test(l.name))return a==='mstc';if(/mechanical/i.test(l.source||''))return a==='engineering';return true;}
 export function eligibleCatalog(question,audience){const on=/\bon[- ]campus\b/i.test(question);return catalog.filter(l=>allows(l,audience)&&!(on&&(l.scope==='off-campus'||/off[- ]campus|facebook/i.test(l.name))));}
+const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that']);
+function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
+// Sends a scored subset of the eligible catalog instead of the whole thing - cheaper
+// and keeps a specific alias hit (e.g. "mccombs room reservation") from getting lost
+// among 90+ generically-eligible entries for a broad audience.
+export function relevantCatalog(question,eligible,limit=20){
+ const words=questionWords(question);
+ const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
+ const scored=eligible.map(l=>{
+  let score=0;
+  const aliasHit=(l.aliases||[]).some(a=>qNorm.includes(' '+a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()+' '));
+  if(aliasHit)score+=50;
+  const nameLower=l.name.toLowerCase();
+  for(const w of words){
+   if(nameLower.includes(w))score+=3;
+   if((l.topics||[]).some(t=>t.toLowerCase().includes(w)))score+=2;
+   if((l.desc||'').toLowerCase().includes(w))score+=1;
+  }
+  return {l,score,aliasHit};
+ });
+ scored.sort((a,b)=>b.score-a.score);
+ const top=scored.filter(s=>s.score>0).slice(0,limit).map(s=>s.l);
+ for(const s of scored)if(s.aliasHit&&!top.includes(s.l))top.push(s.l);
+ return top.length?top:eligible.slice(0,limit);
+}
+// Narrow on purpose: only fires when the whole question (ignoring punctuation) is
+// one of a resource's own aliases and no other resource shares it - a real student
+// sentence almost never matches this exactly, so it can't misfire on anything with
+// actual interpretation to do. Lets a handful of pure administrative lookups (EID
+// reset, DUO setup) skip the model call entirely.
+export function singleUnambiguousMatch(question,eligible){
+ const qNorm=question.toLowerCase().trim().replace(/[^a-z0-9\s]/g,'');
+ const hits=eligible.filter(l=>(l.aliases||[]).some(a=>a.toLowerCase().replace(/[^a-z0-9\s]/g,'')===qNorm));
+ return hits.length===1?hits[0]:null;
+}
 function validWebHost(url){let host;try{host=new URL(url).hostname;}catch{return false;}return host==='utexas.edu'||host.endsWith('.utexas.edu');}
 export function validateAnswer(answer,eligible){
  if(!answer||typeof answer.heading!=='string'||!Array.isArray(answer.paragraphs)||!answer.paragraphs.length||!Array.isArray(answer.followUps))throw Error('Invalid answer');
@@ -64,6 +100,15 @@ export function validateAnswer(answer,eligible){
  });
  return {heading:answer.heading.slice(0,140),paragraphs,followUps:answer.followUps.filter(x=>typeof x==='string').slice(0,3).map(x=>x.slice(0,120)),sources,stripped};
 }
+// Best-effort, in-memory only: a Map inside this module's scope. Helps while a
+// given Netlify Function container stays warm; resets on cold start and is not
+// shared across concurrent instances. Never keyed on or storing anything personal -
+// only no-history, non-web-search public answers, keyed by question+audience.
+const answerCache=new Map();
+export function _clearAnswerCacheForTests(){answerCache.clear();}
+const CACHE_TTL_MS=10*60*1000;
+function cacheGet(key){const hit=answerCache.get(key);if(!hit)return null;if(Date.now()>hit.expiresAt){answerCache.delete(key);return null;}return hit.value;}
+function cacheSet(key,value){answerCache.set(key,{value,expiresAt:Date.now()+CACHE_TTL_MS});}
 export default async function handler(req){
  if(req.method!=='POST')return json({error:'Use POST.'},405);
  const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return json({error:'Origin not allowed.'},403);
@@ -72,21 +117,37 @@ export default async function handler(req){
  let data;try{const raw=await req.text();if(new TextEncoder().encode(raw).length>16000)return json({error:'Request too large.'},413);data=JSON.parse(raw);}catch{return json({error:'Invalid JSON.'},400);}
  const question=typeof data.question==='string'?data.question.trim():'';
  if(!question||question.length>600||!audiences.has(data.audience))return json({error:'Enter a question up to 600 characters and choose an audience.'},400);
- if(!process.env.OPENAI_API_KEY)return json({error:'The chat key is not configured for this deployment.'},503);
  const history=Array.isArray(data.history)?data.history.slice(-8).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').map(m=>({role:m.role,content:m.content.slice(0,1200)})):[];
  const audience=explicitAudience(question)||data.audience;
  const eligible=eligibleCatalog(question,audience);
- const resourceData=eligible.map(l=>({id:l.id,name:l.name,description:l.desc,audience:l.audience||'Not verified; do not infer eligibility',collection:l.source,topics:l.topics,excerpt:l.contentExcerpt,verifiedAt:l.verifiedAt,login:l.login}));
+ const id=crypto.randomUUID().slice(0,8);
+ const cacheKey=history.length===0?audience+'|'+question.toLowerCase().trim():null;
+ if(cacheKey){const cached=cacheGet(cacheKey);if(cached)return json({...cached,audience,id});}
+ // Pure administrative lookup with exactly one unambiguous resource - skip the model call
+ // (and the OpenAI key requirement entirely - this path never needs either).
+ const direct=history.length===0?singleUnambiguousMatch(question,eligible):null;
+ if(direct){
+  const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:'1',sources:direct.name,webSearch:'false',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000'});
+  if(cacheKey)cacheSet(cacheKey,answer);
+  return json({...answer,audience,id});
+ }
+ if(!process.env.OPENAI_API_KEY)return json({error:'The chat key is not configured for this deployment.'},503);
+ const relevant=relevantCatalog(question,eligible);
+ const resourceData=relevant.map(l=>({id:l.id,name:l.name,description:l.desc,purpose:l.purpose,aliases:l.aliases,audience:l.audience||'Not verified; do not infer eligibility',collection:l.source,topics:l.topics,official:l.official,excerpt:l.contentExcerpt,verifiedAt:l.verifiedAt,login:l.login}));
  const schema={type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'string'}},needsWebSearch:{type:'boolean'},webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url'],additionalProperties:false}},primaryId:{type:'string'}},required:['heading','paragraphs','followUps','needsWebSearch','webSources','primaryId'],additionalProperties:false};
- const instructions=rules+'\nToday: '+new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date())+'\nEffective audience: '+audience;
+ const sourceMapBlock=Object.entries(sources).map(([k,v])=>k+': '+v.url+' (verified '+v.verifiedAt+(v.note?'; '+v.note:'')+')').join('\n');
+ const instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date())+'\nEffective audience: '+audience;
  const baseInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...history,{role:'user',content:question}];
  const model=process.env.OPENAI_MODEL||'gpt-4o';
  const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:900,instructions,input,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
- const id=crypto.randomUUID().slice(0,8);
- let inTok=0,outTok=0,cachedTok=0,usedSearch=false;
+ let inTok=0,outTok=0,cachedTok=0,usedSearch=false,calls=0,latencyMs=0;
  const textOf=async response=>{const body=await response.json();if(body.usage){inTok+=body.usage.input_tokens||0;outTok+=body.usage.output_tokens||0;cachedTok+=body.usage.input_tokens_details?.cached_tokens||0;}if(body.status==='incomplete')throw Error('Incomplete answer');return (body.output||[]).flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');};
  try{
+  const t0=Date.now();
+  calls++;
   const response=await call(baseInput);
+  latencyMs+=Date.now()-t0;
   if(!response.ok){console.error('Longhorn Links provider status',response.status);return json({error:response.status===429?'The chat is at its usage limit. Please try again shortly.':response.status===401||response.status===403?'The server key or its API permissions need checking.':'The answer service could not complete this request. Please try again.'},response.status===429?429:502);}
   let raw=JSON.parse(await textOf(response));
   if(raw&&raw.needsWebSearch){
@@ -94,7 +155,10 @@ export default async function handler(req){
     // No catalog message here - the model already saw the full catalog in call one,
     // and resending it just to ask it to search instead costs tokens for nothing.
     const searchInput=[...history,{role:'user',content:question},{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough. Use web_search (utexas.edu only) to find the specific official page for this question, then answer again in the same schema, citing any web result as [[w1]] with a matching webSources entry.'}];
+    const t1=Date.now();
+    calls++;
     const searchResponse=await call(searchInput,[{type:'web_search',filters:{allowed_domains:['utexas.edu']},search_context_size:'low'}]);
+    latencyMs+=Date.now()-t1;
     if(searchResponse.ok){usedSearch=true;raw=JSON.parse(await textOf(searchResponse));}
     else console.error('Longhorn Links web search status',searchResponse.status);
    }catch(e){console.error('Longhorn Links web search failed',e.name);}
@@ -111,8 +175,12 @@ export default async function handler(req){
    sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),
    webSearch:String(usedSearch),
    stripped:String(answer.stripped),
+   calls:String(calls),
+   model,
+   latencyMs:String(latencyMs),
    cost:((inTok*pricePerMinput+outTok*pricePerMoutput)/1e6).toFixed(5)
   });
+  if(cacheKey&&!usedSearch)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }catch(e){console.error('Longhorn Links answer failed',e.name);return json({error:'The answer could not be completed. Please try again.'},502);}
 }
