@@ -124,7 +124,15 @@ export function validateAnswer(answer,eligible){
   if(u.isWeb){const w=webMap.get(u.id);return {id:u.id,name:w.name,url:w.url,desc:'',login:false,kind:'web',retrievedAt};}
   const l=map.get(u.id);return {id:u.id,name:l.name,url:l.url,desc:l.desc,login:!!l.login};
  });
- return {heading:answer.heading.slice(0,140),paragraphs,followUps:answer.followUps.filter(x=>typeof x==='string').slice(0,3).map(x=>x.slice(0,120)),sources,stripped};
+ // Each follow-up is a short label (what the button shows) plus a fuller message (what
+ // actually gets submitted) - keeps buttons scannable while the request stays unambiguous.
+ // A plain string is still accepted (label===message) for callers/tests that predate this.
+ const followUps=answer.followUps.map(f=>{
+  if(typeof f==='string')return f.trim()?{label:f.slice(0,60),message:f.slice(0,200)}:null;
+  if(!f||typeof f.label!=='string'||typeof f.message!=='string'||!f.label.trim()||!f.message.trim())return null;
+  return {label:f.label.slice(0,60),message:f.message.slice(0,200)};
+ }).filter(Boolean).slice(0,3);
+ return {heading:answer.heading.slice(0,140),paragraphs,followUps,sources,stripped};
 }
 // Best-effort, in-memory only: a Map inside this module's scope. Helps while a
 // given Netlify Function container stays warm; resets on cold start and is not
@@ -161,7 +169,7 @@ export default async function handler(req){
  if(!process.env.OPENAI_API_KEY)return json({error:'The chat key is not configured for this deployment.'},503);
  const relevant=relevantCatalog(question,eligible);
  const resourceData=relevant.map(l=>({id:l.id,name:l.name,description:l.desc,purpose:l.purpose,aliases:l.aliases,audience:l.audience||'Not verified; do not infer eligibility',collection:l.source,topics:l.topics,official:l.official,excerpt:l.contentExcerpt,verifiedAt:l.verifiedAt,login:l.login}));
- const schema={type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'string'}},needsWebSearch:{type:'boolean'},webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url'],additionalProperties:false}},primaryId:{type:'string'}},required:['heading','paragraphs','followUps','needsWebSearch','webSources','primaryId'],additionalProperties:false};
+ const schema={type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'object',properties:{label:{type:'string'},message:{type:'string'}},required:['label','message'],additionalProperties:false}},needsWebSearch:{type:'boolean'},webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url'],additionalProperties:false}},primaryId:{type:'string'}},required:['heading','paragraphs','followUps','needsWebSearch','webSources','primaryId'],additionalProperties:false};
  const sourceMapBlock=Object.entries(sources).map(([k,v])=>k+': '+v.url+' (verified '+v.verifiedAt+(v.note?'; '+v.note:'')+')').join('\n');
  const instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date())+'\nEffective audience: '+audience;
  const baseInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...history,{role:'user',content:question}];
