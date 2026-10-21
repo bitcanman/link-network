@@ -28,22 +28,34 @@ export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' 
 export function allows(l,a){const audience=(l.audience||'').toLowerCase();if(/undergrad/.test(audience)&&/\bgraduate\b/.test(audience))return true;if(/undergrad/.test(audience))return a==='first-year'||a==='undergraduate';if(/graduate/.test(audience))return ['graduate','mba','mstc'].includes(a);if(audience)return true;if(l.source==='MBA'||/\bmba\b/i.test(l.name))return a==='mba';if(l.source==='MSTC'||/\bmstc\b/i.test(l.name))return a==='mstc';if(/mechanical/i.test(l.source||''))return a==='engineering';return true;}
 export function eligibleCatalog(question,audience){const on=/\bon[- ]campus\b/i.test(question);return catalog.filter(l=>allows(l,audience)&&!(on&&(l.scope==='off-campus'||/off[- ]campus|facebook/i.test(l.name))));}
 const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that']);
+// Bridges a handful of real wording gaps found by testing, not a general stemmer:
+// "funded"/"funding"/"funds" are the same ask, and "company"/"business"/"venture"
+// mean the same thing as "startup" in this catalog's topics. Without this,
+// "how to get my company funded" scored zero against every entry (no catalog text
+// literally contains "funded" or "company") and silently fell back to an arbitrary
+// slice of the catalog - a real bug, not a hypothetical one.
+const WORD_SYNONYMS={company:'startup',companies:'startup',business:'startup',businesses:'startup',venture:'startup',ventures:'startup',firm:'startup',firms:'startup'};
+function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&w.endsWith('es'))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
+function canon(w){const s=stem(w);return WORD_SYNONYMS[w]||WORD_SYNONYMS[s]||s;}
 function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
+function textWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1);}
 // Sends a scored subset of the eligible catalog instead of the whole thing - cheaper
 // and keeps a specific alias hit (e.g. "mccombs room reservation") from getting lost
 // among 90+ generically-eligible entries for a broad audience.
 export function relevantCatalog(question,eligible,limit=20){
- const words=questionWords(question);
+ const words=[...new Set(questionWords(question).map(canon))];
  const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
  const scored=eligible.map(l=>{
   let score=0;
   const aliasHit=(l.aliases||[]).some(a=>qNorm.includes(' '+a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()+' '));
   if(aliasHit)score+=50;
-  const nameLower=l.name.toLowerCase();
+  const nameCanon=new Set(textWords(l.name).map(canon));
+  const topicsCanon=new Set(textWords((l.topics||[]).join(' ')).map(canon));
+  const descCanon=new Set(textWords(l.desc).map(canon));
   for(const w of words){
-   if(nameLower.includes(w))score+=3;
-   if((l.topics||[]).some(t=>t.toLowerCase().includes(w)))score+=2;
-   if((l.desc||'').toLowerCase().includes(w))score+=1;
+   if(nameCanon.has(w))score+=3;
+   if(topicsCanon.has(w))score+=2;
+   if(descCanon.has(w))score+=1;
   }
   return {l,score,aliasHit};
  });
@@ -78,6 +90,11 @@ export function validateAnswer(answer,eligible){
   if(typeof p!=='string')return null;
   let text=p.length>2200?p.slice(0,2200):p;
   text=text.replace(/https?:\/\/\S*/g,'').replace(/<[^>]+>/g,'');
+  // The frontend displays this as plain text with only [[r123]] converted to links -
+  // it has no Markdown renderer, so any ** or # the model writes would otherwise show
+  // up as literal characters to the student. Unwrap emphasis/headers/list markers
+  // instead of leaving them in, since asking nicely in the rules alone didn't stop it.
+  text=text.replace(/\*\*(.+?)\*\*/g,'$1').replace(/\*(.+?)\*/g,'$1').replace(/(?<![a-z0-9])_(.+?)_(?![a-z0-9])/gi,'$1').replace(/^#+\s*/,'').replace(/^[-*+]\s+/,'').replace(/^\d+\.\s+/,'');
   text=text.replace(/\[\[([rw]\d+)\]\]/g,(full,id)=>{
    const isWeb=id[0]==='w';
    if(isWeb?!webMap.has(id):!map.has(id)){stripped++;return'';}
