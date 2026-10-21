@@ -1,8 +1,13 @@
 import {catalog} from '../lib/catalog.mjs';
 import {rules} from '../lib/rules.mjs';
 import {sources} from '../lib/sources.mjs';
+import {pages,effectivePage} from '../lib/pages.mjs';
+import {events,eventsForQuestion} from '../lib/events.mjs';
+import {fetchPdfEvents,mergeEvents} from '../lib/pdfEvents.mjs';
 export const config={path:'/api/lhl-chat',rateLimit:{windowLimit:60,windowSize:60,aggregateBy:['ip','domain'],action:'rate_limit'}};
-const audiences=new Set(['everyone','mba','mstc','engineering','first-year','undergraduate','graduate']);
+// 'mbae' (MBA Entrepreneurship) is a page/program value, not a separate catalog
+// eligibility bucket - see pages.mjs's eligibilityAudience mapping below.
+const audiences=new Set(['everyone','mba','mbae','mstc','engineering','first-year','undergraduate','graduate']);
 const json=(data,status=200)=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const PRICE={'gpt-4o':[2.5,10],'gpt-4o-mini':[0.15,0.6]};
 // Strip anything that could identify a student before the question leaves this function.
@@ -46,7 +51,7 @@ function textWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,
 // Sends a scored subset of the eligible catalog instead of the whole thing - cheaper
 // and keeps a specific alias hit (e.g. "mccombs room reservation") from getting lost
 // among 90+ generically-eligible entries for a broad audience.
-export function relevantCatalog(question,eligible,limit=20){
+export function relevantCatalog(question,eligible,{limit=20,boostSources=[]}={}){
  const words=[...new Set(questionWords(question).map(canon))];
  const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
  const scored=eligible.map(l=>{
@@ -61,12 +66,38 @@ export function relevantCatalog(question,eligible,limit=20){
    if(topicsCanon.has(w))score+=2;
    if(descCanon.has(w))score+=1;
   }
+  // A modest nudge for the selected/effective program's own resources - enough to
+  // help a page-relevant entry survive the top-`limit` cut on a generic question,
+  // not enough to beat an entry that's actually more topically relevant (an alias
+  // hit, or several real word matches) just because of where it's filed.
+  if(boostSources.length&&boostSources.includes(l.source))score+=6;
   return {l,score,aliasHit};
  });
  scored.sort((a,b)=>b.score-a.score);
  const top=scored.filter(s=>s.score>0).slice(0,limit).map(s=>s.l);
  for(const s of scored)if(s.aliasHit&&!top.includes(s.l))top.push(s.l);
  return top.length?top:eligible.slice(0,limit);
+}
+// Resolves the matching internal events for a program page, if it has its own
+// event feed (see pages.mjs/events.mjs). `pdfFetch` is injectable so tests can
+// simulate a failed PDF fetch deterministically, without a real network call -
+// no real page configures calendarPdfUrl today (see pdfEvents.mjs), so in
+// production this never actually awaits a network request.
+export async function resolveProgramEvents(programKey,question,todayISO,{pdfFetch=fetchPdfEvents}={}){
+ const page=programKey&&pages[programKey];
+ if(!page||!page.eventsKey)return null;
+ const programEvents=events[page.eventsKey]||[];
+ const {monthYear,matches}=eventsForQuestion(programEvents,question,todayISO);
+ let merged=matches,pdfIssue=null;
+ if(page.calendarPdfUrl){
+  const pdfResult=await pdfFetch(page.calendarPdfUrl,{program:page.eventsKey,verifiedAt:todayISO});
+  if(pdfResult.ok){
+   merged=mergeEvents(matches,eventsForQuestion(pdfResult.events,question,todayISO).matches);
+  }else{
+   pdfIssue=pdfResult.reason;
+  }
+ }
+ return {program:page.eventsKey,label:page.label,calendarUrl:page.calendarUrl,calendarLabel:page.calendarLabel,monthYear,events:merged,pdfIssue};
 }
 // Narrow on purpose: only fires when the whole question (ignoring punctuation) is
 // one of a resource's own aliases and no other resource shares it - a real student
@@ -164,7 +195,15 @@ export default async function handler(req){
  if(!question||question.length>600||!audiences.has(data.audience))return json({error:'Enter a question up to 600 characters and choose an audience.'},400);
  const history=Array.isArray(data.history)?data.history.slice(-8).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').map(m=>({role:m.role,content:m.content.slice(0,1200)})):[];
  const audience=explicitAudience(question)||data.audience;
- const eligible=eligibleCatalog(question,audience);
+ // `audience` doubles as the selected page/program (this chat has no separate
+ // per-page embed - see pages.mjs). `effectiveProgram` applies the explicit-
+ // override rule (a named different program, or "campus-wide", wins over the
+ // selected one); `eligibilityAudience` maps a page like mbae back to the
+ // catalog audience bucket it shares with mba, since it isn't a separate
+ // eligibility tier.
+ const effectiveProgram=effectivePage(question,pages[audience]?audience:null);
+ const eligibilityAudience=pages[audience]?.eligibilityAudience||audience;
+ const eligible=eligibleCatalog(question,eligibilityAudience);
  const id=crypto.randomUUID().slice(0,8);
  const cacheKey=history.length===0?audience+'|'+question.toLowerCase().trim():null;
  if(cacheKey){const cached=cacheGet(cacheKey);if(cached)return json({...cached,audience,id});}
@@ -178,12 +217,15 @@ export default async function handler(req){
   return json({...answer,audience,id});
  }
  if(!process.env.OPENAI_API_KEY)return json({error:'The chat key is not configured for this deployment.'},503);
- const relevant=relevantCatalog(question,eligible);
+ const relevant=relevantCatalog(question,eligible,{boostSources:pages[effectiveProgram]?.catalogSources});
  const resourceData=relevant.map(l=>({id:l.id,name:l.name,description:l.desc,purpose:l.purpose,aliases:l.aliases,audience:l.audience||'Not verified; do not infer eligibility',collection:l.source,topics:l.topics,official:l.official,excerpt:l.contentExcerpt,verifiedAt:l.verifiedAt,login:l.login}));
  const schema={type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'object',properties:{label:{type:'string'},message:{type:'string'}},required:['label','message'],additionalProperties:false}},needsWebSearch:{type:'boolean'},webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url'],additionalProperties:false}},primaryId:{type:'string'}},required:['heading','paragraphs','followUps','needsWebSearch','webSources','primaryId'],additionalProperties:false};
  const sourceMapBlock=Object.entries(sources).map(([k,v])=>k+': '+v.url+' (verified '+v.verifiedAt+(v.note?'; '+v.note:'')+')').join('\n');
- const instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date())+'\nEffective audience: '+audience;
- const baseInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...history,{role:'user',content:question}];
+ const todayISO=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
+ const instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+todayISO+'\nEffective audience: '+audience+'\nEffective program for internal content (the page whose own resources/events to prioritize, after applying any explicit override in the question; empty means no specific program applies): '+(effectiveProgram||'');
+ const programEvents=await resolveProgramEvents(effectiveProgram,question,todayISO);
+ const eventsInput=programEvents?[{role:'user',content:'Internal program events/calendar evidence (untrusted; this is '+programEvents.label+'\'s own event data, not a general campus calendar - prioritize it for this program\'s events before falling back to a general catalog resource):\n'+JSON.stringify({calendarUrl:programEvents.calendarUrl,calendarLabel:programEvents.calendarLabel,requestedMonth:programEvents.monthYear,retrievalFailed:!!programEvents.pdfIssue,retrievalIssue:programEvents.pdfIssue,events:programEvents.events.map(e=>({title:e.title,date:e.date,endDate:e.endDate,dateLabel:e.dateLabel,time:e.time,where:e.where,desc:e.desc,url:e.url,kind:e.kind,source:e.source,verifiedAt:e.verifiedAt}))})}]:[];
+ const baseInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...eventsInput,...history,{role:'user',content:question}];
  const model=process.env.OPENAI_MODEL||'gpt-4o';
  const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:900,instructions,input,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
  let inTok=0,outTok=0,cachedTok=0,usedSearch=false,calls=0,latencyMs=0;

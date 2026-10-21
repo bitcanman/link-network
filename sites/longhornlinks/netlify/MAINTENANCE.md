@@ -10,10 +10,13 @@ This file describes the real, current structure - not a plan.
 | Behavioral rules (tone, citation discipline, safety) | `netlify/lib/rules.mjs` |
 | Dated facts kept separate from behavior (academic calendar, registration access, payment deadlines, MSTC gap) | `netlify/lib/sources.mjs` |
 | The resource catalog (what the bot can cite) | `netlify/lib/catalog.mjs` |
+| Registry of specialized program pages (MSTC, MBA, MBA Entrepreneurship, Mechanical Engineering, ...) | `netlify/lib/pages.mjs` |
+| Internal event/calendar data reused from those pages' own structured data | `netlify/lib/events.mjs` |
+| Dependency-free PDF text extraction + event parsing (best-effort, no real page uses it yet) | `netlify/lib/pdfEvents.mjs` |
 | The function that runs the chatbot | `netlify/functions/lhl-chat.mjs` |
 | The feedback-logging function | `netlify/functions/lhl-feedback.mjs` |
 | Fast regression tests (mocked, no network) | `tests/chat.test.mjs` |
-| The 45-question eval set | `tests/eval/questions.mjs`, `tests/eval/fixtures.mjs`, `tests/eval/run-eval.mjs` |
+| The eval question set (59 and growing) | `tests/eval/questions.mjs`, `tests/eval/fixtures.mjs`, `tests/eval/run-eval.mjs` |
 
 ## Adding or changing a rule
 
@@ -42,8 +45,47 @@ and worth adding even if you don't expect this one to ever short-circuit), `alia
 `audience` (restricts who can see it - see `allows()` in `lhl-chat.mjs` for exactly
 how this is interpreted), `login` (true if it's behind UT EID).
 
-Not every one of the 163 entries has every field yet - only the ones this eval set
+Not every one of the 166 entries has every field yet - only the ones this eval set
 exercises were retrofitted. Add the fields for any new entry you expect to matter.
+
+## Specialized program pages: events, PDFs, and page-aware retrieval
+
+The chatbot's `audience` value doubles as the "selected page/program" signal -
+there's no separate per-page chat embed, so whichever program a student picks in
+the `/ask` selector is what `pages.mjs` and `events.mjs` key off of.
+
+- **`pages.mjs`** is the registry: one entry per specialized page, giving its real
+  route, the catalog `source` tag(s) that are "this program's own resources" (a
+  modest retrieval score boost, not a hard filter - see `relevantCatalog()`'s
+  `boostSources`), the catalog eligibility bucket it maps to (`eligibilityAudience`
+  - e.g. `mbae` maps to `mba`, since it's a page distinction, not a separate
+  eligibility tier), and, if the page has its own event feed, an `eventsKey` into
+  `events.mjs` and the real, discovered `calendarUrl` (never invent an anchor/URL
+  the page doesn't actually have). Adding a new specialized page later is one entry
+  here - no new code path, no new prompt.
+- **`events.mjs`** holds each program's actual event data, **copied from that
+  page's own structured data** (mstc.html's `DATA.events` array; the literal
+  arguments to mbae.html's `res(...)` calls inside its `events` topic) - never
+  scraped from rendered HTML. Each event keeps its program, verified date(s),
+  year, time/location, description, its own url (never shown as a raw link to the
+  student - see rules.mjs), where it came from (`source:'page'|'pdf'`, `sourceUrl`,
+  `pdfUrl`), and `verifiedAt`.
+- **There is currently no accessible calendar PDF anywhere in this data.**
+  mstc.html's own "calendar PDF" links are Canvas module-item URLs gated behind an
+  MSTC-student Canvas login this server does not have; fetching them unauthenticated
+  returns a login page, not a PDF. `pdfEvents.mjs`'s extractor/parser/merge pipeline
+  is real and unit-tested (synthetic PDF bytes in `tests/chat.test.mjs`), ready for
+  the day a page links a genuinely public calendar PDF (set `calendarPdfUrl` on that
+  page's `pages.mjs` entry to turn it on) - but nothing calls it in production today.
+- **Refreshing**: there is no build step, so nothing re-syncs this automatically.
+  When mstc.html's `DATA.events` (or mbae.html's `events` topic) changes, hand-update
+  the matching array in `events.mjs` and bump its event's `verifiedAt`. When a
+  program's own Longhorn Links hub page changes its event-section anchor, update
+  `calendarUrl` in `pages.mjs` *and* the matching catalog entry's `url` together (see
+  the consistency test in `chat.test.mjs` that checks every `eventsKey` page has a
+  catalog entry whose `url` matches its `calendarUrl` - this is what the model
+  actually cites instead of a raw per-event URL, since this repo's citation system
+  only resolves `[[r123]]`/`[[w1]]` tokens, not arbitrary URLs).
 
 ## Updating dates / source map
 

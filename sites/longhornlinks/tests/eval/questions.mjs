@@ -290,5 +290,37 @@ export const questions = [
   expectedResourceId:'r0',
   requiredBehavior:['Treat this as a correction of the semester, not a new topic.','Re-answer the same AI-classes request for Fall 2026 using the Course Schedule (r0) once that term is open, or say it is not yet posted if it is not.'],
   prohibitedBehavior:['Asking the student to restate the whole original request.','Inventing Fall 2026 course offerings if the schedule is not yet published for that term.'],
-  supportingSource:'catalog:r0',status:'verified',notes:'Regression test H. Needs --live/human review.'}
+  supportingSource:'catalog:r0',status:'verified',notes:'Regression test H. Needs --live/human review.'},
+ // PAGE-AWARE RETRIEVAL (internal events, PDFs, and program prioritization) -
+ // added for the MSTC-events-omission regression and its generalization to
+ // every specialized program page (MBA Entrepreneurship, Mechanical Engineering).
+ {id:54,category:'page-aware',question:'What events are happening in October?',audience:'mstc',
+  expectedResourceId:'r165',
+  requiredBehavior:['Use the internal MSTC events evidence (not a general campus calendar) - real fixture events exist in October 2026.','List matching events chronologically with verified dates, times, and locations.','Cite r165 (the MSTC Longhorn Links hub, matching the internal calendarUrl) rather than any raw per-event URL.'],
+  prohibitedBehavior:['Suggesting the student contact the MSTC Program Office before using this evidence.','Writing a raw event URL in the answer text.'],
+  supportingSource:'events.mjs:mstc, catalog:r165',status:'verified',notes:'Regression test 1 (has-matches case). Structural check only confirms r165 is retrievable - whether the model actually lists the events chronologically and skips raw URLs needs --live/human review.'},
+ {id:55,category:'page-aware',question:'What events are happening in November?',audience:'mstc',
+  requiredBehavior:['State plainly that the available MSTC calendar has no events for November - real fixture data only covers October 2026.','Must not claim the calendar failed to load (it did not), and must not speculate that November events "haven\'t been published yet".'],
+  prohibitedBehavior:['Inventing a November event.','Treating an empty result as a retrieval failure.'],
+  supportingSource:'events.mjs:mstc',status:'verified',notes:'Regression test 1 (no-matches case, distinguishing "none" from "failed"). No single expected resource id - behavioral only, needs --live/human review.'},
+ {id:56,category:'page-aware',question:'What MSTC events are happening in November?',audience:'everyone',
+  expectedResourceId:'r165',
+  requiredBehavior:['Resolve the effective program to MSTC from the explicit mention even though "Everyone" is selected.'],
+  prohibitedBehavior:['Treating this as a general, program-less events question.'],
+  supportingSource:'catalog:r165',status:'verified',notes:'Regression test 2.'},
+ {id:57,category:'page-aware',question:'What campus-wide events are happening in November?',audience:'mstc',
+  expectedResourceId:'r26',
+  requiredBehavior:['Drop the MSTC-specific context because the request is explicitly campus-wide, and use the general campus events resource instead.'],
+  prohibitedBehavior:['Searching or citing the internal MSTC events evidence for an explicitly campus-wide request.'],
+  supportingSource:'catalog:r26',status:'verified',notes:'Regression test 3.'},
+ {id:58,category:'page-aware',question:'What funding is available?',audience:'mbae',
+  candidateResourceIds:['r86','r152','r66'],
+  requiredBehavior:['Prioritize MBA Entrepreneurship-relevant funding resources given the selected page, while still weighing real relevance and verified eligibility - not recommending an MBA resource merely because it exists.'],
+  prohibitedBehavior:['Ignoring the MBA Entrepreneurship page context entirely and answering as if no program were selected.'],
+  supportingSource:'catalog:r86 (and others)',status:'verified',notes:'No single expected resource id - page-context weighting is a ranking/behavioral effect, needs --live/human review.'},
+ {id:59,category:'page-aware',question:'Where can I find undergraduate housing?',audience:'mbae',
+  expectedResourceId:'r141',candidateResourceIds:['r33','r142','r144'],
+  requiredBehavior:['The explicit undergraduate housing request overrides the selected MBA Entrepreneurship page context entirely.'],
+  prohibitedBehavior:['Returning MBA Entrepreneurship resources for a request that has nothing to do with that page.'],
+  supportingSource:'catalog:r141',status:'verified',notes:'Explicit-override test for the generalized page-aware behavior.'}
 ];
