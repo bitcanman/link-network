@@ -148,7 +148,12 @@ export function validateAnswer(answer,eligible){
  }
  const used=[];
  let stripped=0;
- const paragraphs=answer.paragraphs.slice(0,8).map(p=>{
+ // 40, not 8: each bullet/step is now its own entry (see rules.mjs), so a
+ // legitimately long, multi-section list (several requirement groups, several
+ // course bullets each) can genuinely need more entries than a handful of prose
+ // paragraphs ever did - 8 silently truncated a real multi-section answer
+ // mid-list during testing.
+ const paragraphs=answer.paragraphs.slice(0,40).map(p=>{
   if(typeof p!=='string')return null;
   let text=p.length>2200?p.slice(0,2200):p;
   // Markdown links are never valid output (rule 14), but the model occasionally writes
@@ -159,11 +164,15 @@ export function validateAnswer(answer,eligible){
   text=text.replace(/\[([^\]\n]{0,120})\]\([^)\n]{0,300}$/,'$1');
   text=text.replace(/\[([^\]\n]{0,120})\]\(https?:\/\/[^)\s\n]{0,300}\)/g,'$1');
   text=text.replace(/https?:\/\/\S*/g,'').replace(/<[^>]+>/g,'');
-  // The frontend displays this as plain text with only [[r123]] converted to links -
-  // it has no Markdown renderer, so any ** or # the model writes would otherwise show
-  // up as literal characters to the student. Unwrap emphasis/headers/list markers
-  // instead of leaving them in, since asking nicely in the rules alone didn't stop it.
-  text=text.replace(/\*\*(.+?)\*\*/g,'$1').replace(/\*(.+?)\*/g,'$1').replace(/(?<![a-z0-9])_(.+?)_(?![a-z0-9])/gi,'$1').replace(/^#+\s*/,'').replace(/^[-*+]\s+/,'').replace(/^\d+\.\s+/,'');
+  // The frontend renders a constrained markdown-like subset only: **bold**, a
+  // leading "- " as one bullet-list item, a leading "N. " as one numbered step -
+  // each is its own paragraphs[] entry (see rules.mjs). Everything else the model
+  // might write has no renderer and would show up as literal characters, so it's
+  // still unwrapped here: single-*italic*/_underscore_ emphasis, # headers, and a
+  // "*" or "+" bullet marker (only "-" is the recognized list syntax). The
+  // single-asterisk strip uses lookaround so it can't eat into **bold** - matching
+  // "*x*" but never the inner text of "**x**".
+  text=text.replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g,'$1').replace(/(?<![a-z0-9])_(.+?)_(?![a-z0-9])/gi,'$1').replace(/^#+\s*/,'').replace(/^[*+]\s+/,'');
   text=text.replace(/\[\[([rw]\d+)\]\]/g,(full,id)=>{
    const isWeb=id[0]==='w';
    if(isWeb?!webMap.has(id):!map.has(id)){stripped++;return'';}
@@ -268,7 +277,10 @@ export default async function handler(req){
   forcingTerms=forcingTerms.filter(w=>!eventWords.has(w));
  }
  const model=process.env.OPENAI_MODEL||'gpt-4o';
- const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:900,instructions,input,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
+ // 1400, not 900: a genuinely multi-section bulleted answer (several requirement
+ // groups, several course bullets each) is now made of many short array entries
+ // rather than a few prose paragraphs, and needs more room to not cut off mid-list.
+ const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
  let inTok=0,outTok=0,cachedTok=0,usedSearch=false,calls=0,latencyMs=0,fallbackReason='none';
  const textOf=async response=>{const body=await response.json();if(body.usage){inTok+=body.usage.input_tokens||0;outTok+=body.usage.output_tokens||0;cachedTok+=body.usage.input_tokens_details?.cached_tokens||0;}if(body.status==='incomplete')throw Error('Incomplete answer');return (body.output||[]).flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');};
  try{
