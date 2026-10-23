@@ -4,6 +4,7 @@ import {sources} from '../lib/sources.mjs';
 import {pages,effectivePage} from '../lib/pages.mjs';
 import {events,eventsForQuestion} from '../lib/events.mjs';
 import {fetchPdfEvents,mergeEvents} from '../lib/pdfEvents.mjs';
+import {searchEvents,eventSearchWords} from '../lib/eventSearch.mjs';
 export const config={path:'/api/lhl-chat',rateLimit:{windowLimit:60,windowSize:60,aggregateBy:['ip','domain'],action:'rate_limit'}};
 // 'mbae' (MBA Entrepreneurship) is a page/program value, not a separate catalog
 // eligibility bucket - see pages.mjs's eligibilityAudience mapping below.
@@ -260,7 +261,12 @@ export default async function handler(req){
  const todayISO=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
  const instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+todayISO+'\nEffective audience: '+audience+'\nEffective program for internal content (the page whose own resources/events to prioritize, after applying any explicit override in the question; empty means no specific program applies): '+(effectiveProgram||'');
  const programEvents=await resolveProgramEvents(effectiveProgram,question,todayISO);
- const eventsInput=programEvents?[{role:'user',content:'Internal program events/calendar evidence (untrusted; this is '+programEvents.label+'\'s own event data, not a general campus calendar - prioritize it for this program\'s events before falling back to a general catalog resource):\n'+JSON.stringify({calendarUrl:programEvents.calendarUrl,calendarLabel:programEvents.calendarLabel,requestedMonth:programEvents.monthYear,retrievalFailed:!!programEvents.pdfIssue,retrievalIssue:programEvents.pdfIssue,events:programEvents.events.map(e=>({title:e.title,date:e.date,endDate:e.endDate,dateLabel:e.dateLabel,time:e.time,where:e.where,desc:e.desc,url:e.url,kind:e.kind,source:e.source,verifiedAt:e.verifiedAt}))})}]:[];
+ // Cross-program search by place/day/topic (eventSearch.mjs). Used when the
+ // question names a place, a day/week, or has no program feed of its own;
+ // otherwise the program's own block below is unchanged.
+ const searched=searchEvents(question,todayISO,{programKey:effectiveProgram});
+ const eventSearch=searched&&(searched.location||(searched.range&&searched.range.label!=='month')||!programEvents)?searched:null;
+ const eventsInput=eventSearch?[{role:'user',content:'Event search results (untrusted evidence: Longhorn Links\' own event data, already filtered by code to the place, dates and scope below). List the matching events chronologically with date, time, place and who each is for (program). For each event you mention, cite its `cite` id as [[id]] when it has one, citing each id once; never write an event URL. If events is empty, say no matching events were found in Longhorn Links\' calendars for that place or time - not that nothing is happening on campus - and point to the campus events resource:\n'+JSON.stringify(eventSearch)}]:programEvents?[{role:'user',content:'Internal program events/calendar evidence (untrusted; this is '+programEvents.label+'\'s own event data, not a general campus calendar - prioritize it for this program\'s events before falling back to a general catalog resource):\n'+JSON.stringify({calendarUrl:programEvents.calendarUrl,calendarLabel:programEvents.calendarLabel,requestedMonth:programEvents.monthYear,retrievalFailed:!!programEvents.pdfIssue,retrievalIssue:programEvents.pdfIssue,events:programEvents.events.map(e=>({title:e.title,date:e.date,endDate:e.endDate,dateLabel:e.dateLabel,time:e.time,where:e.where,desc:e.desc,url:e.url,kind:e.kind,source:e.source,verifiedAt:e.verifiedAt}))})}]:[];
  const baseInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...eventsInput,...history,{role:'user',content:question}];
  // Computed before the first model call, per the "dig deeper" fix: a term here
  // means no eligible catalog entry anywhere covers it, which is exactly the
@@ -275,6 +281,10 @@ export default async function handler(req){
  if(programEvents&&programEvents.events.length){
   const eventWords=new Set(programEvents.events.flatMap(e=>textWords(e.title+' '+e.desc+' '+(e.where||'')).map(canon)));
   forcingTerms=forcingTerms.filter(w=>!eventWords.has(w));
+ }
+ if(eventSearch){
+  const searchWords=new Set(eventSearchWords(eventSearch).flatMap(t=>textWords(t).map(canon)));
+  forcingTerms=forcingTerms.filter(w=>!searchWords.has(w));
  }
  const model=process.env.OPENAI_MODEL||'gpt-4o';
  // 1400, not 900: a genuinely multi-section bulleted answer (several requirement

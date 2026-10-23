@@ -23,6 +23,7 @@
 // this came from), pdfUrl (set only for source:'pdf'), verifiedAt (last time this
 // file was hand-synced against the live page - see MAINTENANCE.md for the
 // refresh procedure, since there is no build step to automate it).
+import {inboxEvents} from './inboxEvents.mjs';
 const MSTC_SOURCE_URL = 'https://longhornlinks.com/mstc#opportunities';
 const MBAE_SOURCE_URL = 'https://longhornlinks.com/mbae';
 const VERIFIED_AT = '2026-10-21';
@@ -45,6 +46,48 @@ export const events = {
   {id:'mbae-4', program:'mbae', title:'Texas Venture Labs Investment Competition', date:'2026-12-11', endDate:null, dateLabel:'Dec 11, 2026', year:2026, time:'', where:'', desc:'Graduate student venture pitches and investor feedback.', url:'https://www.mccombs.utexas.edu/centers-initiatives/brumley-institute/tvl-investment-competition/', kind:'Event', cost:'', source:'page', sourceUrl:MBAE_SOURCE_URL, pdfUrl:null, verifiedAt:VERIFIED_AT}
  ]
 };
+
+// Same event from two sources (a page and an email, or two newsletters) =
+// same date + same first 16 letters of the title. Matches the Apps Script's
+// own dedupe key. Earlier lists win, so hand-synced page data beats email data.
+function eventKey(e){
+ return e.date+'|'+String(e.title).toLowerCase().replace(/^(the|join us for( the)?|register for( the)?)\s+/,'').replace(/[^a-z0-9]/g,'').slice(0,16);
+}
+export function mergeProgramEvents(...lists){
+ const seen=new Set(),out=[];
+ for(const e of lists.flat()){const k=eventKey(e);if(seen.has(k))continue;seen.add(k);out.push(e);}
+ return out;
+}
+// Program pools. mbae is a subset of mba: an MBA events search sees mba + mbae
+// events; an MBA Entrepreneurship search sees mbae events only.
+// general and engineering have no program page of their own; they are reached
+// through the cross-program event search (eventSearch.mjs), e.g. by location.
+export function buildEventPools(staticEvents,inbox){
+ const tagged=p=>inbox.filter(e=>e.program===p);
+ const mbae=mergeProgramEvents(staticEvents.mbae,tagged('mbae'));
+ return {
+  mstc:mergeProgramEvents(staticEvents.mstc,tagged('mstc')),
+  mbae,
+  mba:mergeProgramEvents(mbae,tagged('mba')),
+  general:tagged('general'),
+  engineering:tagged('engineering')
+ };
+}
+// inboxEvents.mjs is auto-published from email with no human review and there
+// is no build step to test it, so it is validated here at load time. Anything
+// malformed is dropped rather than shown. url is always null: email links are
+// mostly tracking redirects, and the model cites the program hub instead.
+const ISO_DATE=/^\d{4}-\d{2}-\d{2}$/;
+const str=(v,max)=>typeof v==='string'?v.slice(0,max):'';
+export function sanitizeInboxEvents(list){
+ return (Array.isArray(list)?list:[]).filter(e=>e&&['mba','mbae','mstc','engineering','general'].includes(e.program)&&typeof e.title==='string'&&e.title.trim()&&ISO_DATE.test(e.date)).map(e=>({
+  id:str(e.id,40),program:e.program,title:str(e.title,200),date:e.date,
+  endDate:ISO_DATE.test(e.endDate||'')?e.endDate:null,dateLabel:str(e.dateLabel,80),year:Number(e.date.slice(0,4)),
+  time:str(e.time,80),where:str(e.where,160),desc:str(e.desc,500),url:null,kind:str(e.kind,40)||'Event',cost:'',
+  source:'inbox',sourceUrl:str(e.sourceUrl,200),pdfUrl:null,verifiedAt:ISO_DATE.test(e.verifiedAt||'')?e.verifiedAt:''
+ }));
+}
+Object.assign(events,buildEventPools(events,sanitizeInboxEvents(inboxEvents)));
 
 const MONTH_NAMES=['january','february','march','april','may','june','july','august','september','october','november','december'];
 // No month named ("what's coming up") returns null - callers should then show

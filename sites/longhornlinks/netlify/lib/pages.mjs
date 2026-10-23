@@ -27,7 +27,8 @@ export const pages = {
   eligibilityAudience: 'mba',
   catalogSources: ['MBA'],
   url: 'https://longhornlinks.com/mba',
-  eventsKey: null,
+  // This pool includes every MBA Entrepreneurship event too (see events.mjs).
+  eventsKey: 'mba',
   calendarUrl: 'https://longhornlinks.com/mba',
   calendarLabel: 'the MBA page'
  },
