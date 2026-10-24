@@ -3,36 +3,6 @@
 // overwrites this file. Merged into the program pools in events.mjs.
 export const inboxEvents = [
  {
-  "id": "inbox-e11a324e39",
-  "program": "mba",
-  "title": "Business of Sport Summit (BOSS)",
-  "date": "2026-10-23",
-  "endDate": null,
-  "dateLabel": "Friday, October 23, 2026",
-  "time": "",
-  "where": "Rowling Hall",
-  "desc": "The 2026 Business of Sports Summit will feature speakers from top sports industry leaders and networking opportunities with 50 companies.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "https://longhornlinks.com/mba",
-  "verifiedAt": "2026-10-23"
- },
- {
-  "id": "inbox-e11a324e39",
-  "program": "mba",
-  "title": "Business of Sports Summit",
-  "date": "2026-10-23",
-  "endDate": null,
-  "dateLabel": "Friday, October 23, 2026",
-  "time": "",
-  "where": "RRH Crum Auditorium",
-  "desc": "Explore sports business including sponsorships, sales, and analytics.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "https://longhornlinks.com/mba",
-  "verifiedAt": "2026-10-23"
- },
- {
   "id": "inbox-ae7dd2960d",
   "program": "general",
   "title": "2027 ClimateCAP MBA Fellowship Application Deadline",
