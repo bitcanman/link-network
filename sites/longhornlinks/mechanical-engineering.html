@@ -166,6 +166,32 @@ dialog .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
 .end,footer .foot{align-items:flex-start;flex-direction:column}
 }
 @media(max-width:480px){.grid{grid-template-columns:1fr}h1{font-size:32px}}
+
+/* ---------- Sub-teams/programs disclosure inside a parent org's card ---------- */
+.subteams{margin:0 13px 10px;font-size:12px;border-top:1px dashed var(--line);padding-top:8px}
+.subteams summary{cursor:pointer;color:var(--deep);font-weight:600;list-style:none}
+.subteams summary::-webkit-details-marker{display:none}
+.subteams summary::before{content:'▸ '}
+.subteams[open] summary::before{content:'▾ '}
+.subteams ul{margin:8px 0 0;padding-left:15px}
+.subteams li{margin-bottom:5px;color:var(--muted);line-height:1.35}
+.subteams li strong{color:var(--ink)}
+.subteam-type{display:inline-block;font-size:10px;color:var(--deep);background:var(--tint);padding:1px 5px;border-radius:3px;margin-left:4px;white-space:nowrap}
+
+/* ---------- Majors nav dropdown (one top-level entry, room for more majors later) ---------- */
+.nav-dropdown{position:relative}
+.nav-dropdown>button{font-family:'Spline Sans Mono',monospace;font-size:12.5px;letter-spacing:.06em;
+  text-transform:uppercase;text-decoration:none;color:var(--muted);
+  border:1.5px solid var(--line);border-radius:8px;padding:9px 18px;
+  background:transparent;transition:.12s;cursor:pointer}
+.nav-dropdown>button:hover{border-color:var(--brand);color:var(--brand-deep)}
+.nav-dropdown>button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+.nav-menu{position:absolute;top:calc(100% + 6px);left:0;z-index:5;min-width:210px;background:var(--panel);
+  border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 26px #0000001a;padding:6px;display:flex;flex-direction:column;gap:2px}
+.nav-menu a{display:block;padding:9px 11px;border-radius:7px;text-decoration:none;font-size:13.5px;color:var(--ink)}
+.nav-menu a:hover{background:var(--tint);color:var(--brand-deep)}
+.nav-menu a.on{background:var(--tint);color:var(--brand-deep);font-weight:600}
+@media (max-width:480px){.nav-dropdown>button{padding:8px 12px;font-size:11px}}
 </style>
 </head>
 <body>
@@ -187,7 +213,12 @@ dialog .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
 <div class="navE"><div class="wrap row">
   <a href="/">General</a>
   <a href="/mba.html">MBA</a>
-  <a class="on" href="/mechanical-engineering" aria-current="page"><span class="full">Mechanical Engineering</span><span class="mob">MechE</span></a>
+  <div class="nav-dropdown">
+    <button type="button" class="on" id="majorsBtn" aria-haspopup="true" aria-expanded="false" aria-controls="majorsMenu"><span class="full">Majors: Mechanical Engineering</span><span class="mob">Majors</span></button>
+    <div class="nav-menu" id="majorsMenu" role="menu" hidden>
+      <a class="on" href="/mechanical-engineering" aria-current="page" role="menuitem">Mechanical Engineering</a>
+    </div>
+  </div>
   <span class="sp"></span>
   <a href="/registration">Registration</a>
 </div></div>
@@ -196,7 +227,7 @@ dialog .actions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}
 <div>
 <div class="eyebrow">Cockrell School of Engineering</div>
 <h1>Your <span>MechE</span> starting point.</h1>
-<p>Find your society. Get trained. Explore mechanical engineering resources, all in one place.</p>
+<p>Find your team or society. Get trained. Explore mechanical engineering resources, all in one place.</p>
 </div>
 <aside class="dept">
 <span class="eyebrow">Built for students</span>
@@ -210,10 +241,10 @@ Unofficial · Student-built<br>No login to browse or save.
 <div class="searchline">
 <div class="search">
 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg>
-<input id="search" type="search" aria-label="Search mechanical engineering resources" placeholder="Search societies, laser cutting, research…">
+<input id="search" type="search" aria-label="Search mechanical engineering resources" placeholder="Search teams, societies, laser cutting, research…">
 <kbd aria-hidden="true">/</kbd>
 </div>
-<span id="count" class="count mono" aria-live="polite">34 resources</span>
+<span id="count" class="count mono" aria-live="polite">37 resources</span>
 </div>
 <div id="chips" class="chips" aria-label="Filter resources"></div>
 </div>
@@ -235,7 +266,7 @@ Unofficial · Student-built<br>No login to browse or save.
 
 <div id="none" hidden>
 <h2>No matching links.</h2>
-<p>Try “shop”, “clubs”, “classes” or “internship”.</p>
+<p>Try “robotics”, “rockets”, “laser cutting” or “internship”.</p>
 <button class="plain" id="reset">Clear search &amp; filters</button>
 </div>
 
@@ -272,7 +303,7 @@ Unofficial · Student-built<br>No login to browse or save.
 <strong>★ Longhorn Links · Mechanical Engineering</strong>
 <p>Unofficial and not affiliated with or endorsed by The University of Texas at Austin. Confirm requirements, training access, recruitment and deadlines with the linked organization. Prototype v1.0.</p>
 </div>
-<div>Resource links reviewed<br>October 6, 2026<br><a href="https://longhornlinks.com/">All UT resources</a></div>
+<div>Resource links reviewed<br>October 24, 2026<br><a href="https://longhornlinks.com/">All UT resources</a></div>
 </div>
 </footer>
 
@@ -296,51 +327,65 @@ Unofficial · Student-built<br>No login to browse or save.
 
 <script>
 const CATS=[
-['societies','Societies & student organizations','Meet your people. Find the current membership and event information.'],
-['adjacent','MechE-adjacent clubs','Explore teams beyond the ME department: vehicles, rockets, robotics, neurotech and business.'],
-['inventionworks','Texas Inventionworks','UT’s maker space in EER. Start here to enroll and complete the introductory training.'],
-['training','Equipment training','Choose your tool, check its requirements and complete the equipment-specific training.'],
 ['registration','Academic Resources','Advising, course planning, registration and help with your classes.'],
-['careers','Careers & experience','Internships, recruiting, research and your next step.']
+['careers','Careers & experience','Internships, recruiting, research and your next step.'],
+['designbuild','Design & Build Teams','Build, prototype, program or compete with something - vehicles, rockets, drones, robots and more.'],
+['professional','Professional Societies & Communities','Professional development, mentorship, networking, representation and academic community.'],
+['inventionworks','Texas Inventionworks','UT’s maker space in EER. Start here to enroll and complete the introductory training.'],
+['training','Equipment training','Choose your tool, check its requirements and complete the equipment-specific training.']
 ];
 
-// Each row: ID, category, title, description, URL, tag, search keywords.
+// Each row: ID, category, title, description, URL, tag, search keywords,
+// optional sub-teams/programs (shown as an expandable disclosure in the card;
+// their names/types are folded into keywords so they stay searchable too).
 const LINKS=[
-['longhorn-racing','adjacent','Longhorn Racing','Design, build and race Formula SAE and solar vehicles with a multidisciplinary student team.','https://www.longhornracing.org/','Vehicle design','clubs formula sae electric solar cars automotive manufacturing cad project team'],
-['baja','adjacent','Longhorn Baja Racing','Design, fabricate, test and race an off-road vehicle for Baja SAE.','https://longhornbajaracing.com/','Off-road racing','clubs baja sae off road cars vehicle cad manufacturing'],
-['guadaloop','adjacent','Texas Guadaloop','Work on prototype hyperloop transportation with engineering, business and media teams.','https://www.guadaloop.com/','Transportation','clubs hyperloop levitation propulsion transport cad research'],
-['trel','adjacent','Texas Rocket Engineering Lab (TREL)','Develop and test rockets in a student-led, interdisciplinary engineering lab.','https://texasrocketlab.ae.utexas.edu/','Rocket engineering','clubs trel rocket propulsion aerospace avionics structures research project'],
-['lra','adjacent','Longhorn Rocketry Association (LRA)','Design, build and launch student rockets for collegiate rocketry competitions.','https://sites.utexas.edu/longhornrocketry/','Rocketry','clubs lra rockets aerospace structures propulsion competition'],
-['texas-flight','adjacent','Texas Flight','UT’s AIAA Design Build Fly team builds and tests radio-controlled aircraft. Find the team in Aerospace’s student organization directory.','https://ae.utexas.edu/academics/student-community/','Aircraft design','clubs texas flight dbf design build fly airplane aircraft aerospace cad aerodynamics'],
-['tar','adjacent','Texas Aerial Robotics (TAR)','Design, build and program autonomous drones, combining hardware, controls and software.','https://texasaerialrobotics.wixsite.com/website','Autonomous drones','clubs tar aerial robotics drone uav controls autonomous computer vision'],
-['eib','adjacent','Texas Engineers in Business','Explore business and technical careers while building leadership, project management and business skills.','https://texaseib.org/','Engineering & business','clubs eib engineers business entrepreneurship management leadership networking'],
-['humanoids','adjacent','Texas Humanoids','Build humanoid robots through mechanical design, electronics, software and controls.','https://longhornhumanoids.com/','Humanoid robotics','clubs humanoids longhorn humanoids robots robotics mechatronics cad actuators controls'],
-['neurotech','adjacent','Longhorn Neurotech','Explore neural engineering and brain–computer interfaces through projects, competitions and guest speakers.','https://lhneurotech.net/','Neuroengineering','clubs neurotech neural neuroscience brain computer interface bci eeg emg prosthetics hardware'],
+// -- Academic resources --
 ['advisor','registration','Mechanical Engineering advising','Find appointment booking, drop-in advising and departmental academic support.','https://me.utexas.edu/academics/undergraduate/undergraduate-advising/','Start here','classes degree plan registration help appointment holds'],
 ['schedule','registration','UT course schedules','Check course times, unique numbers and availability in the current semester schedule.','https://registrar.utexas.edu/schedules','Official UT','registration classes sections prerequisites'],
 ['degree','registration','ME undergraduate program','Start with the department’s undergraduate program information and academic resources.','https://me.utexas.edu/academics/undergraduate/','Degree planning','degree plan flowchart curriculum electives catalog'],
 ['canvas','registration','Canvas','Open your course sites, assignments and course announcements.','https://utexas.instructure.com/','UT login','homework grades classes coursework'],
 ['tutoring','registration','Tutoring & academic support','ME advising lists departmental tutoring and other campus academic support options.','https://me.utexas.edu/academics/undergraduate/undergraduate-advising/','Academic help','tutor study homework office hours'],
 ['contact','registration','Contact the ME undergraduate office','Find the departmental office contact details for questions you cannot resolve online.','https://me.utexas.edu/connect/contact-us/','Department contact','advising email phone support'],
-['asme','societies','UT ASME','Connect with other MEs through social events, professional development and the chapter’s community.','https://www.utasme.org/','ME society','clubs society friends networking upperclassmen'],
-['wme','societies','Women in Mechanical Engineering','Community, service and networking; find the Discord and event calendar on the group’s site.','https://texaswme.weebly.com/','ME society','clubs women mentorship friends'],
-['pts','societies','Pi Tau Sigma','ME honor society. Find the chapter in Cockrell’s organization directory and ask about membership.','https://cockrell.utexas.edu/student-life/student-organizations/','Honor society','clubs honors pts'],
-['uab','societies','ME Undergraduate Advisory Board','Student voices on curriculum and the ME experience. Learn about current board projects.','https://me.utexas.edu/connect/student-community/','Student leadership','peer advising registration feedback upperclassmen'],
-['engineeringorgs','societies','All engineering organizations','Explore SWE, NSBE, SHPE, SASE, SEC, honor societies and other engineering groups.','https://cockrell.utexas.edu/student-life/student-organizations/','Engineering directory','clubs societies community membership'],
-['nobe','societies','Business & Engineering · NOBE','Explore the Texas chapter of the National Organization for Business and Engineering.','https://www.nobetexas.org/','Cross-disciplinary','business entrepreneurship clubs'],
-['asmeevents','societies','ASME events & community','Use the chapter’s event and calendar links to find ways to get involved.','https://www.utasme.org/','Events','calendar workshops friends networking'],
-['tiwstart','inventionworks','Culture & Community module','Complete the introductory Texas Inventionworks module on Canvas.','https://utexas.instructure.com/courses/1377490/modules#module_1710750','UT login','introduction community safety'],
-['laser','training','Laser cutting training','TIW lasers require training before use. Find the laser area and equipment information.','https://inventionworks.engr.utexas.edu/about/resources/areas','Training required','laser cutter certification acrylic wood'],
-['machine','training','Machine shop training','Learn about manual mills and lathes, and the online, in-person and project training steps.','https://inventionworks.engr.utexas.edu/about/resources/areas','Training required','machining cnc lathe metal milling certification'],
-['printing','training','3D printing equipment','Compare TIW printers, listed costs and training requirements before choosing a machine.','https://inventionworks.engr.utexas.edu/about/resources/equipment','Equipment guide','additive manufacturing bambu fdm sla prototyping'],
-['solder','training','Soldering & electronics equipment','Find the soldering stations, electronics equipment and listed training requirements.','https://inventionworks.engr.utexas.edu/about/resources/equipment','Equipment guide','circuits wiring solder electronics'],
-['tiwcanvas','inventionworks','Enroll in the TIW Canvas course','Start the Texas Inventionworks enrollment pathway.','https://utexas.instructure.com/enroll/MT8GYT','UT login','enroll canvas access'],
-['tiw','inventionworks','Equipment training on Canvas','Open the Texas Inventionworks course to find equipment training modules.','https://utexas.instructure.com/courses/1377490','UT login','equipment training course machines'],
+['transfer-external','registration','Incoming transfer admission (Cockrell)','Applying from another college or university? Start the Cockrell School external transfer admission process here.','https://cockrell.utexas.edu/admissions/undergraduate/external-transfer/','Incoming students','transfer apply admission external new students outside university join cockrell'],
+['transfer-internal','registration','Internal transfer into Cockrell/ME','Already a UT student in a different major? Apply to change your major into Cockrell or Mechanical Engineering here.','https://cockrell.utexas.edu/admissions/undergraduate/internal-transfer/','Change your major','transfer internal change major current student switch cockrell'],
+// -- Careers & experience --
 ['ecac','careers','Engineering Career Assistance Center','Get help with resumes, interviews, recruiting and career planning.','https://cockrell.utexas.edu/student-life/career-services/','Engineering careers','jobs internships resume interview career fair ecac'],
 ['coop','careers','Co-ops & internships','Explore Cockrell’s co-op and internship program information.','https://cockrell.utexas.edu/student-life/career-services/co-ops-and-internships/','Work experience','jobs internships coop industry'],
 ['research','careers','ME research labs & groups','Find mechanical engineering labs and groups to explore research interests.','https://me.utexas.edu/research/research-labs-and-groups/','Research directory','undergraduate research faculty lab robotics energy materials'],
-['integrated','careers','Integrated BSME / MSE program','Learn about the combined degree pathway, application process and academic planning.','https://me.utexas.edu/academics/integrated-bsme-and-msme-program/','Graduate pathway','masters five year grad school research']
-].map(([id,cat,title,desc,url,tag,keywords])=>({id,cat,title,desc,url,tag,keywords}));
+['integrated','careers','Integrated BSME / MSE program','Learn about the combined degree pathway, application process and academic planning.','https://me.utexas.edu/academics/integrated-bsme-and-msme-program/','Graduate pathway','masters five year grad school research'],
+// -- Design & Build Teams: students build, prototype, program or compete with something --
+['longhorn-racing','designbuild','Longhorn Racing','Design, build and race vehicles across three teams: Combustion (Formula SAE), Electric and Solar (American Solar Challenge).','https://www.longhornracing.org/','Vehicle design','clubs formula sae electric solar cars automotive manufacturing cad project team racing',
+  [{name:'Combustion',type:'Team',desc:'Builds a Formula SAE combustion-engine race car.'},{name:'Electric',type:'Team',desc:'Builds an electric-powered Formula-style race car.'},{name:'Solar',type:'Team',desc:'Builds a solar car for the American Solar Challenge.'}]],
+['baja','designbuild','Longhorn Baja Racing','Design, fabricate, test and race an off-road vehicle for Baja SAE.','https://longhornbajaracing.com/','Off-road racing','clubs baja sae off road cars vehicle cad manufacturing racing'],
+['guadaloop','designbuild','Texas Guadaloop','Work on prototype hyperloop transportation with engineering, business and media teams.','https://www.guadaloop.com/','Transportation','clubs hyperloop levitation propulsion transport cad research'],
+['trel','designbuild','Texas Rocket Engineering Lab (TREL)','Develop and test rockets in a student-led, interdisciplinary engineering lab.','https://texasrocketlab.ae.utexas.edu/','Rocket engineering','clubs trel rocket rockets propulsion aerospace avionics structures research project'],
+['lra','designbuild','Longhorn Rocketry Association (LRA)','Design, build and launch student rockets for collegiate rocketry competitions, including the International Rocket Engineering Competition (IREC).','https://sites.utexas.edu/longhornrocketry/','Rocketry','clubs lra rocket rockets aerospace structures propulsion competition irec'],
+['texas-flight','designbuild','Texas Flight','UT’s official AIAA Design/Build/Fly (DBF) team - design, build and fly a custom radio-controlled aircraft for a national aerospace competition.','https://www.texasflight.org/','Aircraft design','clubs texas flight dbf design build fly airplane aircraft aerospace cad aerodynamics'],
+['tar','designbuild','Texas Aerial Robotics (TAR)','Design, build and program autonomous drones, combining hardware, controls and software.','https://texasaerialrobotics.wixsite.com/website','Autonomous drones','clubs tar aerial robotics drone drones uav controls autonomous computer vision'],
+['ras','designbuild','IEEE Robotics and Automation Society (RAS)','UT’s largest robotics organization - build and compete across multiple teams, committees and programs, open to any major.','https://ras.ece.utexas.edu/','Robotics','clubs robotics ras ieee vex vex u robomaster demobots robotathon drones competition mechatronics controls manufacturing computer vision',
+  [{name:'VEX U',type:'Team',desc:'Competes in VEX AI / VEX U robotics competitions.'},{name:'RoboMaster',type:'Team',desc:'Builds combat robots for the 3v3 RoboMaster competition - manufacturing, computer vision and controls.'},{name:'Demobots',type:'Committee',desc:'Builds creative demonstration robots (like the campus-roaming Couchbot) for outreach.'},{name:'Robotathon',type:'Program',desc:'Annual fall competition where teams build a line/color/wall-sensing robot from a provided kit.'}]],
+['eclair','designbuild','ECLAIR Robotics','Student-led AI and robotics projects with funding, mentorship and equipment provided - no dues required.','https://eclairrobotics.web.app','AI & robotics','clubs eclair robotics ai artificial intelligence software projects'],
+['humanoids','designbuild','Texas Humanoids','Build humanoid robots across mechanical, electrical and programming teams - full design-build-test cycle.','https://longhornhumanoids.com/','Humanoid robotics','clubs humanoids longhorn humanoids robots robotics mechatronics cad actuators controls perception',
+  [{name:'Mechanical',type:'Team',desc:'Structural simulation, CAD design and mechanism testing.'},{name:'Electrical',type:'Team',desc:'Embedded systems, PCB design and motor drivers.'},{name:'Programming',type:'Team',desc:'Control systems, reinforcement learning and perception.'}]],
+['neurotech','designbuild','Longhorn Neurotech','Build brain-computer interfaces through hardware, software and research teams, competing in the NeuroTechX (NTX) competition.','https://lhneurotech.net/','Neuroengineering','clubs neurotech neural neuroscience brain computer interface bci eeg emg prosthetics hardware ntx'],
+// -- Professional Societies & Communities: professional development, mentorship, networking, representation and academic community --
+['asme','professional','UT ASME','The American Society of Mechanical Engineers chapter - professional development, a speaker/event calendar, and the department’s social community.','https://www.utasme.org/','ME society','clubs society friends networking upperclassmen asme events calendar workshops'],
+['wme','professional','Women in Mechanical Engineering','Community, service and networking; find the Discord and event calendar on the group’s site.','https://texaswme.weebly.com/','ME society','clubs women mentorship friends wme'],
+['pts','professional','Pi Tau Sigma','ME honor society. Find the chapter in Cockrell’s organization directory and ask about membership.','https://cockrell.utexas.edu/student-life/student-organizations/','Honor society','clubs honors pts honor society'],
+['uab','professional','ME Undergraduate Advisory Board','Student voices on curriculum and the ME experience. Learn about current board projects.','https://me.utexas.edu/connect/student-community/','Student leadership','peer advising registration feedback upperclassmen uab'],
+['eib','professional','Texas Engineers in Business','Business foundations workshops, an industry speaker series and networking - open to any engineering major, including ME students exploring technical-business careers.','https://texaseib.org/','Engineering & business','clubs eib engineers business entrepreneurship management leadership networking'],
+['nobe','professional','Business & Engineering · NOBE','Explore the Texas chapter of the National Organization for Business and Engineering.','https://www.nobetexas.org/','Cross-disciplinary','business entrepreneurship clubs nobe'],
+['engineeringorgs','professional','All engineering organizations','Browse the full Cockrell directory - SWE, NSBE, SHPE, SASE, honor societies and more representation and community groups.','https://cockrell.utexas.edu/student-life/student-organizations/','Engineering directory','clubs societies community membership swe nsbe shpe sase'],
+// -- Texas Inventionworks --
+['tiwstart','inventionworks','Culture & Community module','Complete the introductory Texas Inventionworks module on Canvas.','https://utexas.instructure.com/courses/1377490/modules#module_1710750','UT login','introduction community safety'],
+['tiwcanvas','inventionworks','Enroll in the TIW Canvas course','Start the Texas Inventionworks enrollment pathway.','https://utexas.instructure.com/enroll/MT8GYT','UT login','enroll canvas access'],
+['tiw','inventionworks','Equipment training on Canvas','Open the Texas Inventionworks course to find equipment training modules.','https://utexas.instructure.com/courses/1377490','UT login','equipment training course machines'],
+// -- Equipment training --
+['laser','training','Laser cutting training','TIW lasers require training before use. Find the laser area and equipment information.','https://inventionworks.engr.utexas.edu/about/resources/areas','Training required','laser cutter certification acrylic wood laser cutting'],
+['machine','training','Machine shop training','Learn about manual mills and lathes, and the online, in-person and project training steps.','https://inventionworks.engr.utexas.edu/about/resources/areas','Training required','machining cnc lathe metal milling certification'],
+['printing','training','3D printing equipment','Compare TIW printers, listed costs and training requirements before choosing a machine.','https://inventionworks.engr.utexas.edu/about/resources/equipment','Equipment guide','additive manufacturing bambu fdm sla prototyping 3d printing'],
+['solder','training','Soldering & electronics equipment','Find the soldering stations, electronics equipment and listed training requirements.','https://inventionworks.engr.utexas.edu/about/resources/equipment','Equipment guide','circuits wiring solder electronics']
+].map(([id,cat,title,desc,url,tag,keywords,subteams])=>({id,cat,title,desc,url,tag,keywords,subteams}));
 
 /* Small, curated set of genuinely campus-wide links, kept out of CATS so
    they never render in the normal directory or inflate its counts. Shown
@@ -398,7 +443,10 @@ function allLinks(){
 }
 
 function matches(x){
-  const text=[x.title,x.desc,x.tag,x.keywords].join(' ').toLowerCase();
+  // Sub-teams/programs folded in here too (not just their keywords string),
+  // so a search for a sub-team's own name or type always finds its parent card.
+  const subtext=(x.subteams||[]).map(s=>s.name+' '+s.type+' '+s.desc).join(' ');
+  const text=[x.title,x.desc,x.tag,x.keywords,subtext].join(' ').toLowerCase();
   const stop=new Set(['how','do','i','can','to','a','the','where','is','my','find','me']);
   const aliases={
     clubs:'club',societies:'society',courses:'classes',
@@ -442,6 +490,26 @@ function card(x){
   t.textContent=x.tag||'My link';
   a.append(h,d,t);
   el.append(a);
+
+  if(x.subteams&&x.subteams.length){
+    const details=document.createElement('details');
+    details.className='subteams';
+    const summary=document.createElement('summary');
+    summary.textContent=x.subteams.length+' teams & programs inside';
+    const ul=document.createElement('ul');
+    x.subteams.forEach(s=>{
+      const li=document.createElement('li');
+      const strong=document.createElement('strong');
+      strong.textContent=s.name;
+      const typeSpan=document.createElement('span');
+      typeSpan.className='subteam-type';
+      typeSpan.textContent=s.type;
+      li.append(strong,' ',typeSpan,document.createTextNode(' — '+s.desc));
+      ul.append(li);
+    });
+    details.append(summary,ul);
+    el.append(details);
+  }
 
   const b=document.createElement('button');
   b.className='save';
@@ -568,10 +636,10 @@ function render(){
 }
 
 for(const [id,label]of [
-  ['all','All links'],['societies','Societies'],
-  ['adjacent','Adjacent clubs'],['inventionworks','Inventionworks'],
-  ['training','Training'],['registration','Academic Resources'],
-  ['careers','Careers & research'],['saved','★ Favorites']
+  ['all','All links'],['registration','Academic Resources'],
+  ['careers','Careers & research'],['designbuild','Design & Build'],
+  ['professional','Professional Societies'],['inventionworks','Inventionworks'],
+  ['training','Training'],['saved','★ Favorites']
 ]){
   const b=document.createElement('button');
   b.className='chip';
@@ -636,6 +704,19 @@ $('addform').onsubmit=e=>{
 };
 
 $('url').oninput=()=>$('url').setCustomValidity('');
+
+// Majors nav dropdown: one top-level entry that can hold more major pages
+// later without adding another button to the nav row.
+(function(){
+  const btn=$('majorsBtn'),menu=$('majorsMenu');
+  if(!btn||!menu)return;
+  const close=()=>{menu.hidden=true;btn.setAttribute('aria-expanded','false')};
+  const open=()=>{menu.hidden=false;btn.setAttribute('aria-expanded','true')};
+  btn.onclick=e=>{e.stopPropagation();menu.hidden?open():close()};
+  document.addEventListener('click',e=>{if(!menu.hidden&&!e.target.closest('.nav-dropdown'))close()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!menu.hidden){close();btn.focus()}});
+})();
+
 render();
 if(!storageOK)notify('Saved links are unavailable in this browser.');
 </script>
