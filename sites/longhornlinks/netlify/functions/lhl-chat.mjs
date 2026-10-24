@@ -249,7 +249,7 @@ export default async function handler(req){
  const direct=history.length===0?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:'1',sources:direct.name,webSearch:'false',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000'});
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:'1',sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000'});
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
@@ -309,14 +309,20 @@ export default async function handler(req){
   if(raw&&(raw.needsWebSearch||forcedSearch)){
    fallbackReason=raw.needsWebSearch?'model-self-reported':'forced-unmatched-subject';
    try{
-    // No catalog message here - the model already saw the full catalog in call one,
-    // and resending it just to ask it to search instead costs tokens for nothing.
+    // Each /v1/responses call is stateless (store:false) - the model has no
+    // memory of call one's catalog message unless it's resent here. Omitting
+    // it meant the second pass could only ever cite [[w#]], even when the
+    // first pass had good [[r#]] catalog matches (observed: an MSTC "course
+    // catalog" question lost r1/r162/r165 entirely once the search pass ran).
+    // resourceData here is already the ~20-entry retrieved subset, not the
+    // full 166-entry catalog, so resending it is far cheaper than it would
+    // have been before relevantCatalog() trimmed it.
     // The uncovered terms, when present, are passed as a plain, clearly-delimited
     // data sentence (a comma-joined word list, already stripped of punctuation by
     // questionWords()) - never as freeform user text that could be read as a new
     // instruction.
     const unmatchedNote=forcedSearch?' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.':'';
-    const searchInput=[...history,{role:'user',content:question},{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough.'+unmatchedNote+' Use web_search (utexas.edu only) to find the specific official page for this question, then answer again in the same schema, citing any web result as [[w1]] with a matching webSources entry.'}];
+    const searchInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...history,{role:'user',content:question},{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough.'+unmatchedNote+' Use web_search (utexas.edu only) to find the specific official page for this question. Keep any catalog [[r123]] citations from your last answer that are still correct, and add the web result as a new [[w1]] citation with a matching webSources entry for the specific page you found - this should add to your last answer, not replace it, unless the catalog citation was actually wrong.'}];
     const t1=Date.now();
     calls++;
     const searchResponse=await call(searchInput,[{type:'web_search',filters:{allowed_domains:['utexas.edu']},search_context_size:'low'}]);
@@ -336,6 +342,11 @@ export default async function handler(req){
    // catalog had no answer, which is the signal worth watching.
    sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),
    webSearch:String(usedSearch),
+   // Whether a search-path answer kept at least one catalog ([[r123]]) citation
+   // alongside the web result, vs. losing it entirely once the search pass ran -
+   // 'n/a' when no search happened, so a regression here shows up as a drop in
+   // 'true' rather than silently blending into rows where it never applied.
+   keptCatalogCitation:usedSearch?String(answer.sources.some(s=>s.kind!=='web')):'n/a',
    // Raw coverage diagnostic (see unmatchedSalientTerms) - distinct from whether
    // a search actually ran, so "unmatched vocabulary with no search" and "unmatched
    // vocabulary that genuinely triggered one" are both visible separately.
