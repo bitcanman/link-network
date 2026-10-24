@@ -354,10 +354,10 @@ export default async function handler(req){
  // `instructions` (the rules text) plus the catalog block at the start of `input`
  // are now a large, identical prefix across most calls for a given audience - the
  // catalog is the full eligible set now, not a top-N cut (see relevantCatalog) -
- // and that's exactly what promptCacheKey exists to let the provider cache. Keyed
+ // and that's exactly what prompt_cache_key exists to let the provider cache. Keyed
  // on audience, not on effectiveProgram or the question, because the eligible
  // catalog (and so the prefix) varies by audience and nothing finer than that.
- const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,promptCacheKey:'lhl-'+audience,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
+ const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,prompt_cache_key:'lhl-'+audience,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
  let inTok=0,outTok=0,cachedTok=0,usedSearch=false,calls=0,latencyMs=0,fallbackReason='none';
  const textOf=async response=>{const body=await response.json();if(body.usage){inTok+=body.usage.input_tokens||0;outTok+=body.usage.output_tokens||0;cachedTok+=body.usage.input_tokens_details?.cached_tokens||0;}if(body.status==='incomplete')throw Error('Incomplete answer');return (body.output||[]).flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');};
  try{
@@ -365,7 +365,16 @@ export default async function handler(req){
   calls++;
   const response=await call(baseInput);
   latencyMs+=Date.now()-t0;
-  if(!response.ok){console.error('Longhorn Links provider status',response.status);return json({error:response.status===429?'The chat is at its usage limit. Please try again shortly.':response.status===401||response.status===403?'The server key or its API permissions need checking.':'The answer service could not complete this request. Please try again.'},response.status===429?429:502);}
+  if(!response.ok){
+   // OpenAI's error body names the offending parameter explicitly (e.g. an
+   // unrecognized field) - logging it turns a generic-looking outage into a
+   // diagnosis in seconds. Server-side console only; never returned to the
+   // student, since it may contain request details.
+   let bodyText='';
+   try{bodyText=(await response.text()).slice(0,500);}catch{}
+   console.error('Longhorn Links provider status',response.status,bodyText);
+   return json({error:response.status===429?'The chat is at its usage limit. Please try again shortly.':response.status===401||response.status===403?'The server key or its API permissions need checking.':'The answer service could not complete this request. Please try again.'},response.status===429?429:502);
+  }
   let raw=JSON.parse(await textOf(response));
   // Don't rely solely on the model's own needsWebSearch self-report - it can come
   // back false even when the answer it just gave is a generic container (course
