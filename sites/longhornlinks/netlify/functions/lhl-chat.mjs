@@ -56,13 +56,20 @@ function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.leng
 function canon(w){const s=stem(w);return WORD_SYNONYMS[w]||WORD_SYNONYMS[s]||s;}
 function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
 function textWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1);}
-// Sends a scored subset of the eligible catalog instead of the whole thing - cheaper
-// and keeps a specific alias hit (e.g. "mccombs room reservation") from getting lost
-// among 90+ generically-eligible entries for a broad audience.
-export function relevantCatalog(question,eligible,{limit=20,boostSources=[]}={}){
+// Orders the eligible catalog by likely relevance - it no longer drops anything.
+// Literal word matching with a small hand-written stemmer has no concept of
+// meaning, so a resource that's exactly right can still score zero here ("how
+// to make friends" scores zero against every entry; "how do i find clubs"
+// scores zero against HornsLink specifically, since its name/desc say
+// "organization" and only its aliases say "club"). Truncating to a scored
+// top-N on that basis was a selection failure, not a model failure - the model
+// can tell a real match from a coincidence; literal scoring can't tell a real
+// miss from a wording gap. So this only sorts; `limit` (unset/0 by default)
+// exists purely as a reversible cost knob - see RETRIEVAL_LIMIT in the handler.
+export function relevantCatalog(question,eligible,{limit=0,boostSources=[]}={}){
  const words=[...new Set(questionWords(question).map(canon))];
  const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
- const scored=eligible.map(l=>{
+ const scored=eligible.map((l,i)=>{
   let score=0;
   const aliasHit=(l.aliases||[]).some(a=>qNorm.includes(' '+a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()+' '));
   if(aliasHit)score+=50;
@@ -76,17 +83,20 @@ export function relevantCatalog(question,eligible,{limit=20,boostSources=[]}={})
    if(topicsCanon.has(w))score+=2;
    if(descCanon.has(w))score+=1;
   }
-  // A modest nudge for the selected/effective program's own resources - enough to
-  // help a page-relevant entry survive the top-`limit` cut on a generic question,
-  // not enough to beat an entry that's actually more topically relevant (an alias
-  // hit, or several real word matches) just because of where it's filed.
+  // A modest nudge for the selected/effective program's own resources, so a
+  // page-relevant entry ranks higher on a generic question - not enough to
+  // beat an entry that's actually more topically relevant (an alias hit, or
+  // several real word matches) just because of where it's filed.
   if(boostSources.length&&boostSources.includes(l.source))score+=6;
-  return {l,score,aliasHit};
+  return {l,score,i};
  });
- scored.sort((a,b)=>b.score-a.score);
- const top=scored.filter(s=>s.score>0).slice(0,limit).map(s=>s.l);
- for(const s of scored)if(s.aliasHit&&!top.includes(s.l))top.push(s.l);
- return top.length?top:eligible.slice(0,limit);
+ // Ties (including every zero-score entry) keep their original catalog order
+ // rather than sorting arbitrarily - Array.prototype.sort is not guaranteed
+ // stable across engines on every input shape, so this is explicit, not relied
+ // on implicitly.
+ scored.sort((a,b)=>b.score-a.score||a.i-b.i);
+ const ordered=scored.map(s=>s.l);
+ return limit>0?ordered.slice(0,limit):ordered;
 }
 // Coverage diagnostic, not proof that web search is needed on its own - a term
 // coming back here just means no eligible catalog entry's name/aliases/topics/desc
@@ -296,12 +306,16 @@ export default async function handler(req){
  const direct=(history.length===0||isSelfContained(question))?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0'});
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'});
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
  if(!process.env.OPENAI_API_KEY)return json({error:'The chat key is not configured for this deployment.'},503);
- const relevant=relevantCatalog(question,eligible,{boostSources:pages[effectiveProgram]?.catalogSources});
+ // Reversible without a deploy: unset or 0 sends the full eligible catalog (the new
+ // default - see relevantCatalog's own comment for why), a positive number truncates
+ // to that many, tunable or rollback-able from Netlify's env var UI alone.
+ const retrievalLimit=Number(process.env.RETRIEVAL_LIMIT)||0;
+ const relevant=relevantCatalog(question,eligible,{limit:retrievalLimit,boostSources:pages[effectiveProgram]?.catalogSources});
  const resourceData=relevant.map(l=>({id:l.id,name:l.name,description:l.desc,purpose:l.purpose,aliases:l.aliases,audience:l.audience||'Not verified; do not infer eligibility',collection:l.source,topics:l.topics,official:l.official,excerpt:l.contentExcerpt,verifiedAt:l.verifiedAt,login:l.login}));
  const schema={type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'object',properties:{label:{type:'string'},message:{type:'string'}},required:['label','message'],additionalProperties:false}},needsWebSearch:{type:'boolean'},webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url'],additionalProperties:false}},primaryId:{type:'string'}},required:['heading','paragraphs','followUps','needsWebSearch','webSources','primaryId'],additionalProperties:false};
  const sourceMapBlock=Object.entries(sources).map(([k,v])=>k+': '+v.url+' (verified '+v.verifiedAt+(v.note?'; '+v.note:'')+')').join('\n');
@@ -337,7 +351,13 @@ export default async function handler(req){
  // 1400, not 900: a genuinely multi-section bulleted answer (several requirement
  // groups, several course bullets each) is now made of many short array entries
  // rather than a few prose paragraphs, and needs more room to not cut off mid-list.
- const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
+ // `instructions` (the rules text) plus the catalog block at the start of `input`
+ // are now a large, identical prefix across most calls for a given audience - the
+ // catalog is the full eligible set now, not a top-N cut (see relevantCatalog) -
+ // and that's exactly what promptCacheKey exists to let the provider cache. Keyed
+ // on audience, not on effectiveProgram or the question, because the eligible
+ // catalog (and so the prefix) varies by audience and nothing finer than that.
+ const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,promptCacheKey:'lhl-'+audience,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
  let inTok=0,outTok=0,cachedTok=0,usedSearch=false,calls=0,latencyMs=0,fallbackReason='none';
  const textOf=async response=>{const body=await response.json();if(body.usage){inTok+=body.usage.input_tokens||0;outTok+=body.usage.output_tokens||0;cachedTok+=body.usage.input_tokens_details?.cached_tokens||0;}if(body.status==='incomplete')throw Error('Incomplete answer');return (body.output||[]).flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');};
  try{
@@ -403,6 +423,9 @@ export default async function handler(req){
    // Log-only misdescription guard (see validateAnswer) - counted for a week to
    // measure the false-positive rate before it starts removing anything.
    suspectCitations:String(answer.suspectCitations),
+   // How many catalog entries were actually sent to the model - visible alongside
+   // cost now that the default is the full eligible set, not a top-N cut.
+   catalogEntries:String(relevant.length),
    calls:String(calls),
    model,
    latencyMs:String(latencyMs),
