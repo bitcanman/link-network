@@ -33,7 +33,7 @@ async function logAsk(fields){
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bundergrad\w*\b/.test(v))return 'undergraduate';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}
 export function allows(l,a){const audience=(l.audience||'').toLowerCase();if(/undergrad/.test(audience)&&/\bgraduate\b/.test(audience))return true;if(/undergrad/.test(audience))return a==='first-year'||a==='undergraduate';if(/graduate/.test(audience))return ['graduate','mba','mstc'].includes(a);if(audience)return true;if(l.source==='MBA'||/\bmba\b/i.test(l.name))return a==='mba';if(l.source==='MSTC'||/\bmstc\b/i.test(l.name))return a==='mstc';if(/mechanical/i.test(l.source||''))return a==='engineering';return true;}
 export function eligibleCatalog(question,audience){const on=/\bon[- ]campus\b/i.test(question);return catalog.filter(l=>allows(l,audience)&&!(on&&(l.scope==='off-campus'||/off[- ]campus|facebook/i.test(l.name))));}
-const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that']);
+const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that','ut','utexas','texas','austin']);
 // Bridges a handful of real wording gaps found by testing, not a general stemmer:
 // "funded"/"funding"/"funds" are the same ask, and "company"/"business"/"venture"
 // mean the same thing as "startup" in this catalog's topics. Without this,
@@ -67,10 +67,12 @@ export function relevantCatalog(question,eligible,{limit=20,boostSources=[]}={})
   const aliasHit=(l.aliases||[]).some(a=>qNorm.includes(' '+a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()+' '));
   if(aliasHit)score+=50;
   const nameCanon=new Set(textWords(l.name).map(canon));
+  const aliasCanon=new Set(textWords((l.aliases||[]).join(' ')).map(canon));
   const topicsCanon=new Set(textWords((l.topics||[]).join(' ')).map(canon));
   const descCanon=new Set(textWords(l.desc).map(canon));
   for(const w of words){
    if(nameCanon.has(w))score+=3;
+   if(aliasCanon.has(w))score+=2;
    if(topicsCanon.has(w))score+=2;
    if(descCanon.has(w))score+=1;
   }
@@ -137,6 +139,18 @@ export function singleUnambiguousMatch(question,eligible){
  const hits=eligible.filter(l=>(l.aliases||[]).some(a=>a.toLowerCase().replace(/[^a-z0-9\s]/g,'')===qNorm));
  return hits.length===1?hits[0]:null;
 }
+// Gates the no-model instant path on a later turn: the path itself only ever fires on
+// a clean, unambiguous alias match (singleUnambiguousMatch already guarantees that),
+// but on turn 1 that's also guaranteed self-contained since there's no prior turn to
+// depend on. On a later turn the exact same words could be shorthand for something
+// upstream in the conversation ("that", "what about X"), or too short a fragment to
+// mean anything on its own - this is the additional gate for those cases specifically,
+// not a replacement for singleUnambiguousMatch's own strictness.
+const ANAPHORA_RE=/\b(it|that|this|them)\b|\b(what|how) about\b/i;
+export function isSelfContained(question){
+ if(ANAPHORA_RE.test(question))return false;
+ return questionWords(question).length>=3;
+}
 function validWebHost(url){let host;try{host=new URL(url).hostname;}catch{return false;}return host==='utexas.edu'||host.endsWith('.utexas.edu');}
 export function validateAnswer(answer,eligible){
  if(!answer||typeof answer.heading!=='string'||!Array.isArray(answer.paragraphs)||!answer.paragraphs.length||!Array.isArray(answer.followUps))throw Error('Invalid answer');
@@ -154,8 +168,8 @@ export function validateAnswer(answer,eligible){
  // course bullets each) can genuinely need more entries than a handful of prose
  // paragraphs ever did - 8 silently truncated a real multi-section answer
  // mid-list during testing.
- const paragraphs=answer.paragraphs.slice(0,40).map(p=>{
-  if(typeof p!=='string')return null;
+ const paragraphs=answer.paragraphs.slice(0,40).flatMap(p=>{
+  if(typeof p!=='string')return [];
   let text=p.length>2200?p.slice(0,2200):p;
   // Markdown links are never valid output (rule 14), but the model occasionally writes
   // one anyway, and output can also get cut off mid-link by the token limit - leaving a
@@ -165,22 +179,34 @@ export function validateAnswer(answer,eligible){
   text=text.replace(/\[([^\]\n]{0,120})\]\([^)\n]{0,300}$/,'$1');
   text=text.replace(/\[([^\]\n]{0,120})\]\(https?:\/\/[^)\s\n]{0,300}\)/g,'$1');
   text=text.replace(/https?:\/\/\S*/g,'').replace(/<[^>]+>/g,'');
-  // The frontend renders a constrained markdown-like subset only: **bold**, a
-  // leading "- " as one bullet-list item, a leading "N. " as one numbered step -
-  // each is its own paragraphs[] entry (see rules.mjs). Everything else the model
-  // might write has no renderer and would show up as literal characters, so it's
-  // still unwrapped here: single-*italic*/_underscore_ emphasis, # headers, and a
-  // "*" or "+" bullet marker (only "-" is the recognized list syntax). The
-  // single-asterisk strip uses lookaround so it can't eat into **bold** - matching
-  // "*x*" but never the inner text of "**x**".
-  text=text.replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g,'$1').replace(/(?<![a-z0-9])_(.+?)_(?![a-z0-9])/gi,'$1').replace(/^#+\s*/,'').replace(/^[*+]\s+/,'');
-  text=text.replace(/\[\[([rw]\d+)\]\]/g,(full,id)=>{
-   const isWeb=id[0]==='w';
-   if(isWeb?!webMap.has(id):!map.has(id)){stripped++;return'';}
-   if(!used.some(u=>u.id===id))used.push({id,isWeb});
-   return full;
+  // A model occasionally packs several list items into one paragraphs[] entry
+  // separated by literal newlines instead of one entry each (see rules.mjs) -
+  // split those back out here, in the same pass that normalizes each resulting
+  // line's leading marker, rather than letting a packed entry render as one run-on
+  // paragraph with junk markers inside it.
+  return text.split(/\r?\n+/).map(line=>{
+   let t=line;
+   // The frontend renders a constrained markdown-like subset only: **bold**, a
+   // leading "- " as one bullet-list item, a leading "N. " as one numbered step -
+   // each is its own paragraphs[] entry (see rules.mjs). Everything else the model
+   // might write has no renderer and would show up as literal characters, so it's
+   // still unwrapped here: single-*italic*/_underscore_ emphasis and # headers. The
+   // single-asterisk strip uses lookaround so it can't eat into **bold** - matching
+   // "*x*" but never the inner text of "**x**".
+   t=t.replace(/(?<!\*)\*([^*]+?)\*(?!\*)/g,'$1').replace(/(?<![a-z0-9])_(.+?)_(?![a-z0-9])/gi,'$1').replace(/^#+\s*/,'');
+   // Rather than teaching the renderer more list-marker syntax, fold every marker
+   // meaning "- " onto the one it already understands, and drop markers with no
+   // list meaning at all so they don't render as literal leading junk ("> The
+   // official term..." / "— Office of the Registrar...", both observed live).
+   t=t.replace(/^[*•+]\s+/,'- ').replace(/^[>—–]\s+/,'');
+   t=t.replace(/\[\[([rw]\d+)\]\]/g,(full,id)=>{
+    const isWeb=id[0]==='w';
+    if(isWeb?!webMap.has(id):!map.has(id)){stripped++;return'';}
+    if(!used.some(u=>u.id===id))used.push({id,isWeb,text:t});
+    return full;
+   });
+   return t;
   });
-  return text;
  }).filter(p=>p!==null&&p.trim());
  if(!paragraphs.length)throw Error('No usable content after sanitizing.');
  // primaryId is a reliability backstop: models forget inline [[r123]] tokens more often than they skip a
@@ -198,6 +224,24 @@ export function validateAnswer(answer,eligible){
    if(nameWords.some(w=>allText.includes(w)))used.unshift({id:primaryId,isWeb});
   }
  }
+ // Log-only misdescription guard: a cited catalog entry whose name/aliases/topics/desc
+ // share no content word with the paragraph it's attached to is suspect - the observed
+ // case was a football-ticket answer citing r4 (Canvas) as "the athletics website" while
+ // r29 (The Big Ticket) sat unused at retrieval rank 1. This does not strip or reject
+ // anything yet; it only counts, so the false-positive rate is measurable (via
+ // ASK_LOG_URL) before a suspect citation starts getting removed. A generous extra link
+ // offered as a plausible alternative is not flagged by this on its own - only a
+ // citation whose entry shares literally no content word with its own paragraph is.
+ let suspectCitations=0;
+ for(const u of used){
+  if(u.isWeb||!u.text)continue;
+  const entry=map.get(u.id);
+  if(!entry)continue;
+  const contentCanon=text=>new Set(textWords(text).filter(w=>!STOPWORDS.has(w)).map(canon));
+  const resourceWords=new Set([...contentCanon(entry.name),...contentCanon((entry.aliases||[]).join(' ')),...contentCanon((entry.topics||[]).join(' ')),...contentCanon(entry.desc)]);
+  const paraWords=contentCanon(u.text);
+  if(![...paraWords].some(w=>resourceWords.has(w)))suspectCitations++;
+ }
  const retrievedAt=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
  const sources=used.map(u=>{
   if(u.isWeb){const w=webMap.get(u.id);return {id:u.id,name:w.name,url:w.url,desc:'',login:false,kind:'web',retrievedAt};}
@@ -211,7 +255,7 @@ export function validateAnswer(answer,eligible){
   if(!f||typeof f.label!=='string'||typeof f.message!=='string'||!f.label.trim()||!f.message.trim())return null;
   return {label:f.label.slice(0,60),message:f.message.slice(0,200)};
  }).filter(Boolean).slice(0,3);
- return {heading:answer.heading.slice(0,140),paragraphs,followUps,sources,stripped};
+ return {heading:answer.heading.slice(0,140),paragraphs,followUps,sources,stripped,suspectCitations};
 }
 // Best-effort, in-memory only: a Map inside this module's scope. Helps while a
 // given Netlify Function container stays warm; resets on cold start and is not
@@ -245,11 +289,14 @@ export default async function handler(req){
  const cacheKey=history.length===0?audience+'|'+question.toLowerCase().trim():null;
  if(cacheKey){const cached=cacheGet(cacheKey);if(cached)return json({...cached,audience,id});}
  // Pure administrative lookup with exactly one unambiguous resource - skip the model call
- // (and the OpenAI key requirement entirely - this path never needs either).
- const direct=history.length===0?singleUnambiguousMatch(question,eligible):null;
+ // (and the OpenAI key requirement entirely - this path never needs either). Turn 1 is
+ // always eligible (nothing upstream to depend on); a later turn only qualifies when the
+ // question is also self-contained (see isSelfContained) - otherwise the same words could
+ // be shorthand for something earlier in the conversation, so it still goes to the model.
+ const direct=(history.length===0||isSelfContained(question))?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:'1',sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000'});
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0'});
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
@@ -353,6 +400,9 @@ export default async function handler(req){
    unmatched:unmatched.join(','),
    fallbackReason,
    stripped:String(answer.stripped),
+   // Log-only misdescription guard (see validateAnswer) - counted for a week to
+   // measure the false-positive rate before it starts removing anything.
+   suspectCitations:String(answer.suspectCitations),
    calls:String(calls),
    model,
    latencyMs:String(latencyMs),
