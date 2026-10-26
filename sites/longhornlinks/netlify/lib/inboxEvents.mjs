@@ -33,6 +33,66 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-9c4706e9a7",
+  "program": "general",
+  "title": "Agency and Accountability for AI in Education",
+  "date": "2026-10-27",
+  "endDate": null,
+  "dateLabel": "Tuesday, October 27, 2026",
+  "time": "10:00 AM-noon",
+  "where": "Texas Innovation Center",
+  "desc": "A career event focused on AI in education.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
+  "id": "inbox-349d1cf232",
+  "program": "general",
+  "title": "Breaking into Energy with Aurora Energy Research",
+  "date": "2026-10-27",
+  "endDate": null,
+  "dateLabel": "Tuesday, October 27, 2026",
+  "time": "6:00-7:00 PM",
+  "where": "RLP 1.302B",
+  "desc": "Learn about breaking into the energy sector with Aurora Energy Research.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
+  "id": "inbox-008ca239cb",
+  "program": "general",
+  "title": "D.E. Shaw Research Information Session",
+  "date": "2026-10-27",
+  "endDate": null,
+  "dateLabel": "Tuesday, October 27, 2026",
+  "time": "6:00-7:30 PM",
+  "where": "FAC 2.142",
+  "desc": "Information session regarding D.E. Shaw Research.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
+  "id": "inbox-861e6e1c56",
+  "program": "general",
+  "title": "Graduate Job Search Working Group",
+  "date": "2026-10-27",
+  "endDate": null,
+  "dateLabel": "Tuesday, October 27, 2026",
+  "time": "1:00-2:00 PM",
+  "where": "FAC 2.134",
+  "desc": "A working group for graduate students focusing on job search documents.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
   "id": "inbox-62157950bf",
   "program": "general",
   "title": "Impact Chat: From Semiconductors to Sustainability with Alyson Freeman",
@@ -153,6 +213,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-750d10b3ef",
+  "program": "general",
+  "title": "UT Austin Quant Night",
+  "date": "2026-10-29",
+  "endDate": null,
+  "dateLabel": "Thursday, October 29, 2026",
+  "time": "5:00-7:00 PM",
+  "where": "Etter-Harbin Alumni Center",
+  "desc": "Meet with alumni and recruiters from various companies.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
   "id": "inbox-bf0de62d3c",
   "program": "general",
   "title": "Wall Street Prep Corporate Valuation Seminar",
@@ -183,6 +258,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-f633b664a0",
+  "program": "general",
+  "title": "Home Football Game vs. Mississippi State Bulldogs",
+  "date": "2026-10-31",
+  "endDate": null,
+  "dateLabel": "Saturday, October 31, 2026",
+  "time": "6:30 PM",
+  "where": "Darrell K Royal-Texas Memorial Stadium",
+  "desc": "The Longhorns will face the Mississippi State Bulldogs in an evening matchup, combining Halloween festivities with Texas Football.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
   "id": "inbox-06dfb48118",
   "program": "mba",
   "title": "International Night",
@@ -196,6 +286,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "https://longhornlinks.com/mba",
   "verifiedAt": "2026-10-23"
+ },
+ {
+  "id": "inbox-1a5bc4293f",
+  "program": "general",
+  "title": "The Resilient Humanities PhD: Humanities Institute Annual Symposium Day 1",
+  "date": "2026-11-04",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 4, 2026",
+  "time": "11:30 AM-6:00 PM",
+  "where": "RLP 1.302B",
+  "desc": "A symposium focused on scholarly formation for the 21st century.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
  },
  {
   "id": "inbox-da9395e30e",
@@ -213,6 +318,36 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-0b8398aef7",
+  "program": "general",
+  "title": "How to Prepare for the BioFair",
+  "date": "2026-11-05",
+  "endDate": null,
+  "dateLabel": "Thursday, November 5, 2026",
+  "time": "5:00-6:00 PM",
+  "where": "Virtual",
+  "desc": "Learn tips and tricks for networking at the BioFair.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
+  "id": "inbox-d106b99178",
+  "program": "general",
+  "title": "Hustles for Humanists: A Half Day Seminar",
+  "date": "2026-11-05",
+  "endDate": null,
+  "dateLabel": "Thursday, November 5, 2026",
+  "time": "9:00 AM-1:30 PM",
+  "where": "RLP 1.302B",
+  "desc": "A seminar for humanities graduate students to find or create meaningful work.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
   "id": "inbox-68bc24955a",
   "program": "general",
   "title": "The Project Volunteer Sign-Up",
@@ -226,5 +361,20 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-23"
+ },
+ {
+  "id": "inbox-5b30f62e8f",
+  "program": "general",
+  "title": "Bioscience and Biotech Career Fair",
+  "date": "2026-11-11",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 11, 2026",
+  "time": "12:00-5:00 PM",
+  "where": "Virtual",
+  "desc": "A career fair focused on bioscience and biotech.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
  }
 ];
