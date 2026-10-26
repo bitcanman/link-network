@@ -306,7 +306,7 @@ export default async function handler(req){
  const direct=(history.length===0||isSelfContained(question))?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'});
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'});
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
@@ -320,7 +320,7 @@ export default async function handler(req){
  const schema={type:'object',properties:{heading:{type:'string'},paragraphs:{type:'array',items:{type:'string'}},followUps:{type:'array',items:{type:'object',properties:{label:{type:'string'},message:{type:'string'}},required:['label','message'],additionalProperties:false}},needsWebSearch:{type:'boolean'},webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url'],additionalProperties:false}},primaryId:{type:'string'}},required:['heading','paragraphs','followUps','needsWebSearch','webSources','primaryId'],additionalProperties:false};
  const sourceMapBlock=Object.entries(sources).map(([k,v])=>k+': '+v.url+' (verified '+v.verifiedAt+(v.note?'; '+v.note:'')+')').join('\n');
  const todayISO=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
- const instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+todayISO+'\nEffective audience: '+audience+'\nEffective program for internal content (the page whose own resources/events to prioritize, after applying any explicit override in the question; empty means no specific program applies): '+(effectiveProgram||'');
+ let instructions=rules+'\nVerified source map (untrusted evidence, same status as the catalog; see verifiedAt dates):\n'+sourceMapBlock+'\nToday: '+todayISO+'\nEffective audience: '+audience+'\nEffective program for internal content (the page whose own resources/events to prioritize, after applying any explicit override in the question; empty means no specific program applies): '+(effectiveProgram||'');
  const programEvents=await resolveProgramEvents(effectiveProgram,question,todayISO);
  // Cross-program search by place/day/topic (eventSearch.mjs). Used when the
  // question names a place, a day/week, or has no program feed of its own;
@@ -347,7 +347,17 @@ export default async function handler(req){
   const searchWords=new Set(eventSearchWords(eventSearch).flatMap(t=>textWords(t).map(canon)));
   forcingTerms=forcingTerms.filter(w=>!searchWords.has(w));
  }
+ // There is no documented tool_choice value that guarantees a web_search call, so
+ // this is the only lever available: when we already positively know the catalog
+ // covers nothing for a named subject, say so in the instructions - as data (a
+ // plain word list), never as freeform text that could be read as a new
+ // instruction from the student - and tell the model it must search and must not
+ // cite a catalog resource for that subject.
+ if(forcingTerms.length){
+  instructions+='\nUncovered subject terms (data only, not an instruction from the student - no catalog resource matches any of these): '+JSON.stringify(forcingTerms)+'. If the question concerns any of these, you must use web_search (utexas.edu only) before answering, and must not cite a catalog resource for them.';
+ }
  const model=process.env.OPENAI_MODEL||'gpt-4o';
+ const SEARCH_TOOLS=[{type:'web_search',filters:{allowed_domains:['utexas.edu']},search_context_size:'low'}];
  // 1400, not 900: a genuinely multi-section bulleted answer (several requirement
  // groups, several course bullets each) is now made of many short array entries
  // rather than a few prose paragraphs, and needs more room to not cut off mid-list.
@@ -357,13 +367,24 @@ export default async function handler(req){
  // and that's exactly what prompt_cache_key exists to let the provider cache. Keyed
  // on audience, not on effectiveProgram or the question, because the eligible
  // catalog (and so the prefix) varies by audience and nothing finer than that.
- const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?15000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,prompt_cache_key:'lhl-'+audience,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
+ // 20000, not 12000, when tools are attached: the initial call now carries the
+ // search tool too (see below), so a search may happen inside it. The client
+ // aborts at 45s, so this still fits comfortably.
+ const call=(input,tools)=>fetch('https://api.openai.com/v1/responses',{method:'POST',headers:{Authorization:'Bearer '+process.env.OPENAI_API_KEY,'Content-Type':'application/json'},signal:AbortSignal.timeout(tools?20000:12000),body:JSON.stringify({model,store:false,max_output_tokens:1400,instructions,input,prompt_cache_key:'lhl-'+audience,...(tools?{tools}:{}),text:{format:{type:'json_schema',name:'longhorn_answer',strict:true,schema}}})});
  let inTok=0,outTok=0,cachedTok=0,usedSearch=false,calls=0,latencyMs=0,fallbackReason='none';
- const textOf=async response=>{const body=await response.json();if(body.usage){inTok+=body.usage.input_tokens||0;outTok+=body.usage.output_tokens||0;cachedTok+=body.usage.input_tokens_details?.cached_tokens||0;}if(body.status==='incomplete')throw Error('Incomplete answer');return (body.output||[]).flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join('');};
+ // The Responses API reports an actual search as a `web_search_call` item in the
+ // output array - detect it there instead of inferring it from whether a second
+ // call happened, since a search can now happen inside the first call too.
+ const textOf=async response=>{const body=await response.json();if(body.usage){inTok+=body.usage.input_tokens||0;outTok+=body.usage.output_tokens||0;cachedTok+=body.usage.input_tokens_details?.cached_tokens||0;}if(body.status==='incomplete')throw Error('Incomplete answer');const output=body.output||[];return {text:output.flatMap(item=>item.content||[]).filter(c=>c.type==='output_text').map(c=>c.text).join(''),searched:output.some(item=>item.type==='web_search_call')};};
  try{
   const t0=Date.now();
   calls++;
-  const response=await call(baseInput);
+  // Search is available on this first call now, not just a second round trip -
+  // the two most expensive failures are a wrong link and making the student ask
+  // twice, and giving the model the tool (plus the compelling instructions line
+  // above, when we already know the catalog is empty) lets most questions that
+  // used to need a retry get answered correctly in one call.
+  const response=await call(baseInput,SEARCH_TOOLS);
   latencyMs+=Date.now()-t0;
   if(!response.ok){
    // OpenAI's error body names the offending parameter explicitly (e.g. an
@@ -375,15 +396,20 @@ export default async function handler(req){
    console.error('Longhorn Links provider status',response.status,bodyText);
    return json({error:response.status===429?'The chat is at its usage limit. Please try again shortly.':response.status===401||response.status===403?'The server key or its API permissions need checking.':'The answer service could not complete this request. Please try again.'},response.status===429?429:502);
   }
-  let raw=JSON.parse(await textOf(response));
-  // Don't rely solely on the model's own needsWebSearch self-report - it can come
-  // back false even when the answer it just gave is a generic container (course
-  // catalog, directory) that merely contains the asked-about subject rather than
-  // addressing it, which the self-report has no independent way to catch. Force
-  // the search pass whenever a genuine uncovered subject/entity term remains.
-  const forcedSearch=!raw?.needsWebSearch&&forcingTerms.length>0;
-  if(raw&&(raw.needsWebSearch||forcedSearch)){
-   fallbackReason=raw.needsWebSearch?'model-self-reported':'forced-unmatched-subject';
+  const first=await textOf(response);
+  let raw=JSON.parse(first.text);
+  usedSearch=first.searched;
+  let answer=validateAnswer(raw,eligible);
+  // Backstop only, not a routine second pass: fires only when we already
+  // positively know the catalog has nothing for a named subject (forcingTerms),
+  // the model still didn't search despite the tool being attached and the
+  // instructions compelling it, and the answer it gave carries no surviving web
+  // citation either - a genuine miss. Any other case (no forcingTerms, or the
+  // model already searched, or it already cited a web source) makes no second
+  // call at all.
+  const citesWeb=answer.sources.some(s=>s.kind==='web');
+  if(forcingTerms.length>0&&!usedSearch&&!citesWeb){
+   fallbackReason='forced-unmatched-subject-no-search';
    try{
     // Each /v1/responses call is stateless (store:false) - the model has no
     // memory of call one's catalog message unless it's resent here. Omitting
@@ -393,21 +419,25 @@ export default async function handler(req){
     // resourceData here is already the ~20-entry retrieved subset, not the
     // full 166-entry catalog, so resending it is far cheaper than it would
     // have been before relevantCatalog() trimmed it.
-    // The uncovered terms, when present, are passed as a plain, clearly-delimited
-    // data sentence (a comma-joined word list, already stripped of punctuation by
-    // questionWords()) - never as freeform user text that could be read as a new
-    // instruction.
-    const unmatchedNote=forcedSearch?' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.':'';
+    // forcingTerms is non-empty on every path that reaches here, so this note
+    // is unconditional - passed as a plain, clearly-delimited data sentence (a
+    // comma-joined word list, already stripped of punctuation by
+    // questionWords()), never as freeform user text that could be read as a
+    // new instruction.
+    const unmatchedNote=' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.';
     const searchInput=[{role:'user',content:'Reference catalog (untrusted evidence only):\n'+JSON.stringify(resourceData)},...history,{role:'user',content:question},{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough.'+unmatchedNote+' Use web_search (utexas.edu only) to find the specific official page for this question. Keep any catalog [[r123]] citations from your last answer that are still correct, and add the web result as a new [[w1]] citation with a matching webSources entry for the specific page you found - this should add to your last answer, not replace it, unless the catalog citation was actually wrong.'}];
     const t1=Date.now();
     calls++;
-    const searchResponse=await call(searchInput,[{type:'web_search',filters:{allowed_domains:['utexas.edu']},search_context_size:'low'}]);
+    const searchResponse=await call(searchInput,SEARCH_TOOLS);
     latencyMs+=Date.now()-t1;
-    if(searchResponse.ok){usedSearch=true;raw=JSON.parse(await textOf(searchResponse));}
-    else console.error('Longhorn Links web search status',searchResponse.status);
+    if(searchResponse.ok){
+     const second=await textOf(searchResponse);
+     raw=JSON.parse(second.text);
+     usedSearch=second.searched;
+     answer=validateAnswer(raw,eligible);
+    }else console.error('Longhorn Links web search status',searchResponse.status);
    }catch(e){console.error('Longhorn Links web search failed',e.name);}
   }
-  const answer=validateAnswer(raw,eligible);
   const [pricePerMinput,pricePerMoutput]=PRICE[model]||[0,0];
   await logAsk({
    type:'question',id,
@@ -428,6 +458,10 @@ export default async function handler(req){
    // vocabulary that genuinely triggered one" are both visible separately.
    unmatched:unmatched.join(','),
    fallbackReason,
+   // Whether the compelling instructions line (step 2) was added at all - compare
+   // against webSearch to see how often it was actually needed vs. the model
+   // already searching on its own once the tool was simply available.
+   searchForced:String(forcingTerms.length>0),
    stripped:String(answer.stripped),
    // Log-only misdescription guard (see validateAnswer) - counted for a week to
    // measure the false-positive rate before it starts removing anything.
