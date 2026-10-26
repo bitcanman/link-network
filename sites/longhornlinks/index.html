@@ -277,40 +277,50 @@
     .section{scroll-margin-top:84px;}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;}}
+
+/* Unified site header (lhl-*) - self-contained so every page renders it identically. */
+.lhl-head{--lh-brand:#BF5700;--lh-line:#E4D9C9;--lh-ink:#221B14;--lh-muted:#6B6157;
+  /* display/height/padding are reset explicitly: several pages carry bare header{}
+     rules (ask/index.html has six) that would otherwise win over this block. */
+  display:block;height:auto;padding:0;margin:0;
+  background:var(--lh-surface,#FFF);border-bottom:1px solid var(--lh-rule,var(--lh-line));
+  position:relative;z-index:40}
+.lhl-head .lhl-in{max-width:1180px;margin:0 auto;padding:0 22px;min-height:94px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px 26px;flex-wrap:wrap}
+.lhl-brand{display:flex;align-items:center;gap:11px;color:var(--lh-ink);font-weight:800;
+  font-size:20px;letter-spacing:-.7px;text-decoration:none;flex:0 0 auto}
+.lhl-brand svg{width:30px;height:30px;fill:var(--lh-brand);stroke:none;flex:0 0 auto}
+.lhl-nav{display:flex;align-items:center;gap:26px;font-size:15px;font-weight:600;flex-wrap:wrap}
+.lhl-nav a{color:var(--lh-muted);text-decoration:none;padding-bottom:3px;
+  border-bottom:2px solid transparent;white-space:nowrap}
+.lhl-nav a:hover{color:var(--lh-ink)}
+.lhl-nav a[aria-current="page"]{color:var(--lh-brand);border-bottom-color:var(--lh-brand)}
+.lhl-nav a.lhl-ask{display:flex;align-items:center;gap:7px}
+.lhl-nav a.lhl-ask svg{width:16px;height:16px;fill:var(--lh-brand);stroke:none}
+.lhl-nav a:focus-visible,.lhl-brand:focus-visible{outline:2px solid #1457D6;outline-offset:3px}
+@media(max-width:720px){
+  .lhl-head .lhl-in{min-height:0;padding:14px 16px;gap:12px}
+  .lhl-nav{gap:19px;font-size:14.5px;width:100%;overflow-x:auto}
+}
 </style>
 </head>
 <body>
 
 <!-- Tier 2: main header -->
-<header class="main">
-  <div class="wrap main-inner">
-    <a class="wordmark" href="#top">
-      <span class="mark" aria-hidden="true">&#9733;</span>
-      <span><span class="wm-name">Longhorn Links</span><br><span class="wm-sub">UT Austin</span></span>
-    </a>
-    <nav class="sections" aria-label="Jump to section">
-      <a href="#cat-academics">Academics</a>
-      <a href="#cat-registration">Registration</a>
-      <a href="#cat-money">Money</a>
-      <a href="#cat-campuslife">Campus</a>
-      <a href="#cat-sports">Sports</a>
-      <a href="#cat-housing">Housing</a>
-      <a href="#cat-health">Health</a>
-    </nav>
-    <div class="cta-wrap">
-      <a class="rr-try" href="mailto:jn32456@my.utexas.edu"><span class="rr-pre">Don’t see a link? </span>Contact Us <span class="arw" aria-hidden="true">&rarr;</span></a>
-      <span class="disc-inline">Unofficial &middot; Student-built</span>
-    </div>
+<header class="lhl-head">
+  <div class="lhl-in">
+    <a class="lhl-brand" href="/" aria-label="Longhorn Links home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg> Longhorn Links</a>
+  <nav class="lhl-nav" aria-label="Main navigation">
+    <a href="/ask/" class="lhl-ask"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.7 6.8L22 12l-7.3 3.2L12 22l-2.7-6.8L2 12l7.3-3.2z"/></svg>Ask</a>
+    <a href="/" aria-current="page">General</a>
+    <a href="/mba.html">MBA</a>
+    <a href="/mechanical-engineering">MechE</a>
+    <a href="/registration">Registration</a>
+  </nav>
   </div>
 </header>
 
-<div class="navE"><div class="wrap row">
-  <a class="on" href="/" aria-current="page">General</a>
-  <a href="/mba.html">MBA</a>
-  <a href="/mechanical-engineering">MECHE</a>
-  <span class="sp"></span>
-  <a href="/registration">Registration</a>
-</div></div>
+
 
 <section class="hero" id="top">
   <div class="wrap">

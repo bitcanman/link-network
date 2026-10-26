@@ -34,6 +34,31 @@
 .toolbar>.search{max-width:510px}.favorite-toggle{display:grid;place-items:center;flex:none;width:34px;height:34px;padding:0;border:1px solid #e8ded2;border-radius:9px;background:#fff;color:#8a775f;cursor:pointer;transition:background .14s ease,border-color .14s ease,color .14s ease}.favorite-toggle:hover{border-color:#d8a77d;background:#fff6eb;color:#a34c08}.favorite-toggle[aria-pressed=true]{border-color:#e3bd75;background:#fff7df;color:#a35b00}.favorite-toggle:focus-visible{outline:3px solid rgba(191,87,0,.3);outline-offset:2px}.favorite-toggle svg{display:block;width:18px;height:18px}.topic-card-heading{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:0 0 7px;pointer-events:none}.topic-card-heading h4{flex:1;min-width:0;margin:0}.topic-card-heading .favorite-toggle{pointer-events:auto}.search-result-actions{display:flex;align-items:center;gap:6px;flex:none}.search-result-actions .favorite-toggle{width:36px;height:36px}
 @media(max-width:650px){.favorite-toggle{width:34px;height:34px}.topic-card-heading{gap:6px}.topic-card-heading .favorite-toggle{width:32px;height:32px}}
 @media(max-width:650px){body{overflow-x:hidden}.favorites-category .resource-tiles{grid-template-columns:1fr;grid-auto-rows:auto}.favorite-mini-card{min-height:60px;padding:7px 9px}.favorite-mini-copy-button,.favorite-mini-card .favorite-toggle,.topic-card-heading .favorite-toggle,.search-result-actions .favorite-toggle,.search-copy,.topic-card-copy{width:42px;height:42px;min-width:42px}.favorite-mini-copy-button svg,.favorite-mini-card .favorite-toggle svg{width:18px;height:18px}.favorite-mini-copy strong{font-size:13px}.favorite-mini-copy small{font-size:11px}.topic-card-copy{height:42px}.event-expanded a{min-height:40px;display:inline-flex;align-items:center}.event-row{touch-action:manipulation}.resource-tile,.favorite-mini-card,.topic-card{touch-action:manipulation}}
+
+/* Unified site header (lhl-*) - self-contained so every page renders it identically. */
+.lhl-head{--lh-brand:#BF5700;--lh-line:#E4D9C9;--lh-ink:#221B14;--lh-muted:#6B6157;
+  /* display/height/padding are reset explicitly: several pages carry bare header{}
+     rules (ask/index.html has six) that would otherwise win over this block. */
+  display:block;height:auto;padding:0;margin:0;
+  background:var(--lh-surface,#FFF);border-bottom:1px solid var(--lh-rule,var(--lh-line));
+  position:relative;z-index:40}
+.lhl-head .lhl-in{max-width:1180px;margin:0 auto;padding:0 22px;min-height:94px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px 26px;flex-wrap:wrap}
+.lhl-brand{display:flex;align-items:center;gap:11px;color:var(--lh-ink);font-weight:800;
+  font-size:20px;letter-spacing:-.7px;text-decoration:none;flex:0 0 auto}
+.lhl-brand svg{width:30px;height:30px;fill:var(--lh-brand);stroke:none;flex:0 0 auto}
+.lhl-nav{display:flex;align-items:center;gap:26px;font-size:15px;font-weight:600;flex-wrap:wrap}
+.lhl-nav a{color:var(--lh-muted);text-decoration:none;padding-bottom:3px;
+  border-bottom:2px solid transparent;white-space:nowrap}
+.lhl-nav a:hover{color:var(--lh-ink)}
+.lhl-nav a[aria-current="page"]{color:var(--lh-brand);border-bottom-color:var(--lh-brand)}
+.lhl-nav a.lhl-ask{display:flex;align-items:center;gap:7px}
+.lhl-nav a.lhl-ask svg{width:16px;height:16px;fill:var(--lh-brand);stroke:none}
+.lhl-nav a:focus-visible,.lhl-brand:focus-visible{outline:2px solid #1457D6;outline-offset:3px}
+@media(max-width:720px){
+  .lhl-head .lhl-in{min-height:0;padding:14px 16px;gap:12px}
+  .lhl-nav{gap:19px;font-size:14.5px;width:100%;overflow-x:auto}
+}
 </style>
 
 <style>
@@ -52,7 +77,18 @@ body{background-color:var(--paper);background-image:linear-gradient(rgba(191,87,
 </style>
 </head>
 <body>
-<header class="topbar"><div class="shell" style="display:flex;align-items:center;justify-content:space-between;width:100%"><div class="brand-wrap"><button class="topbar-quick-back" id="topicQuickBack" type="button" aria-label="Back to all student resources" hidden>←</button><a class="brand" href="#top" aria-label="MSTC Student Hub home"><svg class="brand-star" viewBox="0 0 100 100" aria-hidden="true"><path fill="currentColor" d="M50 4 61 36 95 36 67 56 78 89 50 69 22 89 33 56 5 36 39 36Z"/></svg><span>Longhorn Links<small>MSTC Student Hub</small></span></a></div><nav class="nav" aria-label="Main navigation"><a href="#resources">Student resources</a><a href="#opportunities">Event calendar</a><a class="nav-survey" href="https://docs.google.com/forms/d/e/1FAIpQLSdcev13hOAevwKgwkXGVZSw6YNo31O3-oPfGiF4SpnyWUlQmQ/viewform" target="_blank" rel="noopener">MSTC Survey</a></nav></div></header>
+<header class="lhl-head">
+  <div class="lhl-in">
+    <a class="lhl-brand" href="/" aria-label="Longhorn Links home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg> Longhorn Links</a>
+  <nav class="lhl-nav" aria-label="Main navigation">
+    <a href="/ask/" class="lhl-ask"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.7 6.8L22 12l-7.3 3.2L12 22l-2.7-6.8L2 12l7.3-3.2z"/></svg>Ask</a>
+    <a href="/" aria-current="page">General</a>
+    <a href="/mba.html">MBA</a>
+    <a href="/mechanical-engineering">MechE</a>
+    <a href="/registration">Registration</a>
+  </nav>
+  </div>
+</header>
 <main id="top" class="shell">
 <section class="home-intro" aria-labelledby="homeTitle"><h1 id="homeTitle">Browse MSTC Resources</h1><p>Find your way around the MSTC program, campus, and Austin innovation community.</p></section>
 <section class="section resources-first" id="resources"><div class="resource-overview" id="resourceOverview"><div class="toolbar"><label class="search"><span class="search-icon" aria-hidden="true"></span><input id="resourceSearch" type="search" placeholder="Try advising, funding opportunities, course catalog" aria-label="Search student resources"></label><span class="count" id="resourceCount"></span></div><div class="search-results" id="searchResults" role="list" hidden></div><div class="resource-categories" id="resourceCategories" aria-label="MSTC resource topics"></div></div><section class="topic-page" id="topicPage" aria-labelledby="topicTitle" hidden><button class="topic-back" id="topicBack" type="button"><span aria-hidden="true">←</span> All student resources</button><header class="topic-hero"><h2 id="topicTitle"></h2><p id="topicIntro"></p></header><div class="topic-toolbar"><label class="search"><span class="search-icon" aria-hidden="true"></span><input id="topicSearch" type="search" placeholder="Search this topic" aria-label="Search resources in this topic"></label></div><div class="topic-groups" id="topicGroups"></div><div class="topic-no-results" id="topicNoResults" hidden>No resources match that search. Try another term.</div></section></section>

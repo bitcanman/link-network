@@ -60,10 +60,46 @@ dialog{width:min(1020px,calc(100% - 24px));max-height:92vh;border:1px solid #e0d
   .foot{font-size:10px;line-height:1.55}
   dialog{width:calc(100% - 14px);max-height:94dvh;border-radius:12px}.dialog-head{padding:15px 16px 12px}.dialog-head h2{font-size:23px;line-height:1.15}.dialog-content{padding:14px 16px 19px}.intro{font-size:14px}.detail-grid{grid-template-columns:1fr}.simple-list{grid-template-columns:1fr}
 }
+
+/* Unified site header (lhl-*) - self-contained so every page renders it identically. */
+.lhl-head{--lh-brand:#BF5700;--lh-line:#E4D9C9;--lh-ink:#221B14;--lh-muted:#6B6157;
+  /* display/height/padding are reset explicitly: several pages carry bare header{}
+     rules (ask/index.html has six) that would otherwise win over this block. */
+  display:block;height:auto;padding:0;margin:0;
+  background:var(--lh-surface,#FFF);border-bottom:1px solid var(--lh-rule,var(--lh-line));
+  position:relative;z-index:40}
+.lhl-head .lhl-in{max-width:1180px;margin:0 auto;padding:0 22px;min-height:94px;
+  display:flex;align-items:center;justify-content:space-between;gap:18px 26px;flex-wrap:wrap}
+.lhl-brand{display:flex;align-items:center;gap:11px;color:var(--lh-ink);font-weight:800;
+  font-size:20px;letter-spacing:-.7px;text-decoration:none;flex:0 0 auto}
+.lhl-brand svg{width:30px;height:30px;fill:var(--lh-brand);stroke:none;flex:0 0 auto}
+.lhl-nav{display:flex;align-items:center;gap:26px;font-size:15px;font-weight:600;flex-wrap:wrap}
+.lhl-nav a{color:var(--lh-muted);text-decoration:none;padding-bottom:3px;
+  border-bottom:2px solid transparent;white-space:nowrap}
+.lhl-nav a:hover{color:var(--lh-ink)}
+.lhl-nav a[aria-current="page"]{color:var(--lh-brand);border-bottom-color:var(--lh-brand)}
+.lhl-nav a.lhl-ask{display:flex;align-items:center;gap:7px}
+.lhl-nav a.lhl-ask svg{width:16px;height:16px;fill:var(--lh-brand);stroke:none}
+.lhl-nav a:focus-visible,.lhl-brand:focus-visible{outline:2px solid #1457D6;outline-offset:3px}
+@media(max-width:720px){
+  .lhl-head .lhl-in{min-height:0;padding:14px 16px;gap:12px}
+  .lhl-nav{gap:19px;font-size:14.5px;width:100%;overflow-x:auto}
+}
 </style>
 </head>
 <body>
-<header class="top"><div class="wrap topin"><a class="brand" href="#top"><svg class="brand-mark" viewBox="0 0 34 34" aria-hidden="true" focusable="false"><rect width="34" height="34" rx="8" fill="currentColor"/><path fill="#fff" d="m17 5 3.5 7.1 7.8 1.1-5.7 5.5 1.3 7.8-6.9-3.7-6.9 3.7 1.3-7.8-5.7-5.5 7.8-1.1z"/></svg><span>Longhorn Links<small>Graduate Entrepreneurship Society</small></span></a></div></header>
+<header class="lhl-head">
+  <div class="lhl-in">
+    <a class="lhl-brand" href="/" aria-label="Longhorn Links home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1.1 6.2-5.6-3-5.6 3 1.1-6.2L3 9.6l6.2-.9Z"/></svg> Longhorn Links</a>
+  <nav class="lhl-nav" aria-label="Main navigation">
+    <a href="/ask/" class="lhl-ask"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.7 6.8L22 12l-7.3 3.2L12 22l-2.7-6.8L2 12l7.3-3.2z"/></svg>Ask</a>
+    <a href="/">General</a>
+    <a href="/mba.html" aria-current="page">MBA</a>
+    <a href="/mechanical-engineering">MechE</a>
+    <a href="/registration">Registration</a>
+  </nav>
+  </div>
+</header>
 <main id="top" class="wrap">
   <section class="opener" aria-labelledby="page-title"><h1 id="page-title">Entrepreneurship at McCombs,<br><span class="headline-accent">One Click Away<svg viewBox="0 0 500 22" preserveAspectRatio="none" aria-hidden="true"><path d="M5 15 Q145 2 493 10" stroke="#ffd07d" stroke-width="10" fill="none" stroke-linecap="round"/></svg></span></h1></section>
   <div class="tools"><input class="search" id="search" type="search" placeholder="Search entrepreneurship resources" aria-label="Search tiles"><span class="results" id="results">10 topics</span></div>
