@@ -63,6 +63,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-288837b679",
+  "program": "general",
+  "title": "Claim Your Student Ticket for Saturday's Game",
+  "date": "2026-10-28",
+  "endDate": null,
+  "dateLabel": "Wednesday, October 28, 2026",
+  "time": "6:00 PM",
+  "where": "",
+  "desc": "Online ticket claim access for football student tickets begins for each home game. Login and claim your ticket to ensure entry.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-26"
+ },
+ {
   "id": "inbox-f58391d2d8",
   "program": "general",
   "title": "McCombs+ Webinar: PIVOT!: Making the Career Transition",
