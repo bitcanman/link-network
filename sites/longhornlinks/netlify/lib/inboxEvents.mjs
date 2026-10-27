@@ -3,21 +3,6 @@
 // overwrites this file. Merged into the program pools in events.mjs.
 export const inboxEvents = [
  {
-  "id": "inbox-ae7dd2960d",
-  "program": "general",
-  "title": "2027 ClimateCAP MBA Fellowship Application Deadline",
-  "date": "2026-10-26",
-  "endDate": null,
-  "dateLabel": "Monday, October 26, 2026",
-  "time": "",
-  "where": "",
-  "desc": "Applications for the 2027 ClimateCAP MBA Fellowship close at 5pm ET.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-10-23"
- },
- {
   "id": "inbox-cd08730d99",
   "program": "general",
   "title": "Austin Tech Week",
