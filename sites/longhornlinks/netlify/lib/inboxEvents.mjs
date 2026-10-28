@@ -153,6 +153,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-b1368bbe0b",
+  "program": "general",
+  "title": "Claim your Texas Football ticket for this Saturday’s game",
+  "date": "2026-10-31",
+  "endDate": null,
+  "dateLabel": "Saturday, October 31, 2026",
+  "time": "6:00 PM",
+  "where": "",
+  "desc": "Students can claim tickets for the game starting today at 6 PM. Tickets remain available on a first-come, first-served basis.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-28"
+ },
+ {
   "id": "inbox-f633b664a0",
   "program": "general",
   "title": "Home Football Game vs. Mississippi State Bulldogs",
