@@ -213,6 +213,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-26"
  },
  {
+  "id": "inbox-80a0bff777",
+  "program": "general",
+  "title": "Uncle Kracker with Special Guest Julianna Rankin",
+  "date": "2026-10-31",
+  "endDate": null,
+  "dateLabel": "Saturday, October 31, 2026",
+  "time": "3:00 PM",
+  "where": "LBJ Lawn",
+  "desc": "Live music prior to Texas Football vs. Mississippi State game. Free admission!",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-28"
+ },
+ {
   "id": "inbox-06dfb48118",
   "program": "mba",
   "title": "International Night",
