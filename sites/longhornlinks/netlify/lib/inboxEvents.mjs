@@ -48,6 +48,36 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-fadb10abd4",
+  "program": "general",
+  "title": "#6 Women’s Basketball to Host Baylor",
+  "date": "2026-10-29",
+  "endDate": null,
+  "dateLabel": "Thursday, October 29, 2026",
+  "time": "",
+  "where": "Frank Erwin Center",
+  "desc": "The Texas Longhorns women’s basketball team will host Baylor in an exciting matchup.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-28"
+ },
+ {
+  "id": "inbox-5821f9230f",
+  "program": "mba",
+  "title": "Bidding Round 2",
+  "date": "2026-10-29",
+  "endDate": null,
+  "dateLabel": "Thursday, October 29, 2026",
+  "time": "8:00 am – 2:30 pm",
+  "where": "",
+  "desc": "Bidding Round 2 begins for MBA students. Any points left after Round 1 can be used to bid in Round 2. All bids must be submitted and confirmed before 2:30 pm.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mba",
+  "verifiedAt": "2026-10-28"
+ },
+ {
   "id": "inbox-04862f63f4",
   "program": "mba",
   "title": "McCombs Marketing Conference & Challenge: IGNITION",
