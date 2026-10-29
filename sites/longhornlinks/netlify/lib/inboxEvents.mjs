@@ -243,6 +243,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-91079120b2",
+  "program": "mbae",
+  "title": "Freed Family Pitch Competition Finals 2026",
+  "date": "2026-11-05",
+  "endDate": null,
+  "dateLabel": "Thursday, November 5, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Join the finals of the Freed Family Pitch Competition, showcasing innovative business ideas.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mbae",
+  "verifiedAt": "2026-10-29"
+ },
+ {
   "id": "inbox-0b8398aef7",
   "program": "general",
   "title": "How to Prepare for the BioFair",
@@ -273,6 +288,36 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-26"
  },
  {
+  "id": "inbox-9da88e4b4b",
+  "program": "mbae",
+  "title": "GSLI Attorneys in Residence for Impact Ventures",
+  "date": "2026-11-06",
+  "endDate": null,
+  "dateLabel": "Friday, November 6, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Participate in the GSLI program focused on impact ventures.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mbae",
+  "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-9179df9571",
+  "program": "mba",
+  "title": "KBH Energy Finance Case Competition",
+  "date": "2026-11-06",
+  "endDate": "2026-11-07",
+  "dateLabel": "Friday, November 6, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Compete in the KBH Energy Finance Case Competition, addressing current energy finance issues.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mba",
+  "verifiedAt": "2026-10-29"
+ },
+ {
   "id": "inbox-68bc24955a",
   "program": "general",
   "title": "The Project Volunteer Sign-Up",
@@ -288,6 +333,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-23"
  },
  {
+  "id": "inbox-4596e4e29c",
+  "program": "general",
+  "title": "Longhorns in Sustainability: A Career Panel",
+  "date": "2026-11-10",
+  "endDate": null,
+  "dateLabel": "Tuesday, November 10, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Join a panel discussion on sustainability careers with UT Austin alumni.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-29"
+ },
+ {
   "id": "inbox-5b30f62e8f",
   "program": "general",
   "title": "Bioscience and Biotech Career Fair",
@@ -301,5 +361,65 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-26"
+ },
+ {
+  "id": "inbox-41abb11074",
+  "program": "general",
+  "title": "War, Innovation, and Resilience: How Ukraine's Economy Is Responding — and Repositioning — for the Future",
+  "date": "2026-11-11",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 11, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Explore the economic responses and repositioning strategies of Ukraine's economy in the face of war.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-6a77f5eb1d",
+  "program": "general",
+  "title": "2026 CATT Conference",
+  "date": "2026-11-12",
+  "endDate": "2026-11-13",
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Attend the 2026 CATT Conference focusing on AI agents and innovations in technology.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-53dff92c15",
+  "program": "general",
+  "title": "University Blockchain Conference",
+  "date": "2026-11-20",
+  "endDate": "2026-11-21",
+  "dateLabel": "Friday, November 20, 2026",
+  "time": "",
+  "where": "AT&T Conference Center",
+  "desc": "Join students for the University Blockchain Conference, no background needed, with free entry for UT students using code UTSTUDENT.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-5125fcfe84",
+  "program": "mba",
+  "title": "Fall 2026 TVL Investment Competition",
+  "date": "2026-12-11",
+  "endDate": null,
+  "dateLabel": "Friday, December 11, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Apply for the Fall 2026 TVL Investment Competition, an opportunity to showcase investment skills.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mba",
+  "verifiedAt": "2026-10-29"
  }
 ];
