@@ -37,9 +37,15 @@ const answerTool={
    paragraphs:{type:'array',items:{type:'string'}},
    followUps:{type:'array',items:{type:'object',properties:{label:{type:'string'},message:{type:'string'}},required:['label','message']}},
    webSources:{type:'array',items:{type:'object',properties:{id:{type:'string'},title:{type:'string'},url:{type:'string'}},required:['id','title','url']}},
-   primaryId:{type:'string'}
+   primaryId:{type:'string'},
+   // Declared so the model can actually set it - rules.mjs instructs the model
+   // to set this when the catalog has nothing specific enough, but a field the
+   // tool schema never declares is not reliably populated. The handler reads
+   // it below to force the deeper retry pass even when the model still cited
+   // some web page (a generic page is not the same as an answer).
+   needsWebSearch:{type:'boolean'}
   },
-  required:['heading','paragraphs','followUps','webSources','primaryId']
+  required:['heading','paragraphs','followUps','webSources','primaryId','needsWebSearch']
  }
 };
 // Strip anything that could identify a student before the question leaves this function.
@@ -340,7 +346,7 @@ export default async function handler(req){
  const direct=(history.length===0||isSelfContained(question))?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'});
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',needsWebSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'});
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
@@ -397,8 +403,16 @@ export default async function handler(req){
  // web citations regardless of what the model searched.
  system+='\n\nWhen you have your final answer, call the longhorn_answer tool with it - heading, paragraphs (plain strings, cite catalog entries inline as [[r123]] and any web result as [[w1]] with a matching webSources entry), followUps, webSources, and primaryId (the single best resource id, or "" if none applies). Never present your final answer as plain text.';
  const model='claude-sonnet-5';
- const tools=[{type:'web_search_20250305',name:'web_search'},answerTool];
- const call=messages=>fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':process.env.ANTHROPIC_API_KEY,'anthropic-version':ANTHROPIC_VERSION,'Content-Type':'application/json'},signal:AbortSignal.timeout(30000),body:JSON.stringify({model,max_tokens:1600,system,messages,tools,tool_choice:{type:'auto'}})});
+ // Claude's web_search tool has no OpenAI-style search_context_size knob (no
+ // "thin vs rich result snippets" lever exists here) - its real escalation
+ // lever is max_uses, the number of searches the model may run in one call.
+ // A low cap on the first call keeps the common case cheap; the retry raises
+ // it so a thin first search can actually be refined rather than re-rolled
+ // with the identical budget, which is what produced run-to-run variance on
+ // the same question.
+ const tools=[{type:'web_search_20250305',name:'web_search',max_uses:3},answerTool];
+ const DEEP_TOOLS=[{type:'web_search_20250305',name:'web_search',max_uses:8},answerTool];
+ const call=(messages,toolsForCall=tools)=>fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':process.env.ANTHROPIC_API_KEY,'anthropic-version':ANTHROPIC_VERSION,'Content-Type':'application/json'},signal:AbortSignal.timeout(30000),body:JSON.stringify({model,max_tokens:1600,system,messages,tools:toolsForCall,tool_choice:{type:'auto'}})});
  let inTok=0,outTok=0,cacheReadTok=0,cacheWriteTok=0,webSearchRequests=0,usedSearch=false,calls=0,latencyMs=0,fallbackReason='none';
  const tally=body=>{
   const u=body.usage||{};
@@ -451,16 +465,17 @@ export default async function handler(req){
   let raw=extract(body);
   usedSearch=webSearchRequests>0;
   let answer=validateAnswer(raw,eligible);
-  // Backstop only, not a routine second pass: fires only when we already
-  // positively know the catalog has nothing for a named subject (forcingTerms),
-  // the model still didn't search despite the tool being attached and the
-  // system prompt compelling it, and the answer it gave carries no surviving
-  // web citation either - a genuine miss. Any other case (no forcingTerms, or
-  // the model already searched, or it already cited a web source) makes no
-  // second call at all.
-  const citesWeb=answer.sources.some(s=>s.kind==='web');
-  if(forcingTerms.length>0&&!usedSearch&&!citesWeb){
-   fallbackReason='forced-unmatched-subject-no-search';
+  // Backstop: fires when we already positively know the catalog has nothing
+  // for a named subject (forcingTerms), OR the model itself flagged the
+  // answer insufficient (needsWebSearch:true) - citing a real utexas.edu page
+  // is not the same as actually answering, so a cited-but-generic page (the
+  // journalism.utexas.edu case) must not suppress this. It's skipped only
+  // when a search already ran AND the model is satisfied with what it found;
+  // a model that searched and still says needsWebSearch:true must get the
+  // deeper pass, which is exactly the case this fixes.
+  const modelSaysInsufficient=raw.needsWebSearch===true;
+  if((forcingTerms.length>0||modelSaysInsufficient)&&!(usedSearch&&!modelSaysInsufficient)){
+   fallbackReason=modelSaysInsufficient?'model-declared-insufficient':'forced-unmatched-subject-no-search';
    try{
     // Each messages.create() call carries its own full conversation - the
     // model has no memory of call one's catalog message unless it's resent
@@ -469,16 +484,17 @@ export default async function handler(req){
     // MSTC "course catalog" question lost r1/r162/r165 entirely once the
     // search pass ran). resourceData here is already the ~20-entry retrieved
     // subset, not the full catalog, so resending it is cheap.
-    // forcingTerms is non-empty on every path that reaches here, so this note
-    // is unconditional - passed as a plain, clearly-delimited data sentence (a
-    // comma-joined word list, already stripped of punctuation by
-    // questionWords()), never as freeform user text that could be read as a
-    // new instruction.
-    const unmatchedNote=' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.';
+    // forcingTerms can now be empty here (the model-declared-insufficient
+    // path doesn't require it), so the uncovered-subject sentence is only
+    // appended when there's an actual term list to name - passed as a plain,
+    // clearly-delimited data sentence (a comma-joined word list, already
+    // stripped of punctuation by questionWords()), never as freeform user
+    // text that could be read as a new instruction.
+    const unmatchedNote=forcingTerms.length?' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.':'';
     const searchInput=[...baseInput,{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough.'+unmatchedNote+' Use web_search to find the specific official page for this question. Keep any catalog [[r123]] citations from your last answer that are still correct, and add the web result as a new [[w1]] citation with a matching webSources entry for the specific page you found - this should add to your last answer, not replace it, unless the catalog citation was actually wrong.'}];
     const t1=Date.now();
     calls++;
-    const searchResponse=await call(searchInput);
+    const searchResponse=await call(searchInput,DEEP_TOOLS);
     latencyMs+=Date.now()-t1;
     if(searchResponse.ok){
      const secondBody=await searchResponse.json();
@@ -500,6 +516,11 @@ export default async function handler(req){
    // catalog had no answer, which is the signal worth watching.
    sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),
    webSearch:String(usedSearch),
+   // Whether the model itself flagged the answer insufficient (as distinct
+   // from forcingTerms, the code-side coverage check) - without this there's
+   // no way to measure how often the model was asking for help and the
+   // handler was ignoring it (the bug this commit fixes).
+   needsWebSearch:String(raw.needsWebSearch===true),
    // Whether a search-path answer kept at least one catalog ([[r123]]) citation
    // alongside the web result, vs. losing it entirely once the search pass ran -
    // 'n/a' when no search happened, so a regression here shows up as a drop in
