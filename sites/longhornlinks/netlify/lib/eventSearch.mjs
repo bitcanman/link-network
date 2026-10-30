@@ -27,7 +27,7 @@ export const LOCATIONS=[
 // Program labels the model shows next to each event, and the catalog id of
 // that program's Longhorn Links hub, which is the link it may cite.
 const PROGRAM_INFO={
- mba:{label:'MBA',cite:'r168'},
+ mba:{label:'MBA',cite:'r351'},
  mbae:{label:'MBA Entrepreneurship',cite:'r92'},
  mstc:{label:'MSTC',cite:'r165'},
  general:{label:'Open to all UT students',cite:'r26'},

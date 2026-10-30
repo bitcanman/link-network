@@ -188,7 +188,13 @@ export function scoredCatalog(question,eligible,{boostSources=[]}={}){
  const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
  const scored=eligible.map((l,i)=>{
   let score=0;
-  const aliasHit=(l.aliases||[]).some(a=>qNorm.includes(' '+a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim()+' '));
+  // The +50 exact-phrase bonus is reserved for multi-word aliases - a
+  // single-word alias (e.g. "tuition", "register") is too generic to deserve
+  // the same weight as a precise phrase match, and would otherwise outrank a
+  // genuinely more specific multi-word hit elsewhere in the catalog (see
+  // r138 "when is tuition due" vs. a one-word "tuition" alias on Tuition
+  // Rebate Program). It still contributes the normal +2 per-word score below.
+  const aliasHit=(l.aliases||[]).some(a=>{const norm=a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();return norm.includes(' ')&&qNorm.includes(' '+norm+' ');});
   if(aliasHit)score+=50;
   const nameCanon=new Set(textWords(l.name).map(canon));
   const aliasCanon=new Set(textWords((l.aliases||[]).join(' ')).map(canon));
