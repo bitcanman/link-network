@@ -78,6 +78,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-28"
  },
  {
+  "id": "inbox-558392b234",
+  "program": "general",
+  "title": "Gameday Bites and Rides Cashback",
+  "date": "2026-10-31",
+  "endDate": null,
+  "dateLabel": "Saturday, October 31, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Download ShopBack to receive $5 cashback on gameday bites and rides.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-10-30"
+ },
+ {
   "id": "inbox-f633b664a0",
   "program": "general",
   "title": "Home Football Game vs. Mississippi State Bulldogs",
