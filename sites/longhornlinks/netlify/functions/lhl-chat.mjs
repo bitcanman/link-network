@@ -60,11 +60,15 @@ export function scrubQuestion(text){
 // detached fetch here would drop rows at random.
 // 4s: a measured round trip to Apps Script is 2.0-2.4s warm, more when cold - this
 // stays above that floor without letting one slow write meaningfully delay the
-// chat response. Any failure is still swallowed so the sheet cannot take the chat down.
-async function logAsk(fields){
+// chat response. timeoutMs defaults to 4000 for callers outside the per-request
+// wall-clock budget (there are none left, but keeping a sane default costs
+// nothing); the handler's own calls pass a budget-aware value instead so a
+// slow logging round trip can't be what pushes a near-deadline request past
+// Netlify's hard 30s kill.
+async function logAsk(fields,timeoutMs=4000){
  if(!process.env.ASK_LOG_URL)return;
  try{
-  await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fields),signal:AbortSignal.timeout(4000)});
+  await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fields),signal:AbortSignal.timeout(timeoutMs)});
  }catch(e){console.error('Longhorn Links ask log failed',e.name);}
 }
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bundergrad\w*\b/.test(v))return 'undergraduate';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}
@@ -87,23 +91,33 @@ const WORD_SYNONYMS={company:'startup',companies:'startup',business:'startup',bu
 // own name/desc (an event titled "Spring Career Fair" should still score on
 // "spring"), they just must not, on their own, make an otherwise-satisfied
 // request ("please show me where I pay tuition") look like it needs a search.
-const GENERIC_ACTION_RE=/^(please|show|tell|explain|help|want|like|give|let|know|see|looking|thanks|thank|quickly|asap|real|really|actually|literally|basically|honestly|seriously)$/;
+// The added filler words below are listed in their already-stemmed (canon())
+// form, not their dictionary form, since this regex is only ever tested
+// against unmatchedSalientTerms' output and that output is already stemmed -
+// e.g. "getting"/"gets" both reduce to "gett"/"get", "needed" reduces to
+// "need", "going" is left alone by the stemmer (5 chars, the ing-rule needs
+// >5) so it stays "going". Verified against the actual stem() function
+// rather than guessed, since a mismatched form here would silently never
+// match anything.
+const GENERIC_ACTION_RE=/^(please|show|tell|explain|help|want|like|give|let|know|see|looking|thanks|thank|quickly|asap|real|really|actually|literally|basically|honestly|seriously|just|got|get|gett|need|try|go|going|went|put|take|took|outside|inside|near|nearby|around|over|back|somewhere|anywhere|someone|anyone|someth|anyth|stuff|thing|way|lot|bit|kind|sort)$/;
 const DATEY_RE=/^(january|february|march|april|may|june|july|august|september|october|november|december|today|tomorrow|yesterday|week|weeks|month|months|year|years|day|days|semester|spring|fall|summer|winter|now|soon|morning|afternoon|evening|night)$/;
+// A blocklist alone always leaks (a filler word nobody thought to list), so
+// forcing a search is additionally gated on retrieval confidence: skip it
+// entirely once the best eligible match's score already clears this. +6 is
+// the program-boost nudge and a single name/alias-word hit is +3, so a real
+// topical match (not just filler) reaches this comfortably; a filler-word-
+// only "match" (nothing in a resource's name/aliases/topics/desc overlaps)
+// never does. Tune from the topScore log column, not guessed blind.
+const STRONG_MATCH=8;
 function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&w.endsWith('es'))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
 function canon(w){const s=stem(w);return WORD_SYNONYMS[w]||WORD_SYNONYMS[s]||s;}
 function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
 function textWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1);}
-// Orders the eligible catalog by likely relevance - it no longer drops anything.
-// Literal word matching with a small hand-written stemmer has no concept of
-// meaning, so a resource that's exactly right can still score zero here ("how
-// to make friends" scores zero against every entry; "how do i find clubs"
-// scores zero against HornsLink specifically, since its name/desc say
-// "organization" and only its aliases say "club"). Truncating to a scored
-// top-N on that basis was a selection failure, not a model failure - the model
-// can tell a real match from a coincidence; literal scoring can't tell a real
-// miss from a wording gap. So this only sorts; `limit` (unset/0 by default)
-// exists purely as a reversible cost knob - see RETRIEVAL_LIMIT in the handler.
-export function relevantCatalog(question,eligible,{limit=0,boostSources=[]}={}){
+// Exposes each eligible entry's raw score alongside relevantCatalog's own
+// ordering, so a caller can judge retrieval confidence (e.g. "is the top
+// match strong enough that we actually don't need a web search") instead of
+// only getting the reordered list with the scores thrown away.
+export function scoredCatalog(question,eligible,{boostSources=[]}={}){
  const words=[...new Set(questionWords(question).map(canon))];
  const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
  const scored=eligible.map((l,i)=>{
@@ -125,14 +139,27 @@ export function relevantCatalog(question,eligible,{limit=0,boostSources=[]}={}){
   // beat an entry that's actually more topically relevant (an alias hit, or
   // several real word matches) just because of where it's filed.
   if(boostSources.length&&boostSources.includes(l.source))score+=6;
-  return {l,score,i};
+  return {link:l,score,i};
  });
  // Ties (including every zero-score entry) keep their original catalog order
  // rather than sorting arbitrarily - Array.prototype.sort is not guaranteed
  // stable across engines on every input shape, so this is explicit, not relied
  // on implicitly.
  scored.sort((a,b)=>b.score-a.score||a.i-b.i);
- const ordered=scored.map(s=>s.l);
+ return scored.map(({link,score})=>({link,score}));
+}
+// Orders the eligible catalog by likely relevance - it no longer drops anything.
+// Literal word matching with a small hand-written stemmer has no concept of
+// meaning, so a resource that's exactly right can still score zero here ("how
+// to make friends" scores zero against every entry; "how do i find clubs"
+// scores zero against HornsLink specifically, since its name/desc say
+// "organization" and only its aliases say "club"). Truncating to a scored
+// top-N on that basis was a selection failure, not a model failure - the model
+// can tell a real match from a coincidence; literal scoring can't tell a real
+// miss from a wording gap. So this only sorts; `limit` (unset/0 by default)
+// exists purely as a reversible cost knob - see RETRIEVAL_LIMIT in the handler.
+export function relevantCatalog(question,eligible,{limit=0,boostSources=[]}={}){
+ const ordered=scoredCatalog(question,eligible,{boostSources}).map(s=>s.link);
  return limit>0?ordered.slice(0,limit):ordered;
 }
 // Coverage diagnostic, not proof that web search is needed on its own - a term
@@ -317,6 +344,15 @@ const CACHE_TTL_MS=10*60*1000;
 function cacheGet(key){const hit=answerCache.get(key);if(!hit)return null;if(Date.now()>hit.expiresAt){answerCache.delete(key);return null;}return hit.value;}
 function cacheSet(key,value){answerCache.set(key,{value,expiresAt:Date.now()+CACHE_TTL_MS});}
 export default async function handler(req){
+ // One wall-clock budget for the whole handler, not a per-call constant, so a
+ // 504 is structurally impossible: Netlify kills this function at 30s with no
+ // response at all (observed: six dead requests at 30.0-30.6s, nothing logged),
+ // so every timed operation below draws from the same shrinking pool instead
+ // of each independently assuming it has the full 30s to itself.
+ const DEADLINE_MS=24000;
+ const startedAt=Date.now();
+ const remainingMs=()=>DEADLINE_MS-(Date.now()-startedAt);
+ const budgetFor=reserveMs=>Math.max(3000,Math.min(remainingMs()-reserveMs,20000));
  if(req.method!=='POST')return json({error:'Use POST.'},405);
  const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return json({error:'Origin not allowed.'},403);
  if(!req.headers.get('content-type')?.includes('application/json'))return json({error:'Expected JSON.'},415);
@@ -346,7 +382,7 @@ export default async function handler(req){
  const direct=(history.length===0||isSelfContained(question))?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',needsWebSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'});
+  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',needsWebSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',topScore:'n/a',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'},Math.max(1000,Math.min(remainingMs(),2500)));
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
@@ -355,7 +391,9 @@ export default async function handler(req){
  // default - see relevantCatalog's own comment for why), a positive number truncates
  // to that many, tunable or rollback-able from Netlify's env var UI alone.
  const retrievalLimit=Number(process.env.RETRIEVAL_LIMIT)||0;
- const relevant=relevantCatalog(question,eligible,{limit:retrievalLimit,boostSources:pages[effectiveProgram]?.catalogSources});
+ const scored=scoredCatalog(question,eligible,{boostSources:pages[effectiveProgram]?.catalogSources});
+ const orderedCatalog=scored.map(s=>s.link);
+ const relevant=retrievalLimit>0?orderedCatalog.slice(0,retrievalLimit):orderedCatalog;
  const resourceData=relevant.map(l=>({id:l.id,name:l.name,description:l.desc,purpose:l.purpose,aliases:l.aliases,audience:l.audience||'Not verified; do not infer eligibility',collection:l.source,topics:l.topics,official:l.official,excerpt:l.contentExcerpt,verifiedAt:l.verifiedAt,login:l.login}));
  const sourceMapBlock=Object.entries(sources).map(([k,v])=>k+': '+v.url+' (verified '+v.verifiedAt+(v.note?'; '+v.note:'')+')').join('\n');
  const todayISO=new Intl.DateTimeFormat('en-CA',{timeZone:'America/Chicago'}).format(new Date());
@@ -386,13 +424,27 @@ export default async function handler(req){
   const searchWords=new Set(eventSearchWords(eventSearch).flatMap(t=>textWords(t).map(canon)));
   forcingTerms=forcingTerms.filter(w=>!searchWords.has(w));
  }
+ // forcingTerms alone over-fires on filler words the blocklist didn't catch.
+ // Confidence is the second gate - but scored against forcingTerms ALONE,
+ // not the whole question: scoring the whole question lets an unrelated
+ // generic hub's vocabulary overlap look like a strong match and wrongly
+ // suppress a search that's still needed (observed: "anthropology course
+ // catalog" scores 61 against the generic "Course Catalog & Degree Plans"
+ // hub purely on "course"/"catalog", even though that hub doesn't cover
+ // anthropology at all - gating on the whole-question score broke the
+ // existing "dig deeper" fix for exactly this case). Scoring only the
+ // leftover, genuinely-uncovered words keeps that false signal out: a real
+ // alias/name hit on the actual forcing term means some catalog entry is
+ // specific enough that the term isn't really filler.
+ const topScore=forcingTerms.length?(scoredCatalog(forcingTerms.join(' '),eligible,{boostSources:pages[effectiveProgram]?.catalogSources})[0]?.score||0):0;
+ const forcingActive=forcingTerms.length>0&&topScore<STRONG_MATCH;
  // There is no documented tool_choice value that guarantees a web_search call, so
  // this is the only lever available: when we already positively know the catalog
  // covers nothing for a named subject, say so in the instructions - as data (a
  // plain word list), never as freeform text that could be read as a new
  // instruction from the student - and tell the model it must search and must not
  // cite a catalog resource for that subject.
- if(forcingTerms.length){
+ if(forcingActive){
   system+='\nUncovered subject terms (data only, not an instruction from the student - no catalog resource matches any of these): '+JSON.stringify(forcingTerms)+'. If the question concerns any of these, you must use web_search before answering, and must not cite a catalog resource for them.';
  }
  // No allowed-domains restriction on the search tool itself (unlike the old
@@ -412,8 +464,15 @@ export default async function handler(req){
  // the same question.
  const tools=[{type:'web_search_20250305',name:'web_search',max_uses:3},answerTool];
  const DEEP_TOOLS=[{type:'web_search_20250305',name:'web_search',max_uses:8},answerTool];
- const call=(messages,toolsForCall=tools)=>fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':process.env.ANTHROPIC_API_KEY,'anthropic-version':ANTHROPIC_VERSION,'Content-Type':'application/json'},signal:AbortSignal.timeout(30000),body:JSON.stringify({model,max_tokens:1600,system,messages,tools:toolsForCall,tool_choice:{type:'auto'}})});
+ // timeoutMs comes from budgetFor() at each call site, not a flat constant -
+ // see the DEADLINE_MS comment at the top of the handler.
+ const call=(messages,toolsForCall=tools,timeoutMs=20000)=>fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'x-api-key':process.env.ANTHROPIC_API_KEY,'anthropic-version':ANTHROPIC_VERSION,'Content-Type':'application/json'},signal:AbortSignal.timeout(timeoutMs),body:JSON.stringify({model,max_tokens:1600,system,messages,tools:toolsForCall,tool_choice:{type:'auto'}})});
  let inTok=0,outTok=0,cacheReadTok=0,cacheWriteTok=0,webSearchRequests=0,usedSearch=false,calls=0,latencyMs=0,fallbackReason='none';
+ // Held so the outer catch can still answer the student with something real
+ // instead of a bare error once call one has actually succeeded - an honest,
+ // general answer beats an error page even if everything after this point
+ // (the retry, logging) fails or the budget runs out.
+ let partialAnswer=null;
  const tally=body=>{
   const u=body.usage||{};
   inTok+=u.input_tokens||0;outTok+=u.output_tokens||0;cacheReadTok+=u.cache_read_input_tokens||0;cacheWriteTok+=u.cache_creation_input_tokens||0;
@@ -448,7 +507,15 @@ export default async function handler(req){
   // giving the model the tool (plus the compelling system-prompt line above,
   // when we already know the catalog is empty) lets most questions that used
   // to need a retry get answered correctly in one call.
-  const response=await call(baseInput);
+  // Reserve only 6000ms (not 10000) for whatever comes after: measured
+  // directly against the real API, two real web searches plus composing the
+  // final answer take ~14.0-14.2s - right at the edge of a 14000ms budget,
+  // losing the race by a couple hundred ms (observed: "parking ticket outside
+  // DKR", a forced search for an unmatched acronym). The retry this reserve
+  // protects is rarely worth much anyway when the only forcing term is a
+  // single unmatched word - there's nothing left to escalate - so call one
+  // gets the bigger share of the budget.
+  const response=await call(baseInput,tools,budgetFor(6000));
   latencyMs+=Date.now()-t0;
   if(!response.ok){
    // Anthropic's error body names the offending parameter explicitly - logging
@@ -465,6 +532,7 @@ export default async function handler(req){
   let raw=extract(body);
   usedSearch=webSearchRequests>0;
   let answer=validateAnswer(raw,eligible);
+  partialAnswer=answer;
   // Backstop: fires when we already positively know the catalog has nothing
   // for a named subject (forcingTerms), OR the model itself flagged the
   // answer insufficient (needsWebSearch:true) - citing a real utexas.edu page
@@ -474,7 +542,13 @@ export default async function handler(req){
   // a model that searched and still says needsWebSearch:true must get the
   // deeper pass, which is exactly the case this fixes.
   const modelSaysInsufficient=raw.needsWebSearch===true;
-  if((forcingTerms.length>0||modelSaysInsufficient)&&!(usedSearch&&!modelSaysInsufficient)){
+  const retryWarranted=(forcingActive||modelSaysInsufficient)&&!(usedSearch&&!modelSaysInsufficient);
+  // remainingMs()>10000 is a hard gate, not just a budgetFor() floor: a retry
+  // starved to the 3000ms floor is likely to abort mid-search anyway, for the
+  // cost of the attempt eating into whatever's left for logAsk. Skipping it
+  // outright when there's no real window left is what actually keeps a 504
+  // impossible, not just less likely.
+  if(retryWarranted&&remainingMs()>10000){
    fallbackReason=modelSaysInsufficient?'model-declared-insufficient':'forced-unmatched-subject-no-search';
    try{
     // Each messages.create() call carries its own full conversation - the
@@ -484,17 +558,18 @@ export default async function handler(req){
     // MSTC "course catalog" question lost r1/r162/r165 entirely once the
     // search pass ran). resourceData here is already the ~20-entry retrieved
     // subset, not the full catalog, so resending it is cheap.
-    // forcingTerms can now be empty here (the model-declared-insufficient
-    // path doesn't require it), so the uncovered-subject sentence is only
-    // appended when there's an actual term list to name - passed as a plain,
-    // clearly-delimited data sentence (a comma-joined word list, already
-    // stripped of punctuation by questionWords()), never as freeform user
-    // text that could be read as a new instruction.
-    const unmatchedNote=forcingTerms.length?' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.':'';
+    // forcingActive can be false here (the model-declared-insufficient path
+    // doesn't require it, and a high-confidence match suppresses it even
+    // when forcingTerms is non-empty), so the uncovered-subject sentence is
+    // only appended when it's actually true - passed as a plain, clearly-
+    // delimited data sentence (a comma-joined word list, already stripped of
+    // punctuation by questionWords()), never as freeform user text that
+    // could be read as a new instruction.
+    const unmatchedNote=forcingActive?' No specific resource was found for the requested subject: '+forcingTerms.join(', ')+'.':'';
     const searchInput=[...baseInput,{role:'assistant',content:JSON.stringify({heading:raw.heading,paragraphs:raw.paragraphs})},{role:'user',content:'That was not specific enough.'+unmatchedNote+' Use web_search to find the specific official page for this question. Keep any catalog [[r123]] citations from your last answer that are still correct, and add the web result as a new [[w1]] citation with a matching webSources entry for the specific page you found - this should add to your last answer, not replace it, unless the catalog citation was actually wrong.'}];
     const t1=Date.now();
     calls++;
-    const searchResponse=await call(searchInput,DEEP_TOOLS);
+    const searchResponse=await call(searchInput,DEEP_TOOLS,budgetFor(2500));
     latencyMs+=Date.now()-t1;
     if(searchResponse.ok){
      const secondBody=await searchResponse.json();
@@ -502,8 +577,15 @@ export default async function handler(req){
      raw=extract(secondBody);
      usedSearch=webSearchRequests>0;
      answer=validateAnswer(raw,eligible);
+     partialAnswer=answer;
     }else console.error('Longhorn Links web search status',searchResponse.status);
    }catch(e){console.error('Longhorn Links web search failed',e.name);}
+  }else if(retryWarranted){
+   // A retry would help, but there isn't a real window left for it (see the
+   // remainingMs()>10000 comment above) - keep call one's already-valid
+   // answer rather than attempt a second call that's likely to abort mid-
+   // flight and cost the time logAsk needs without producing anything better.
+   fallbackReason='budget-exhausted';
   }
   const tokenCost=(inTok*PRICE_CLAUDE.in+cacheReadTok*PRICE_CLAUDE.in*PRICE_CLAUDE.cacheReadMult+cacheWriteTok*PRICE_CLAUDE.in*PRICE_CLAUDE.cacheWriteMult+outTok*PRICE_CLAUDE.out)/1e6;
   const searchCost=webSearchRequests*PRICE_CLAUDE.perSearch;
@@ -534,7 +616,11 @@ export default async function handler(req){
    // Whether the compelling system-prompt line (step 2) was added at all -
    // compare against webSearch to see how often it was actually needed vs. the
    // model already searching on its own once the tool was simply available.
-   searchForced:String(forcingTerms.length>0),
+   searchForced:String(forcingActive),
+   // The best eligible catalog match's raw score (see scoredCatalog/
+   // STRONG_MATCH) - logged so the confidence threshold can be tuned from
+   // real rows instead of guessed at.
+   topScore:String(topScore),
    stripped:String(answer.stripped),
    // Log-only misdescription guard (see validateAnswer) - counted for a week to
    // measure the false-positive rate before it starts removing anything.
@@ -546,8 +632,20 @@ export default async function handler(req){
    model,
    latencyMs:String(latencyMs),
    cost:(tokenCost+searchCost).toFixed(5)
-  });
+  },Math.max(1000,Math.min(remainingMs(),2500)));
   if(cacheKey&&!usedSearch)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
- }catch(e){console.error('Longhorn Links answer failed',e.name);return json({error:'The answer could not be completed. Please try again.'},502);}
+ }catch(e){
+  console.error('Longhorn Links answer failed',e.name);
+  // A real, general answer the student can act on beats an error page - call
+  // one already succeeded and validated, so whatever broke after that point
+  // (the retry, cost math, logging) doesn't have to break the response too.
+  // Best-effort log only; swallow a second failure here rather than let a
+  // logging problem override the chance to still answer the student.
+  if(partialAnswer){
+   try{await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:partialAnswer.sources.map(x=>x.name).join(' | ').slice(0,500),webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason:'partial-after-error',searchForced:String(forcingActive),topScore:String(topScore),stripped:String(partialAnswer.stripped),suspectCitations:String(partialAnswer.suspectCitations),catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},Math.max(1000,Math.min(remainingMs(),2500)));}catch{}
+   return json({...partialAnswer,audience,id});
+  }
+  return json({error:'The answer could not be completed. Please try again.'},502);
+ }
 }
