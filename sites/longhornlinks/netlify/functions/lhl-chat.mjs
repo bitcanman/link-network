@@ -71,6 +71,33 @@ async function logAsk(fields,timeoutMs=4000){
   await fetch(process.env.ASK_LOG_URL,{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(fields),signal:AbortSignal.timeout(timeoutMs)});
  }catch(e){console.error('Longhorn Links ask log failed',e.name);}
 }
+// Dual-write target, same best-effort posture as logAsk above: a missing env
+// var or a Supabase outage must never affect the response. Plain fetch against
+// PostgREST, not supabase-js - this file's only imports stay the two local
+// ones; a client library would add a dependency just for two HTTP verbs this
+// shape already covers.
+// Read live on every call, not cached at module scope - a Netlify function
+// container can stay warm across many requests, and caching these into a
+// top-level const would mean a key rotated via the env var UI (or injected
+// differently per test) never takes effect without a fresh cold start.
+function supabaseConfigured(){return !!(process.env.SUPABASE_URL&&process.env.SUPABASE_SERVICE_KEY);}
+function supabaseHeaders(){const key=process.env.SUPABASE_SERVICE_KEY;return {apikey:key,Authorization:'Bearer '+key,'Content-Type':'application/json',Prefer:'return=minimal'};}
+async function supabaseInsert(table,row,timeoutMs=4000){
+ if(!supabaseConfigured())return;
+ try{
+  await fetch(process.env.SUPABASE_URL+'/rest/v1/'+table,{method:'POST',headers:supabaseHeaders(),body:JSON.stringify(row),signal:AbortSignal.timeout(timeoutMs)});
+ }catch(e){console.error('Supabase insert failed',table,e.name);}
+}
+async function supabasePatch(table,id,row,timeoutMs=4000){
+ if(!supabaseConfigured())return;
+ try{
+  await fetch(process.env.SUPABASE_URL+'/rest/v1/'+table+'?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:supabaseHeaders(),body:JSON.stringify(row),signal:AbortSignal.timeout(timeoutMs)});
+ }catch(e){console.error('Supabase patch failed',table,e.name);}
+}
+// Full UUID validation, not a loose shape check - this goes straight into a
+// uuid column, so anything that isn't a real UUID would fail the insert
+// outright rather than degrade gracefully.
+const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bundergrad\w*\b/.test(v))return 'undergraduate';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}
 export function allows(l,a){const audience=(l.audience||'').toLowerCase();if(/undergrad/.test(audience)&&/\bgraduate\b/.test(audience))return true;if(/undergrad/.test(audience))return a==='first-year'||a==='undergraduate';if(/graduate/.test(audience))return ['graduate','mba','mstc'].includes(a);if(audience)return true;if(l.source==='MBA'||/\bmba\b/i.test(l.name))return a==='mba';if(l.source==='MSTC'||/\bmstc\b/i.test(l.name))return a==='mstc';if(/mechanical/i.test(l.source||''))return a==='engineering';return true;}
 export function eligibleCatalog(question,audience){const on=/\bon[- ]campus\b/i.test(question);return catalog.filter(l=>allows(l,audience)&&!(on&&(l.scope==='off-campus'||/off[- ]campus|facebook/i.test(l.name))));}
@@ -362,6 +389,14 @@ export default async function handler(req){
  if(!question||question.length>600||!audiences.has(data.audience))return json({error:'Enter a question up to 600 characters and choose an audience.'},400);
  const history=Array.isArray(data.history)?data.history.slice(-8).filter(m=>m&&['user','assistant'].includes(m.role)&&typeof m.content==='string').map(m=>({role:m.role,content:m.content.slice(0,1200)})):[];
  const audience=explicitAudience(question)||data.audience;
+ // Validated against a real UUID shape, not just "is a string" - this goes
+ // into a uuid column in ask_questions, so a client value that isn't one
+ // would fail that insert outright. sessionStorage-sourced per ask/index.html,
+ // so it is per-tab and non-identifying; null is always a legal value (an
+ // unconfigured or pre-rollout client simply isn't tracked).
+ const sessionId=typeof data.sessionId==='string'&&UUID_RE.test(data.sessionId)?data.sessionId:null;
+ const seqNum=Number(data.seq);
+ const seq=Number.isInteger(seqNum)&&seqNum>0?seqNum:null;
  // `audience` doubles as the selected page/program (this chat has no separate
  // per-page embed - see pages.mjs). `effectiveProgram` applies the explicit-
  // override rule (a named different program, or "campus-wide", wins over the
@@ -371,9 +406,22 @@ export default async function handler(req){
  const effectiveProgram=effectivePage(question,pages[audience]?audience:null);
  const eligibilityAudience=pages[audience]?.eligibilityAudience||audience;
  const eligible=eligibleCatalog(question,eligibilityAudience);
- const id=crypto.randomUUID().slice(0,8);
+ // A real UUID now, not a truncated 8-char slice - ask_questions.id is a uuid
+ // column, and this same id is what ask_clicks/ask_feedback reference as
+ // question_id, so it has to be a genuine one everywhere it's used, including
+ // the id already returned to and echoed back by the client.
+ const id=crypto.randomUUID();
+ const scrubbedQuestion=scrubQuestion(question).slice(0,300);
+ const turnsCount=Math.floor(history.length/2)+1;
  const cacheKey=history.length===0?audience+'|'+question.toLowerCase().trim():null;
  if(cacheKey){const cached=cacheGet(cacheKey);if(cached)return json({...cached,audience,id});}
+ // Not awaited - the model call (or the instant catalog match below) runs
+ // while this is in flight, so it costs no latency. Every terminal path below
+ // awaits it before patching, so the patch never races an insert that hasn't
+ // landed yet. Fired after the cache-hit check on purpose: a cache hit returns
+ // immediately with no patch to follow, so starting a row here would strand
+ // it in 'started' forever - this only covers paths that actually proceed.
+ const supabaseStarted=supabaseInsert('ask_questions',{id,status:'started',session_id:sessionId,seq,question:scrubbedQuestion,audience,turns:turnsCount},Math.max(1000,Math.min(remainingMs(),2500)));
  // Pure administrative lookup with exactly one unambiguous resource - skip the model call
  // (and the OpenAI key requirement entirely - this path never needs either). Turn 1 is
  // always eligible (nothing upstream to depend on); a later turn only qualifies when the
@@ -382,7 +430,15 @@ export default async function handler(req){
  const direct=(history.length===0||isSelfContained(question))?singleUnambiguousMatch(question,eligible):null;
  if(direct){
   const answer={heading:direct.name,paragraphs:[(direct.purpose||direct.desc)+' [['+direct.id+']]'],followUps:[],sources:[{id:direct.id,name:direct.name,url:direct.url,desc:direct.desc,login:!!direct.login}],stripped:0};
-  await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:direct.name,webSearch:'false',needsWebSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',topScore:'n/a',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'},Math.max(1000,Math.min(remainingMs(),2500)));
+  const logTimeoutMs=Math.max(1000,Math.min(remainingMs(),2500));
+  await supabaseStarted;
+  await Promise.allSettled([
+   // answered:false - this path answers from the catalog directly
+   // (model:'none'), never from a model call, which is exactly the
+   // distinction this column exists to make visible.
+   supabasePatch('ask_questions',id,{status:'ok',answered:false,heading:answer.heading,answer:answer.paragraphs.join('\n'),sources:[direct.name],web_search:false,needs_web_search:false,kept_catalog_citation:null,unmatched:[],fallback_reason:'none',search_forced:false,top_score:null,stripped:0,suspect_citations:0,catalog_entries:0,calls:0,model:'none',latency_ms:0,cost_usd:0},logTimeoutMs),
+   logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:direct.name,webSearch:'false',needsWebSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',topScore:'n/a',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'},logTimeoutMs)
+  ]);
   if(cacheKey)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }
@@ -589,50 +645,72 @@ export default async function handler(req){
   }
   const tokenCost=(inTok*PRICE_CLAUDE.in+cacheReadTok*PRICE_CLAUDE.in*PRICE_CLAUDE.cacheReadMult+cacheWriteTok*PRICE_CLAUDE.in*PRICE_CLAUDE.cacheWriteMult+outTok*PRICE_CLAUDE.out)/1e6;
   const searchCost=webSearchRequests*PRICE_CLAUDE.perSearch;
-  await logAsk({
-   type:'question',id,
-   question:scrubQuestion(question).slice(0,300),
-   audience,
-   turns:String(Math.floor(history.length/2)+1),
-   // Names, not ids, so the column is readable and pivots cleanly. Empty means the
-   // catalog had no answer, which is the signal worth watching.
-   sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),
-   webSearch:String(usedSearch),
-   // Whether the model itself flagged the answer insufficient (as distinct
-   // from forcingTerms, the code-side coverage check) - without this there's
-   // no way to measure how often the model was asking for help and the
-   // handler was ignoring it (the bug this commit fixes).
-   needsWebSearch:String(raw.needsWebSearch===true),
-   // Whether a search-path answer kept at least one catalog ([[r123]]) citation
-   // alongside the web result, vs. losing it entirely once the search pass ran -
-   // 'n/a' when no search happened, so a regression here shows up as a drop in
-   // 'true' rather than silently blending into rows where it never applied.
-   keptCatalogCitation:usedSearch?String(answer.sources.some(s=>s.kind!=='web')):'n/a',
-   // Raw coverage diagnostic (see unmatchedSalientTerms) - distinct from whether
-   // a search actually ran, so "unmatched vocabulary with no search" and "unmatched
-   // vocabulary that genuinely triggered one" are both visible separately.
-   unmatched:unmatched.join(','),
-   fallbackReason,
-   // Whether the compelling system-prompt line (step 2) was added at all -
-   // compare against webSearch to see how often it was actually needed vs. the
-   // model already searching on its own once the tool was simply available.
-   searchForced:String(forcingActive),
-   // The best eligible catalog match's raw score (see scoredCatalog/
-   // STRONG_MATCH) - logged so the confidence threshold can be tuned from
-   // real rows instead of guessed at.
-   topScore:String(topScore),
-   stripped:String(answer.stripped),
-   // Log-only misdescription guard (see validateAnswer) - counted for a week to
-   // measure the false-positive rate before it starts removing anything.
-   suspectCitations:String(answer.suspectCitations),
-   // How many catalog entries were actually sent to the model - visible alongside
-   // cost now that the default is the full eligible set, not a top-N cut.
-   catalogEntries:String(relevant.length),
-   calls:String(calls),
-   model,
-   latencyMs:String(latencyMs),
-   cost:(tokenCost+searchCost).toFixed(5)
-  },Math.max(1000,Math.min(remainingMs(),2500)));
+  const costUsd=tokenCost+searchCost;
+  const keptCatalogCitation=usedSearch?answer.sources.some(s=>s.kind!=='web'):null;
+  const logTimeoutMs=Math.max(1000,Math.min(remainingMs(),2500));
+  await supabaseStarted;
+  await Promise.allSettled([
+   supabasePatch('ask_questions',id,{
+    status:'ok',answered:true,
+    heading:answer.heading,answer:answer.paragraphs.join('\n'),
+    sources:answer.sources.map(x=>x.name),
+    web_search:usedSearch,
+    needs_web_search:raw.needsWebSearch===true,
+    kept_catalog_citation:keptCatalogCitation,
+    unmatched,
+    fallback_reason:fallbackReason,
+    search_forced:forcingActive,
+    top_score:topScore,
+    stripped:answer.stripped,
+    suspect_citations:answer.suspectCitations,
+    catalog_entries:relevant.length,
+    calls,model,latency_ms:latencyMs,cost_usd:costUsd
+   },logTimeoutMs),
+   logAsk({
+    type:'question',id,
+    question:scrubbedQuestion,
+    audience,
+    turns:String(turnsCount),
+    // Names, not ids, so the column is readable and pivots cleanly. Empty means the
+    // catalog had no answer, which is the signal worth watching.
+    sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),
+    webSearch:String(usedSearch),
+    // Whether the model itself flagged the answer insufficient (as distinct
+    // from forcingTerms, the code-side coverage check) - without this there's
+    // no way to measure how often the model was asking for help and the
+    // handler was ignoring it (the bug this commit fixes).
+    needsWebSearch:String(raw.needsWebSearch===true),
+    // Whether a search-path answer kept at least one catalog ([[r123]]) citation
+    // alongside the web result, vs. losing it entirely once the search pass ran -
+    // 'n/a' when no search happened, so a regression here shows up as a drop in
+    // 'true' rather than silently blending into rows where it never applied.
+    keptCatalogCitation:keptCatalogCitation===null?'n/a':String(keptCatalogCitation),
+    // Raw coverage diagnostic (see unmatchedSalientTerms) - distinct from whether
+    // a search actually ran, so "unmatched vocabulary with no search" and "unmatched
+    // vocabulary that genuinely triggered one" are both visible separately.
+    unmatched:unmatched.join(','),
+    fallbackReason,
+    // Whether the compelling system-prompt line (step 2) was added at all -
+    // compare against webSearch to see how often it was actually needed vs. the
+    // model already searching on its own once the tool was simply available.
+    searchForced:String(forcingActive),
+    // The best eligible catalog match's raw score (see scoredCatalog/
+    // STRONG_MATCH) - logged so the confidence threshold can be tuned from
+    // real rows instead of guessed at.
+    topScore:String(topScore),
+    stripped:String(answer.stripped),
+    // Log-only misdescription guard (see validateAnswer) - counted for a week to
+    // measure the false-positive rate before it starts removing anything.
+    suspectCitations:String(answer.suspectCitations),
+    // How many catalog entries were actually sent to the model - visible alongside
+    // cost now that the default is the full eligible set, not a top-N cut.
+    catalogEntries:String(relevant.length),
+    calls:String(calls),
+    model,
+    latencyMs:String(latencyMs),
+    cost:costUsd.toFixed(5)
+   },logTimeoutMs)
+  ]);
   if(cacheKey&&!usedSearch)cacheSet(cacheKey,answer);
   return json({...answer,audience,id});
  }catch(e){
@@ -642,10 +720,58 @@ export default async function handler(req){
   // (the retry, cost math, logging) doesn't have to break the response too.
   // Best-effort log only; swallow a second failure here rather than let a
   // logging problem override the chance to still answer the student.
+  const errorLogTimeoutMs=Math.max(1000,Math.min(remainingMs(),2500));
   if(partialAnswer){
-   try{await logAsk({type:'question',id,question:scrubQuestion(question).slice(0,300),audience,turns:String(Math.floor(history.length/2)+1),sources:partialAnswer.sources.map(x=>x.name).join(' | ').slice(0,500),webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason:'partial-after-error',searchForced:String(forcingActive),topScore:String(topScore),stripped:String(partialAnswer.stripped),suspectCitations:String(partialAnswer.suspectCitations),catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},Math.max(1000,Math.min(remainingMs(),2500)));}catch{}
+   try{
+    await supabaseStarted;
+    await Promise.allSettled([
+     supabasePatch('ask_questions',id,{status:'error',answered:true,error:e.name,fallback_reason:'partial-after-error',heading:partialAnswer.heading,answer:partialAnswer.paragraphs.join('\n'),sources:partialAnswer.sources.map(x=>x.name),web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,stripped:partialAnswer.stripped,suspect_citations:partialAnswer.suspectCitations,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
+     logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:partialAnswer.sources.map(x=>x.name).join(' | ').slice(0,500),webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason:'partial-after-error',searchForced:String(forcingActive),topScore:String(topScore),stripped:String(partialAnswer.stripped),suspectCitations:String(partialAnswer.suspectCitations),catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},errorLogTimeoutMs)
+    ]);
+   }catch{}
    return json({...partialAnswer,audience,id});
   }
+  // No model answer at all (observed: call one's own budgetFor(6000) ceiling
+  // hit at 18.08s/18.27s, aborting before partialAnswer was ever assigned) -
+  // the catalog itself is still real evidence even with zero model output, so
+  // surfacing its top matches beats a bare error page. Deliberately not
+  // prose: nothing here is generated, so there is nothing to get wrong about
+  // what these resources actually say - just the citation markers, which
+  // still render as real, clickable cards.
+  if(relevant.length){
+   try{
+    const topIds=relevant.slice(0,3).map(l=>l.id);
+    const fallback={
+     heading:'We could not generate a full answer',
+     paragraphs:['The full answer could not be generated right now - these are the closest matching resources: '+topIds.map(i=>'[['+i+']]').join(' ')+'.'],
+     followUps:[],
+     webSources:[],
+     primaryId:relevant[0].id
+    };
+    // validateAnswer still enforces the citation allowlist here, so a bug in
+    // this fallback can never cite an id outside the eligible set - same
+    // guarantee as the real model path, not a special-cased exception to it.
+    const answer=validateAnswer(fallback,eligible);
+    try{
+     await supabaseStarted;
+     await Promise.allSettled([
+      supabasePatch('ask_questions',id,{status:'error',answered:false,error:e.name,fallback_reason:'catalog-only-no-model',heading:answer.heading,answer:answer.paragraphs.join('\n'),sources:answer.sources.map(x=>x.name),web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,stripped:answer.stripped,suspect_citations:answer.suspectCitations,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
+      logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason:'catalog-only-no-model',searchForced:String(forcingActive),topScore:String(topScore),stripped:String(answer.stripped),suspectCitations:String(answer.suspectCitations),catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},errorLogTimeoutMs)
+     ]);
+    }catch{}
+    return json({...answer,audience,id});
+   }catch(e){console.error('Longhorn Links catalog-only fallback failed',e.name);}
+  }
+  // Nothing was produced for the student at all - still worth a row: this is
+  // exactly the previously-invisible case (every 504/502 absent from the
+  // data). No heading/answer/sources to report since nothing was generated.
+  try{
+   await supabaseStarted;
+   await Promise.allSettled([
+    supabasePatch('ask_questions',id,{status:'error',answered:false,error:e.name,fallback_reason:fallbackReason,web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
+    logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:'',webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason,searchForced:String(forcingActive),topScore:String(topScore),stripped:'0',suspectCitations:'0',catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},errorLogTimeoutMs)
+   ]);
+  }catch{}
   return json({error:'The answer could not be completed. Please try again.'},502);
  }
 }
