@@ -276,9 +276,10 @@ function askWithInstantFromRealPage(syntheticLinks){
   extractConst('INSTANT_AUDIENCE_MAP')+';'+
   braceSlice(script,script.indexOf('function eligibleForInstant('))+';'+
   extractConst('INSTANT_MIN_SCORE')+';'+
-  braceSlice(script,script.indexOf('function confidentMatches('))+';'+
   braceSlice(script,script.indexOf('function renderInstantLinks('))+';'+
   braceSlice(script,script.indexOf('function renderNoMatch('))+';'+
+  braceSlice(script,script.indexOf('function rankForDisplay('))+';'+
+  braceSlice(script,script.indexOf('function renderInstantResult('))+';'+
   extractConst('DISTRESS_RE')+';'+
   braceSlice(script,script.indexOf('function isDistress('))+';'+
   extractConst('DISTRESS_LINK_IDS')+';'+
@@ -323,7 +324,7 @@ function askWithInstantFromRealPage(syntheticLinks){
 // with no real querySelector - used to locate and "click" the Dig deeper
 // button a test's own ask() call rendered.
 function findLastNode(createdNodes,className){return createdNodes.filter(n=>n.className===className).at(-1);}
-test('instant tier runs on every turn, not just the first, and dedupe correctly accumulates across turns - at INSTANT_MIN_SCORE=3 with no gap check, a candidate sharing even one word with an earlier question now surfaces immediately (at low confidence) rather than waiting for its own exact-phrase turn, which is the intended effect of fix 1, not a bug',async()=>{
+test('instant tier runs on every turn, not just the first, and dedupe is a rank penalty, never a removal - a previously-shown link can still appear again if it still scores, just ranked below a new dominant match rather than disappearing',async()=>{
  const syntheticLinks=[
   {id:'A',cat:'x',name:'Alpha Hub',desc:'A filler description.',url:'https://example.com/a',aliases:['alpha']},
   {id:'B',cat:'x',name:'Quibble Handler',desc:'A filler description.',url:'https://example.com/b',aliases:['hub quibble']},
@@ -337,20 +338,18 @@ test('instant tier runs on every turn, not just the first, and dedupe correctly 
   await ask('alpha hub');
   assert.equal(insertCalls.length,1,'turn 1 renders exactly one instant-links block');
   assert(insertCalls[0].includes('Alpha Hub'),'turn 1 must show A, a plain word-level match');
-  assert(insertCalls[0].includes('Quibble Handler'),'at the new, looser threshold, B also clears the cap on turn 1 purely from sharing the word "hub" with A - a low-confidence cluster member, not ambiguity to withhold');
+  assert(!insertCalls[0].includes('Quibble Handler'),'B scores only 2 alone (a single shared alias word with A) - below INSTANT_MIN_SCORE=3, so it does not even clear scorerTop yet');
   insertCalls.length=0;
   await ask('quibble');
   assert.equal(insertCalls.length,1,'turn 2 (a follow-up) still renders an instant-links block - the tier is not gated to turn 1');
-  assert(insertCalls[0].includes('Wobble Station'),'turn 2 must show D - "quibble" (this question) is one of its two alias words, so it clears the cap the moment "quibble" is typed, regardless of context');
-  assert(!insertCalls[0].includes('Alpha Hub'),'A must be suppressed on turn 2 even though it would still score - it was already shown on turn 1 (dedupe)');
-  assert(!insertCalls[0].includes('Quibble Handler'),'B must also be suppressed on turn 2 - it was already shown on turn 1, even though it is now the dominant (exact-phrase) match for "alpha hub quibble"');
+  assert(insertCalls[0].includes('Quibble Handler'),'turn 2 must show B dominantly - concatenated with turn 1’s "alpha hub" it forms B’s exact alias "hub quibble"');
+  assert(insertCalls[0].includes('Alpha Hub'),'A must still appear too, ranked below B - it still scores 8 (its own self-contained match persists in the combined text) and there is room in the cap of 3, so dedupe only demotes it, never removes it');
   insertCalls.length=0;
   await ask('wobble');
-  assert.equal(insertCalls.length,1,'turn 3 (a second follow-up) still renders a block - either an instant-links block or the honest no-match line, never a silent no-op');
-  assert(!insertCalls[0].includes('Alpha Hub'),'A must stay suppressed');
-  assert(!insertCalls[0].includes('Quibble Handler'),'B must stay suppressed');
-  assert(!insertCalls[0].includes('Wobble Station'),'D must stay suppressed too - it was already shown on turn 2, even though "quibble wobble" is now its dominant exact-phrase match - dedupe persists across more than one turn, not just the immediately previous one');
-  assert(!insertCalls[0].includes('Quibble Handler'),'B must be suppressed on turn 3 - it was already shown on turn 2 (dedupe persists across more than one turn)');
+  assert.equal(insertCalls.length,1,'turn 3 (a second follow-up) still renders a block');
+  assert(insertCalls[0].includes('Wobble Station'),'turn 3 must show D dominantly - concatenated with only the most recent prior question ("quibble"), forming D’s exact alias "quibble wobble"');
+  assert(insertCalls[0].includes('Quibble Handler'),'B must still appear too, ranked below D - it still scores from "quibble" alone and was already shown, but shown-before only demotes within a tie, and here it simply is not tied with D (57 vs 5) so it keeps its earned spot');
+  assert(!insertCalls[0].includes('Alpha Hub'),'A correctly drops out on turn 3 - "alpha"/"hub" are not in "quibble wobble" at all, so it genuinely scores 0 (not suppressed by dedupe, just no longer relevant - this is the "only the most recent prior question" guarantee)');
  }finally{globalThis.fetch=originalFetch;}
 });
 test('a greeting renders the reply alone - no instant scorer runs, no link cards, even though the scorer would otherwise find a confident match',async()=>{
@@ -379,7 +378,7 @@ test('the instant path is genuinely reachable on a later turn with the real, liv
   await ask('what about duo');
   assert.equal(insertCalls.length,1,'a later turn (turns>0) must still be able to render an instant-links block with the real catalog - this is the behavior that regressed to turn-1-only once already');
   assert(insertCalls[0].includes('DUO'),'"what about duo" alone cannot clear the gate, but concatenated with the prior question it surfaces DUO / Multi-Factor Setup');
-  assert(!insertCalls[0].includes('UT EID Self-Service'),'the turn 1 resource must be suppressed on turn 2 - already shown (dedupe)');
+  assert(insertCalls[0].includes('UT EID Self-Service'),'the turn 1 resource is allowed to appear again - it still scores far higher than DUO (61 vs 5) in the combined text, and dedupe is a rank penalty applied only within a tie, never a removal; it must not vanish just because it was already shown');
  }finally{globalThis.fetch=originalFetch;}
 });
 test('every /api/lhl-chat call is a deep search by construction now - the Supabase insert carries deep_search_requested:true, set once and left untouched by every later patch',async()=>{const originalFetch=globalThis.fetch,priorKey=process.env.ANTHROPIC_API_KEY,priorUrl=process.env.SUPABASE_URL,priorSvc=process.env.SUPABASE_SERVICE_KEY;process.env.ANTHROPIC_API_KEY='test-only-not-a-real-key';process.env.SUPABASE_URL='https://example.test';process.env.SUPABASE_SERVICE_KEY='test-service-key';try{const supabaseCalls=[];globalThis.fetch=async(url,options)=>{if(String(url).startsWith(process.env.SUPABASE_URL)){supabaseCalls.push({method:options.method,body:JSON.parse(options.body)});return new Response(null,{status:options.method==='POST'?201:204});}return Response.json({content:[{type:'tool_use',name:'longhorn_answer',input:{heading:'x',paragraphs:['See [[r0]].'],followUps:[],webSources:[],primaryId:'r0',needsWebSearch:false}}],usage:{input_tokens:10,output_tokens:5}});};const response=await handler(request({question:'how do I find classes?',audience:'everyone'}));assert.equal(response.status,200);const insert=supabaseCalls.find(c=>c.method==='POST');assert.equal(insert.body.deep_search_requested,true);const patch=supabaseCalls.find(c=>c.method==='PATCH');assert.equal('deep_search_requested' in patch.body,false,'the patch must not need to repeat it - PATCH only touches the fields it includes, leaving the column the insert already set');}finally{globalThis.fetch=originalFetch;if(priorKey===undefined)delete process.env.ANTHROPIC_API_KEY;else process.env.ANTHROPIC_API_KEY=priorKey;if(priorUrl===undefined)delete process.env.SUPABASE_URL;else process.env.SUPABASE_URL=priorUrl;if(priorSvc===undefined)delete process.env.SUPABASE_SERVICE_KEY;else process.env.SUPABASE_SERVICE_KEY=priorSvc;}});
@@ -517,4 +516,86 @@ test('a correctly spelled question still outranks its misspelled variant for the
   const correct=scoredCatalog('dispute a parking ticket',eligible).find(s=>s.link.id==='r352').score;
   const misspelled=scoredCatalog('disput a parking tikcet',eligible).find(s=>s.link.id==='r352').score;
   assert(correct>misspelled,'the correctly spelled phrasing ('+correct+') must score higher than the misspelled one ('+misspelled+') for the same entry');
+});
+test('after "ticket" shows The Big Ticket, a following "big ticket" still shows it first, in position - a score of 61 must never be suppressed by having already been shown once',async()=>{
+ const html=readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'..','ask','index.html'),'utf8');
+ const realLinks=JSON.parse(html.match(/<script type="application\/json" id="catalogData">([\s\S]*?)<\/script>/)[1]).links;
+ const originalFetch=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({heading:'x',paragraphs:['ok'],sources:[],followUps:[],audience:'everyone',id:'t'});
+ try{
+  const {ask,insertCalls}=askWithInstantFromRealPage(realLinks);
+  await ask('ticket');
+  assert.equal(insertCalls.length,1);
+  assert(insertCalls[0].includes('The Big Ticket'),'turn 1 must show The Big Ticket');
+  insertCalls.length=0;
+  await ask('big ticket');
+  assert.equal(insertCalls.length,1,'a later turn must still render something - never a silent no-op, and never "no direct match" for a resource that scored 61');
+  assert(!insertCalls[0].includes("don't have a direct match"),'The Big Ticket genuinely scored 61 here - it must never be reported as no match just because it was already shown once');
+  assert(insertCalls[0].includes('The Big Ticket'),'The Big Ticket must still show, and lead, on the later turn - a 61 score is nowhere near tied with anything, so the dedupe rank penalty (which only matters within a tie) cannot push it down');
+ }finally{globalThis.fetch=originalFetch;}
+});
+test('"health" shows three links - University Health Services, Counseling & Mental Health, and Student Health Insurance all tie at the top, which is the cluster worth showing, not ambiguity',async()=>{
+ const html=readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'..','ask','index.html'),'utf8');
+ const realLinks=JSON.parse(html.match(/<script type="application\/json" id="catalogData">([\s\S]*?)<\/script>/)[1]).links;
+ const originalFetch=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({heading:'x',paragraphs:['ok'],sources:[],followUps:[],audience:'everyone',id:'t'});
+ try{
+  const {ask,insertCalls}=askWithInstantFromRealPage(realLinks);
+  await ask('health');
+  assert.equal(insertCalls.length,1);
+  for(const name of['University Health Services','Mental Health (CMHC)','Student Health Insurance'])assert(insertCalls[0].includes(name),name+' must be among the three shown');
+  const cardCount=(insertCalls[0].match(/class="instant-link"/g)||[]).length;
+  assert.equal(cardCount,3,'exactly three cards, not fewer and not more than the cap');
+ }finally{globalThis.fetch=originalFetch;}
+});
+test('property: whenever the scorer finds at least one entry above INSTANT_MIN_SCORE, the rendered instant result is never empty - on a first turn, and even in the adversarial case where every one of this question\'s own matches was already shown (the exact shape of both the "health" gap-check bug and the "big ticket" dedupe-removal bug)',async()=>{
+ const html=readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'..','ask','index.html'),'utf8');
+ const script=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+ const extractConst=name=>{const idx=script.indexOf('const '+name+'=');const end=script.indexOf(';',idx);return script.slice(idx,end+1);};
+ const catalogJson=html.match(/<script type="application\/json" id="catalogData">([\s\S]*?)<\/script>/)[1];
+ const code=extractConst('CATALOG_STOPWORDS')+';'+extractConst('CATALOG_WORD_SYNONYMS')+';'+
+  braceSlice(script,script.indexOf('function catalogStem('))+';'+braceSlice(script,script.indexOf('function catalogCanon('))+';'+
+  braceSlice(script,script.indexOf('function catalogQuestionWords('))+';'+braceSlice(script,script.indexOf('function catalogTextWords('))+';'+
+  braceSlice(script,script.indexOf('function fuzzyEq('))+';'+braceSlice(script,script.indexOf('function fuzzyAny('))+';'+
+  braceSlice(script,script.indexOf('function scoreCatalog('))+';'+
+  braceSlice(script,script.indexOf('function resourceAudience('))+';'+
+  braceSlice(script,script.indexOf('function audienceAllows('))+';'+
+  extractConst('INSTANT_AUDIENCE_MAP')+';'+
+  braceSlice(script,script.indexOf('function eligibleForInstant('))+';'+
+  extractConst('INSTANT_MIN_SCORE')+';'+
+  braceSlice(script,script.indexOf('function rankForDisplay('))+';'+
+  'const links=('+catalogJson+').links;'+
+  'const esc=s=>String(s);function icon(){return "";}'+
+  braceSlice(script,script.indexOf('function renderInstantLinks('))+';'+
+  braceSlice(script,script.indexOf('function renderNoMatch('))+';'+
+  braceSlice(script,script.indexOf('function renderInstantResult('))+';'+
+  'return {scoreCatalog,eligibleForInstant,renderInstantResult};';
+ const client=new Function(code)();
+ const {questions}=await import('../tests/eval/questions.mjs');
+ const failures=[];
+ for(const q of questions){
+  const eligible=client.eligibleForInstant(q.question,q.audience||'everyone');
+  const scored=client.scoreCatalog(q.question,eligible);
+  const scorerTop=scored.filter(s=>s.score>=3);
+  if(!scorerTop.length)continue;
+  // First turn: nothing shown yet.
+  {
+   const html=[];
+   const reply={insertAdjacentHTML:(pos,h)=>html.push(h)};
+   const shown=client.renderInstantResult(reply,scored,new Set());
+   if(!shown.length)failures.push({id:q.id,question:q.question,case:'first turn',html:html[0]});
+  }
+  // Adversarial follow-up: every single one of this question's own matches
+  // was already marked shown on an earlier turn - the exact shape of the
+  // "big ticket" bug (one match, already shown, scorer found it, but removal
+  // wiped the whole result).
+  {
+   const html=[];
+   const reply={insertAdjacentHTML:(pos,h)=>html.push(h)};
+   const allShown=new Set(scorerTop.map(s=>s.link.id));
+   const shown=client.renderInstantResult(reply,scored,allShown);
+   if(!shown.length)failures.push({id:q.id,question:q.question,case:'adversarial follow-up (all already shown)',html:html[0]});
+  }
+ }
+ assert.deepEqual(failures,[],'every question with a real scorer match must render something, in both cases - see each entry above for which question and which case broke the invariant');
 });

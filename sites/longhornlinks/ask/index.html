@@ -297,9 +297,43 @@ function eligibleForInstant(question,audience){
 // ambiguity; for a broad question ("health") that is exactly the cluster
 // worth showing, so there is no gap check here.
 const INSTANT_MIN_SCORE=3;
-function confidentMatches(scored){
- if(!scored.length||scored[0].score<INSTANT_MIN_SCORE)return [];
- return scored.slice(0,3).filter(s=>s.score>=INSTANT_MIN_SCORE/2).map(s=>s.link);
+// Dedupe is a rank penalty, never a removal - a previously-shown link can
+// still be the only thing that matches this turn, and removing it would
+// wrongly tell the student nothing was found (exactly how "big ticket"
+// scoring 61 still produced "no direct match" once The Big Ticket had
+// already been shown). A score above 50 - the exact-alias-phrase bonus -
+// always leads regardless of history: naming a resource exactly is the
+// strongest possible signal, shown before or not.
+function rankForDisplay(scoredSubset,shownIds){
+ return [...scoredSubset].sort((a,b)=>{
+  if(a.score!==b.score)return b.score-a.score;
+  const aShown=shownIds.has(a.link.id),bShown=shownIds.has(b.link.id);
+  if(aShown!==bShown)return aShown?1:-1;
+  return 0;
+ });
+}
+// The single point every instant-tier render path goes through, so the next
+// filter anyone adds (another dedupe rule, a new cap, anything) cannot
+// reintroduce this bug by itself. scorerTop - the scorer's own result,
+// thresholded but otherwise untouched by dedupe or the cap - is kept aside
+// specifically so this guard is checked against ground truth, not against
+// whatever the presentation filters happened to leave: if filtering empties
+// the display but the scorer genuinely found something, show that instead.
+// "I don't have a direct match" may only render when scorerTop itself is
+// empty. This has already happened twice from two different filters -
+// INSTANT_MIN_GAP and shownInstantIds removal - fixing each one is not what
+// stops the next; this guard is.
+function renderInstantResult(reply,scored,shownIds){
+ const scorerTop=scored.filter(s=>s.score>=INSTANT_MIN_SCORE);
+ let displayList=rankForDisplay(scorerTop,shownIds).slice(0,3).map(s=>s.link);
+ if(displayList.length===0&&scorerTop.length>0)displayList=scorerTop.slice(0,3).map(s=>s.link);
+ if(!displayList.length){
+  reply.insertAdjacentHTML('beforeend',renderNoMatch());
+  return [];
+ }
+ reply.insertAdjacentHTML('beforeend',renderInstantLinks(displayList));
+ for(const l of displayList)shownIds.add(l.id);
+ return displayList;
 }
 function renderInstantLinks(matches){
  const cards=matches.map(l=>`<a class="instant-link" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.name)}${icon('arrow')}</a>`).join('');
@@ -388,21 +422,19 @@ async function ask(raw){const q=raw.trim();if(!q){openDialog('chat');return}if(l
  const eligible=eligibleForInstant(q,answerAudience);
  const instantScored=scoreCatalog(instantQuery,eligible);
  const distress=isDistress(q);
- const confident=distress?[]:confidentMatches(instantScored).filter(l=>!shownInstantIds.has(l.id));
- const noMatch=!distress&&!confident.length;
+ let shown;
  if(distress){
   // Distress always renders the fixed, written copy and the matching
   // resources - never gated on the generic scorer, never a model call, and
   // not deduped against earlier turns: seeing the crisis line again on a
   // second distressed message is not a "repeat," it's the point.
-  reply.insertAdjacentHTML('beforeend',renderDistressLinks(distressLinks()));
- }else if(confident.length){
-  reply.insertAdjacentHTML('beforeend',renderInstantLinks(confident));
-  for(const l of confident)shownInstantIds.add(l.id);
+  shown=distressLinks();
+  reply.insertAdjacentHTML('beforeend',renderDistressLinks(shown));
  }else{
-  reply.insertAdjacentHTML('beforeend',renderNoMatch());
+  shown=renderInstantResult(reply,instantScored,shownInstantIds);
  }
- logInstant(q,answerAudience,distress?distressLinks():confident,{topScore:instantScored[0]?.score??0,catalogEntries:eligible.length});
+ const noMatch=!distress&&!shown.length;
+ logInstant(q,answerAudience,shown,{topScore:instantScored[0]?.score??0,catalogEntries:eligible.length});
  $('#heroInput').value='';$('#chatInput').value='';
  requestAnimationFrame(()=>box.scrollTo({top:box.scrollHeight,behavior:'smooth'}));
  if(modelMode){
@@ -410,7 +442,7 @@ async function ask(raw){const q=raw.trim();if(!q){openDialog('chat');return}if(l
   return;
  }
  // Opt-in only: nothing below here calls the model until this is clicked.
- const control=buildDeepSearchControl(confident.length?'Not what you needed?':'',()=>{
+ const control=buildDeepSearchControl(!distress&&shown.length?'Not what you needed?':'',()=>{
   control.remove();
   runDeepSearch(q,box,label,reply,noMatch);
  });
