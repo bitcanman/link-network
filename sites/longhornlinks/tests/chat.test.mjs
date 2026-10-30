@@ -4,7 +4,7 @@ import {deflateSync} from 'node:zlib';
 import {readFileSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
-import handler,{explicitAudience,allows,eligibleCatalog,validateAnswer,relevantCatalog,scoredCatalog,singleUnambiguousMatch,isSelfContained,resolveProgramEvents,unmatchedSalientTerms,_clearAnswerCacheForTests} from '../netlify/functions/lhl-chat.mjs';
+import handler,{explicitAudience,allows,eligibleCatalog,validateAnswer,relevantCatalog,scoredCatalog,singleUnambiguousMatch,isSelfContained,resolveProgramEvents,unmatchedSalientTerms,fuzzyEq,_clearAnswerCacheForTests} from '../netlify/functions/lhl-chat.mjs';
 import feedbackHandler from '../netlify/functions/lhl-feedback.mjs';
 import {catalog} from '../netlify/lib/catalog.mjs';
 import {rules} from '../netlify/lib/rules.mjs';
@@ -235,6 +235,7 @@ test('the client instant-tier scorer and the server\'s relevantCatalog rank the 
  const code=extractConst('CATALOG_STOPWORDS')+';'+extractConst('CATALOG_WORD_SYNONYMS')+';'+
   braceSlice(script,script.indexOf('function catalogStem('))+';'+braceSlice(script,script.indexOf('function catalogCanon('))+';'+
   braceSlice(script,script.indexOf('function catalogQuestionWords('))+';'+braceSlice(script,script.indexOf('function catalogTextWords('))+';'+
+  braceSlice(script,script.indexOf('function fuzzyEq('))+';'+braceSlice(script,script.indexOf('function fuzzyAny('))+';'+
   braceSlice(script,script.indexOf('function scoreCatalog('))+';'+
   braceSlice(script,script.indexOf('function resourceAudience('))+';'+
   braceSlice(script,script.indexOf('function audienceAllows('))+';'+
@@ -268,6 +269,7 @@ function askWithInstantFromRealPage(syntheticLinks){
  const real=extractConst('CATALOG_STOPWORDS')+';'+extractConst('CATALOG_WORD_SYNONYMS')+';'+
   braceSlice(script,script.indexOf('function catalogStem('))+';'+braceSlice(script,script.indexOf('function catalogCanon('))+';'+
   braceSlice(script,script.indexOf('function catalogQuestionWords('))+';'+braceSlice(script,script.indexOf('function catalogTextWords('))+';'+
+  braceSlice(script,script.indexOf('function fuzzyEq('))+';'+braceSlice(script,script.indexOf('function fuzzyAny('))+';'+
   braceSlice(script,script.indexOf('function scoreCatalog('))+';'+
   braceSlice(script,script.indexOf('function resourceAudience('))+';'+
   braceSlice(script,script.indexOf('function audienceAllows('))+';'+
@@ -479,3 +481,40 @@ test('once Dig deeper has been clicked anywhere in the conversation, a later tur
 test('"im sick" and "i need a doctor" both rank University Health Services first - "im" is now a stopword (no more Intramural Sports collision) and the catalog carries the plain-language symptom words students actually type',()=>{for(const q of['im sick','i need a doctor']){const eligible=eligibleCatalog(q,'everyone');const scored=scoredCatalog(q,eligible);assert.equal(scored[0].link.id,'r44',q+' must rank University Health Services first');assert(scored[0].score>=8,q+' must clear a real confidence bar, not just barely lead');}});
 test('"i just got a parking ticket" ranks the parking citation entries (Parking & Transportation, Pay a Citation) above The Big Ticket - Big Ticket is now scoped to athletics-only aliases so a bare "ticket" alongside "parking" cannot pull it to the top',()=>{const q='i just got a parking ticket';const eligible=eligibleCatalog(q,'everyone');const scored=scoredCatalog(q,eligible);const rankOf=id=>scored.findIndex(s=>s.link.id===id);const bigTicketRank=rankOf('r29');assert(rankOf('r41')<bigTicketRank,'Parking & Transportation must rank above The Big Ticket');assert(rankOf('r353')<bigTicketRank,'Pay a Citation must rank above The Big Ticket');assert(scored[0].score>=8&&scored[1].score>=8,'the top two (the parking cluster) must both clear a real confidence bar, not just edge out Big Ticket');});
 test('Intramural Sports stays findable by its own name now that "im" is a stopword, and the new plain-language catalog aliases are all multi-word or distinctive single words, never a bare collision-prone token like "id" or "ticket"',()=>{const eligible=eligibleCatalog('intramural sports','everyone');const scored=scoredCatalog('intramural sports',eligible);assert.equal(scored[0].link.id,'r32','Intramural Sports must still rank first by its own name/aliases');const idEligible=eligibleCatalog('i lost my id','everyone');const idScored=scoredCatalog('i lost my id',idEligible);assert.equal(idScored[0].link.id,'r308','"id" must still reach UT ID Center - it was deliberately NOT added to STOPWORDS');});
+test('fuzzyEq: exact equality, prefix, and edit-distance-1 (substitution/insertion/deletion/transposition), pruned by a 4-char floor and matching first character',()=>{
+  assert.equal(fuzzyEq('dispute','dispute'),true,'exact');
+  assert.equal(fuzzyEq('disput','dispute'),true,'prefix - truncation');
+  assert.equal(fuzzyEq('tikcet','ticket'),true,'transposition');
+  assert.equal(fuzzyEq('tickat','ticket'),true,'substitution');
+  assert.equal(fuzzyEq('tickket','ticket'),true,'insertion');
+  assert.equal(fuzzyEq('tcket','ticket'),true,'deletion');
+  assert.equal(fuzzyEq('id','is'),false,'below the 4-char floor - without it "id" would fuzzy-match "is"/"in"/"it" and everything collapses');
+  assert.equal(fuzzyEq('id','in'),false);
+  assert.equal(fuzzyEq('cat','dog'),false,'unrelated short words must not match even via accidental distance math');
+  assert.equal(fuzzyEq('parking','marking'),false,'different first character is pruned before any distance work');
+  assert.equal(fuzzyEq('dispute','disputation'),false,'catalog token more than 3 characters longer than the prefix must not match');
+});
+test('"i want to disput it" ranks Appeal a Citation first - a truncated/misspelled "dispute" reaches it via the prefix rule, not the +50 exact-phrase bonus (which stays exact-only)',()=>{
+  const q='i want to disput it';
+  const eligible=eligibleCatalog(q,'everyone');
+  const scored=scoredCatalog(q,eligible);
+  assert.equal(scored[0].link.id,'r352','Appeal a Citation must rank first');
+  assert(scored[0].score<50,'the match must come from fuzzy word credit, never the exact-alias +50 bonus - a typo is not certainty');
+});
+test('"parking tikcet" pulls the real parking/citation cluster (including the citation-specific Pay a Citation) into serious contention via fuzzy matching on the misspelled word, not zero contribution',()=>{
+  const q='parking tikcet';
+  const eligible=eligibleCatalog(q,'everyone');
+  const scored=scoredCatalog(q,eligible);
+  const parkingRelated=new Set(['r41','r352','r353','r354','r355','r357']);
+  assert(parkingRelated.has(scored[0].link.id),'the top match must be a real parking/citation entry, not something unrelated pulled up by noise: got '+scored[0].link.id);
+  const payCitation=scored.find(s=>s.link.id==='r353');
+  assert(payCitation.score>=scored[0].score-2,'Pay a Citation must be in the same cluster as the top match, not left behind by the typo');
+  const withoutTypo=scoredCatalog('parking',eligible).find(s=>s.link.id===scored[0].link.id).score;
+  assert(scored[0].score>withoutTypo,'the misspelled "tikcet" must contribute real fuzzy credit on top of "parking" alone, not be silently dropped');
+});
+test('a correctly spelled question still outranks its misspelled variant for the same entry - fuzzy credit is deliberately worth less than exact',()=>{
+  const eligible=eligibleCatalog('dispute a parking ticket','everyone');
+  const correct=scoredCatalog('dispute a parking ticket',eligible).find(s=>s.link.id==='r352').score;
+  const misspelled=scoredCatalog('disput a parking tikcet',eligible).find(s=>s.link.id==='r352').score;
+  assert(correct>misspelled,'the correctly spelled phrasing ('+correct+') must score higher than the misspelled one ('+misspelled+') for the same entry');
+});

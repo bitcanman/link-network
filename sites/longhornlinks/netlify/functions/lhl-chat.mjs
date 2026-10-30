@@ -178,10 +178,61 @@ const STRONG_MATCH=8;
 // Citation, both genuinely right for a parking-ticket question) is the
 // cluster worth showing, not ambiguity to withhold on.
 const CATALOG_FALLBACK_MIN_SCORE=8;
-function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&w.endsWith('es'))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
+// The 2-char "es" strip is only correct for a genuine sibilant plural
+// (boxes->box, classes->class, witches->witch) where the "e" was inserted
+// purely for pronunciation. Anything else ending in "es" (dispute+s,
+// resource+s, service+s, time+s) needs only the trailing "s" stripped, which
+// the fallback rule below already does correctly - stripping both letters
+// there mangled "disputes" into "disput" instead of "dispute", which then
+// collided with a typo'd query word by sheer coincidence.
+function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&/([sxz]es|[cs]hes)$/.test(w))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
 function canon(w){const s=stem(w);return WORD_SYNONYMS[w]||WORD_SYNONYMS[s]||s;}
 function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
 function textWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1);}
+// Typo/truncation tolerance for scoredCatalog, after the exact canon/stem
+// check has already failed. a is always the query token, b the catalog
+// token - the prefix case is one-directional on purpose ("regist" is a
+// plausible truncated/misspelled "registration"; the reverse never happens,
+// since catalog vocabulary is always the complete, correct word). Pruned
+// before any distance work: a length-4 floor (below that "id" fuzzy-matches
+// "is"/"in"/"it" and everything collapses - do not lower it) and a shared
+// first character, since every case below requires one anyway.
+export function fuzzyEq(a,b){
+ if(a===b)return true;
+ if(a.length<4||b.length<4)return false;
+ if(a[0]!==b[0])return false;
+ const diff=b.length-a.length;
+ // PREFIX: query is a prefix of catalog, catalog at most 3 chars longer -
+ // catches disput->dispute, regist->registration, appoint->appointment.
+ if(diff>=1&&diff<=3&&b.startsWith(a))return true;
+ if(diff<-1||diff>1)return false;
+ // EDIT DISTANCE 1, single-pass (no matrix): same length means exactly one
+ // substitution or one adjacent transposition (tickat, tikcet); length off
+ // by one means exactly one insertion or deletion (tickket, tcket).
+ if(diff===0){
+  let d1=-1,d2=-1;
+  for(let i=0;i<a.length;i++){
+   if(a[i]!==b[i]){
+    if(d1===-1)d1=i;
+    else if(d2===-1)d2=i;
+    else return false;
+   }
+  }
+  if(d2===-1)return true;
+  return d2===d1+1&&a[d1]===b[d2]&&a[d2]===b[d1];
+ }
+ const s=a.length<b.length?a:b,l=a.length<b.length?b:a;
+ let i=0,j=0,skipped=false;
+ while(i<s.length&&j<l.length){
+  if(s[i]===l[j]){i++;j++;}
+  else{
+   if(skipped)return false;
+   skipped=true;j++;
+  }
+ }
+ return true;
+}
+function fuzzyAny(w,arr){return arr.some(t=>fuzzyEq(w,t));}
 // Exposes each eligible entry's raw score alongside relevantCatalog's own
 // ordering, so a caller can judge retrieval confidence (e.g. "is the top
 // match strong enough that we actually don't need a web search") instead of
@@ -199,14 +250,21 @@ export function scoredCatalog(question,eligible,{boostSources=[]}={}){
   // Rebate Program). It still contributes the normal +2 per-word score below.
   const aliasHit=(l.aliases||[]).some(a=>{const norm=a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();return norm.includes(' ')&&qNorm.includes(' '+norm+' ');});
   if(aliasHit)score+=50;
-  const nameCanon=new Set(textWords(l.name).map(canon));
-  const aliasCanon=new Set(textWords((l.aliases||[]).join(' ')).map(canon));
-  const topicsCanon=new Set(textWords((l.topics||[]).join(' ')).map(canon));
+  const nameCanonArr=textWords(l.name).map(canon),nameCanon=new Set(nameCanonArr);
+  const aliasCanonArr=textWords((l.aliases||[]).join(' ')).map(canon),aliasCanon=new Set(aliasCanonArr);
+  const topicsCanonArr=textWords((l.topics||[]).join(' ')).map(canon),topicsCanon=new Set(topicsCanonArr);
   const descCanon=new Set(textWords(l.desc).map(canon));
+  // Fuzzy (typo/truncation) matches are worth less than exact ones, so a
+  // correctly spelled question always beats a misspelled one for the same
+  // entry - only attempted once the exact check has already failed. desc is
+  // too noisy to fuzz at all (0 points either way).
   for(const w of words){
    if(nameCanon.has(w))score+=3;
+   else if(fuzzyAny(w,nameCanonArr))score+=2;
    if(aliasCanon.has(w))score+=2;
+   else if(fuzzyAny(w,aliasCanonArr))score+=1;
    if(topicsCanon.has(w))score+=2;
+   else if(fuzzyAny(w,topicsCanonArr))score+=1;
    if(descCanon.has(w))score+=1;
   }
   // A modest nudge for the selected/effective program's own resources, so a

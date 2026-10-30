@@ -217,10 +217,44 @@ const GREETING_EXAMPLES=[{label:'How do I register for classes?',message:'How do
 // effective program, so there is nothing to boost yet.
 const CATALOG_STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that','ut','utexas','texas','austin','im','ive','dont','cant','wont','didnt','doesnt','isnt','arent','theyre','youre','whats','thats']);
 const CATALOG_WORD_SYNONYMS={company:'startup',companies:'startup',business:'startup',businesses:'startup',venture:'startup',ventures:'startup',firm:'startup',firms:'startup',reserve:'book',reservation:'book'};
-function catalogStem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&w.endsWith('es'))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
+function catalogStem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&/([sxz]es|[cs]hes)$/.test(w))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
 function catalogCanon(w){const s=catalogStem(w);return CATALOG_WORD_SYNONYMS[w]||CATALOG_WORD_SYNONYMS[s]||s;}
 function catalogQuestionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!CATALOG_STOPWORDS.has(w));}
 function catalogTextWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1);}
+// Typo/truncation tolerance, kept in exact agreement with the server's
+// fuzzyEq in lhl-chat.mjs - see that copy for the full reasoning. a is
+// always the query token, b the catalog token.
+function fuzzyEq(a,b){
+ if(a===b)return true;
+ if(a.length<4||b.length<4)return false;
+ if(a[0]!==b[0])return false;
+ const diff=b.length-a.length;
+ if(diff>=1&&diff<=3&&b.startsWith(a))return true;
+ if(diff<-1||diff>1)return false;
+ if(diff===0){
+  let d1=-1,d2=-1;
+  for(let i=0;i<a.length;i++){
+   if(a[i]!==b[i]){
+    if(d1===-1)d1=i;
+    else if(d2===-1)d2=i;
+    else return false;
+   }
+  }
+  if(d2===-1)return true;
+  return d2===d1+1&&a[d1]===b[d2]&&a[d2]===b[d1];
+ }
+ const s=a.length<b.length?a:b,l=a.length<b.length?b:a;
+ let i=0,j=0,skipped=false;
+ while(i<s.length&&j<l.length){
+  if(s[i]===l[j]){i++;j++;}
+  else{
+   if(skipped)return false;
+   skipped=true;j++;
+  }
+ }
+ return true;
+}
+function fuzzyAny(w,arr){return arr.some(t=>fuzzyEq(w,t));}
 function scoreCatalog(question,eligible){
  const words=[...new Set(catalogQuestionWords(question).map(catalogCanon))];
  const qNorm=' '+question.toLowerCase().replace(/[^a-z0-9\s]/g,' ')+' ';
@@ -228,14 +262,17 @@ function scoreCatalog(question,eligible){
   let score=0;
   const aliasHit=(l.aliases||[]).some(a=>{const norm=a.toLowerCase().replace(/[^a-z0-9\s]/g,' ').replace(/\s+/g,' ').trim();return norm.includes(' ')&&qNorm.includes(' '+norm+' ');});
   if(aliasHit)score+=50;
-  const nameCanon=new Set(catalogTextWords(l.name).map(catalogCanon));
-  const aliasCanon=new Set(catalogTextWords((l.aliases||[]).join(' ')).map(catalogCanon));
-  const topicsCanon=new Set(catalogTextWords((l.topics||[]).join(' ')).map(catalogCanon));
+  const nameCanonArr=catalogTextWords(l.name).map(catalogCanon),nameCanon=new Set(nameCanonArr);
+  const aliasCanonArr=catalogTextWords((l.aliases||[]).join(' ')).map(catalogCanon),aliasCanon=new Set(aliasCanonArr);
+  const topicsCanonArr=catalogTextWords((l.topics||[]).join(' ')).map(catalogCanon),topicsCanon=new Set(topicsCanonArr);
   const descCanon=new Set(catalogTextWords(l.desc).map(catalogCanon));
   for(const w of words){
    if(nameCanon.has(w))score+=3;
+   else if(fuzzyAny(w,nameCanonArr))score+=2;
    if(aliasCanon.has(w))score+=2;
+   else if(fuzzyAny(w,aliasCanonArr))score+=1;
    if(topicsCanon.has(w))score+=2;
+   else if(fuzzyAny(w,topicsCanonArr))score+=1;
    if(descCanon.has(w))score+=1;
   }
   return {link:l,score,i};
