@@ -20,12 +20,34 @@ export default async function handler(req){
  const origin=req.headers.get('origin');if(origin&&origin!==new URL(req.url).origin)return json({error:'Origin not allowed.'},403);
  if(Number(req.headers.get('content-length')||0)>2000)return json({error:'Request too large.'},413);
  let data;try{const raw=await req.text();if(raw.length>2000)return json({error:'Request too large.'},413);data=JSON.parse(raw);}catch{return json({error:'Invalid JSON.'},400);}
- const id=typeof data.id==='string'?data.id.trim():'';
- if(!UUID_RE.test(id))return json({error:'Invalid feedback.'},400);
  // Same validation lhl-chat.mjs applies to the sessionId it echoes back to the
  // client - sessionStorage-sourced, per-tab, non-identifying; null is always
  // legal (clicks fired before a session id existed, or with it disabled).
  const sessionId=typeof data.sessionId==='string'&&UUID_RE.test(data.sessionId)?data.sessionId:null;
+ // A question answered purely by the instant tier - no model call, no
+ // existing ask_questions row to attach to (unlike click/feedback below,
+ // which reference a row lhl-chat already created). This is its own new
+ // row, fired via sendBeacon the moment local scoring completes, on every
+ // submit that doesn't go to deep search - otherwise "we answered it
+ // instantly" and "nobody asked" are indistinguishable in the data.
+ // deep_search_requested is always false here; lhl-chat.mjs sets it true on
+ // every row it creates, since every call there is a deep search by
+ // construction now.
+ if(data.type==='instant'){
+  const question=typeof data.question==='string'?data.question.trim().slice(0,600):'';
+  if(!question)return json({error:'Invalid instant log.'},400);
+  const audience=typeof data.audience==='string'&&data.audience.trim()?data.audience.trim().slice(0,20):'everyone';
+  const turns=Number.isInteger(data.turns)&&data.turns>=0?data.turns:null;
+  const seq=Number.isInteger(data.seq)&&data.seq>=0?data.seq:null;
+  const catalogEntries=Number.isInteger(data.catalogEntries)&&data.catalogEntries>=0?data.catalogEntries:null;
+  const topScore=Number.isFinite(data.topScore)?data.topScore:null;
+  const sourceIds=Array.isArray(data.sourceIds)?data.sourceIds.filter(x=>typeof x==='string').slice(0,5):[];
+  const sourceUrls=Array.isArray(data.sourceUrls)?data.sourceUrls.filter(x=>typeof x==='string').slice(0,5):[];
+  await supabaseInsert('ask_questions',{id:crypto.randomUUID(),status:'ok',question,audience,turns,catalog_entries:catalogEntries,top_score:topScore,answered:false,calls:0,cost_usd:0,primary_url:sourceUrls[0]||null,source_urls:sourceUrls,source_ids:sourceIds,deep_search_requested:false,session_id:sessionId,seq});
+  return json({ok:true});
+ }
+ const id=typeof data.id==='string'?data.id.trim():'';
+ if(!UUID_RE.test(id))return json({error:'Invalid feedback.'},400);
  // Clicks are fired via navigator.sendBeacon, which can't see the response and
  // doesn't need the Apps Script round trip this file otherwise keeps for
  // thumbs up/down - a click is logged to Supabase only.
