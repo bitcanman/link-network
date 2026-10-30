@@ -131,7 +131,7 @@ function sourceFields(answer,primaryId,eligible){
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bundergrad\w*\b/.test(v))return 'undergraduate';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}
 export function allows(l,a){const audience=(l.audience||'').toLowerCase();if(/undergrad/.test(audience)&&/\bgraduate\b/.test(audience))return true;if(/undergrad/.test(audience))return a==='first-year'||a==='undergraduate';if(/graduate/.test(audience))return ['graduate','mba','mstc'].includes(a);if(audience)return true;if(l.source==='MBA'||/\bmba\b/i.test(l.name))return a==='mba';if(l.source==='MSTC'||/\bmstc\b/i.test(l.name))return a==='mstc';if(/mechanical/i.test(l.source||''))return a==='engineering';return true;}
 export function eligibleCatalog(question,audience){const on=/\bon[- ]campus\b/i.test(question);return catalog.filter(l=>allows(l,audience)&&!(on&&(l.scope==='off-campus'||/off[- ]campus|facebook/i.test(l.name))));}
-const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that','ut','utexas','texas','austin']);
+const STOPWORDS=new Set(['the','a','an','is','are','do','does','did','i','my','me','to','for','of','in','on','at','how','what','when','where','who','can','need','get','find','about','with','and','or','it','this','that','ut','utexas','texas','austin','im','ive','dont','cant','wont','didnt','doesnt','isnt','arent','theyre','youre','whats','thats']);
 // Bridges a handful of real wording gaps found by testing, not a general stemmer:
 // "funded"/"funding"/"funds" are the same ask, and "company"/"business"/"venture"
 // mean the same thing as "startup" in this catalog's topics. Without this,
@@ -166,15 +166,18 @@ const DATEY_RE=/^(january|february|march|april|may|june|july|august|september|oc
 // only "match" (nothing in a resource's name/aliases/topics/desc overlaps)
 // never does. Tune from the topScore log column, not guessed blind.
 const STRONG_MATCH=8;
-// Same two-part gate as the client's instant tier (ask/index.html's
-// INSTANT_MIN_SCORE/INSTANT_MIN_GAP) - the catalog-only fallback (no model
-// answer at all) used to always show its top 3 regardless of score, which is
-// exactly how "i just got a parking ticket" could lead with The Big Ticket
-// (football tickets, scoring only on the word "ticket") over Parking &
-// Transportation. A wrong link shown with no model to sanity-check it is
-// worse than the plain error page.
+// Same gate as the client's instant tier (ask/index.html's
+// INSTANT_MIN_SCORE) - the catalog-only fallback (no model answer at all)
+// used to always show its top 3 regardless of score, which is exactly how
+// "i just got a parking ticket" could lead with The Big Ticket (football
+// tickets, scoring only on the word "ticket") over Parking & Transportation.
+// A wrong link shown with no model to sanity-check it is worse than the
+// plain error page. No gap check, for the same reason the client has none:
+// this renders up to 3 cards, not a single primary answer, so two or three
+// entries tying at the top (e.g. Parking & Transportation and Pay a
+// Citation, both genuinely right for a parking-ticket question) is the
+// cluster worth showing, not ambiguity to withhold on.
 const CATALOG_FALLBACK_MIN_SCORE=8;
-const CATALOG_FALLBACK_MIN_GAP=5;
 function stem(w){if(w.length>5&&w.endsWith('ing'))return w.slice(0,-3);if(w.length>5&&w.endsWith('ies'))return w.slice(0,-3)+'y';if(w.length>4&&w.endsWith('ed'))return w.slice(0,-2);if(w.length>4&&w.endsWith('es'))return w.slice(0,-2);if(w.length>3&&w.endsWith('s')&&!w.endsWith('ss'))return w.slice(0,-1);return w;}
 function canon(w){const s=stem(w);return WORD_SYNONYMS[w]||WORD_SYNONYMS[s]||s;}
 function questionWords(question){return question.toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w=>w.length>1&&!STOPWORDS.has(w));}
@@ -806,16 +809,14 @@ export default async function handler(req){
   // No model answer at all (observed: call one's own budgetFor(6000) ceiling
   // hit at 18.08s/18.27s, aborting before partialAnswer was ever assigned) -
   // the catalog itself is still real evidence even with zero model output, so
-  // surfacing its top matches beats a bare error page, PROVIDED they are
-  // actually confident ones: the same gate as the client's instant tier
-  // (top score clears CATALOG_FALLBACK_MIN_SCORE and leads the runner-up by
-  // CATALOG_FALLBACK_MIN_GAP), since there is no model here to catch a
-  // coincidental word-overlap winner the way a real answer would. Below that
-  // bar this falls through to the plain error response instead. Deliberately
-  // not prose when it does fire: nothing here is generated, so there is
-  // nothing to get wrong about what these resources actually say - just the
-  // citation markers, which still render as real, clickable cards.
-  const fallbackConfident=scored.length&&scored[0].score>=CATALOG_FALLBACK_MIN_SCORE&&(!(scored[1]&&scored[1].score>0)||scored[0].score-scored[1].score>=CATALOG_FALLBACK_MIN_GAP);
+  // surfacing its top matches beats a bare error page, PROVIDED the top score
+  // actually clears CATALOG_FALLBACK_MIN_SCORE, since there is no model here
+  // to catch a coincidental word-overlap winner the way a real answer would.
+  // Below that bar this falls through to the plain error response instead.
+  // Deliberately not prose when it does fire: nothing here is generated, so
+  // there is nothing to get wrong about what these resources actually say -
+  // just the citation markers, which still render as real, clickable cards.
+  const fallbackConfident=scored.length&&scored[0].score>=CATALOG_FALLBACK_MIN_SCORE;
   if(fallbackConfident){
    try{
     const topLinks=scored.slice(0,3).filter(s=>s.score>=CATALOG_FALLBACK_MIN_SCORE/2).map(s=>s.link);
