@@ -98,6 +98,36 @@ async function supabasePatch(table,id,row,timeoutMs=4000){
 // uuid column, so anything that isn't a real UUID would fail the insert
 // outright rather than degrade gracefully.
 const UUID_RE=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// `sources` (names) already answers "what did we cite"; this answers "which
+// exact link did the student get" (joinable against ask_clicks.url) and "how
+// stale was it." primaryId is passed in separately rather than read off
+// `answer` because validateAnswer's return value never carries it - resolving
+// it here, against the same `sources` the student actually saw, means a
+// stale/rejected primaryId (dropped by validateAnswer's own name-mention
+// check) naturally resolves to null instead of pointing at something the
+// answer doesn't actually use.
+// Freshness is catalog-only: a [[w#]] web citation was fetched this request,
+// so it is never stale by definition and must not pull the oldest date down
+// or inflate the unverified count. verifiedAt lives on the catalog entry, not
+// on the validated source (sources carry only id/name/url/desc/login), so
+// each catalog id is looked up again against `eligible`. Null (not 0 or an
+// invented date) is the honest value for "no catalog citations at all" or "no
+// catalog citation had a verifiedAt" - a count of 0 is reserved for the case
+// that genuinely measured zero unverified ones among real catalog citations.
+function sourceFields(answer,primaryId,eligible){
+ const sourceIds=answer.sources.map(s=>s.id);
+ const sourceUrls=answer.sources.map(s=>s.url);
+ const primaryUrl=primaryId?(answer.sources.find(s=>s.id===primaryId)?.url??null):null;
+ const catalogSources=answer.sources.filter(s=>s.kind!=='web');
+ let unverifiedSources=0,oldestSourceVerifiedAt=null;
+ for(const s of catalogSources){
+  const verifiedAt=eligible.find(l=>l.id===s.id)?.verifiedAt;
+  if(verifiedAt){if(oldestSourceVerifiedAt===null||verifiedAt<oldestSourceVerifiedAt)oldestSourceVerifiedAt=verifiedAt;}
+  else unverifiedSources++;
+ }
+ if(!catalogSources.length)unverifiedSources=null;
+ return {source_ids:sourceIds,source_urls:sourceUrls,primary_url:primaryUrl,oldest_source_verified_at:oldestSourceVerifiedAt,unverified_sources:unverifiedSources};
+}
 export function explicitAudience(q){const v=q.toLowerCase().replace(/[-–]/g,' ');if(/\b(freshm[ae]n|first year)\b/.test(v))return 'first-year';if(/\bundergrad\w*\b/.test(v))return 'undergraduate';if(/\bmstc\b/.test(v))return 'mstc';if(/\bmba\b/.test(v))return 'mba';if(/\b(engineering|meche)\b/.test(v))return 'engineering';if(/\b(graduate|grad student|masters|phd|doctoral)\b/.test(v))return 'graduate';if(/\b(everyone|all students|ut wide|general resources)\b/.test(v))return 'everyone';return '';}
 export function allows(l,a){const audience=(l.audience||'').toLowerCase();if(/undergrad/.test(audience)&&/\bgraduate\b/.test(audience))return true;if(/undergrad/.test(audience))return a==='first-year'||a==='undergraduate';if(/graduate/.test(audience))return ['graduate','mba','mstc'].includes(a);if(audience)return true;if(l.source==='MBA'||/\bmba\b/i.test(l.name))return a==='mba';if(l.source==='MSTC'||/\bmstc\b/i.test(l.name))return a==='mstc';if(/mechanical/i.test(l.source||''))return a==='engineering';return true;}
 export function eligibleCatalog(question,audience){const on=/\bon[- ]campus\b/i.test(question);return catalog.filter(l=>allows(l,audience)&&!(on&&(l.scope==='off-campus'||/off[- ]campus|facebook/i.test(l.name))));}
@@ -436,7 +466,7 @@ export default async function handler(req){
    // answered:false - this path answers from the catalog directly
    // (model:'none'), never from a model call, which is exactly the
    // distinction this column exists to make visible.
-   supabasePatch('ask_questions',id,{status:'ok',answered:false,heading:answer.heading,answer:answer.paragraphs.join('\n'),sources:[direct.name],web_search:false,needs_web_search:false,kept_catalog_citation:null,unmatched:[],fallback_reason:'none',search_forced:false,top_score:null,stripped:0,suspect_citations:0,catalog_entries:0,calls:0,model:'none',latency_ms:0,cost_usd:0},logTimeoutMs),
+   supabasePatch('ask_questions',id,{status:'ok',answered:false,heading:answer.heading,answer:answer.paragraphs.join('\n'),sources:[direct.name],...sourceFields(answer,direct.id,eligible),web_search:false,needs_web_search:false,kept_catalog_citation:null,unmatched:[],fallback_reason:'none',search_forced:false,top_score:null,stripped:0,suspect_citations:0,catalog_entries:0,calls:0,model:'none',latency_ms:0,cost_usd:0},logTimeoutMs),
    logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:direct.name,webSearch:'false',needsWebSearch:'false',keptCatalogCitation:'n/a',unmatched:'',fallbackReason:'none',searchForced:'false',topScore:'n/a',stripped:'0',calls:'0',model:'none',latencyMs:'0',cost:'0.00000',suspectCitations:'0',catalogEntries:'0'},logTimeoutMs)
   ]);
   if(cacheKey)cacheSet(cacheKey,answer);
@@ -654,6 +684,7 @@ export default async function handler(req){
     status:'ok',answered:true,
     heading:answer.heading,answer:answer.paragraphs.join('\n'),
     sources:answer.sources.map(x=>x.name),
+    ...sourceFields(answer,raw.primaryId,eligible),
     web_search:usedSearch,
     needs_web_search:raw.needsWebSearch===true,
     kept_catalog_citation:keptCatalogCitation,
@@ -725,7 +756,7 @@ export default async function handler(req){
    try{
     await supabaseStarted;
     await Promise.allSettled([
-     supabasePatch('ask_questions',id,{status:'error',answered:true,error:e.name,fallback_reason:'partial-after-error',heading:partialAnswer.heading,answer:partialAnswer.paragraphs.join('\n'),sources:partialAnswer.sources.map(x=>x.name),web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,stripped:partialAnswer.stripped,suspect_citations:partialAnswer.suspectCitations,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
+     supabasePatch('ask_questions',id,{status:'error',answered:true,error:e.name,fallback_reason:'partial-after-error',heading:partialAnswer.heading,answer:partialAnswer.paragraphs.join('\n'),sources:partialAnswer.sources.map(x=>x.name),...sourceFields(partialAnswer,raw.primaryId,eligible),web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,stripped:partialAnswer.stripped,suspect_citations:partialAnswer.suspectCitations,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
      logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:partialAnswer.sources.map(x=>x.name).join(' | ').slice(0,500),webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason:'partial-after-error',searchForced:String(forcingActive),topScore:String(topScore),stripped:String(partialAnswer.stripped),suspectCitations:String(partialAnswer.suspectCitations),catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},errorLogTimeoutMs)
     ]);
    }catch{}
@@ -755,7 +786,7 @@ export default async function handler(req){
     try{
      await supabaseStarted;
      await Promise.allSettled([
-      supabasePatch('ask_questions',id,{status:'error',answered:false,error:e.name,fallback_reason:'catalog-only-no-model',heading:answer.heading,answer:answer.paragraphs.join('\n'),sources:answer.sources.map(x=>x.name),web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,stripped:answer.stripped,suspect_citations:answer.suspectCitations,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
+      supabasePatch('ask_questions',id,{status:'error',answered:false,error:e.name,fallback_reason:'catalog-only-no-model',heading:answer.heading,answer:answer.paragraphs.join('\n'),sources:answer.sources.map(x=>x.name),...sourceFields(answer,fallback.primaryId,eligible),web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,stripped:answer.stripped,suspect_citations:answer.suspectCitations,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
       logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:answer.sources.map(x=>x.name).join(' | ').slice(0,500),webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason:'catalog-only-no-model',searchForced:String(forcingActive),topScore:String(topScore),stripped:String(answer.stripped),suspectCitations:String(answer.suspectCitations),catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},errorLogTimeoutMs)
      ]);
     }catch{}
@@ -768,7 +799,10 @@ export default async function handler(req){
   try{
    await supabaseStarted;
    await Promise.allSettled([
-    supabasePatch('ask_questions',id,{status:'error',answered:false,error:e.name,fallback_reason:fallbackReason,web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
+    // No answer object exists here at all (nothing was generated), so there
+    // is nothing for sourceFields to read - the honest values are the same
+    // empty/null ones it would compute from a zero-source answer anyway.
+    supabasePatch('ask_questions',id,{status:'error',answered:false,error:e.name,fallback_reason:fallbackReason,source_ids:[],source_urls:[],primary_url:null,oldest_source_verified_at:null,unverified_sources:null,web_search:usedSearch,needs_web_search:null,kept_catalog_citation:null,unmatched,search_forced:forcingActive,top_score:topScore,catalog_entries:relevant.length,calls,model,latency_ms:latencyMs,cost_usd:0},errorLogTimeoutMs),
     logAsk({type:'question',id,question:scrubbedQuestion,audience,turns:String(turnsCount),sources:'',webSearch:String(usedSearch),needsWebSearch:'n/a',keptCatalogCitation:'n/a',unmatched:unmatched.join(','),fallbackReason,searchForced:String(forcingActive),topScore:String(topScore),stripped:'0',suspectCitations:'0',catalogEntries:String(relevant.length),calls:String(calls),model,latencyMs:String(latencyMs),cost:'0.00000'},errorLogTimeoutMs)
    ]);
   }catch{}
