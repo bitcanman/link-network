@@ -693,7 +693,7 @@
     $("#sheetDesc").textContent=`${t==="all"?"All tracks":LABEL[t]||t}. Add it once and new events show up on their own. In Google: Other calendars, +, From URL.`;
     $("#sheet").classList.add("open"); }
   $("#subBtn").onclick=openSheet; $("#closeSheet").onclick=()=>$("#sheet").classList.remove("open");
-  $("#sheet").addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").classList.remove("open");});
+  $("#sheet")?.addEventListener("click",e=>{if(e.target.id==="sheet")$("#sheet").classList.remove("open");});
   document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#sheet").classList.remove("open");});
   $("#copyFeed").onclick=()=>{navigator.clipboard?.writeText($("#feedUrl").value);$("#copyFeed").textContent="Copied";setTimeout(()=>$("#copyFeed").textContent="Copy",1500);};
 

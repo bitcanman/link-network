@@ -155,8 +155,8 @@ function sample(title,desc){return `<article class="resource sample"><div class=
 function founder(name,company,meta,url,label){return `<article class="resource"><div class="portrait ${name.includes('Jeff')?'p2':name.includes('Sean')?'p3':''}"></div><span class="meta">${meta}</span><h3>${name}</h3><p>${company}</p><a href="${url}" target="_blank" rel="noreferrer">${label} </a></article>`}
 const dialog=document.querySelector('#detail-dialog'),title=document.querySelector('#dialog-title'),content=document.querySelector('#dialog-content');
 document.querySelectorAll('.tile[data-topic]').forEach(tile=>tile.addEventListener('click',e=>{if(tile.dataset.page)return;e.preventDefault();const item=topics[tile.dataset.topic];title.textContent=item.title;content.innerHTML=`<p class="intro">${item.intro}</p>${item.html}`;dialog.showModal()}));
-dialog.querySelector('.close').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
-const search=document.querySelector('#search'),tiles=[...document.querySelectorAll('.tile')],resultCount=document.querySelector('#results');search.addEventListener('input',()=>{const q=search.value.toLowerCase().trim();let shown=0;tiles.forEach(t=>{const visible=t.innerText.toLowerCase().includes(q);t.hidden=!visible;if(visible)shown++});resultCount.textContent=`${shown} ${shown===1?'topic':'topics'}`});
+dialog?.querySelector('.close')?.addEventListener('click',()=>dialog.close());dialog?.addEventListener('click',e=>{if(e.target===dialog)dialog.close()});
+const search=document.querySelector('#search'),tiles=[...document.querySelectorAll('.tile')],resultCount=document.querySelector('#results');search?.addEventListener('input',()=>{const q=search.value.toLowerCase().trim();let shown=0;tiles.forEach(t=>{const visible=t.innerText.toLowerCase().includes(q);t.hidden=!visible;if(visible)shown++});resultCount.textContent=`${shown} ${shown===1?'topic':'topics'}`});
 </script>
 </body>
 </html>

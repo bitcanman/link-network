@@ -193,10 +193,8 @@ function textWords(text){return (text||'').toLowerCase().replace(/[^a-z0-9\s]/g,
 // check has already failed. a is always the query token, b the catalog
 // token - the prefix case is one-directional on purpose ("regist" is a
 // plausible truncated/misspelled "registration"; the reverse never happens,
-// since catalog vocabulary is always the complete, correct word). Pruned
-// before any distance work: a length-4 floor (below that "id" fuzzy-matches
-// "is"/"in"/"it" and everything collapses - do not lower it) and a shared
-// first character, since every case below requires one anyway.
+// since catalog vocabulary is always the complete, correct word). A shared
+// first character is required for every case below, checked once up front.
 export function fuzzyEq(a,b){
  if(a===b)return true;
  if(a.length<4||b.length<4)return false;
@@ -204,11 +202,19 @@ export function fuzzyEq(a,b){
  const diff=b.length-a.length;
  // PREFIX: query is a prefix of catalog, catalog at most 3 chars longer -
  // catches disput->dispute, regist->registration, appoint->appointment.
+ // The 4-char floor is safe here: a prefix relationship is a much stronger
+ // constraint than "one edit away," so it does not need the stricter floor
+ // below.
  if(diff>=1&&diff<=3&&b.startsWith(a))return true;
- if(diff<-1||diff>1)return false;
  // EDIT DISTANCE 1, single-pass (no matrix): same length means exactly one
  // substitution or one adjacent transposition (tickat, tikcet); length off
- // by one means exactly one insertion or deletion (tickket, tcket).
+ // by one means exactly one insertion or deletion (tickket, tcket). Four-
+ // letter English is far too dense for this to be safe (wall/well/will,
+ // bad/bed, sick/sock) - "im not feeling well" matched Climbing Wall on
+ // "well"/"wall" at length 4. Six characters each is where a one-edit
+ // neighbour is nearly always a genuine typo rather than a different word.
+ if(a.length<6||b.length<6)return false;
+ if(diff<-1||diff>1)return false;
  if(diff===0){
   let d1=-1,d2=-1;
   for(let i=0;i<a.length;i++){

@@ -538,6 +538,7 @@
     {cat:"registration", name:"Texas One Stop", desc:"Registrar, records, financial aid, and billing in one office.", url:"https://onestop.utexas.edu/"},
 
     {cat:"money", name:"Tuition & \u201CWhat I Owe\u201D", desc:"View your bill, pay tuition, and confirm attendance.", url:"https://utdirect.utexas.edu/acct/rec/wio/wio_home.WBX", login:true},
+    {cat:"money", name:"Business Office Payment Portal", desc:"Pay tuition, fees, or other UT charges online.", url:"https://utdirect.utexas.edu/business/payment/portal/", login:true},
     {cat:"money", name:"My Tuition Bill", desc:"Your itemized tuition bill, installment plan, and payment history.", url:"https://utdirect.utexas.edu/apps/studentfinancials/mytuitionbill/", login:true},
     {cat:"money", name:"Direct Deposit (Refunds)", desc:"Set up direct deposit so refunds and student-job pay land in your bank.", url:"https://utdirect.utexas.edu/acct/rec/weft/webEFT_info.WBX", login:true},
     {cat:"money", name:"Student Tax Forms (1098-T)", desc:"Your 1098-T tuition statement and 1098-E loan-interest form for taxes.", url:"https://afm.utexas.edu/student-accounts-receivable/resources/student-tax-form-information"},
@@ -811,12 +812,12 @@
     closeMy();
   }
 
-  document.getElementById("addMyLink").addEventListener("click", openMy);
-  myModal.addEventListener("click", function(e){ if(e.target === myModal) closeMy(); });
-  document.getElementById("m-cancel").addEventListener("click", closeMy);
-  document.getElementById("m-save").addEventListener("click", saveMy);
+  document.getElementById("addMyLink")?.addEventListener("click", openMy);
+  myModal?.addEventListener("click", function(e){ if(e.target === myModal) closeMy(); });
+  document.getElementById("m-cancel")?.addEventListener("click", closeMy);
+  document.getElementById("m-save")?.addEventListener("click", saveMy);
   ["m-name","m-url","m-note"].forEach(function(id){
-    document.getElementById(id).addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); saveMy(); } });
+    document.getElementById(id)?.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); saveMy(); } });
   });
 
   document.addEventListener("click", function(e){
@@ -995,7 +996,7 @@
     emptyEl.style.display = (shown===0 && fbTotal===0) ? "block" : "none";
     document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");
   }
-  q.addEventListener("input", ()=>{ activeCat="all";
+  q?.addEventListener("input", ()=>{ activeCat="all";
     document.querySelectorAll(".chip").forEach((x,i)=>x.classList.toggle("active",i===0));
     applyFilter();
   });
@@ -1029,10 +1030,10 @@
   function openForm(){ modal.classList.add("open"); formMsg.className="form-msg"; document.getElementById("f-title").focus(); }
   function closeForm(){ modal.classList.remove("open"); }
   document.querySelectorAll("[data-open-form]").forEach(el=>el.addEventListener("click", e=>{e.preventDefault();openForm();}));
-  document.getElementById("cancel-form").addEventListener("click", closeForm);
-  modal.addEventListener("click", e=>{ if(e.target===modal) closeForm(); });
+  document.getElementById("cancel-form")?.addEventListener("click", closeForm);
+  modal?.addEventListener("click", e=>{ if(e.target===modal) closeForm(); });
 
-  document.getElementById("submit-form").addEventListener("click", async ()=>{
+  document.getElementById("submit-form")?.addEventListener("click", async ()=>{
     const title = document.getElementById("f-title").value.trim();
     const url = document.getElementById("f-url").value.trim();
     const section = document.getElementById("f-section").value;

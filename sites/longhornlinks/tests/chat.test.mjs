@@ -1,7 +1,7 @@
 import test,{beforeEach} from 'node:test';
 import assert from 'node:assert/strict';
 import {deflateSync} from 'node:zlib';
-import {readFileSync} from 'node:fs';
+import {readFileSync,readdirSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import handler,{explicitAudience,allows,eligibleCatalog,validateAnswer,relevantCatalog,scoredCatalog,singleUnambiguousMatch,isSelfContained,resolveProgramEvents,unmatchedSalientTerms,fuzzyEq,_clearAnswerCacheForTests} from '../netlify/functions/lhl-chat.mjs';
@@ -477,16 +477,36 @@ test('once Dig deeper has been clicked anywhere in the conversation, a later tur
   assert.equal(fetchCount,2,'a later turn auto-continues in model mode - no second click needed');
  }finally{globalThis.fetch=originalFetch;}
 });
-test('"im sick" and "i need a doctor" both rank University Health Services first - "im" is now a stopword (no more Intramural Sports collision) and the catalog carries the plain-language symptom words students actually type',()=>{for(const q of['im sick','i need a doctor']){const eligible=eligibleCatalog(q,'everyone');const scored=scoredCatalog(q,eligible);assert.equal(scored[0].link.id,'r44',q+' must rank University Health Services first');assert(scored[0].score>=8,q+' must clear a real confidence bar, not just barely lead');}});
+test('"im sick", "i need a doctor", "i am ill", and "i feel bad" all rank University Health Services first - "im" is now a stopword (no more Intramural Sports collision) and the catalog carries the plain-language symptom words students actually type',()=>{for(const q of['im sick','i need a doctor','i am ill','i feel bad']){const eligible=eligibleCatalog(q,'everyone');const scored=scoredCatalog(q,eligible);assert.equal(scored[0].link.id,'r44',q+' must rank University Health Services first');assert(scored[0].score>=8,q+' must clear a real confidence bar, not just barely lead');}});
+test('"im not feeling well" ranks University Health Services first and returns no Climbing Wall entry - "well"/"wall" are both 4 letters, below the edit-distance-1 floor of 6, so they must not fuzzy-match',()=>{const q='im not feeling well';const eligible=eligibleCatalog(q,'everyone');const scored=scoredCatalog(q,eligible);assert.equal(scored[0].link.id,'r44','University Health Services must rank first');assert(!scored.some(s=>/climbing wall/i.test(s.link.name)&&s.score>0),'no Climbing Wall entry may score above zero for this question');});
+test('after a turn shows University Health Services, a following "im sick" still shows it - a score of 52 must never be suppressed by having already been shown once',async()=>{
+ const html=readFileSync(path.join(path.dirname(fileURLToPath(import.meta.url)),'..','ask','index.html'),'utf8');
+ const realLinks=JSON.parse(html.match(/<script type="application\/json" id="catalogData">([\s\S]*?)<\/script>/)[1]).links;
+ const originalFetch=globalThis.fetch;
+ globalThis.fetch=async()=>Response.json({heading:'x',paragraphs:['ok'],sources:[],followUps:[],audience:'everyone',id:'t'});
+ try{
+  const {ask,insertCalls}=askWithInstantFromRealPage(realLinks);
+  await ask('i am ill');
+  assert.equal(insertCalls.length,1);
+  assert(insertCalls[0].includes('University Health Services'),'turn 1 must show University Health Services');
+  insertCalls.length=0;
+  await ask('im sick');
+  assert.equal(insertCalls.length,1,'a later turn must still render something, never a silent no-op');
+  assert(!insertCalls[0].includes("don't have a direct match"),'University Health Services genuinely scores 52 here - it must never be reported as no match just because it was already shown once');
+  assert(insertCalls[0].includes('University Health Services'),'University Health Services must still show on the later turn');
+ }finally{globalThis.fetch=originalFetch;}
+});
 test('"i just got a parking ticket" ranks the parking citation entries (Parking & Transportation, Pay a Citation) above The Big Ticket - Big Ticket is now scoped to athletics-only aliases so a bare "ticket" alongside "parking" cannot pull it to the top',()=>{const q='i just got a parking ticket';const eligible=eligibleCatalog(q,'everyone');const scored=scoredCatalog(q,eligible);const rankOf=id=>scored.findIndex(s=>s.link.id===id);const bigTicketRank=rankOf('r29');assert(rankOf('r41')<bigTicketRank,'Parking & Transportation must rank above The Big Ticket');assert(rankOf('r353')<bigTicketRank,'Pay a Citation must rank above The Big Ticket');assert(scored[0].score>=8&&scored[1].score>=8,'the top two (the parking cluster) must both clear a real confidence bar, not just edge out Big Ticket');});
 test('Intramural Sports stays findable by its own name now that "im" is a stopword, and the new plain-language catalog aliases are all multi-word or distinctive single words, never a bare collision-prone token like "id" or "ticket"',()=>{const eligible=eligibleCatalog('intramural sports','everyone');const scored=scoredCatalog('intramural sports',eligible);assert.equal(scored[0].link.id,'r32','Intramural Sports must still rank first by its own name/aliases');const idEligible=eligibleCatalog('i lost my id','everyone');const idScored=scoredCatalog('i lost my id',idEligible);assert.equal(idScored[0].link.id,'r308','"id" must still reach UT ID Center - it was deliberately NOT added to STOPWORDS');});
-test('fuzzyEq: exact equality, prefix, and edit-distance-1 (substitution/insertion/deletion/transposition), pruned by a 4-char floor and matching first character',()=>{
+test('fuzzyEq: exact equality, prefix (4-char floor), and edit-distance-1 (substitution/insertion/deletion/transposition, 6-char floor on both tokens), pruned by a shared first character',()=>{
   assert.equal(fuzzyEq('dispute','dispute'),true,'exact');
-  assert.equal(fuzzyEq('disput','dispute'),true,'prefix - truncation');
-  assert.equal(fuzzyEq('tikcet','ticket'),true,'transposition');
-  assert.equal(fuzzyEq('tickat','ticket'),true,'substitution');
-  assert.equal(fuzzyEq('tickket','ticket'),true,'insertion');
-  assert.equal(fuzzyEq('tcket','ticket'),true,'deletion');
+  assert.equal(fuzzyEq('disput','dispute'),true,'prefix - truncation, 6-char tokens, but prefix only needs the 4-char floor');
+  assert.equal(fuzzyEq('tikcet','ticket'),true,'transposition at exactly 6 characters');
+  assert.equal(fuzzyEq('tickat','ticket'),true,'substitution at exactly 6 characters');
+  assert.equal(fuzzyEq('tickket','ticket'),true,'insertion, 7/6 characters');
+  assert.equal(fuzzyEq('regster','register'),true,'deletion, 7/8 characters');
+  assert.equal(fuzzyEq('tcket','ticket'),false,'deletion below the edit-distance 6-char floor must now be rejected - "tcket" is only 5 characters, even though it would have passed before this fix');
+  assert.equal(fuzzyEq('well','wall'),false,'the regression this fix exists for: a 4-letter substitution ("well"/"wall") must not clear the edit-distance floor - four-letter English is far too dense (wall/well/will, bad/bed, sick/sock)');
   assert.equal(fuzzyEq('id','is'),false,'below the 4-char floor - without it "id" would fuzzy-match "is"/"in"/"it" and everything collapses');
   assert.equal(fuzzyEq('id','in'),false);
   assert.equal(fuzzyEq('cat','dog'),false,'unrelated short words must not match even via accidental distance math');
@@ -598,4 +618,141 @@ test('property: whenever the scorer finds at least one entry above INSTANT_MIN_S
   }
  }
  assert.deepEqual(failures,[],'every question with a real scorer match must render something, in both cases - see each entry above for which question and which case broke the invariant');
+});
+test('every .html page in the site folder loads headlessly without a JS error - this is what would have caught the dead "resource-search" binding that blanked the registration timeline (commit 2b723eb removed the search input but left its listener behind, which threw on load and aborted the rest of that inline script)',async()=>{
+ // No real browser or Playwright - this repo has no build step and no npm
+ // (CLAUDE.md). This is a dependency-free, Node-only approximation: execute
+ // each page's real inline <script> blocks against a minimal DOM/BOM stub
+ // and catch anything thrown, synchronous or in a deferred microtask. It
+ // cannot catch CSS/layout-only breakage, but it reliably catches exactly
+ // the class of bug this test exists for - a null DOM lookup that throws and
+ // kills every line of script after it.
+ const siteDir=path.join(path.dirname(fileURLToPath(import.meta.url)),'..');
+ function listHtmlFiles(dir,base){
+  const out=[];
+  for(const entry of readdirSync(dir,{withFileTypes:true})){
+   if(entry.name.startsWith('.')||entry.name==='node_modules'||entry.name==='panel'||entry.name==='feeds')continue;
+   const full=path.join(dir,entry.name);
+   const rel=base?base+'/'+entry.name:entry.name;
+   if(entry.isDirectory())out.push(...listHtmlFiles(full,rel));
+   else if(entry.name.endsWith('.html'))out.push(rel);
+  }
+  return out;
+ }
+ function makeFakeNode(opts={},skipContent){
+  const node={
+   tagName:(opts.tag||'div').toUpperCase(),id:opts.id||'',className:'',
+   classList:{add(){},remove(){},toggle(){},contains(){return false;}},
+   style:{},dataset:{},children:[],attributes:{},
+   textContent:opts.textContent||'',innerHTML:opts.textContent||'',innerText:'',value:'',
+   hidden:false,disabled:false,checked:false,href:'',src:'',type:'',title:'',rel:'',target:'',
+   setAttribute(k,v){this.attributes[k]=String(v);},
+   getAttribute(k){return k in this.attributes?this.attributes[k]:null;},
+   removeAttribute(k){delete this.attributes[k];},
+   hasAttribute(k){return k in this.attributes;},
+   append(...a){this.children.push(...a);},appendChild(a){this.children.push(a);return a;},
+   prepend(...a){this.children.unshift(...a);},replaceChildren(...a){this.children=a;},remove(){},
+   closest(){return null;},querySelector(sel){return queryOne(sel);},querySelectorAll(sel){return queryAll(sel);},
+   addEventListener(){},removeEventListener(){},dispatchEvent(){return true;},
+   focus(){},blur(){},click(){},select(){},scrollTo(){},scrollIntoView(){},
+   getBoundingClientRect(){return {top:0,left:0,right:0,bottom:0,width:0,height:0};},
+   cloneNode(){return makeFakeNode(opts);},
+   parentElement:null,parentNode:null,firstChild:null,lastChild:null,
+  };
+  if(!skipContent)node.content=makeFakeNode({tag:'#document-fragment'},true);
+  return node;
+ }
+ let idRegistry=new Set(),jsonBlockText=new Map();
+ function queryOne(sel){
+  if(typeof sel==='string'&&/^#[\w-]+$/.test(sel)){
+   const id=sel.slice(1);
+   if(!idRegistry.has(id))return null;
+   return makeFakeNode({id,tag:'div',textContent:jsonBlockText.get(id)||''});
+  }
+  return makeFakeNode({tag:'div'});
+ }
+ function queryAll(sel){
+  if(typeof sel==='string'&&/^#[\w-]+$/.test(sel)){
+   const id=sel.slice(1);
+   return idRegistry.has(id)?[makeFakeNode({id,tag:'div'})]:[];
+  }
+  return [makeFakeNode({tag:'div'}),makeFakeNode({tag:'div'})];
+ }
+ function buildStubs(){
+  const documentStub={
+   body:makeFakeNode({tag:'body'}),documentElement:makeFakeNode({tag:'html'}),
+   title:'',cookie:'',activeElement:makeFakeNode({tag:'body'}),
+   getElementById(id){return idRegistry.has(id)?makeFakeNode({id,tag:'div',textContent:jsonBlockText.get(id)||''}):null;},
+   querySelector(sel){return queryOne(sel);},querySelectorAll(sel){return queryAll(sel);},
+   createElement(tag){return makeFakeNode({tag});},createTextNode(text){return makeFakeNode({tag:'#text',textContent:text});},
+   addEventListener(){},removeEventListener(){},execCommand(){return true;},
+  };
+  let storedState=null;
+  const historyStub={get state(){return storedState;},pushState(s){storedState=s;},replaceState(s){storedState=s;},back(){},forward(){},go(){}};
+  const storageFactory=()=>{const map=new Map();return {getItem(k){return map.has(k)?map.get(k):null;},setItem(k,v){map.set(k,String(v));},removeItem(k){map.delete(k);},clear(){map.clear();}};};
+  const windowStub={
+   addEventListener(){},removeEventListener(){},scrollTo(){},innerWidth:1024,innerHeight:768,
+   location:{href:'https://longhornlinks.com/test.html',pathname:'/test.html',search:'',hash:'',hostname:'longhornlinks.com',origin:'https://longhornlinks.com',assign(){},replace(){}},
+   history:historyStub,localStorage:storageFactory(),sessionStorage:storageFactory(),
+   navigator:{clipboard:{writeText(){return Promise.resolve();}},sendBeacon(){return true;},userAgent:'node-pageload-check'},
+   requestAnimationFrame(){return 0;},cancelAnimationFrame(){},setTimeout(){return 0;},setInterval(){return 0;},clearTimeout(){},clearInterval(){},
+   fetch(){return Promise.resolve({ok:false,status:0,headers:{get(){return null;}},json(){return Promise.resolve({});},text(){return Promise.resolve('');}});},
+   crypto:{randomUUID(){return '00000000-0000-4000-8000-000000000000';}},
+   matchMedia(){return {matches:false,addEventListener(){},addListener(){}};},dataLayer:[],
+  };
+  return {documentStub,windowStub};
+ }
+ function extractScripts(html){
+  const stripped=html.replace(/<!--[\s\S]*?-->/g,'');
+  const scripts=[];
+  for(const m of stripped.matchAll(/<script(\s[^>]*)?>([\s\S]*?)<\/script>/g)){
+   const attrs=m[1]||'';
+   if(/\bsrc=/.test(attrs))continue;
+   if(/type=["']application\/json["']/.test(attrs))continue;
+   if(m[2].includes('dataLayer.push(arguments)'))continue;
+   scripts.push(m[2]);
+  }
+  return scripts;
+ }
+ function buildRegistries(html){
+  idRegistry=new Set();
+  for(const m of html.matchAll(/\sid=["']([^"']+)["']/g))idRegistry.add(m[1]);
+  jsonBlockText=new Map();
+  for(const m of html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)){
+   const attrs=m[1];
+   if(!/type=["']application\/json["']/.test(attrs))continue;
+   const idMatch=attrs.match(/\sid=["']([^"']+)["']/);
+   if(idMatch)jsonBlockText.set(idMatch[1],m[2]);
+  }
+ }
+ async function checkPage(relPath){
+  const html=readFileSync(path.join(siteDir,relPath),'utf8');
+  buildRegistries(html);
+  const scripts=extractScripts(html);
+  const {documentStub,windowStub}=buildStubs();
+  const errors=[];
+  const onRejection=reason=>{errors.push({scriptIndex:'(async)',message:reason&&reason.message||String(reason)});};
+  process.on('unhandledRejection',onRejection);
+  try{
+   for(let i=0;i<scripts.length;i++){
+    try{
+     const fn=new Function('document','window','navigator','location','history','localStorage','sessionStorage','fetch','crypto','requestAnimationFrame','cancelAnimationFrame','setTimeout','setInterval','clearTimeout','clearInterval','matchMedia',scripts[i]);
+     fn(documentStub,windowStub,windowStub.navigator,windowStub.location,windowStub.history,windowStub.localStorage,windowStub.sessionStorage,windowStub.fetch,windowStub.crypto,windowStub.requestAnimationFrame,windowStub.cancelAnimationFrame,windowStub.setTimeout,windowStub.setInterval,windowStub.clearTimeout,windowStub.clearInterval,windowStub.matchMedia);
+    }catch(e){errors.push({scriptIndex:i,message:e.message});}
+   }
+   await new Promise(resolve=>setImmediate(resolve));
+   await new Promise(resolve=>setImmediate(resolve));
+  }finally{
+   process.off('unhandledRejection',onRejection);
+  }
+  return errors;
+ }
+ const files=listHtmlFiles(siteDir,'');
+ assert(files.length>=9,'sanity check: this must actually find the site\'s html pages, not silently scan zero');
+ const failures=[];
+ for(const f of files){
+  const errors=await checkPage(f);
+  if(errors.length)failures.push({page:f,errors:errors.map(e=>e.scriptIndex+': '+e.message)});
+ }
+ assert.deepEqual(failures,[],'one or more pages threw a JS error on load - see each entry above for which page and which error');
 });

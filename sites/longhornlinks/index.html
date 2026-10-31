@@ -753,12 +753,12 @@
     closeMy();
   }
 
-  document.getElementById("addMyLink").addEventListener("click", openMy);
-  myModal.addEventListener("click", function(e){ if(e.target === myModal) closeMy(); });
-  document.getElementById("m-cancel").addEventListener("click", closeMy);
-  document.getElementById("m-save").addEventListener("click", saveMy);
+  document.getElementById("addMyLink")?.addEventListener("click", openMy);
+  myModal?.addEventListener("click", function(e){ if(e.target === myModal) closeMy(); });
+  document.getElementById("m-cancel")?.addEventListener("click", closeMy);
+  document.getElementById("m-save")?.addEventListener("click", saveMy);
   ["m-name","m-url","m-note"].forEach(function(id){
-    document.getElementById(id).addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); saveMy(); } });
+    document.getElementById(id)?.addEventListener("keydown", function(e){ if(e.key === "Enter"){ e.preventDefault(); saveMy(); } });
   });
 
   document.addEventListener("click", function(e){
@@ -916,7 +916,7 @@
     emptyEl.style.display = (shown===0) ? "block" : "none";
     document.querySelector('.controls').classList.toggle('filter-active', activeCat!=="all" || term!=="");
   }
-  q.addEventListener("input", ()=>{ activeCat="all";
+  q?.addEventListener("input", ()=>{ activeCat="all";
     document.querySelectorAll(".chip").forEach((x,i)=>x.classList.toggle("active",i===0));
     applyFilter();
   });
@@ -950,10 +950,10 @@
   function openForm(){ modal.classList.add("open"); formMsg.className="form-msg"; document.getElementById("f-title").focus(); }
   function closeForm(){ modal.classList.remove("open"); }
   document.querySelectorAll("[data-open-form]").forEach(el=>el.addEventListener("click", e=>{e.preventDefault();openForm();}));
-  document.getElementById("cancel-form").addEventListener("click", closeForm);
-  modal.addEventListener("click", e=>{ if(e.target===modal) closeForm(); });
+  document.getElementById("cancel-form")?.addEventListener("click", closeForm);
+  modal?.addEventListener("click", e=>{ if(e.target===modal) closeForm(); });
 
-  document.getElementById("submit-form").addEventListener("click", async ()=>{
+  document.getElementById("submit-form")?.addEventListener("click", async ()=>{
     const title = document.getElementById("f-title").value.trim();
     const url = document.getElementById("f-url").value.trim();
     const section = document.getElementById("f-section").value;
