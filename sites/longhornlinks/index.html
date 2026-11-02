@@ -555,10 +555,7 @@
     {cat:"quicklinks", name:"Canvas", desc:"Your courses, assignments, and grades.", url:"https://utexas.instructure.com/", login:true},
     {cat:"quicklinks", name:"My Schedule + Student Portal", desc:"Class schedule, etc.", url:"https://my.utexas.edu/", login:true},
     {cat:"quicklinks", name:"Register for Classes", desc:"The live add/drop registration system.", url:"https://utdirect.utexas.edu/registration/", login:true},
-    {cat:"quicklinks", name:"Texas One Stop", desc:"Registrar, records, financial aid, and billing in one office.", url:"https://onestop.utexas.edu/"},
     {cat:"quicklinks", name:"Course Catalog & Degree Plans", desc:"Official course descriptions, prerequisites, and degree requirements.", url:"https://catalog.utexas.edu/"},
-    {cat:"quicklinks", name:"Spring 2027 Course List", desc:"Every class for Spring 2027, with times and unique numbers.", url:"https://registrar.utexas.edu/schedules/272"},
-    {cat:"quicklinks", name:"Registration", desc:"Choose your semester and register for classes.", url:"https://utdirect.utexas.edu/registration/chooseSemester.WBX", login:true},
   ];
 
   const CATS = [
@@ -645,7 +642,24 @@
      they had not removed, so this upgrade does not wipe out what they already set up. */
   function initFav(){
     const fresh = readJSON(FAV_KEY);
-    if(fresh && Array.isArray(fresh.saved) && Array.isArray(fresh.custom)){ favState = fresh; return; }
+    if(fresh && Array.isArray(fresh.saved) && Array.isArray(fresh.custom)){
+      favState = fresh;
+      /* A saved favorite's id is "cat|name" tied to whatever is in QUICKLINKS
+         or LINKS right now - if QUICKLINKS defaults are ever renamed or
+         removed, a returning visitor's old ids can all stop resolving at
+         once, silently emptying the section instead of showing anything.
+         That is corruption, not an intentional "I cleared everything," so
+         repair it by re-seeding from the current defaults rather than
+         leaving the student looking at nothing. */
+      const resolvable = favState.saved.some(function(id){
+        return id.indexOf("custom-") === 0 ? !!customById(id) : !!REAL_BY_FAVID[id];
+      });
+      if(favState.saved.length && !resolvable){
+        favState.saved = QUICKLINKS.map(favId);
+        persistFav();
+      }
+      return;
+    }
     const saved = QUICKLINKS.map(favId);
     const custom = [];
     const oldMy = readJSON(MY_KEY);
