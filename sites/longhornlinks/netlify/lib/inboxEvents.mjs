@@ -33,6 +33,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-01"
  },
  {
+  "id": "inbox-ccb08cda20",
+  "program": "general",
+  "title": "Get Ready to Vote!",
+  "date": "2026-11-03",
+  "endDate": null,
+  "dateLabel": "Tuesday, November 3, 2026",
+  "time": "11:00 AM - 2:30 PM",
+  "where": "West Mall",
+  "desc": "Stop by West Mall on Election Day for free, drop-in voting support to help verify voter registration, find polling locations, and learn about voting rights.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-02"
+ },
+ {
   "id": "inbox-06dfb48118",
   "program": "mba",
   "title": "International Night",
@@ -226,6 +241,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-a9c34f4381",
+  "program": "general",
+  "title": "Request for 2026 SEC Championship Game Student Ticket",
+  "date": "2026-11-12",
+  "endDate": null,
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "4:00 PM",
+  "where": "",
+  "desc": "Students can request a ticket for the SEC Championship game if Texas qualifies. Request does not guarantee fulfillment.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-02"
  },
  {
   "id": "inbox-53dff92c15",
