@@ -3,36 +3,6 @@
 // overwrites this file. Merged into the program pools in events.mjs.
 export const inboxEvents = [
  {
-  "id": "inbox-3e8da38fad",
-  "program": "general",
-  "title": "#6 Women’s Basketball Season Tip-off",
-  "date": "2026-11-02",
-  "endDate": null,
-  "dateLabel": "Monday, November 2, 2026",
-  "time": "",
-  "where": "Frank Erwin Center",
-  "desc": "The Women’s Basketball team tips off their season against their opponent. Show your support!",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-01"
- },
- {
-  "id": "inbox-f6b6f05d76",
-  "program": "general",
-  "title": "#7 Men’s Basketball Season Tip-off",
-  "date": "2026-11-02",
-  "endDate": null,
-  "dateLabel": "Monday, November 2, 2026",
-  "time": "",
-  "where": "Frank Erwin Center",
-  "desc": "The Men’s Basketball team tips off their season against their opponent. Come show your support!",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-01"
- },
- {
   "id": "inbox-ccb08cda20",
   "program": "general",
   "title": "Get Ready to Vote!",
