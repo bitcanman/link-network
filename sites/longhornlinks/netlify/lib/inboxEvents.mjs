@@ -3,6 +3,21 @@
 // overwrites this file. Merged into the program pools in events.mjs.
 export const inboxEvents = [
  {
+  "id": "inbox-f265d1b31c",
+  "program": "general",
+  "title": "Food for Fines",
+  "date": "2026-11-03",
+  "endDate": "2026-12-05",
+  "dateLabel": "Tuesday, November 3, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Food for Fines allows students to donate qualifying items to help support those experiencing food insecurity in exchange for having their parking citations paid off. The program runs from Nov. 3 through Dec. 5.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-03"
+ },
+ {
   "id": "inbox-ccb08cda20",
   "program": "general",
   "title": "Get Ready to Vote!",
@@ -16,6 +31,36 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-11-02"
+ },
+ {
+  "id": "inbox-68be25c2d3",
+  "program": "mba",
+  "title": "McCombs Speaker Series: Rachel Truair, CMO, Demandbase",
+  "date": "2026-11-03",
+  "endDate": null,
+  "dateLabel": "Tuesday, November 3, 2026",
+  "time": "5:00-6:00 PM",
+  "where": "RRH, Crum Auditorium",
+  "desc": "Rachel Truair is a growth-focused CMO with over 15 years of experience scaling SaaS companies. She shares insights on marketing strategies.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mba",
+  "verifiedAt": "2026-11-03"
+ },
+ {
+  "id": "inbox-d9aff17386",
+  "program": "mbae",
+  "title": "ETA Lunch & Learn with Adrian Carniol",
+  "date": "2026-11-04",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 4, 2026",
+  "time": "2:00-3:00 PM",
+  "where": "TVL Room, Rowling Hall",
+  "desc": "Join the ETA Club for a conversation about entrepreneurship through acquisition with Adrian Carniol.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mbae",
+  "verifiedAt": "2026-11-03"
  },
  {
   "id": "inbox-06dfb48118",
@@ -168,6 +213,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-29"
  },
  {
+  "id": "inbox-56ec302f8d",
+  "program": "general",
+  "title": "BioFair: Biosciences & Biotechnology Virtual Career Fair",
+  "date": "2026-11-11",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 11, 2026",
+  "time": "12:00 PM - 5:00 PM",
+  "where": "Virtual",
+  "desc": "Meet employers in healthcare, biotechnology, and pharmaceutical sectors through virtual sessions.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-03"
+ },
+ {
   "id": "inbox-5b30f62e8f",
   "program": "general",
   "title": "Bioscience and Biotech Career Fair",
@@ -181,6 +241,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-26"
+ },
+ {
+  "id": "inbox-58a4ea35fa",
+  "program": "mbae",
+  "title": "November Startup Coffee Connect",
+  "date": "2026-11-11",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 11, 2026",
+  "time": "10:00 AM - 11:30 AM",
+  "where": "Texas Innovation Center, in the corridor connecting ECJ and EER, across from O’s Cafe",
+  "desc": "Meet Longhorn founders and others exploring entrepreneurship over coffee and breakfast tacos.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mbae",
+  "verifiedAt": "2026-11-03"
  },
  {
   "id": "inbox-41abb11074",
@@ -211,6 +286,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-44bfc50a0f",
+  "program": "general",
+  "title": "Collaborative Happy Hour with LBJ, McCombs, and UT Law",
+  "date": "2026-11-12",
+  "endDate": null,
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "5:30-7:30 PM",
+  "where": "LBJ School Lobby",
+  "desc": "Connect with alumni and students across public affairs, business, and law.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-03"
  },
  {
   "id": "inbox-a9c34f4381",
