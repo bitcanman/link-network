@@ -33,6 +33,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
+  "id": "inbox-b54d805c32",
+  "program": "general",
+  "title": "Free Shirts, Food & Jerseys",
+  "date": "2026-11-04",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 4, 2026",
+  "time": "",
+  "where": "Moody Center",
+  "desc": "Join us for free shirts, food, and jerseys at the Moody Center.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-04"
+ },
+ {
   "id": "inbox-06dfb48118",
   "program": "mba",
   "title": "International Night",
@@ -151,6 +166,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "https://longhornlinks.com/mba",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-ccbf1eb152",
+  "program": "general",
+  "title": "Free Shirts, Food & Jerseys at Moody Center",
+  "date": "2026-11-07",
+  "endDate": null,
+  "dateLabel": "Saturday, November 7, 2026",
+  "time": "",
+  "where": "Moody Center",
+  "desc": "Students can enjoy free shirts, food, and jerseys.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-04"
  },
  {
   "id": "inbox-68bc24955a",
