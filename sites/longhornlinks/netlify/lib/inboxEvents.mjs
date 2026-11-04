@@ -18,36 +18,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
-  "id": "inbox-ccb08cda20",
-  "program": "general",
-  "title": "Get Ready to Vote!",
-  "date": "2026-11-03",
-  "endDate": null,
-  "dateLabel": "Tuesday, November 3, 2026",
-  "time": "11:00 AM - 2:30 PM",
-  "where": "West Mall",
-  "desc": "Stop by West Mall on Election Day for free, drop-in voting support to help verify voter registration, find polling locations, and learn about voting rights.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-02"
- },
- {
-  "id": "inbox-68be25c2d3",
-  "program": "mba",
-  "title": "McCombs Speaker Series: Rachel Truair, CMO, Demandbase",
-  "date": "2026-11-03",
-  "endDate": null,
-  "dateLabel": "Tuesday, November 3, 2026",
-  "time": "5:00-6:00 PM",
-  "where": "RRH, Crum Auditorium",
-  "desc": "Rachel Truair is a growth-focused CMO with over 15 years of experience scaling SaaS companies. She shares insights on marketing strategies.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "https://longhornlinks.com/mba",
-  "verifiedAt": "2026-11-03"
- },
- {
   "id": "inbox-d9aff17386",
   "program": "mbae",
   "title": "ETA Lunch & Learn with Adrian Carniol",
