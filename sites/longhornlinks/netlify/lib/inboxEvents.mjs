@@ -258,6 +258,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-02"
  },
  {
+  "id": "inbox-0b53d96741",
+  "program": "general",
+  "title": "International Education Week",
+  "date": "2026-11-16",
+  "endDate": "2026-11-20",
+  "dateLabel": "Monday, November 16, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Be a part of UT Austin’s global community during events embracing various themes.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-05"
+ },
+ {
   "id": "inbox-53dff92c15",
   "program": "general",
   "title": "University Blockchain Conference",
@@ -286,5 +301,20 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "https://longhornlinks.com/mba",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-3f5c5bf5c7",
+  "program": "mbae",
+  "title": "TVL Investment Competition",
+  "date": "2026-12-11",
+  "endDate": null,
+  "dateLabel": "Friday, December 11, 2026",
+  "time": "9:00 AM - 5:00 PM",
+  "where": "Robert B. Rowling Hall",
+  "desc": "Attend the TVL Investment Competition to watch graduate student founders pitch their ventures and compete for awards and scholarships.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mbae",
+  "verifiedAt": "2026-11-05"
  }
 ];
