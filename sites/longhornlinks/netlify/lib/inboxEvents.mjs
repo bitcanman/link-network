@@ -228,6 +228,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-10-29"
  },
  {
+  "id": "inbox-070a2b0e16",
+  "program": "general",
+  "title": "SEC Championship Game Student Ticket Request",
+  "date": "2026-12-05",
+  "endDate": null,
+  "dateLabel": "Saturday, December 5, 2026",
+  "time": "4:00 PM ET / 3:00 PM CT",
+  "where": "Mercedes-Benz Stadium, Atlanta, GA",
+  "desc": "Request your student ticket for the 2026 SEC Championship Game. Limited to 1 ticket per student.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-06"
+ },
+ {
   "id": "inbox-5125fcfe84",
   "program": "mba",
   "title": "Fall 2026 TVL Investment Competition",
