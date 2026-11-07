@@ -18,21 +18,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
-  "id": "inbox-9da88e4b4b",
-  "program": "mbae",
-  "title": "GSLI Attorneys in Residence for Impact Ventures",
-  "date": "2026-11-06",
-  "endDate": null,
-  "dateLabel": "Friday, November 6, 2026",
-  "time": "",
-  "where": "",
-  "desc": "Participate in the GSLI program focused on impact ventures.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "https://longhornlinks.com/mbae",
-  "verifiedAt": "2026-10-29"
- },
- {
   "id": "inbox-9179df9571",
   "program": "mba",
   "title": "KBH Energy Finance Case Competition",
