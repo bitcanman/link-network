@@ -18,6 +18,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
+  "id": "inbox-10b2345bd4",
+  "program": "general",
+  "title": "Graduate Job Search Working Group",
+  "date": "2026-11-10",
+  "endDate": null,
+  "dateLabel": "Tuesday, November 10, 2026",
+  "time": "1-2 p.m.",
+  "where": "FAC 2.134 Conference Room",
+  "desc": "Participate in a working group focused on the graduate job search process.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-09"
+ },
+ {
   "id": "inbox-4596e4e29c",
   "program": "general",
   "title": "Longhorns in Sustainability: A Career Panel",
@@ -78,6 +93,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
+  "id": "inbox-b7cb4b1c31",
+  "program": "general",
+  "title": "STEM PhDs Flagship Information Session",
+  "date": "2026-11-11",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 11, 2026",
+  "time": "4 p.m.",
+  "where": "MBB 1.210",
+  "desc": "Learn about venture creation focused on addressing clinical and sustainability challenges.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-09"
+ },
+ {
   "id": "inbox-41abb11074",
   "program": "general",
   "title": "War, Innovation, and Resilience: How Ukraine's Economy Is Responding — and Repositioning — for the Future",
@@ -106,6 +136,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-3ef643b4c2",
+  "program": "general",
+  "title": "2026 Legislative & Government Affairs Internship Fair",
+  "date": "2026-11-12",
+  "endDate": null,
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "noon-3 p.m.",
+  "where": "WCP 2.410 & 2.412",
+  "desc": "Attend the internship fair focused on legislative and government affairs opportunities.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-09"
  },
  {
   "id": "inbox-44bfc50a0f",
@@ -151,6 +196,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-11-05"
+ },
+ {
+  "id": "inbox-5d78bd2e63",
+  "program": "general",
+  "title": "Building a Network to Help You in Academia and Beyond (Beyond the Professoriate Live Webinar)",
+  "date": "2026-11-18",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 18, 2026",
+  "time": "11-11:45 a.m.",
+  "where": "Virtual",
+  "desc": "Attend a live webinar focused on networking in academia and beyond.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-09"
  },
  {
   "id": "inbox-53dff92c15",
