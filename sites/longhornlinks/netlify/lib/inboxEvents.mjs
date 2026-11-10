@@ -153,6 +153,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-09"
  },
  {
+  "id": "inbox-b3b36a05a4",
+  "program": "mba",
+  "title": "2Y International OPT Workshop with ISSS",
+  "date": "2026-11-12",
+  "endDate": null,
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "3:00pm - 4:00pm",
+  "where": "RRH 4.314",
+  "desc": "Learn about the OPT application process and ask questions as you prepare for employment after graduation.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mba",
+  "verifiedAt": "2026-11-10"
+ },
+ {
   "id": "inbox-44bfc50a0f",
   "program": "general",
   "title": "Collaborative Happy Hour with LBJ, McCombs, and UT Law",
