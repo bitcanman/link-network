@@ -18,36 +18,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
-  "id": "inbox-10b2345bd4",
-  "program": "general",
-  "title": "Graduate Job Search Working Group",
-  "date": "2026-11-10",
-  "endDate": null,
-  "dateLabel": "Tuesday, November 10, 2026",
-  "time": "1-2 p.m.",
-  "where": "FAC 2.134 Conference Room",
-  "desc": "Participate in a working group focused on the graduate job search process.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-09"
- },
- {
-  "id": "inbox-4596e4e29c",
-  "program": "general",
-  "title": "Longhorns in Sustainability: A Career Panel",
-  "date": "2026-11-10",
-  "endDate": null,
-  "dateLabel": "Tuesday, November 10, 2026",
-  "time": "",
-  "where": "",
-  "desc": "Join a panel discussion on sustainability careers with UT Austin alumni.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-10-29"
- },
- {
   "id": "inbox-56ec302f8d",
   "program": "general",
   "title": "BioFair: Biosciences & Biotechnology Virtual Career Fair",
