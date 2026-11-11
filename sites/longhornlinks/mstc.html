@@ -266,7 +266,8 @@ function weekdayAbbr(e){const m=e.date.match(/^([^,]+),/);return m?m[1].split('�
 const MONTH_INDEX={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};
 const today=new Date();
 function isToday(e){if(today.getFullYear()!==2026||MONTH_INDEX[e.month]!==today.getMonth())return false;const d=today.getDate();return d>=parseInt(e.day)&&d<=Number(e.day.split('–')[1]||parseInt(e.day));}
-DATA.events.forEach(e=>{const entry=document.createElement('article');entry.className='event-entry'+(isToday(e)?' is-today':'');const button=document.createElement('button');button.type='button';button.className='event-row';button.setAttribute('aria-expanded','false');button.innerHTML=`<span class="event-date-chip"><small>${isToday(e)?'TODAY':esc(weekdayAbbr(e))+' '+esc(e.month)}</small><strong>${esc(e.day)}</strong></span><span class="event-row-copy"><strong>${esc(e.title)}</strong><small>${esc(e.kind)} · ${esc(e.time)}</small></span><span class="event-more">Details</span>`;const detail=document.createElement('div');detail.className='event-expanded';detail.hidden=true;detail.innerHTML=`<p><strong>${esc(e.date)} · ${esc(e.time)}</strong></p><p>${esc(e.where)}${e.cost?' · '+esc(e.cost):''}</p><p>${esc(e.desc)}</p><a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.cta)}</a>`;button.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')==='true';document.querySelectorAll('.event-row').forEach(b=>b.setAttribute('aria-expanded','false'));document.querySelectorAll('.event-expanded').forEach(d=>d.hidden=true);button.setAttribute('aria-expanded',String(!open));detail.hidden=open});entry.append(button,detail);eventList.append(entry)});
+function renderEventList(){eventList.replaceChildren();DATA.events.forEach(e=>{const entry=document.createElement('article');entry.className='event-entry'+(isToday(e)?' is-today':'');const button=document.createElement('button');button.type='button';button.className='event-row';button.setAttribute('aria-expanded','false');button.innerHTML=`<span class="event-date-chip"><small>${isToday(e)?'TODAY':esc(weekdayAbbr(e))+' '+esc(e.month)}</small><strong>${esc(e.day)}</strong></span><span class="event-row-copy"><strong>${esc(e.title)}</strong><small>${esc(e.kind)} · ${esc(e.time)}</small></span><span class="event-more">Details</span>`;const detail=document.createElement('div');detail.className='event-expanded';detail.hidden=true;detail.innerHTML=`<p><strong>${esc(e.date)} · ${esc(e.time)}</strong></p><p>${esc(e.where)}${e.cost?' · '+esc(e.cost):''}</p><p>${esc(e.desc)}</p>${e.url?`<a href="${esc(e.url)}" target="_blank" rel="noopener">${esc(e.cta)}</a>`:''}`;button.addEventListener('click',()=>{const open=button.getAttribute('aria-expanded')==='true';document.querySelectorAll('.event-row').forEach(b=>b.setAttribute('aria-expanded','false'));document.querySelectorAll('.event-expanded').forEach(d=>d.hidden=true);button.setAttribute('aria-expanded',String(!open));detail.hidden=open});entry.append(button,detail);eventList.append(entry)})}
+renderEventList();
 const input=document.getElementById('resourceSearch');
 const SEARCH_TAGS={
  'Financial Aid Advising':'funding opportunities scholarships grants tuition financial support student aid',
@@ -379,4 +380,20 @@ input.addEventListener('input',()=>{
  if(!topicPage.hidden)showOverview();
  window.scrollTo({top:document.getElementById('resources').offsetTop-70,behavior:'smooth'});
 });
+</script>
+<script>
+// Layers MSTC-tagged events from the forwarded-email inbox sweep on top of
+// the hand-maintained DATA.events, via /api/mstc-events (netlify/functions/
+// mstc-events.mjs). Fetched after the page's own render so a slow or failed
+// request never blocks or breaks the calendar - it just stays as-is.
+function eventSortKey(e){return (MONTH_INDEX[e.month]!=null?MONTH_INDEX[e.month]:99)*100+parseInt(e.day)}
+fetch('/api/mstc-events').then(r=>r.ok?r.json():[]).then(list=>{
+ if(!Array.isArray(list)||!list.length)return;
+ const existing=new Set(DATA.events.map(e=>String(e.title).trim().toLowerCase()));
+ const fresh=list.filter(e=>e&&e.title&&!existing.has(String(e.title).trim().toLowerCase()));
+ if(!fresh.length)return;
+ DATA.events=DATA.events.concat(fresh).sort((a,b)=>eventSortKey(a)-eventSortKey(b));
+ renderEventList();
+ drawCalendar();
+}).catch(()=>{});
 </script></body></html>
