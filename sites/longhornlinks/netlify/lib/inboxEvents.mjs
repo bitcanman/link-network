@@ -198,6 +198,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-02"
  },
  {
+  "id": "inbox-bb12a139fb",
+  "program": "general",
+  "title": "SEC Championship Game Student Ticket Request Deadline",
+  "date": "2026-11-12",
+  "endDate": null,
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "4:00 PM",
+  "where": "",
+  "desc": "Deadline to request a ticket for the 2026 SEC Championship Game. Requesting a ticket does not guarantee fulfillment.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-10"
+ },
+ {
   "id": "inbox-0b53d96741",
   "program": "general",
   "title": "International Education Week",
