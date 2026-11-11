@@ -33,6 +33,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
+  "id": "inbox-0bf42042e2",
+  "program": "mstc",
+  "title": "Bioscience & Biotech Career Fair",
+  "date": "2026-11-11",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 11, 2026",
+  "time": "12:00 PM – 5:00 PM",
+  "where": "Virtual",
+  "desc": "A virtual fair connecting students with employers in the bioscience and biotechnology industries.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
+  "verifiedAt": "2026-11-11"
+ },
+ {
   "id": "inbox-5b30f62e8f",
   "program": "general",
   "title": "Bioscience and Biotech Career Fair",
@@ -196,6 +211,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-11-05"
+ },
+ {
+  "id": "inbox-fa2ac97590",
+  "program": "mstc",
+  "title": "FIESTA Austin Startup Pitch & Networking Night",
+  "date": "2026-11-17",
+  "endDate": null,
+  "dateLabel": "Tuesday, November 17, 2026",
+  "time": "5:30 PM",
+  "where": "STATION Austin, 701 Brazos St., Austin, TX",
+  "desc": "An evening of pitches and networking for founders and professionals in the startup community.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
+  "verifiedAt": "2026-11-11"
  },
  {
   "id": "inbox-5d78bd2e63",
