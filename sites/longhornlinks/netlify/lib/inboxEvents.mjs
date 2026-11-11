@@ -153,6 +153,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-10"
  },
  {
+  "id": "inbox-180c4e88b2",
+  "program": "general",
+  "title": "CATT Conference 2026",
+  "date": "2026-11-12",
+  "endDate": "2026-11-13",
+  "dateLabel": "Thursday, November 12, 2026",
+  "time": "",
+  "where": "Virtual",
+  "desc": "The conference spotlighting Organizing AI Agents gathers professionals exploring the impact of AI on industries and ethical governance.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-11"
+ },
+ {
   "id": "inbox-44bfc50a0f",
   "program": "general",
   "title": "Collaborative Happy Hour with LBJ, McCombs, and UT Law",
