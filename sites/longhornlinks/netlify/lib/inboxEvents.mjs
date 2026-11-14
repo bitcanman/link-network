@@ -18,36 +18,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
-  "id": "inbox-6a77f5eb1d",
-  "program": "general",
-  "title": "2026 CATT Conference",
-  "date": "2026-11-12",
-  "endDate": "2026-11-13",
-  "dateLabel": "Thursday, November 12, 2026",
-  "time": "",
-  "where": "",
-  "desc": "Attend the 2026 CATT Conference focusing on AI agents and innovations in technology.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-10-29"
- },
- {
-  "id": "inbox-180c4e88b2",
-  "program": "general",
-  "title": "CATT Conference 2026",
-  "date": "2026-11-12",
-  "endDate": "2026-11-13",
-  "dateLabel": "Thursday, November 12, 2026",
-  "time": "",
-  "where": "Virtual",
-  "desc": "The conference spotlighting Organizing AI Agents gathers professionals exploring the impact of AI on industries and ethical governance.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-11"
- },
- {
   "id": "inbox-0b53d96741",
   "program": "general",
   "title": "International Education Week",
