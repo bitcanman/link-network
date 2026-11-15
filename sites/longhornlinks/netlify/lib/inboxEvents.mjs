@@ -33,6 +33,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-05"
  },
  {
+  "id": "inbox-0ec904cd84",
+  "program": "general",
+  "title": "Request 2026 SEC Championship Game Student Ticket",
+  "date": "2026-11-16",
+  "endDate": null,
+  "dateLabel": "Monday, November 16, 2026",
+  "time": "4:00 PM",
+  "where": "",
+  "desc": "Students can request one ticket for the SEC Championship game. Note that requesting a ticket does not guarantee fulfillment.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-15"
+ },
+ {
   "id": "inbox-fa2ac97590",
   "program": "mstc",
   "title": "FIESTA Austin Startup Pitch & Networking Night",
