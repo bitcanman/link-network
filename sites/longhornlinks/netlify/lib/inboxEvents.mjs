@@ -18,6 +18,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
+  "id": "inbox-8e7c1d4739",
+  "program": "general",
+  "title": "Claim Your Student Ticket",
+  "date": "2026-11-16",
+  "endDate": null,
+  "dateLabel": "Monday, November 16, 2026",
+  "time": "6:00 PM",
+  "where": "",
+  "desc": "Online ticket claim access begins for Saturday's game. Students must log in and claim their tickets for the home football game.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-16"
+ },
+ {
   "id": "inbox-0b53d96741",
   "program": "general",
   "title": "International Education Week",
@@ -93,6 +108,36 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-09"
  },
  {
+  "id": "inbox-b42ecffdb0",
+  "program": "general",
+  "title": "Explore Your Future at Bain: A Webinar for Advanced Degrees",
+  "date": "2026-11-19",
+  "endDate": null,
+  "dateLabel": "Thursday, November 19, 2026",
+  "time": "3:00-4:00 p.m.",
+  "where": "Virtual",
+  "desc": "A webinar providing insights about career opportunities at Bain for advanced degree holders.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-16"
+ },
+ {
+  "id": "inbox-baadf63b86",
+  "program": "general",
+  "title": "The Global Advantage: Where International Education Meets Career Success",
+  "date": "2026-11-19",
+  "endDate": null,
+  "dateLabel": "Thursday, November 19, 2026",
+  "time": "2:00-3:00 p.m.",
+  "where": "Texas Global",
+  "desc": "An event discussing the link between international education and career success.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-16"
+ },
+ {
   "id": "inbox-53dff92c15",
   "program": "general",
   "title": "University Blockchain Conference",
@@ -106,6 +151,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-2806f35e14",
+  "program": "general",
+  "title": "UT CONNECT Information Session",
+  "date": "2026-12-03",
+  "endDate": null,
+  "dateLabel": "Thursday, December 3, 2026",
+  "time": "5:00-6:00 p.m.",
+  "where": "Virtual",
+  "desc": "An information session about the UT CONNECT program.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-16"
  },
  {
   "id": "inbox-070a2b0e16",
