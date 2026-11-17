@@ -18,21 +18,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
-  "id": "inbox-8e7c1d4739",
-  "program": "general",
-  "title": "Claim Your Student Ticket",
-  "date": "2026-11-16",
-  "endDate": null,
-  "dateLabel": "Monday, November 16, 2026",
-  "time": "6:00 PM",
-  "where": "",
-  "desc": "Online ticket claim access begins for Saturday's game. Students must log in and claim their tickets for the home football game.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-16"
- },
- {
   "id": "inbox-0b53d96741",
   "program": "general",
   "title": "International Education Week",
@@ -46,21 +31,6 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-11-05"
- },
- {
-  "id": "inbox-0ec904cd84",
-  "program": "general",
-  "title": "Request 2026 SEC Championship Game Student Ticket",
-  "date": "2026-11-16",
-  "endDate": null,
-  "dateLabel": "Monday, November 16, 2026",
-  "time": "4:00 PM",
-  "where": "",
-  "desc": "Students can request one ticket for the SEC Championship game. Note that requesting a ticket does not guarantee fulfillment.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-15"
  },
  {
   "id": "inbox-fa2ac97590",
