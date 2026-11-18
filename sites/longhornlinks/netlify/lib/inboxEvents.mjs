@@ -63,6 +63,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-09"
  },
  {
+  "id": "inbox-c06ff629f8",
+  "program": "general",
+  "title": "Cheer on #6 MBB with FREE foam fingers",
+  "date": "2026-11-19",
+  "endDate": null,
+  "dateLabel": "Thursday, November 19, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Join us to support the men's basketball team with free foam fingers. It's a great opportunity for UT students to get involved and show school spirit.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-18"
+ },
+ {
   "id": "inbox-b42ecffdb0",
   "program": "general",
   "title": "Explore Your Future at Bain: A Webinar for Advanced Degrees",
@@ -106,6 +121,21 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-11-16"
+ },
+ {
+  "id": "inbox-4e1326397f",
+  "program": "general",
+  "title": "NCAA Soccer",
+  "date": "2026-11-20",
+  "endDate": null,
+  "dateLabel": "Friday, November 20, 2026",
+  "time": "",
+  "where": "",
+  "desc": "Come out to watch NCAA Soccer this Friday. A fun event for all UT students to enjoy the game.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-18"
  },
  {
   "id": "inbox-c540f7143c",
