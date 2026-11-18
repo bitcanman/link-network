@@ -33,21 +33,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-05"
  },
  {
-  "id": "inbox-fa2ac97590",
-  "program": "mstc",
-  "title": "FIESTA Austin Startup Pitch & Networking Night",
-  "date": "2026-11-17",
-  "endDate": null,
-  "dateLabel": "Tuesday, November 17, 2026",
-  "time": "5:30 PM",
-  "where": "STATION Austin, 701 Brazos St., Austin, TX",
-  "desc": "An evening of pitches and networking for founders and professionals in the startup community.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
-  "verifiedAt": "2026-11-11"
- },
- {
   "id": "inbox-45e7a1919d",
   "program": "general",
   "title": "Big Ticket Weekend: #16 Volleyball vs. #6 Women’s Hoops",
@@ -93,6 +78,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-16"
  },
  {
+  "id": "inbox-36bcd07043",
+  "program": "mstc",
+  "title": "Safety & Security Briefing with Texas Global",
+  "date": "2026-11-19",
+  "endDate": null,
+  "dateLabel": "Thursday, November 19, 2026",
+  "time": "5:00–7:00 PM",
+  "where": "Zoom",
+  "desc": "This session will cover important travel safety information and resources to help you prepare for the upcoming MSTC Global Trip.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
+  "verifiedAt": "2026-11-18"
+ },
+ {
   "id": "inbox-baadf63b86",
   "program": "general",
   "title": "The Global Advantage: Where International Education Meets Career Success",
@@ -108,6 +108,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-16"
  },
  {
+  "id": "inbox-c540f7143c",
+  "program": "mstc",
+  "title": "STC 384 – New Venture Strategies",
+  "date": "2026-11-20",
+  "endDate": null,
+  "dateLabel": "Friday, November 20, 2026",
+  "time": "4:00–8:00 PM",
+  "where": "Rowling Hall (RRH) 3.310",
+  "desc": "This class will focus on new venture strategies.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
+  "verifiedAt": "2026-11-18"
+ },
+ {
   "id": "inbox-53dff92c15",
   "program": "general",
   "title": "University Blockchain Conference",
@@ -121,6 +136,36 @@ export const inboxEvents = [
   "kind": "Event",
   "sourceUrl": "",
   "verifiedAt": "2026-10-29"
+ },
+ {
+  "id": "inbox-9d06c4ab0b",
+  "program": "mstc",
+  "title": "STC 288 – New Venture Finance",
+  "date": "2026-11-21",
+  "endDate": null,
+  "dateLabel": "Saturday, November 21, 2026",
+  "time": "1:00–5:00 PM",
+  "where": "Rowling Hall (RRH) 3.310",
+  "desc": "This class will cover finance related to new ventures.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
+  "verifiedAt": "2026-11-18"
+ },
+ {
+  "id": "inbox-f1e3b14e01",
+  "program": "mstc",
+  "title": "STC 294 – Managing Product Development & Production",
+  "date": "2026-11-21",
+  "endDate": null,
+  "dateLabel": "Saturday, November 21, 2026",
+  "time": "8:00 AM–12:00 PM",
+  "where": "Rowling Hall (RRH) 3.310",
+  "desc": "This class covers managing product development and production processes.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mstc#opportunities",
+  "verifiedAt": "2026-11-18"
  },
  {
   "id": "inbox-2806f35e14",
