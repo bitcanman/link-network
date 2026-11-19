@@ -33,36 +33,6 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-05"
  },
  {
-  "id": "inbox-45e7a1919d",
-  "program": "general",
-  "title": "Big Ticket Weekend: #16 Volleyball vs. #6 Women’s Hoops",
-  "date": "2026-11-18",
-  "endDate": null,
-  "dateLabel": "Wednesday, November 18, 2026",
-  "time": "",
-  "where": "",
-  "desc": "Attend the Big Ticket Weekend featuring a volleyball and women’s basketball game. Free giveaways are also available.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-13"
- },
- {
-  "id": "inbox-5d78bd2e63",
-  "program": "general",
-  "title": "Building a Network to Help You in Academia and Beyond (Beyond the Professoriate Live Webinar)",
-  "date": "2026-11-18",
-  "endDate": null,
-  "dateLabel": "Wednesday, November 18, 2026",
-  "time": "11-11:45 a.m.",
-  "where": "Virtual",
-  "desc": "Attend a live webinar focused on networking in academia and beyond.",
-  "url": null,
-  "kind": "Event",
-  "sourceUrl": "",
-  "verifiedAt": "2026-11-09"
- },
- {
   "id": "inbox-c06ff629f8",
   "program": "general",
   "title": "Cheer on #6 MBB with FREE foam fingers",
