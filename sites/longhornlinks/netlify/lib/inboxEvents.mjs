@@ -153,6 +153,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-06"
  },
  {
+  "id": "inbox-9a89381ab1",
+  "program": "general",
+  "title": "Breakfast Before Books",
+  "date": "2026-12-08",
+  "endDate": null,
+  "dateLabel": "Tuesday, December 8, 2026",
+  "time": "9:00-12:00 PM",
+  "where": "PCL library corner",
+  "desc": "Join us for a free breakfast before finals to fuel up and chat about student organizations.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-20"
+ },
+ {
   "id": "inbox-5125fcfe84",
   "program": "mba",
   "title": "Fall 2026 TVL Investment Competition",
