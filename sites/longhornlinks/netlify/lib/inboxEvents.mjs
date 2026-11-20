@@ -108,6 +108,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-18"
  },
  {
+  "id": "inbox-988581f800",
+  "program": "general",
+  "title": "#6 Men’s Basketball at Home",
+  "date": "2026-11-22",
+  "endDate": null,
+  "dateLabel": "Sunday, November 22, 2026",
+  "time": "",
+  "where": "Moody Center",
+  "desc": "Come support the Men’s Basketball team as they play at home this Sunday.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "",
+  "verifiedAt": "2026-11-20"
+ },
+ {
   "id": "inbox-2806f35e14",
   "program": "general",
   "title": "UT CONNECT Information Session",
