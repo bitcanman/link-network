@@ -18,6 +18,21 @@ export const inboxEvents = [
   "verifiedAt": "2026-11-03"
  },
  {
+  "id": "inbox-0ffca220b8",
+  "program": "mba",
+  "title": "Titans of Investing Application Deadline",
+  "date": "2026-11-25",
+  "endDate": null,
+  "dateLabel": "Wednesday, November 25, 2026",
+  "time": "8:00 AM",
+  "where": "",
+  "desc": "Final applications for the Titans of Investing program are due. This elite program focuses on increasing wisdom among students in finance.",
+  "url": null,
+  "kind": "Event",
+  "sourceUrl": "https://longhornlinks.com/mba",
+  "verifiedAt": "2026-11-24"
+ },
+ {
   "id": "inbox-2806f35e14",
   "program": "general",
   "title": "UT CONNECT Information Session",
